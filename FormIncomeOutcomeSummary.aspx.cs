@@ -37,7 +37,7 @@ namespace RentBike
                 DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
                 storeId = Helper.parseInt(drpStore.SelectedValue);
             }
-            LoadMiddle();
+            LoadMiddle(storeId);
             LoadData(storeId);
         }
 
@@ -144,11 +144,8 @@ namespace RentBike
                 if (lst.Any())
                 {
                     sumBegin = lst[0].BeginAmount;
-                    foreach (SummaryInfo itm in lst)
-                    {
-                        sumIn += itm.TotalIn;
-                        sumOut += itm.TotalOut;
-                    }
+                    sumIn = lst.Select(c => c.TotalIn).DefaultIfEmpty().Sum();
+                    sumOut = lst.Select(c => c.TotalOut).DefaultIfEmpty().Sum();
                     sumEnd = sumIn - sumOut;
 
                     Label lblTotalIn = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalIn");
@@ -185,151 +182,77 @@ namespace RentBike
         }
 
 
-        private void LoadMiddle()
+        private void LoadMiddle(int storeId)
         {
             using (var db = new RentBikeEntities())
             {
-                if (CheckAdminPermission())
+                List<CONTRACT_FULL_VW> contrList;
+
+                if (storeId != 0)
                 {
-                    DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-                    int storeId = Helper.parseInt(drpStore.SelectedValue);
-                    List<CONTRACT_FULL_VW> contrList;
-
-                    if (storeId != 0)
-                    {
-                        var item1 = from itm1 in db.CONTRACT_FULL_VW
-                                    where itm1.CONTRACT_STATUS == true && itm1.STORE_ID == storeId
-                                    select itm1;
-                        contrList = item1.ToList();
-                    }
-                    else
-                    {
-                        var item1 = from itm1 in db.CONTRACT_FULL_VW
-                                    where itm1.CONTRACT_STATUS == true
-                                    select itm1;
-                        contrList = item1.ToList();
-                    }
-
-                    decimal bikeAmount = 0;
-                    decimal equipAmount = 0;
-                    decimal otherAmount = 0;
-                    foreach (CONTRACT_FULL_VW c in contrList)
-                    {
-                        if (c.RENT_TYPE_NAME == "Cho thuê xe")
-                        { bikeAmount += c.CONTRACT_AMOUNT; }
-                        if (c.RENT_TYPE_NAME == "Cho thuê thiết bị văn phòng")
-                        { equipAmount += c.CONTRACT_AMOUNT; }
-                        if (c.RENT_TYPE_NAME == "Cho thuê mặt hàng khác")
-                        { otherAmount += c.CONTRACT_AMOUNT; }
-                    }
-
-                    lblRentBikeAmount.Text = bikeAmount == 0 ? "0" : string.Format("{0:0,0}", bikeAmount);
-                    lblRentEquipAmount.Text = equipAmount == 0 ? "0" : string.Format("{0:0,0}", equipAmount);
-                    lblRentOtherAmount.Text = otherAmount == 0 ? "0" : string.Format("{0:0,0}", otherAmount);
-                    lblRentAll.Text = bikeAmount + equipAmount + otherAmount == 0 ? "0" : string.Format("{0:0,0}", (bikeAmount + equipAmount + otherAmount));
-
-
-                    //============================================================
-                    List<InOut> ioList;
-                    if (storeId != 0)
-                    {
-                        var item2 = from itm2 in db.InOuts
-                                    where itm2.STORE_ID == storeId
-                                    select itm2;
-
-                        ioList = item2.ToList();
-                    }
-                    else
-                    {
-                        var item2 = from itm2 in db.InOuts
-                                    select itm2;
-
-                        ioList = item2.ToList();
-                    }
-                    decimal totalIn = 0;
-                    decimal totalOut = 0;
-                    foreach (InOut io in ioList)
-                    {
-                        totalIn += io.IN_AMOUNT;
-                        totalOut += io.OUT_AMOUNT;
-                    }
-                    lblSumAllIn.Text = totalIn == 0 ? "0" : string.Format("{0:0,0}", totalIn);
-                    lblSumAllOut.Text = totalOut == 0 ? "0" : string.Format("{0:0,0}", totalOut);
-
-                    decimal totalCapital = 0;
-                    List<Store> storeList;
-                    if (storeId != 0)
-                    {
-                        var item3 = from itm3 in db.Stores
-                                    where itm3.ID == storeId
-                                    select itm3;
-                        storeList = item3.ToList();
-                    }
-                    else
-                    {
-                        var item3 = from itm3 in db.Stores
-                                    select itm3;
-                        storeList = item3.ToList();
-                    }
-                    foreach (Store st in storeList)
-                    {
-                        totalCapital += st.START_CAPITAL;
-                    }
-                    lblTotalInvest.Text = totalCapital == 0 ? "0" : string.Format("{0:0,0}", totalCapital);
-                }
-                else // NOT ADMIN
-                {
-                    int storeid = Convert.ToInt16(Session["store_id"]);
                     var item1 = from itm1 in db.CONTRACT_FULL_VW
-                                where itm1.STORE_ID == storeid
+                                where itm1.CONTRACT_STATUS == true && itm1.STORE_ID == storeId
                                 select itm1;
-                    List<CONTRACT_FULL_VW> contrList = item1.Where(c => c.CONTRACT_STATUS == true).ToList();
-                    decimal bikeAmount = 0;
-                    decimal equipAmount = 0;
-                    decimal otherAmount = 0;
-                    foreach (CONTRACT_FULL_VW c in contrList)
-                    {
-                        if (c.RENT_TYPE_NAME == "Cho thuê xe")
-                        { bikeAmount += c.CONTRACT_AMOUNT; }
-                        if (c.RENT_TYPE_NAME == "Cho thuê thiết bị văn phòng")
-                        { equipAmount += c.CONTRACT_AMOUNT; }
-                        if (c.RENT_TYPE_NAME == "Cho thuê mặt hàng khác")
-                        { otherAmount += c.CONTRACT_AMOUNT; }
-                    }
+                    contrList = item1.ToList();
+                }
+                else
+                {
+                    var item1 = from itm1 in db.CONTRACT_FULL_VW
+                                where itm1.CONTRACT_STATUS == true
+                                select itm1;
+                    contrList = item1.ToList();
+                }
 
-                    lblRentBikeAmount.Text = bikeAmount == 0 ? "0" : string.Format("{0:0,0}", bikeAmount);
-                    lblRentEquipAmount.Text = equipAmount == 0 ? "0" : string.Format("{0:0,0}", equipAmount);
-                    lblRentOtherAmount.Text = otherAmount == 0 ? "0" : string.Format("{0:0,0}", otherAmount);
-                    lblRentAll.Text = bikeAmount + equipAmount + otherAmount == 0 ? "0" : string.Format("{0:0,0}", (bikeAmount + equipAmount + otherAmount));
+                decimal bikeAmount = contrList.Where(c => c.RENT_TYPE_ID == 1).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty().Sum();
+                decimal equipAmount = contrList.Where(c => c.RENT_TYPE_ID == 2).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty().Sum();
+                decimal otherAmount = contrList.Where(c => c.RENT_TYPE_ID == 3).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty().Sum();
+
+                lblRentBikeAmount.Text = bikeAmount == 0 ? "0" : string.Format("{0:0,0}", bikeAmount);
+                lblRentEquipAmount.Text = equipAmount == 0 ? "0" : string.Format("{0:0,0}", equipAmount);
+                lblRentOtherAmount.Text = otherAmount == 0 ? "0" : string.Format("{0:0,0}", otherAmount);
+                lblRentAll.Text = bikeAmount + equipAmount + otherAmount == 0 ? "0" : string.Format("{0:0,0}", (bikeAmount + equipAmount + otherAmount));
 
 
-                    //============================================================
+                //============================================================
+                List<InOut> ioList;
+                if (storeId != 0)
+                {
                     var item2 = from itm2 in db.InOuts
-                                where itm2.STORE_ID == storeid
+                                where itm2.STORE_ID == storeId
                                 select itm2;
 
-                    List<InOut> ioList = item2.ToList();
-                    decimal totalIn = 0;
-                    decimal totalOut = 0;
-                    foreach (InOut io in ioList)
-                    {
-                        totalIn += io.IN_AMOUNT;
-                        totalOut += io.OUT_AMOUNT;
-                    }
-                    lblSumAllIn.Text = totalIn == 0 ? "0" : string.Format("{0:0,0}", totalIn);
-                    lblSumAllOut.Text = totalOut == 0 ? "0" : string.Format("{0:0,0}", totalOut);
-
-                    decimal totalCapital = 0;
-                    var item3 = from itm3 in db.Stores
-                                where itm3.ID == storeid
-                                select itm3;
-                    List<Store> storeList = item3.ToList();
-                    foreach (Store st in storeList)
-                    {
-                        totalCapital += st.START_CAPITAL;
-                    }
-                    lblTotalInvest.Text = totalCapital == 0 ? "0" : string.Format("{0:0,0}", totalCapital);
+                    ioList = item2.ToList();
                 }
+                else
+                {
+                    var item2 = from itm2 in db.InOuts
+                                select itm2;
+
+                    ioList = item2.ToList();
+                }
+                decimal totalIn = ioList.Select(c =>c.IN_AMOUNT).DefaultIfEmpty().Sum();
+                decimal totalOut = ioList.Select(c => c.OUT_AMOUNT).DefaultIfEmpty().Sum();
+
+                lblSumAllIn.Text = totalIn == 0 ? "0" : string.Format("{0:0,0}", totalIn);
+                lblSumAllOut.Text = totalOut == 0 ? "0" : string.Format("{0:0,0}", totalOut);
+
+                List<Store> storeList;
+                if (storeId != 0)
+                {
+                    var item3 = from itm3 in db.Stores
+                                where itm3.ID == storeId
+                                select itm3;
+                    storeList = item3.ToList();
+                }
+                else
+                {
+                    var item3 = from itm3 in db.Stores
+                                select itm3;
+                    storeList = item3.ToList();
+                }
+
+                decimal totalCapital = storeList.Select(c => c.START_CAPITAL).DefaultIfEmpty().Sum();
+                lblTotalInvest.Text = totalCapital == 0 ? "0" : string.Format("{0:0,0}", totalCapital);
             }
         }
 
