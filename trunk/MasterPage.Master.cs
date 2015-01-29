@@ -226,12 +226,12 @@ namespace RentBike
                     foreach (var g in data)
                     {
                         SummaryInfo si = new SummaryInfo();
-                        si.StoreId = g.Record.ToList()[0].ID;
-                        si.Period = Convert.ToDateTime(g.Record.ToList()[0].Period).ToString("dd/MM/yyyy");
-                        si.TotalIn = g.Record.ToList()[0].TotalIn;
-                        si.TotalOut = g.Record.ToList()[0].TotalOut;
+                        si.StoreId = storeId;
+                        si.Period = Convert.ToDateTime(g.Period.Value).ToString("dd/MM/yyyy");
+                        si.TotalIn = g.Record.Select(x => x.InAmount).DefaultIfEmpty().Sum();
+                        si.TotalOut = g.Record.Select(x => x.OutAmount).DefaultIfEmpty().Sum();
                         si.BeginAmount = 0;
-                        si.EndAmount = g.Record.ToList()[0].TotalIn - g.Record.ToList()[0].TotalOut;
+                        si.EndAmount = si.TotalIn - si.TotalOut;
 
                         lst.Add(si);
                     }
@@ -305,12 +305,12 @@ namespace RentBike
                     foreach (var g in data)
                     {
                         SummaryInfo si = new SummaryInfo();
-                        si.StoreId = g.Record.ToList()[0].ID;
-                        si.Period = Convert.ToDateTime(g.Record.ToList()[0].Period).ToString("dd/MM/yyyy");
-                        si.TotalIn = g.Record.ToList()[0].TotalIn;
-                        si.TotalOut = g.Record.ToList()[0].TotalOut;
+                        si.StoreId = storeId;
+                        si.Period = Convert.ToDateTime(g.Period.Value).ToString("dd/MM/yyyy");
+                        si.TotalIn = g.Record.Select(x => x.InAmount).DefaultIfEmpty().Sum();
+                        si.TotalOut = g.Record.Select(x => x.OutAmount).DefaultIfEmpty().Sum();
                         si.BeginAmount = 0;
-                        si.EndAmount = g.Record.ToList()[0].TotalIn - g.Record.ToList()[0].TotalOut;
+                        si.EndAmount = si.TotalIn - si.TotalOut;
 
                         lst.Add(si);
                     }
@@ -332,11 +332,8 @@ namespace RentBike
                     if (lst.Any())
                     {
                         sumBegin = lst[0].BeginAmount;
-                        foreach (SummaryInfo itm in lst)
-                        {
-                            sumIn += itm.TotalIn;
-                            sumOut += itm.TotalOut;
-                        }
+                        sumIn = lst.Select(c => c.TotalIn).DefaultIfEmpty().Sum();
+                        sumOut = lst.Select(c => c.TotalOut).DefaultIfEmpty().Sum();
                         sumEnd = sumIn - sumOut;
                         lblTotalValue.Text = string.Format("{0:0,0}", sumEnd);
                     }
