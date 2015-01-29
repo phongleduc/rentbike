@@ -27,15 +27,15 @@ namespace RentBike
                 Response.Redirect("FormLogin.aspx");
             }
             int storeId = Helper.parseInt(Session["store_id"].ToString());
+            int permissionid = Convert.ToInt16(Session["permission"]);
             if (!IsPostBack)
             {
-                int permissionid = Convert.ToInt16(Session["permission"]);
                 LoadStore(permissionid);
-                if (permissionid == 1)
-                {
-                    DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-                    storeId = Helper.parseInt(drpStore.SelectedValue);
-                }
+            }
+            if (permissionid == 1)
+            {
+                DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
+                storeId = Helper.parseInt(drpStore.SelectedValue);
             }
             LoadMiddle();
             LoadData(storeId);
