@@ -61,7 +61,12 @@ namespace RentBike
 
                 result = result.Where(c => c.OVER_DATE > 10).OrderByDescending(c => c.OVER_DATE).ToList();
                 LoadGeneralInfo(result);
-                LoadData(string.Empty, 0, result, db);
+                int index = 0;
+                if (ddlPager != null)
+                {
+                    index = ddlPager.SelectedIndex;
+                }
+                LoadData(string.Empty, index, result, db);
             }
         }
 
