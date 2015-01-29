@@ -57,7 +57,6 @@ namespace RentBike
                     lstInOut = lstInOut.Where(c => c.STORE_ID == storeId).ToList();
                 }
                 var data = from d in lstInOut
-                           orderby d.INOUT_DATE descending
                            group d by d.INOUT_DATE into g
                            select new
                            {
