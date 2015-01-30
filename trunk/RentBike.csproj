@@ -102,6 +102,7 @@
     <Content Include="App_Themes\Theme1\image\tick-blue.png" />
     <Content Include="App_Themes\Theme1\image\tick-orange.png" />
     <Content Include="App_Themes\Theme1\image\unchecked.gif" />
+    <Content Include="FormCommonSettingUpdate.aspx" />
     <Content Include="FormAccountManagement.aspx" />
     <Content Include="FormAccountUpdate.aspx" />
     <Content Include="FormAction.aspx" />
@@ -180,6 +181,13 @@
     </Compile>
     <Compile Include="CONTRACT_HISTORY_FULL_VW.cs">
       <DependentUpon>RentBike.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FormCommonSettingUpdate.aspx.cs">
+      <DependentUpon>FormCommonSettingUpdate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FormCommonSettingUpdate.aspx.designer.cs">
+      <DependentUpon>FormCommonSettingUpdate.aspx</DependentUpon>
     </Compile>
     <Compile Include="Customer.cs">
       <DependentUpon>RentBike.tt</DependentUpon>

@@ -6,7 +6,7 @@
         <tbody>
             <tr>
                 <td>
-                    <asp:Button ID="btnRentTypeCreate" runat="server" Text="Tạo phân loại" CssClass="btn btn-primary" /></td>
+                    <asp:Button ID="btnRentTypeCreate" runat="server" Text="Tạo phân loại" CssClass="btn btn-primary" OnClick="btnRentTypeCreate_Click"/></td>
             </tr>
         </tbody>
     </table>
@@ -29,7 +29,7 @@
                           <td><%# Container.ItemIndex + 1 %></td>
                           <td><%# Eval("NAME") %></td>
                             <td><%# Eval("ACTIVE") %></td>
-                          <td><asp:HyperLink ID="hplAccountUpdate" runat="server" Text="Cập nhật" NavigateUrl='<%# Eval("ID","FormAccountUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
+                          <td><asp:HyperLink ID="hplAccountUpdate" runat="server" Text="Cập nhật" NavigateUrl='<%# Eval("ID","FormCommonSettingUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
                         </tr>                        
                 </itemtemplate>
                 <FooterTemplate>
