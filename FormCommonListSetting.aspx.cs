@@ -72,5 +72,10 @@ namespace RentBike
         {
             LoadData(string.Empty, Convert.ToInt16(ddlPager.SelectedValue) - 1);
         }
+
+        protected void btnRentTypeCreate_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("FormCommonSettingUpdate.aspx");
+        }
     }
 }
