@@ -190,7 +190,7 @@ namespace RentBike
                     item.ACC = txtAccount.Text.Trim();
                     if (txtOldPassword.Text.Trim().Length > 0)
                     {
-                        item.PASSWORD = txtNewPassword.Text.Trim();
+                        item.PASSWORD = CommonList.EncryptPassword(txtNewPassword.Text.Trim());
                     }
                     item.PERMISSION_ID = Convert.ToInt16(ddlPermission.SelectedValue);
                     item.STORE_ID = Convert.ToInt16(ddlStore.SelectedValue);
