@@ -70,9 +70,9 @@ namespace RentBike
             {
                 return "Bạn cần phải nhập tên tài khoản.";
             }
-            if (txtAccount.Text.Trim().Length < 6)
+            if (txtAccount.Text.Trim().Length < 5)
             {
-                return "Tên tài khoản phải có ít nhất 6 ký tự.";
+                return "Tên tài khoản phải có ít nhất 5 ký tự.";
             }
             if (!Regex.IsMatch(txtAccount.Text.Trim(), "^[a-zA-Z0-9]+$"))
             {

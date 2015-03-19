@@ -18,17 +18,17 @@
             <tr>
                 <td class="text-right">Mật khẩu cũ</td>
                 <td>
-                    <asp:TextBox ID="txtOldPassword" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
+                    <asp:TextBox ID="txtOldPassword" TextMode="Password" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
             </tr>
             <tr>
-                <td class="text-right">Mật khẩu</td>
+                <td class="text-right">Mật khẩu mới</td>
                 <td>
-                    <asp:TextBox ID="txtNewPassword" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
+                    <asp:TextBox ID="txtNewPassword" TextMode="Password" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
             </tr>
             <tr>
                 <td class="text-right">Xác nhận mật khẩu</td>
                 <td>
-                    <asp:TextBox ID="txtConfirmPassword" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
+                    <asp:TextBox ID="txtConfirmPassword" TextMode="Password" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
             </tr>
             <tr>
                 <td class="text-right">Quyền sử dụng</td>
