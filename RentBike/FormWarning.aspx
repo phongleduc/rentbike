@@ -49,7 +49,7 @@
                     <asp:HiddenField ID ="hdfOverDay" Value='<%# Eval("OVER_DATE") %>' runat="server" />
                 </td>
                 <td>
-                    <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("AUTO_CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
+                    <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>

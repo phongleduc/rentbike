@@ -85,6 +85,15 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.TextBox txtCustomerName;
         
         /// <summary>
+        /// txtBirthDay control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBirthDay;
+        
+        /// <summary>
         /// txtLicenseNumber control.
         /// </summary>
         /// <remarks>
@@ -92,6 +101,24 @@ namespace RentBike {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtLicenseNumber;
+        
+        /// <summary>
+        /// txtRangeDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtRangeDate;
+        
+        /// <summary>
+        /// txtPlaceDate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPlaceDate;
         
         /// <summary>
         /// txtPhone control.
@@ -103,22 +130,22 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.TextBox txtPhone;
         
         /// <summary>
-        /// txtAddress control.
+        /// txtPermanentResidence control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtAddress;
+        protected global::System.Web.UI.WebControls.TextBox txtPermanentResidence;
         
         /// <summary>
-        /// ddlCity control.
+        /// txtCurrentResidence control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlCity;
+        protected global::System.Web.UI.WebControls.TextBox txtCurrentResidence;
         
         /// <summary>
         /// txtContractNo control.
@@ -254,6 +281,24 @@ namespace RentBike {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSerial2;
+        
+        /// <summary>
+        /// txtImplementer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtImplementer;
+        
+        /// <summary>
+        /// txtBackDocument control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtBackDocument;
         
         /// <summary>
         /// txtReferencePhone control.
