@@ -20,52 +20,44 @@ namespace RentBike
             if (!IsPostBack)
             {
                 int id = Convert.ToInt16(Request.QueryString["ID"]);
-                Contract con;
                 using (var db = new RentBikeEntities())
                 {
-                    var contract = db.Contracts.First(c => c.ID == id);
-                    con = contract;
-                }
+                    Contract con = db.Contracts.FirstOrDefault(c => c.ID == id);
 
-                txtEndDate.Text = string.Format("{0:dd/MM/yyyy}", con.END_DATE);
-                txtAmount.Text = string.Format("{0:0,0}", con.CONTRACT_AMOUNT);
+                    txtEndDate.Text = string.Format("{0:dd/MM/yyyy}", con.END_DATE);
+                    txtAmount.Text = string.Format("{0:0,0}", con.CONTRACT_AMOUNT);
 
-                TimeSpan ts = DateTime.Now.Date.Subtract(con.END_DATE);
-                txtOverDate.Text = Math.Round(ts.TotalDays).ToString();
+                    TimeSpan ts = DateTime.Now.Date.Subtract(con.END_DATE);
+                    txtOverDate.Text = Math.Round(ts.TotalDays).ToString();
 
-                List<InOut> ioLst;
-                using (var db = new RentBikeEntities())
-                {
+                    List<InOut> ioLst = db.InOuts.Where(io => io.CONTRACT_ID == id).ToList();
 
-                    var inoutList = db.InOuts.Where(io => io.CONTRACT_ID == id).ToList();
-                    ioLst = inoutList;
-                }
-                decimal paidAmount = 0;
-                for (int i = 0; i < ioLst.Count; i++)
-                {
-                    paidAmount += ioLst[i].IN_AMOUNT;
-                }
-
-                if (ts.TotalDays >= 0)
-                {
-                    txtPayFee.Text = string.Format("{0:0,0}", Math.Round(con.FEE_PER_DAY * 30 - paidAmount + con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts.TotalDays))));
-                    txtRealIncome.Text = txtPayFee.Text;
-                }
-                else
-                {
-                    TimeSpan ts1 = DateTime.Now.Subtract(con.RENT_DATE);
-                    //txtPayFee.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
-                    if (con.RENT_TYPE_ID == 2)
+                    decimal paidAmount = 0;
+                    for (int i = 0; i < ioLst.Count; i++)
                     {
-                        txtPayFee.Text = string.Format("{0:0,0}", Convert.ToInt32(con.FEE_PER_DAY) * 10);
+                        paidAmount += ioLst[i].IN_AMOUNT;
+                    }
+
+                    if (ts.TotalDays >= 0)
+                    {
+                        txtRealIncome.Text = string.Format("{0:0,0}", Math.Round(con.FEE_PER_DAY * 30 - paidAmount + con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts.TotalDays))));
                     }
                     else
                     {
-                        txtPayFee.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
+                        TimeSpan ts1 = DateTime.Now.Subtract(con.RENT_DATE);
+                        txtRealIncome.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
+                        //txtPayFee.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
+                        //if (con.RENT_TYPE_ID == 2)
+                        //{
+                        //    txtRealIncome.Text = string.Format("{0:0,0}", Convert.ToInt32(con.FEE_PER_DAY) * 10);
+                        //}
+                        //else
+                        //{
+                        //    txtRealIncome.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
+                        //}
                     }
+                    txtReduceAmount.Text = "0";
                 }
-                txtRealIncome.Text = txtPayFee.Text;
-                txtReduceAmount.Text = "0";
             }
         }
 
@@ -96,7 +88,7 @@ namespace RentBike
                 }
                 io1.MORE_INFO = txtMoreInfo.Text.Trim();
                 io1.STORE_ID = con.STORE_ID;
-                io1.SEARCH_TEXT = string.Format("{0} {1} {2}", con.AUTO_CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME);
+                io1.SEARCH_TEXT = string.Format("{0} {1} {2}", con.CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME);
                 io1.INOUT_DATE = DateTime.Now;
                 io1.CREATED_BY = Session["username"].ToString();
                 io1.CREATED_DATE = DateTime.Now;
@@ -124,7 +116,7 @@ namespace RentBike
                         break;
                 }
 
-                if (Convert.ToDecimal(txtPayFee.Text) < 0)
+                if (Convert.ToDecimal(txtRealIncome.Text) < 0)
                 {
                     io2.IN_AMOUNT = 0;
                     io2.OUT_AMOUNT = Math.Abs(Convert.ToDecimal(txtRealIncome.Text));
@@ -132,7 +124,7 @@ namespace RentBike
                 }
                 else
                 {
-                    io2.IN_AMOUNT = Convert.ToDecimal(txtRealIncome.Text.Replace(".",string.Empty));
+                    io2.IN_AMOUNT = Convert.ToDecimal(txtRealIncome.Text.Replace(".", string.Empty));
                     io2.OUT_AMOUNT = 0;
                 }
 
@@ -141,10 +133,10 @@ namespace RentBike
                     var item = db.InOutTypes.First(s => s.NAME == feeName);
                     io2.INOUT_TYPE_ID = item.ID;
                 }
-                io2.MORE_INFO = string.Format("Trả phí thừa hợp đồng {0}", con.AUTO_CONTRACT_NO);
+                io2.MORE_INFO = string.Format("Trả phí thừa hợp đồng {0}", con.CONTRACT_NO);
                 io2.PERIOD_DATE = DateTime.Now;
                 io2.STORE_ID = con.STORE_ID;
-                io2.SEARCH_TEXT = string.Format("{0} {1} {2}", con.AUTO_CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME);
+                io2.SEARCH_TEXT = string.Format("{0} {1} {2}", con.CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME);
                 io2.INOUT_DATE = DateTime.Now;
                 io2.CREATED_BY = Session["username"].ToString();
                 io2.CREATED_DATE = DateTime.Now;
@@ -152,7 +144,7 @@ namespace RentBike
                 io2.UPDATED_DATE = DateTime.Now;
 
                 // Out --> Fee reduce
-                decimal reduceAmount = Convert.ToDecimal(txtReduceAmount.Text.Replace(",",string.Empty));
+                decimal reduceAmount = Convert.ToDecimal(txtReduceAmount.Text.Replace(",", string.Empty));
                 InOut io3 = new InOut();
                 if (reduceAmount != 0)
                 {
@@ -168,7 +160,7 @@ namespace RentBike
                     io3.MORE_INFO = txtMoreInfo.Text.Trim();
                     io3.PERIOD_DATE = DateTime.Now;
                     io3.STORE_ID = con.STORE_ID;
-                    io3.SEARCH_TEXT = string.Format("{0} {1} {2}", con.AUTO_CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME);
+                    io3.SEARCH_TEXT = string.Format("{0} {1} {2}", con.CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME);
                     io3.INOUT_DATE = DateTime.Now;
                     io3.CREATED_BY = Session["username"].ToString();
                     io3.CREATED_DATE = DateTime.Now;
@@ -202,7 +194,7 @@ namespace RentBike
                 // Insert History row
                 ContractHistory ch = new ContractHistory();
                 ch.CONTRACT_ID = con.ID;
-                ch.AUTO_CONTRACT_NO = con.AUTO_CONTRACT_NO;
+                ch.CONTRACT_NO = con.CONTRACT_NO;
                 ch.CUSTOMER_ID = con.CUSTOMER_ID;
                 ch.CONTRACT_AMOUNT = con.CONTRACT_AMOUNT;
                 ch.DETAIL = con.DETAIL;
@@ -223,6 +215,8 @@ namespace RentBike
                 ch.REFERENCE_PHONE = con.REFERENCE_PHONE;
                 ch.SCHOOL_NAME = con.SCHOOL_NAME;
                 ch.CLASS_NAME = con.CLASS_NAME;
+                ch.IMPLEMENTER = con.IMPLEMENTER;
+                ch.BACK_TO_DOCUMENTS = con.BACK_TO_DOCUMENTS;
                 ch.CREATED_BY = Session["username"].ToString();
                 ch.CREATED_DATE = DateTime.Now;
                 ch.UPDATED_BY = Session["username"].ToString();
@@ -232,7 +226,6 @@ namespace RentBike
                     db.ContractHistories.Add(ch);
                     db.SaveChanges();
                 }
-
                 trans.Complete();
             }
             Response.Redirect("FormContractManagement.aspx");

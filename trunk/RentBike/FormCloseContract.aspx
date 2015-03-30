@@ -21,13 +21,13 @@
                 <td>
                     <asp:TextBox ID="txtAmount" runat="server" Enabled="false" CssClass="form-control input-sm text-right"></asp:TextBox></td>
             </tr>
-            <tr>
+<%--            <tr>
                 <td class="text-right">Phí phải trả</td>
                 <td>
                     <asp:TextBox ID="txtPayFee" ClientIDMode="Static" runat="server" Enabled="false" CssClass="form-control input-sm text-right"></asp:TextBox></td>
-            </tr>
+            </tr>--%>
             <tr>
-                <td class="text-right">Khoản giảm trừ</td>
+                <td class="text-right">Thừa phí</td>
                 <td>
                     <asp:TextBox ID="txtReduceAmount" ClientIDMode="Static" runat="server" CssClass="form-control input-sm text-right" onChange="ComputeCosts();"></asp:TextBox></td>
             </tr>

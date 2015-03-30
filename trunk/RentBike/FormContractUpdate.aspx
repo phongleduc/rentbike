@@ -40,7 +40,7 @@
                     <td><%# Eval("PHONE") %></td>
                     <td><%# Eval("ADDRESS") %></td>
                     <td>
-                        <asp:HyperLink ID="hplContractInfo" runat="server" Text='<%# Eval("AUTO_CONTRACT_NO") %>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink>
+                        <asp:HyperLink ID="hplContractInfo" runat="server" Text='<%# Eval("CONTRACT_NO") %>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink>
                     </td>
                     <td><%# Convert.ToBoolean(Eval("CONTRACT_STATUS")) ? "Chưa thanh lý" : "Đã thanh lý" %></td>
                     <td>
@@ -54,7 +54,7 @@
         <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
         <%--</asp:Panel>--%>
 
-        <table class="table table-striped table-hover" style="width: 60%; margin-left: 20%;">
+        <table class="table table-striped table-hover" style="width: 70%; margin-left: 10%;">
             <tbody>
                 <tr>
                     <td colspan="2" class="text-center"><strong>
@@ -75,9 +75,28 @@
                         <asp:TextBox ID="txtCustomerName" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
                 </tr>
                 <tr>
+                    <td class="text-right">Ngày sinh</td>
+                    <td>
+                        <asp:TextBox ID="txtBirthDay" runat="server" CssClass="form-control input-sm"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
                     <td class="text-right">Số CMND/Số GPLX</td>
                     <td>
-                        <asp:TextBox ID="txtLicenseNumber" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
+                        <asp:TextBox ID="txtLicenseNumber" runat="server" CssClass="form-control input-sm"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right">Ngày cấp</td>
+                    <td>
+                        <asp:TextBox ID="txtRangeDate" runat="server" CssClass="form-control input-sm"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-right">Nơi cấp</td>
+                    <td>
+                        <asp:TextBox ID="txtPlaceDate" runat="server" CssClass="form-control input-sm"></asp:TextBox>
+                    </td>
                 </tr>
                 <tr>
                     <td class="text-right">Số điện thoại</td>
@@ -85,14 +104,14 @@
                         <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
                 </tr>
                 <tr>
-                    <td class="text-right">Địa chỉ</td>
+                    <td class="text-right">Hộ khẩu thường trú</td>
                     <td>
-                        <asp:TextBox ID="txtAddress" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
+                        <asp:TextBox ID="txtPermanentResidence" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
                 </tr>
                 <tr>
-                    <td class="text-right">Tỉnh/Thành phố</td>
+                    <td class="text-right">Hiện trú tại</td>
                     <td>
-                        <asp:DropDownList ID="ddlCity" runat="server" CssClass="form-control"></asp:DropDownList></td>
+                        <asp:TextBox ID="txtCurrentResidence" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
                 </tr>
                 <tr class="success">
                     <td colspan="2" class="text-center"><strong>Thông tin hợp đồng</strong></td>
@@ -201,8 +220,18 @@
                     <td>
                         <asp:TextBox ID="txtSerial2" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
                 </tr>
+                <tr id="trImplementer">
+                    <td class="text-right">Người làm</td>
+                    <td>
+                        <asp:TextBox ID="txtImplementer" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
+                </tr>
+                <tr id="trDocuments">
+                    <td class="text-right">Giấy tờ để lại</td>
+                    <td>
+                        <asp:TextBox ID="txtBackDocument" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
+                </tr>
                 <tr id="trReferencePhone">
-                    <td class="text-right">Số điện thoại</td>
+                    <td class="text-right">Số điện thoại gia đình</td>
                     <td>
                         <asp:TextBox ID="txtReferencePhone" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
                 </tr>
@@ -232,29 +261,42 @@
     </asp:Panel>
     <script>
         $(document).ready(function () {
-            $("#txtRentDate").datepicker({
+            $('#<%=txtRentDate.ClientID %>').datepicker({
                 dateFormat: 'dd/mm/yy',
                 onSelect: function (dateStr) {
                     var date = $(this).datepicker('getDate');
                     if (date) {
                         date.setDate(date.getDate() + 29);
-                        $('#txtEndDate').val($.datepicker.formatDate('dd/mm/yy', date));
+                        $('#<%=txtEndDate.ClientID %>').val($.datepicker.formatDate('dd/mm/yy', date));
                     }
                 }
             });
-            $("#txtEndDate").datepicker({
+            $('#<%=txtEndDate.ClientID %>').datepicker({
                 dateFormat: 'dd/mm/yy',
                 onSelect: function (dateStr) {
                     var date = $(this).datepicker('getDate');
                     if (date) {
                         date.setDate(date.getDate() - 29);
-                        $('#txtRentDate').val($.datepicker.formatDate('dd/mm/yy', date));
+                        $('#<%=txtRentDate.ClientID %>').val($.datepicker.formatDate('dd/mm/yy', date));
                     }
                 }
             });
+            $('#<%=txtRangeDate.ClientID %>').datepicker({
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1920:" + new Date().getFullYear()
+            });
 
-            $("#txtAmount").priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
-            $("#txtFeePerDay").priceFormat({ prefix: '', suffix: '', centsLimit: 0 });;
+            $('#<%=txtBirthDay.ClientID %>').datepicker({
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1920:" + new Date().getFullYear()
+            });
+
+            $('#<%=txtAmount.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
+            $('#<%=txtFeePerDay.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });;
 
             var rentTypeId = '<%= RentTypeID%>';
             hideToRentType(rentTypeId);
@@ -272,125 +314,17 @@
                     return false;
                 }
             });
-
-            // validate signup form on keyup and submit
-<%--            $("#form1").validate({
-                rules: {
-                    '<%= txtCustomerName.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtLicenseNumber.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtPhone.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtAddress.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtContractNo.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtAmount.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtFeePerDay.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtRentDate.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtEndDate.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtReferencePerson.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtReferencePhone.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtItemName.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtItemLicenseNo.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtSerial1.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtSerial2.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtSchool.UniqueID %>': {
-                        required: true
-                    },
-                    '<%= txtClass.UniqueID %>': {
-                        required: true
-                    }
-                },
-                messages: {
-                    '<%= txtCustomerName.UniqueID %>': {
-                        required: "Bạn phải nhập tên khách hàng."
-                    },
-                    '<%= txtLicenseNumber.UniqueID %>': {
-                        required: "Bạn phải nhập Số CMND/Số GPLX."
-                    },
-                    '<%= txtPhone.UniqueID %>': {
-                        required: "Bạn phải nhập số điện thoại."
-                    },
-                    '<%= txtAddress.UniqueID %>': {
-                        required: "Bạn phải nhập địa chỉ."
-                    },
-                    '<%= txtContractNo.UniqueID %>': {
-                        required: "Bạn phải nhập số hợp đồng."
-                    },
-                    '<%= txtAmount.UniqueID %>': {
-                        required: "Bạn phải nhập giá trị hợp đồng."
-                    },
-                    '<%= txtFeePerDay.UniqueID %>': {
-                        required: "Bạn phải nhập phí cho từng ngày."
-                    },
-                    '<%= txtRentDate.UniqueID %>': {
-                        required: "Bạn phải nhập ngày bắt đầu thuê."
-                    },
-                    '<%= txtEndDate.UniqueID %>': {
-                        required: "Bạn phải nhập ngày kết thúc thuê."
-                    },
-                    '<%= txtReferencePerson.UniqueID %>': {
-                        required: "Bạn phải nhập người xác minh."
-                    },
-                    '<%= txtReferencePhone.UniqueID %>': {
-                        required: "Bạn phải nhập số điện thoại người xác minh."
-                    },
-                    '<%= txtItemName.UniqueID %>': {
-                        required: "Bạn phải nhập số điện thoại người xác minh."
-                    },
-                    '<%= txtItemLicenseNo.UniqueID %>': {
-                        required: "Bạn phải nhập biểm kiểm soát."
-                    },
-                    '<%= txtSerial1.UniqueID %>': {
-                        required: "Bạn phải nhập số khung."
-                    },
-                    '<%= txtSerial2.UniqueID %>': {
-                        required: "Bạn phải nhập số máy."
-                    },
-                    '<%= txtSchool.UniqueID %>': {
-                        required: "Bạn phải nhập tên trường học."
-                    },
-                    '<%= txtClass.UniqueID %>': {
-                        required: "Bạn phải nhập tên lớp học."
-                    }
-                }
-            });--%>
         });
 
         function hideToRentType(rentTypeId) {
             if (parseInt(rentTypeId) == 2) {
-                $('#trItemName, #trLicenseNo, #trSerial1, #trSerial2').hide();
+                $('#trItemName, #trLicenseNo, #trSerial1, #trSerial2, #trImplementer, #trDocuments').hide();
                 $('#trReferencePhone, #trSchool, #trClass').show();
+                $('#trReferencePhone td').first().text('Số điện thoại gia đình');
             } else {
-                $('#trItemName, #trLicenseNo, #trSerial1, #trSerial2').show();
+                $('#trItemName, #trLicenseNo, #trSerial1, #trSerial2, #trImplementer, #trDocuments').show();
                 $('#trReferencePhone, #trSchool, #trClass').hide();
+                $('#trReferencePhone td').first().text('Số điện thoại');
             }
         }
 

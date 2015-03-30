@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RentBike.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -52,28 +53,27 @@ namespace RentBike
                 using (var db = new RentBikeEntities())
                 {
                     var item = db.CONTRACT_FULL_VW.First(itm => itm.ID == pp.CONTRACT_ID);
-                    string feeName = string.Empty;
+                    int inoutType = 0;
                     switch (item.RENT_TYPE_NAME)
                     {
                         case "Cho thuê xe":
-                            feeName = "Phí thuê xe";
+                            inoutType = 14;
                             break;
                         case "Cho thuê thiết bị văn phòng":
-                            feeName = "Phí thuê thiết bị";
+                            inoutType = 15;
                             break;
                         case "Cho thuê mặt hàng khác":
-                            feeName = "Phí khác";
+                            inoutType = 15;
                             break;
                     }
 
-                    var item1 = db.InOutTypes.First(s => s.NAME == feeName);
                     var inouttypelist = db.InOutTypes.Where(s => s.IS_CONTRACT == true && s.ACTIVE == true).ToList();
 
                     ddInOutType.DataSource = inouttypelist;
                     ddInOutType.DataTextField = "NAME";
                     ddInOutType.DataValueField = "ID";
                     ddInOutType.DataBind();
-                    ddInOutType.SelectedItem.Text = item.RENT_TYPE_NAME;
+                    ddInOutType.SelectedValue = inoutType.ToString();
 
                     //txtIncome.Text = pp.ACTUAL_PAY.ToString();
 
