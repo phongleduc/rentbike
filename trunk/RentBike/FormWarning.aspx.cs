@@ -82,72 +82,21 @@ namespace RentBike
                         {
                             c.MUST_PAY_IN_TODAY = true;
                         }
+
+                        var lstPeriodPayed = tmpLstPeriod.Any() ? tmpLstPeriod.Where(s => s.ACTUAL_PAY >= s.AMOUNT_PER_PERIOD) : null;
+                        if (lstPeriodPayed != null && lstPeriodPayed.Any())
+                        {
+                            c.PAY_DATE = lstPeriodPayed.LastOrDefault().PAY_DATE;
+                            c.OVER_DATE = DateTime.Now.Subtract(c.PAY_DATE).Days;
+                            c.PAYED_TIME = lstPeriodPayed.Count();
+                        }
+                        if (c.OVER_DATE >= 0)
+                            dataList.Add(c);
                     }
-                    var lstPeriodPayed = tmpLstPeriod.Any() ? tmpLstPeriod.Where(s => s.ACTUAL_PAY >= s.AMOUNT_PER_PERIOD) : null;
-                    if (lstPeriodPayed != null && lstPeriodPayed.Any())
-                    {
-                        c.PAY_DATE = lstPeriodPayed.LastOrDefault().PAY_DATE;
-                        c.OVER_DATE = DateTime.Now.Subtract(c.PAY_DATE).Days;
-                        c.PAYED_TIME = lstPeriodPayed.Count();
-                    }
-                    dataList.Add(c);
                 }
                 if (!string.IsNullOrEmpty(searchDate))
                 {
                     dataList = dataList.Where(s => s.MUST_PAY_IN_TODAY == true).ToList();
-                }
-
-                totalRecord = Convert.ToInt16(dataList.Count());
-                int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-                List<int> pageList = new List<int>();
-                for (int i = 1; i <= totalPage; i++)
-                {
-                    pageList.Add(i);
-                }
-
-                ddlPager.DataSource = pageList;
-                ddlPager.DataBind();
-                if (pageList.Count > 0)
-                {
-                    ddlPager.SelectedIndex = page;
-                }
-
-                int skip = page * pageSize;
-                dataList = dataList.OrderByDescending(s => s.OVER_DATE).Skip(skip).Take(pageSize).ToList();
-            }
-
-            rptWarning.DataSource = dataList;
-            rptWarning.DataBind();
-        }
-
-        private void LoadDataAdmin(string strSearch, int page)
-        {
-            int totalRecord = 0;
-            // LOAD DATA WITH PAGING
-            List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
-            using (var db = new RentBikeEntities())
-            {
-                var st = from s in db.CONTRACT_FULL_VW.ToList()
-                         where s.SEARCH_TEXT.Contains(strSearch) && s.CONTRACT_STATUS == true
-                         orderby s.ID descending
-                         select s;
-
-                var lstPeriod = db.PayPeriods.Where(s => s.STATUS == true).ToList();
-                foreach (CONTRACT_FULL_VW c in st)
-                {
-                    c.PAYED_TIME = 0;
-                    c.PAY_DATE = c.RENT_DATE;
-                    c.OVER_DATE = DateTime.Now.Subtract(c.PAY_DATE).Days;
-
-                    lstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID).OrderByDescending(s => s.PAY_DATE).ToList();
-                    var lstPeriodPayed = lstPeriod.Any() ? lstPeriod.Where(s => s.ACTUAL_PAY >= s.AMOUNT_PER_PERIOD) : null;
-                    if (lstPeriodPayed != null && lstPeriodPayed.Any())
-                    {
-                        c.PAY_DATE = lstPeriodPayed.LastOrDefault().PAY_DATE;
-                        c.OVER_DATE = DateTime.Now.Subtract(c.PAY_DATE).Days;
-                        c.PAYED_TIME = lstPeriodPayed.Count();
-                    }
-                    dataList.Add(c);
                 }
 
                 totalRecord = Convert.ToInt16(dataList.Count());
@@ -205,7 +154,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
+                var item = db.Accounts.First(s => s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;
