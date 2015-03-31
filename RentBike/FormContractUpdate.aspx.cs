@@ -446,42 +446,45 @@ namespace RentBike
                             }
                             PayPeriod pp1 = new PayPeriod();
                             pp1.CONTRACT_ID = item.ID;
-                            if (ddlRentType.SelectedValue == "2")
-                            {
-                                pp1.PAY_DATE = periodTime;
-                            }
-                            else
-                            {
-                                pp1.PAY_DATE = periodTime.AddDays(9);
-                            }
+                            pp1.PAY_DATE = periodTime;
+                            //if (ddlRentType.SelectedValue == "2")
+                            //{
+                            //    pp1.PAY_DATE = periodTime;
+                            //}
+                            //else
+                            //{
+                            //    pp1.PAY_DATE = periodTime.AddDays(9);
+                            //}
                             pp1.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
                             pp1.STATUS = true;
                             pp1.ACTUAL_PAY = 0;
 
                             PayPeriod pp2 = new PayPeriod();
                             pp2.CONTRACT_ID = item.ID;
-                            if (ddlRentType.SelectedValue == "2")
-                            {
-                                pp2.PAY_DATE = periodTime.AddDays(9);
-                            }
-                            else
-                            {
-                                pp2.PAY_DATE = periodTime.AddDays(19);
-                            }
+                            pp2.PAY_DATE = periodTime.AddDays(9);
+                            //if (ddlRentType.SelectedValue == "2")
+                            //{
+                            //    pp2.PAY_DATE = periodTime.AddDays(9);
+                            //}
+                            //else
+                            //{
+                            //    pp2.PAY_DATE = periodTime.AddDays(19);
+                            //}
                             pp2.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
                             pp2.STATUS = true;
                             pp2.ACTUAL_PAY = 0;
 
                             PayPeriod pp3 = new PayPeriod();
                             pp3.CONTRACT_ID = item.ID;
-                            if (ddlRentType.SelectedValue == "2")
-                            {
-                                pp3.PAY_DATE = periodTime.AddDays(19);
-                            }
-                            else
-                            {
-                                pp3.PAY_DATE = periodTime.AddDays(29);
-                            }
+                            pp3.PAY_DATE = periodTime.AddDays(19);
+                            //if (ddlRentType.SelectedValue == "2")
+                            //{
+                            //    pp3.PAY_DATE = periodTime.AddDays(19);
+                            //}
+                            //else
+                            //{
+                            //    pp3.PAY_DATE = periodTime.AddDays(29);
+                            //}
                             pp3.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
                             pp3.STATUS = true;
                             pp3.ACTUAL_PAY = 0;

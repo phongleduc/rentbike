@@ -52,7 +52,7 @@ namespace RentBike
 
                 using (var db = new RentBikeEntities())
                 {
-                    var item = db.CONTRACT_FULL_VW.First(itm => itm.ID == pp.CONTRACT_ID);
+                    var item = db.CONTRACT_FULL_VW.FirstOrDefault(itm => itm.ID == pp.CONTRACT_ID);
                     int inoutType = 0;
                     switch (item.RENT_TYPE_NAME)
                     {
@@ -109,7 +109,7 @@ namespace RentBike
             PayPeriod pp = new PayPeriod();
             using (var db = new RentBikeEntities())
             {
-                var item = db.PayPeriods.First(s => s.ID == periodId);
+                var item = db.PayPeriods.FirstOrDefault(s => s.ID == periodId);
                 item.ACTUAL_PAY = Convert.ToDecimal(txtIncome.Text);
                 pp = item;
                 db.SaveChanges();
@@ -129,6 +129,8 @@ namespace RentBike
                 io.STORE_ID = Convert.ToInt16(Session["store_id"]);
                 io.SEARCH_TEXT = string.Format("{0} ", io.MORE_INFO);
                 io.INOUT_DATE = DateTime.Now;
+                io.UPDATED_BY = Session["username"].ToString();
+                io.UPDATED_DATE = DateTime.Now;
 
                 db.InOuts.Add(io);
                 db.SaveChanges();
@@ -200,7 +202,7 @@ namespace RentBike
             PayPeriod pp = new PayPeriod();
             using (var db = new RentBikeEntities())
             {
-                var item = db.PayPeriods.First(s => s.ID == periodId);
+                var item = db.PayPeriods.FirstOrDefault(s => s.ID == periodId);
                 pp = item;
             }
 

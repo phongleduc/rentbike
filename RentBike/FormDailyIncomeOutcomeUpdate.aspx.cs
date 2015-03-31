@@ -92,7 +92,7 @@ namespace RentBike
 
                 using (var db = new RentBikeEntities())
                 {
-                    var item = db.InOutTypes.First(s => s.ID == io.INOUT_TYPE_ID);
+                    var item = db.InOutTypes.FirstOrDefault(s => s.ID == io.INOUT_TYPE_ID);
 
                     if (item.IS_INCOME)
                     {
@@ -161,7 +161,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.First(s => s.ACC == acc);
+                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;

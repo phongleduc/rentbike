@@ -45,7 +45,7 @@ namespace RentBike
                     //int storeid = Convert.ToInt16(Session["store_id"]);
                     //using (var db = new RentBikeEntities())
                     //{
-                    //    var item = db.Stores.First(s => s.ID == storeid);
+                    //    var item = db.Stores.FirstOrDefault(s => s.ID == storeid);
                     //    lblStoreName.Text = item.NAME;
                     //    lblTotalValue.Text = item.START_CAPITAL == 0 ? "0" : string.Format("{0:0,0}", item.START_CAPITAL);
                     //}
@@ -168,7 +168,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.First(s => s.ACC == acc);
+                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;
