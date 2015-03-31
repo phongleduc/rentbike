@@ -109,6 +109,7 @@ namespace RentBike
                                                  CloseFeeOther = 0,
                                                  RemainEndOfDay = 0,
                                                  InOutTypeId = o.INOUT_TYPE_ID,
+                                                 RentTypeId = o.RENT_TYPE_ID,
                                                  InCapital = 0,
                                                  OutCapital = 0,
                                                  InOther = 0,
@@ -172,6 +173,24 @@ namespace RentBike
                         if (inout.Any())
                         {
                             si.OutOther = inout.Sum(x => x.OutAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 18 && x.RentTypeId == 1);
+                        if (inout.Any())
+                        {
+                            si.CloseFeeCar = inout.Sum(x => x.InAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 18 && x.RentTypeId == 2);
+                        if (inout.Any())
+                        {
+                            si.CloseFeeEquip = inout.Sum(x => x.InAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 18 && x.RentTypeId == 3);
+                        if (inout.Any())
+                        {
+                            si.CloseFeeOther = inout.Sum(x => x.InAmount);
                         }
                         
                         lst.Add(si);
@@ -271,6 +290,7 @@ namespace RentBike
                                                 CloseFeeOther = 0,
                                                 RemainEndOfDay = 0,
                                                 InOutTypeId = o.INOUT_TYPE_ID,
+                                                RentTypeId = o.RENT_TYPE_ID,
                                                 InCapital = 0,
                                                 OutCapital = 0,
                                                 InOther = 0,
@@ -335,6 +355,24 @@ namespace RentBike
                         if (inout.Any())
                         {
                             si.OutOther = inout.Sum(x => x.OutAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 18 && x.RentTypeId == 1);
+                        if (inout.Any())
+                        {
+                            si.CloseFeeCar = inout.Sum(x => x.InAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 18 && x.RentTypeId == 2);
+                        if (inout.Any())
+                        {
+                            si.CloseFeeEquip = inout.Sum(x => x.InAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 18 && x.RentTypeId == 3);
+                        if (inout.Any())
+                        {
+                            si.CloseFeeOther = inout.Sum(x => x.InAmount);
                         }
 
                         lst.Add(si);
