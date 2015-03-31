@@ -424,9 +424,11 @@ namespace RentBike
                                 item.STORE_ID = Convert.ToInt16(ddlStore.SelectedValue);
                             else
                                 item.STORE_ID = Convert.ToInt16(Session["store_id"]);
-                            item.SEARCH_TEXT = string.Format("{0} {1} {2} {3} {4} {5} {6}",
+                            item.SEARCH_TEXT = string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}",
                                                             txtCustomerName.Text.Trim(),
+                                                            txtBirthDay.Text.Trim(),
                                                             txtLicenseNumber.Text.Trim(),
+                                                            txtRangeDate.Text.Trim(),
                                                             txtPermanentResidence.Text.Trim(),
                                                             txtCurrentResidence.Text.Trim(),
                                                             txtPhone.Text.Trim(),
