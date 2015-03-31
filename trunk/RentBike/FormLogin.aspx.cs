@@ -68,7 +68,7 @@ namespace RentBike
                 {
                     if (storeid != 0)
                     {
-                        var item = db.Stores.First(s => s.ID == storeid);
+                        var item = db.Stores.FirstOrDefault(s => s.ID == storeid);
 
                         if (!item.ACTIVE)
                             return false;

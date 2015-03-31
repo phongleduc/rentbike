@@ -69,7 +69,7 @@ namespace RentBike
                 CONTRACT_FULL_VW con = new CONTRACT_FULL_VW();
                 using (var db = new RentBikeEntities())
                 {
-                    var contract = db.CONTRACT_FULL_VW.First(c => c.ID == contractId);
+                    var contract = db.CONTRACT_FULL_VW.FirstOrDefault(c => c.ID == contractId);
                     con = contract;
                 }
 
@@ -83,7 +83,7 @@ namespace RentBike
                 io1.RENT_TYPE_ID = con.RENT_TYPE_ID;
                 using (var db = new RentBikeEntities())
                 {
-                    var item = db.InOutTypes.First(s => s.NAME == "Thanh lý");
+                    var item = db.InOutTypes.FirstOrDefault(s => s.NAME == "Thanh lý");
                     io1.INOUT_TYPE_ID = item.ID;
                 }
                 io1.MORE_INFO = txtMoreInfo.Text.Trim();
@@ -130,7 +130,7 @@ namespace RentBike
 
                 using (var db = new RentBikeEntities())
                 {
-                    var item = db.InOutTypes.First(s => s.NAME == feeName);
+                    var item = db.InOutTypes.FirstOrDefault(s => s.NAME == feeName);
                     io2.INOUT_TYPE_ID = item.ID;
                 }
                 io2.MORE_INFO = string.Format("Trả phí thừa hợp đồng {0}", con.CONTRACT_NO);
@@ -154,7 +154,7 @@ namespace RentBike
                     io3.RENT_TYPE_ID = con.RENT_TYPE_ID;
                     using (var db = new RentBikeEntities())
                     {
-                        var item = db.InOutTypes.First(s => s.NAME == "Giảm trừ phí");
+                        var item = db.InOutTypes.FirstOrDefault(s => s.NAME == "Giảm trừ phí");
                         io3.INOUT_TYPE_ID = item.ID;
                     }
                     io3.MORE_INFO = txtMoreInfo.Text.Trim();
@@ -185,7 +185,7 @@ namespace RentBike
                 // Update status contract
                 using (var db = new RentBikeEntities())
                 {
-                    var contract = db.Contracts.First(c => c.ID == contractId);
+                    var contract = db.Contracts.FirstOrDefault(c => c.ID == contractId);
                     contract.CONTRACT_STATUS = false;
                     contract.CLOSE_CONTRACT_DATE = DateTime.Now;
                     db.SaveChanges();
@@ -270,7 +270,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.First(s => s.ACC == acc);
+                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;
