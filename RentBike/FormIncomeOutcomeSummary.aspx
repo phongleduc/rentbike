@@ -72,7 +72,7 @@
                                 </tr>
                                 <tr>
                                     <td>Thanh lý thuê khác:</td>
-                                    <td><%# Eval("CloseFeeOther").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("CloseFeeOther")) %></td>
+                                    <td><%# Eval("CloseFeeOther").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("CloseFeeOther")) %> VNĐ</td>
                                 </tr>
 <%--                                <tr>
                                     <td>Nợ phí:</td>
@@ -96,7 +96,7 @@
                                 </tr>
                                 <tr>
                                     <td>Chi khác:</td>
-                                    <td>0 VNĐ</td>
+                                    <td><%# Eval("OutOther").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("OutOther")) %> VNĐ</td>
                                 </tr>
                                 <tr>
                                     <td>Dư cuối ngày:</td>

@@ -134,24 +134,42 @@ namespace RentBike
                         if (ieContract.Any())
                         {
                             si.ContractFeeCar = ieContract.Sum(x => x.CONTRACT_AMOUNT);
-                            si.RentFeeCar = ieContract.Sum(x => x.FEE_PER_DAY);
+                            //si.RentFeeCar = ieContract.Sum(x => x.FEE_PER_DAY);
                         }
 
                         ieContract = lstContract.Where(x => x.RENT_TYPE_ID == 2);
                         if (ieContract.Any())
                         {
                             si.ContractFeeEquip = ieContract.Sum(x => x.CONTRACT_AMOUNT);
-                            si.RentFeeEquip = ieContract.Sum(x => x.FEE_PER_DAY);
+                            //si.RentFeeEquip = ieContract.Sum(x => x.FEE_PER_DAY);
                         }
 
                         ieContract = lstContract.Where(x => x.RENT_TYPE_ID == 3);
                         if (ieContract.Any())
                         {
                             si.ContractFeeOther = ieContract.Sum(x => x.CONTRACT_AMOUNT);
-                            si.RentFeeOther = ieContract.Sum(x => x.FEE_PER_DAY);
+                            //si.RentFeeOther = ieContract.Sum(x => x.FEE_PER_DAY);
                         }
 
-                        var inout = g.Record.Where(x => x.InOutTypeId == 10);
+                        var inout = g.Record.Where(x => x.InOutTypeId == 14);
+                        if (inout.Any())
+                        {
+                            si.RentFeeCar = inout.Sum(x => x.InAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 15);
+                        if (inout.Any())
+                        {
+                            si.RentFeeEquip = inout.Sum(x => x.InAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 16);
+                        if (inout.Any())
+                        {
+                            si.RentFeeOther = inout.Sum(x => x.InAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 10);
                         if (inout.Any())
                         {
                             si.InCapital = inout.Sum(x => x.InAmount);
@@ -316,24 +334,42 @@ namespace RentBike
                         if (ieContract.Any())
                         {
                             si.ContractFeeCar = ieContract.Sum(x => x.CONTRACT_AMOUNT);
-                            si.RentFeeCar = ieContract.Sum(x => x.FEE_PER_DAY);
+                            //si.RentFeeCar = ieContract.Sum(x => x.FEE_PER_DAY);
                         }
 
                         ieContract = lstContract.Where(x => x.RENT_TYPE_ID == 2);
                         if (ieContract.Any())
                         {
                             si.ContractFeeEquip = ieContract.Sum(x => x.CONTRACT_AMOUNT);
-                            si.RentFeeEquip = ieContract.Sum(x => x.FEE_PER_DAY);
+                            //si.RentFeeEquip = ieContract.Sum(x => x.FEE_PER_DAY);
                         }
 
                         ieContract = lstContract.Where(x => x.RENT_TYPE_ID == 3);
                         if (ieContract.Any())
                         {
                             si.ContractFeeOther = ieContract.Sum(x => x.CONTRACT_AMOUNT);
-                            si.RentFeeOther = ieContract.Sum(x => x.FEE_PER_DAY);
+                            //si.RentFeeOther = ieContract.Sum(x => x.FEE_PER_DAY);
                         }
 
-                        var inout = g.Record.Where(x => x.InOutTypeId == 10);
+                        var inout = g.Record.Where(x => x.InOutTypeId == 14);
+                        if (inout.Any())
+                        {
+                            si.RentFeeCar = inout.Sum(x => x.InAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 15);
+                        if (inout.Any())
+                        {
+                            si.RentFeeEquip = inout.Sum(x => x.InAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 16);
+                        if (inout.Any())
+                        {
+                            si.RentFeeOther = inout.Sum(x => x.InAmount);
+                        }
+
+                        inout = g.Record.Where(x => x.InOutTypeId == 10);
                         if (inout.Any())
                         {
                             si.InCapital = inout.Sum(x => x.InAmount);

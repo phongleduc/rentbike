@@ -60,8 +60,7 @@ namespace RentBike
             {
                 dataList = (from s in db.CONTRACT_FULL_VW
                             where s.SEARCH_TEXT.Contains(strSearch) && s.CONTRACT_STATUS == true && s.STORE_ID == storeid
-                            orderby s.RENT_TYPE_NAME, s.RENT_DATE descending
-                            select s).ToList();
+                            select s).OrderByDescending(c =>c.RENT_DATE).ToList();
 
                 if (dataList.Any())
                 {
@@ -102,8 +101,7 @@ namespace RentBike
             {
                 dataList = (from s in db.CONTRACT_FULL_VW
                             where s.SEARCH_TEXT.Contains(strSearch) && s.CONTRACT_STATUS == true
-                            orderby s.RENT_TYPE_NAME, s.RENT_DATE descending
-                            select s).ToList();
+                            select s).OrderByDescending(c => c.RENT_DATE).ToList();
                 if (dataList.Any())
                 {
                     if (storeId != 0)

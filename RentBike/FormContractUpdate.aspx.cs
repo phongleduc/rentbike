@@ -34,14 +34,79 @@ namespace RentBike
                     string id = Request.QueryString["ID"];
                     string copy = Request.QueryString["copy"];
                     int storeId = Convert.ToInt16(Session["store_id"]);
+
                     if (!string.IsNullOrEmpty(id) && string.IsNullOrEmpty(copy)) // EDIT
                     {
-                        IsNewContract = false;
-                        ContractID = id;
-                        List<CONTRACT_FULL_VW> lst;
-                        int contractid = Convert.ToInt32(id);
                         using (var db = new RentBikeEntities())
                         {
+                            int contractId = Helper.parseInt(id);
+                            var contract = db.Contracts.Where(c => c.ID == contractId && c.CONTRACT_STATUS == true).FirstOrDefault();
+                            if (contract != null)
+                            {
+                                DateTime endDate = contract.END_DATE;
+                                int overDate = DateTime.Now.Subtract(endDate).Days;
+                                if (overDate > 0)
+                                {
+                                    PayPeriod pp1;
+                                    PayPeriod pp2;
+                                    PayPeriod pp3;
+                                    int percentDate = overDate / 30;
+
+                                    DateTime endDateUpdated = endDate.AddDays(30 * (percentDate + 1));
+                                    contract.END_DATE = endDateUpdated;
+                                    db.SaveChanges();
+
+                                    PayPeriod payPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId).OrderByDescending(c => c.PAY_DATE).FirstOrDefault();
+                                    for (int i = 0; i <= percentDate; i++)
+                                    {
+                                        pp1 = new PayPeriod();
+                                        pp1.CONTRACT_ID = contractId;
+                                        pp1.PAY_DATE = payPeriod.PAY_DATE.AddDays(10);
+                                        switch (contract.RENT_TYPE_ID)
+                                        {
+                                            case 1:
+                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + 500;
+                                                break;
+                                            case 2:
+                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + 1000;
+                                                break;
+                                            default:
+                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD;
+                                                break;
+                                        }
+                                        pp1.STATUS = true;
+                                        pp1.ACTUAL_PAY = 0;
+
+                                        pp2 = new PayPeriod();
+                                        pp2.CONTRACT_ID = contractId;
+                                        pp2.PAY_DATE = pp1.PAY_DATE.AddDays(10);
+                                        pp2.AMOUNT_PER_PERIOD = pp1.AMOUNT_PER_PERIOD;
+                                        pp2.STATUS = true;
+                                        pp2.ACTUAL_PAY = 0;
+
+                                        pp3 = new PayPeriod();
+                                        pp3.CONTRACT_ID = contractId;
+                                        pp3.PAY_DATE = pp2.PAY_DATE.AddDays(10);
+                                        pp3.AMOUNT_PER_PERIOD = pp1.AMOUNT_PER_PERIOD;
+                                        pp3.STATUS = true;
+                                        pp3.ACTUAL_PAY = 0;
+
+                                        db.PayPeriods.Add(pp1);
+                                        db.PayPeriods.Add(pp2);
+                                        db.PayPeriods.Add(pp3);
+
+                                        db.SaveChanges();
+
+                                        payPeriod = pp3;
+                                    }
+                                }
+                            }
+
+                            IsNewContract = false;
+                            ContractID = id;
+                            List<CONTRACT_FULL_VW> lst;
+                            int contractid = Convert.ToInt32(id);
+
                             Store stor = new Store();
                             stor = db.Stores.FirstOrDefault(s => s.ID == storeId);
 
@@ -67,6 +132,9 @@ namespace RentBike
                             CONTRACT_FULL_VW cntrct = lst[0];
                             txtLicenseNumber.Text = cntrct.LICENSE_NO;
                             txtCustomerName.Text = cntrct.CUSTOMER_NAME;
+                            txtBirthDay.Text = string.Format("{0:dd/MM/yyyy}", cntrct.BIRTH_DAY);
+                            txtRangeDate.Text = string.Format("{0:dd/MM/yyyy}", cntrct.LICENSE_RANGE_DATE);
+                            txtPlaceDate.Text = cntrct.LICENSE_RANGE_PLACE;
                             txtPhone.Text = cntrct.PHONE;
                             txtPermanentResidence.Text = cntrct.PERMANENT_RESIDENCE;
                             txtCurrentResidence.Text = cntrct.CURRENT_RESIDENCE;
@@ -85,14 +153,16 @@ namespace RentBike
                             txtItemLicenseNo.Text = cntrct.ITEM_LICENSE_NO;
                             txtSerial1.Text = cntrct.SERIAL_1;
                             txtSerial2.Text = cntrct.SERIAL_2;
+                            txtImplementer.Text = cntrct.IMPLEMENTER;
+                            txtBackDocument.Text = cntrct.BACK_TO_DOCUMENTS;
                             txtItemDetail.Text = cntrct.DETAIL;
                             txtReferencePhone.Text = cntrct.REFERENCE_PHONE;
                             txtSchool.Text = cntrct.SCHOOL_NAME;
                             txtClass.Text = cntrct.CLASS_NAME;
 
-                            txtLicenseNumber.Enabled = txtCustomerName.Enabled = txtPhone.Enabled = txtPermanentResidence.Enabled = txtCurrentResidence.Enabled = false;
+                            txtLicenseNumber.Enabled = txtCustomerName.Enabled = txtBirthDay.Enabled = txtRangeDate.Enabled = txtPlaceDate.Enabled = ddlStore.Enabled = txtPhone.Enabled = txtPermanentResidence.Enabled = txtCurrentResidence.Enabled = false;
                             txtContractNo.Enabled = ddlRentType.Enabled = txtAmount.Enabled = txtFeePerDay.Enabled = txtRentDate.Enabled = txtEndDate.Enabled = false;
-                            txtReferencePerson.Enabled = txtItemName.Enabled = txtItemLicenseNo.Enabled = txtSerial1.Enabled = txtSerial2.Enabled = txtReferencePhone.Enabled = txtSchool.Enabled = txtClass.Enabled = false;
+                            txtReferencePerson.Enabled = txtItemName.Enabled = txtItemLicenseNo.Enabled = txtSerial1.Enabled = txtSerial2.Enabled = txtImplementer.Enabled = txtBackDocument.Enabled = txtReferencePhone.Enabled = txtSchool.Enabled = txtClass.Enabled = false;
 
                             LoadPayFeeSchedule();
                         }
@@ -170,7 +240,7 @@ namespace RentBike
                 }
                 catch (Exception ex)
                 {
-                      lblMessage.Text = ex.Message;
+                    lblMessage.Text = ex.Message;
                     lblMessage.CssClass = "text-center text-danger";
                 }
             }
@@ -649,16 +719,12 @@ namespace RentBike
                            where s.CONTRACT_ID == contractID
                            select s).ToList();
 
-                    if (lst != null && lst.Count == 3)
-                    {
-                        if (lst[0].ACTUAL_PAY > lst[0].AMOUNT_PER_PERIOD)
-                        {
-                            lst[1].ACTUAL_PAY += lst[0].ACTUAL_PAY - lst[0].AMOUNT_PER_PERIOD;
-                        }
 
-                        if (lst[1].ACTUAL_PAY > lst[1].AMOUNT_PER_PERIOD)
+                    for (int i = 0; i < lst.Count; i++)
+                    {
+                        if (lst[i].ACTUAL_PAY > lst[i].AMOUNT_PER_PERIOD)
                         {
-                            lst[2].ACTUAL_PAY += lst[1].ACTUAL_PAY - lst[1].AMOUNT_PER_PERIOD;
+                            lst[i + 1].ACTUAL_PAY += lst[i].ACTUAL_PAY - lst[i].AMOUNT_PER_PERIOD;
                         }
                     }
                 }
