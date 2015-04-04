@@ -50,7 +50,9 @@ namespace RentBike
                                     PayPeriod pp1;
                                     PayPeriod pp2;
                                     PayPeriod pp3;
+
                                     int percentDate = overDate / 30;
+                                    int multipleFee = Convert.ToInt32(Decimal.Floor(contract.CONTRACT_AMOUNT / 1000000));
 
                                     DateTime endDateUpdated = endDate.AddDays(30 * (percentDate + 1));
                                     contract.END_DATE = endDateUpdated;
@@ -65,10 +67,10 @@ namespace RentBike
                                         switch (contract.RENT_TYPE_ID)
                                         {
                                             case 1:
-                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + 500;
+                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 500);
                                                 break;
                                             case 2:
-                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + 1000;
+                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 1000);
                                                 break;
                                             default:
                                                 pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD;
