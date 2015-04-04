@@ -26,6 +26,11 @@
             </tr>
         </ItemTemplate>
         <FooterTemplate>
+            <tr class="danger">
+                <td>Mức phí:</td>
+                <td>
+                    <asp:Label ID="lblAmountPerDay" runat="server" CssClass="text-right"></asp:Label></td>
+            </tr>
             <tr class="info">
                 <td>Tổng số đã thanh toán:</td>
                 <td>

@@ -28,7 +28,7 @@ namespace RentBike
                 }
 
                 LoadGrid(pp);
-                LoadPaidAmountAndTheLeft(pp.CONTRACT_ID, pp.ID);
+                LoadPaidAmountAndTheLeft(pp);
                 // DISPLAY SREEN
                 hplContract.NavigateUrl = string.Format("FormContractUpdate.aspx?ID={0}", pp.CONTRACT_ID);
                 hplContract.Text = "Xem chi tiết hợp đồng";
@@ -63,7 +63,7 @@ namespace RentBike
                             inoutType = 15;
                             break;
                         case "Cho thuê mặt hàng khác":
-                            inoutType = 15;
+                            inoutType = 16;
                             break;
                     }
 
@@ -141,7 +141,7 @@ namespace RentBike
             Response.Redirect("FormContractUpdate.aspx?ID=" + pp.CONTRACT_ID);
         }
 
-        private void LoadPaidAmountAndTheLeft(int contract_id, int period_id)
+        private void LoadPaidAmountAndTheLeft(PayPeriod pp)
         {
             List<InOut> lst = new List<InOut>();
             List<PayPeriod> lst1 = new List<PayPeriod>();
@@ -151,43 +151,59 @@ namespace RentBike
 
             using (var db = new RentBikeEntities())
             {
-                var result = db.InOuts.Where(itm => itm.CONTRACT_ID == contract_id && itm.PERIOD_ID == period_id).ToList();
-                foreach(InOut io in result)
+                var result = db.InOuts.Where(itm => itm.CONTRACT_ID == pp.CONTRACT_ID && itm.PERIOD_ID == pp.ID).ToList();
+                foreach (InOut io in result)
                 {
                     total += io.IN_AMOUNT;
                     total -= io.OUT_AMOUNT;
                 }
 
-                var lstPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contract_id).ToList();
+                var lstPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == pp.CONTRACT_ID).ToList();
                 if (lstPeriod != null)
                 {
-                    if (period_id == lstPeriod[0].ID)
+                    if (pp.ID == lstPeriod[0].ID)
                     {
                         remain = 0;
                     }
-                    else if (period_id == lstPeriod[1].ID)
-                    {
-                        if (lstPeriod[0].ACTUAL_PAY > lstPeriod[0].AMOUNT_PER_PERIOD)
-                        {
-                            remain = lstPeriod[0].ACTUAL_PAY - lstPeriod[0].AMOUNT_PER_PERIOD;
-                        }
-                    }
                     else
                     {
-                        if ((lstPeriod[0].ACTUAL_PAY + lstPeriod[1].ACTUAL_PAY ) > (lstPeriod[0].AMOUNT_PER_PERIOD * 2))
+                        decimal totalPerAmount = 0;
+                        decimal totalActualPay = 0;
+                        foreach (PayPeriod pay in lstPeriod)
                         {
-                            remain = (lstPeriod[0].ACTUAL_PAY + lstPeriod[1].ACTUAL_PAY) - (lstPeriod[0].AMOUNT_PER_PERIOD * 2);
+                            if (pay.ID < pp.ID)
+                            {
+                                totalPerAmount = totalPerAmount + pay.AMOUNT_PER_PERIOD;
+                                totalActualPay = totalActualPay + pay.ACTUAL_PAY;
+                            }
                         }
+                        if (totalActualPay > totalPerAmount)
+                            remain = totalActualPay - totalPerAmount;
                     }
+                    //else if (period_id == lstPeriod[1].ID)
+                    //{
+                    //    if (lstPeriod[0].ACTUAL_PAY > lstPeriod[0].AMOUNT_PER_PERIOD)
+                    //    {
+                    //        remain = lstPeriod[0].ACTUAL_PAY - lstPeriod[0].AMOUNT_PER_PERIOD;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    if ((lstPeriod[0].ACTUAL_PAY + lstPeriod[1].ACTUAL_PAY ) > (lstPeriod[0].AMOUNT_PER_PERIOD * 2))
+                    //    {
+                    //        remain = (lstPeriod[0].ACTUAL_PAY + lstPeriod[1].ACTUAL_PAY) - (lstPeriod[0].AMOUNT_PER_PERIOD * 2);
+                    //    }
+                    //}
                 }
 
-                PayPeriod pp = db.PayPeriods.FirstOrDefault(itm1 => itm1.ID == period_id);
                 if (pp.AMOUNT_PER_PERIOD - total > 0)
                 {
                     amountLeft = pp.AMOUNT_PER_PERIOD - total - remain;
                 }
             }
 
+            Label lblAmountPerDay = (Label)rptContractInOut.Controls[rptContractInOut.Controls.Count - 1].Controls[0].FindControl("lblAmountPerDay");
+            lblAmountPerDay.Text = string.Format("{0:0,0}", pp.AMOUNT_PER_PERIOD);
             Label lblTotalPaid = (Label)rptContractInOut.Controls[rptContractInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalPaid");
             lblTotalPaid.Text = string.Format("{0:0,0}", total);
             Label lblAmountRemain = (Label)rptContractInOut.Controls[rptContractInOut.Controls.Count - 1].Controls[0].FindControl("lblAmountRemain");
