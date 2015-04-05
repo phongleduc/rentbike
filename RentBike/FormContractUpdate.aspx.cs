@@ -59,18 +59,22 @@ namespace RentBike
                                     db.SaveChanges();
 
                                     PayPeriod payPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId).OrderByDescending(c => c.PAY_DATE).FirstOrDefault();
+                                    int increateFeeCar = multipleFee * 500 * 10;
+                                    int increateFeeEquip = multipleFee * 1000 * 10;
+
                                     for (int i = 0; i <= percentDate; i++)
                                     {
+
                                         pp1 = new PayPeriod();
                                         pp1.CONTRACT_ID = contractId;
                                         pp1.PAY_DATE = payPeriod.PAY_DATE.AddDays(10);
                                         switch (contract.RENT_TYPE_ID)
                                         {
                                             case 1:
-                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 500);
+                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + increateFeeCar;
                                                 break;
                                             case 2:
-                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 1000);
+                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + increateFeeEquip;
                                                 break;
                                             default:
                                                 pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD;
@@ -404,7 +408,7 @@ namespace RentBike
                     string id = Request.QueryString["ID"];
                     string copy = Request.QueryString["copy"];
                     string result = ValidateFields();
-                    int cusid;
+                    int cusid = 0;
                     if (string.IsNullOrEmpty(id) || (!string.IsNullOrEmpty(copy) && copy == "1")) // NEW
                     {
                         if (!string.IsNullOrEmpty(result))
@@ -422,31 +426,46 @@ namespace RentBike
                         }
                         else
                         {
-                            Customer cusItem = new Customer();
-                            cusItem.NAME = txtCustomerName.Text.Trim();
-                            cusItem.BIRTH_DAY = DateTime.ParseExact(txtBirthDay.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                            cusItem.LICENSE_NO = txtLicenseNumber.Text.Trim();
-                            cusItem.LICENSE_RANGE_DATE = DateTime.ParseExact(txtRangeDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                            cusItem.LICENSE_RANGE_PLACE = txtPlaceDate.Text.Trim();
-                            cusItem.PHONE = txtPhone.Text.Trim();
-                            cusItem.PERMANENT_RESIDENCE = txtPermanentResidence.Text.Trim();
-                            cusItem.CURRENT_RESIDENCE = txtCurrentResidence.Text.Trim();
-
                             using (var db = new RentBikeEntities())
                             {
-                                var citm = from itm in db.Customers
-                                           where itm.NAME == cusItem.NAME &
-                                                 itm.LICENSE_NO == cusItem.LICENSE_NO
-                                           select itm;
-                                List<Customer> cLst = citm.ToList();
-
-                                if (cLst.Count > 0)
+                                bool IsNewCust = false;
+                                int customerId = Helper.parseInt(id);
+                                Customer cusItem = db.Customers.FirstOrDefault(c => c.ID == customerId);
+                                if (cusItem == null)
                                 {
-                                    cusid = cLst[0].ID;
+                                    IsNewCust = true;
+                                    cusItem = new Customer();
+                                }
+
+                                cusItem.NAME = txtCustomerName.Text.Trim();
+                                cusItem.BIRTH_DAY = DateTime.ParseExact(txtBirthDay.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                cusItem.LICENSE_NO = txtLicenseNumber.Text.Trim();
+                                cusItem.LICENSE_RANGE_DATE = DateTime.ParseExact(txtRangeDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                cusItem.LICENSE_RANGE_PLACE = txtPlaceDate.Text.Trim();
+                                cusItem.PHONE = txtPhone.Text.Trim();
+                                cusItem.PERMANENT_RESIDENCE = txtPermanentResidence.Text.Trim();
+                                cusItem.CURRENT_RESIDENCE = txtCurrentResidence.Text.Trim();
+
+                                if (IsNewCust)
+                                {
+                                    var citm = from itm in db.Customers
+                                               where itm.LICENSE_NO == cusItem.LICENSE_NO
+                                               select itm;
+                                    List<Customer> cLst = citm.ToList();
+
+                                    if (cLst.Count > 0)
+                                    {
+                                        cusid = cLst[0].ID;
+                                    }
+                                    else
+                                    {
+                                        db.Customers.Add(cusItem);
+                                        db.SaveChanges();
+                                        cusid = cusItem.ID;
+                                    }
                                 }
                                 else
                                 {
-                                    db.Customers.Add(cusItem);
                                     db.SaveChanges();
                                     cusid = cusItem.ID;
                                 }

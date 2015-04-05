@@ -63,7 +63,7 @@
             <tr>
                 <td><%# Container.ItemIndex + 1 %></td>
                 <td><%# Eval("CUSTOMER_NAME") %></td>
-                <td><%# Eval("CURRENT_RESIDENCE") == null? Eval("ADDRESS") : Eval("CURRENT_RESIDENCE") %></td>
+                <td><%# Eval("CURRENT_RESIDENCE") == null? (Eval("PERMANENT_RESIDENCE") == null? Eval("ADDRESS") : Eval("PERMANENT_RESIDENCE")) : Eval("CURRENT_RESIDENCE") %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Eval("CONTRACT_AMOUNT")) %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Eval("FEE_PER_DAY")) %></td>
                 <td class="text-center"><%# String.Format("{0:dd/MM/yyyy}", Eval("RENT_DATE"))%></td>
