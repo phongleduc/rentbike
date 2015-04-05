@@ -11,7 +11,7 @@ namespace RentBike
 {
     public partial class DailyIncomeOutcome : System.Web.UI.Page
     {
-        int pageSize = 10;
+        int pageSize = 20;
         int storeId = 0;
         protected void Page_Load(object sender, EventArgs e)
         {

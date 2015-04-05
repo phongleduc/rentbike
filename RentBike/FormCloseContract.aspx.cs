@@ -27,36 +27,46 @@ namespace RentBike
                     txtEndDate.Text = string.Format("{0:dd/MM/yyyy}", con.END_DATE);
                     txtAmount.Text = string.Format("{0:0,0}", con.CONTRACT_AMOUNT);
 
-                    TimeSpan ts = DateTime.Now.Date.Subtract(con.END_DATE);
-                    txtOverDate.Text = Math.Round(ts.TotalDays).ToString();
+                    //TimeSpan ts = DateTime.Now.Date.Subtract(con.END_DATE);
+                    //txtOverDate.Text = Math.Round(ts.TotalDays).ToString();
 
-                    List<InOut> ioLst = db.InOuts.Where(io => io.CONTRACT_ID == id).ToList();
+                    int actualDay = DateTime.Now.Subtract(con.RENT_DATE).Days; 
+                    decimal paidAmount = db.InOuts.Where(c => c.CONTRACT_ID == id).Select(c => c.IN_AMOUNT).DefaultIfEmpty().Sum();
 
-                    decimal paidAmount = 0;
-                    for (int i = 0; i < ioLst.Count; i++)
-                    {
-                        paidAmount += ioLst[i].IN_AMOUNT;
-                    }
+                    List<PayPeriod> lstPayperiod = db.PayPeriods.Where(c => c.CONTRACT_ID == id).ToList();
+                    decimal total = 0; // = db.PayPeriods.Where(c => c.CONTRACT_ID == id && c.PAY_DATE <= DateTime.Now).Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty().Sum();
 
-                    if (ts.TotalDays >= 0)
+                    for (DateTime date = con.RENT_DATE; date <= DateTime.Now; date = date.AddDays(1))
                     {
-                        txtRealIncome.Text = string.Format("{0:0,0}", Math.Round(con.FEE_PER_DAY * 30 - paidAmount + con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts.TotalDays))));
+                        foreach (PayPeriod pay in lstPayperiod)
+                        {
+                            if (date < pay.PAY_DATE.AddDays(10))
+                            {
+                                total += pay.AMOUNT_PER_PERIOD / 10; 
+                                break;
+                            }
+                        }  
                     }
-                    else
-                    {
-                        TimeSpan ts1 = DateTime.Now.Subtract(con.RENT_DATE);
-                        txtRealIncome.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
-                        //txtPayFee.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
-                        //if (con.RENT_TYPE_ID == 2)
-                        //{
-                        //    txtRealIncome.Text = string.Format("{0:0,0}", Convert.ToInt32(con.FEE_PER_DAY) * 10);
-                        //}
-                        //else
-                        //{
-                        //    txtRealIncome.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
-                        //}
-                    }
+                    txtRealIncome.Text = string.Format("{0:0,0}", (con.CONTRACT_AMOUNT + total) - paidAmount);
                     txtReduceAmount.Text = "0";
+                    //if (ts.TotalDays >= 0)
+                    //{
+                    //    txtRealIncome.Text = string.Format("{0:0,0}", Math.Round(con.FEE_PER_DAY * 30 - paidAmount + con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts.TotalDays))));
+                    //}
+                    //else
+                    //{
+                    //    TimeSpan ts1 = DateTime.Now.Subtract(con.RENT_DATE);
+                    //    txtRealIncome.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
+                    //    //txtPayFee.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
+                    //    //if (con.RENT_TYPE_ID == 2)
+                    //    //{
+                    //    //    txtRealIncome.Text = string.Format("{0:0,0}", Convert.ToInt32(con.FEE_PER_DAY) * 10);
+                    //    //}
+                    //    //else
+                    //    //{
+                    //    //    txtRealIncome.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
+                    //    //}
+                    //}
                 }
             }
         }

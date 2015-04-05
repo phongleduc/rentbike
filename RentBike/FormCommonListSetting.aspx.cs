@@ -9,7 +9,7 @@ namespace RentBike
 {
     public partial class FormCommonListSetting : System.Web.UI.Page
     {
-        int pageSize =10;
+        int pageSize =20;
 
         protected void Page_Load(object sender, EventArgs e)
         {
