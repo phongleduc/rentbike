@@ -33,6 +33,16 @@ namespace RentBike
                     LoadDataAdmin(0, string.Empty, 0);
                 else
                     LoadData(string.Empty, 0);
+
+                drpRentType.Items.Clear();
+                drpRentType.Items.Add(new ListItem("Tất cả", ""));
+                using (var db = new RentBikeEntities())
+                {
+                    foreach (RentType rentType in db.RentTypes.ToList())
+                    {
+                        drpRentType.Items.Add(new ListItem(rentType.NAME, rentType.ID.ToString()));
+                    }
+                }
             }
         }
 
@@ -45,114 +55,53 @@ namespace RentBike
                 LoadData(string.Empty, 0);
 
         }
-
-        private void LoadData(string strSearch, int page)
+        private void LoadData(string strSearch, int rentType)
         {
-            // LOAD PAGER
-            int totalRecord = 0;
-            int storeid = Convert.ToInt16(Session["store_id"]);
-            using (var db = new RentBikeEntities())
-            {
-                var count = (from c in db.ContractHistories
-                             where c.SEARCH_TEXT.Contains(strSearch) && c.STORE_ID == storeid
-                             select c).Count();
-                totalRecord = Convert.ToInt16(count);
-            }
-
-            int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-            List<int> pageList = new List<int>();
-            for (int i = 1; i <= totalPage; i++)
-            {
-                pageList.Add(i);
-            }
-
-            ddlPager.DataSource = pageList;
-            ddlPager.DataBind();
-            if (pageList.Count > 0)
-            {
-                ddlPager.SelectedIndex = page;
-            }
-
-            // LOAD DATA WITH PAGING
+            int storeid = Helper.parseInt(Session["store_id"].ToString());
             List<CONTRACT_HISTORY_FULL_VW> dataList;
-            int skip = page * pageSize;
             using (var db = new RentBikeEntities())
             {
-                var st = from s in db.CONTRACT_HISTORY_FULL_VW
-                         where s.SEARCH_TEXT.Contains(strSearch) && s.STORE_ID == storeid
-                         orderby s.ID
-                         select s;
+                dataList = (from s in db.CONTRACT_HISTORY_FULL_VW
+                            where s.SEARCH_TEXT.Contains(strSearch) && s.STORE_ID == storeid
+                            select s).OrderByDescending(c => c.CLOSE_CONTRACT_DATE).ToList();
 
-                dataList = st.Skip(skip).Take(pageSize).ToList();
+                if (dataList.Any())
+                {
+                    if (rentType != 0)
+                    {
+                        dataList = dataList.Where(c => c.RENT_TYPE_ID == rentType).ToList();
+                    }
+                    rptContractHistory.DataSource = dataList;
+                    rptContractHistory.DataBind();
+                }
             }
 
-            rptContractHistory.DataSource = dataList;
-            rptContractHistory.DataBind();
+
         }
 
-        private void LoadDataAdmin(int storeId, string strSearch, int page)
+        private void LoadDataAdmin(int storeId, string strSearch, int rentType)
         {
-            // LOAD PAGER
-            int totalRecord = 0;
-            using (var db = new RentBikeEntities())
-            {
-                if (storeId != 0)
-                {
-                    var count = (from c in db.ContractHistories
-                                 where c.STORE_ID == storeId && c.SEARCH_TEXT.Contains(strSearch)
-                                 select c).Count();
-                    totalRecord = Convert.ToInt16(count);
-                }
-                else
-                {
-                    var count = (from c in db.ContractHistories
-                                 where c.SEARCH_TEXT.Contains(strSearch)
-                                 select c).Count();
-                    totalRecord = Convert.ToInt16(count);
-                }
-            }
-
-            int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-            List<int> pageList = new List<int>();
-            for (int i = 1; i <= totalPage; i++)
-            {
-                pageList.Add(i);
-            }
-
-            ddlPager.DataSource = pageList;
-            ddlPager.DataBind();
-            if (pageList.Count > 0)
-            {
-                ddlPager.SelectedIndex = page;
-            }
-
-            // LOAD DATA WITH PAGING
             List<CONTRACT_HISTORY_FULL_VW> dataList;
-            int skip = page * pageSize;
             using (var db = new RentBikeEntities())
             {
-                if (storeId != 0)
+                dataList = (from s in db.CONTRACT_HISTORY_FULL_VW
+                            where s.SEARCH_TEXT.Contains(strSearch)
+                            select s).OrderByDescending(c => c.CLOSE_CONTRACT_DATE).ToList();
+                if (dataList.Any())
                 {
-                    var st = from s in db.CONTRACT_HISTORY_FULL_VW
-                             where s.STORE_ID == storeId && s.SEARCH_TEXT.Contains(strSearch)
-                             orderby s.ID
-                             select s;
+                    if (storeId != 0)
+                    {
+                        dataList = dataList.Where(c => c.STORE_ID == storeId).ToList();
+                    }
 
-                    dataList = st.Skip(skip).Take(pageSize).ToList();
-                }
-                else
-                {
-                    var st = from s in db.CONTRACT_HISTORY_FULL_VW
-                             where s.SEARCH_TEXT.Contains(strSearch)
-                             orderby s.ID
-                             select s;
-
-                    dataList = st.Skip(skip).Take(pageSize).ToList();
+                    if (rentType != 0)
+                    {
+                        dataList = dataList.Where(c => c.RENT_TYPE_ID == rentType).ToList();
+                    }
+                    rptContractHistory.DataSource = dataList;
+                    rptContractHistory.DataBind();
                 }
             }
-
-            rptContractHistory.DataSource = dataList;
-            rptContractHistory.DataBind();
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)
@@ -160,12 +109,12 @@ namespace RentBike
             LoadData(txtSearch.Text.Trim(), 0);
         }
 
-        protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
+        protected void drpRentType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (CheckAdminPermission())
-                LoadDataAdmin(Helper.parseInt(drpStore.SelectedValue), txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+                LoadDataAdmin(Helper.parseInt(drpStore.SelectedValue), txtSearch.Text.Trim(), Helper.parseInt(drpRentType.SelectedValue));
             else
-                LoadData(txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+                LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpRentType.SelectedValue));
         }
 
         public bool CheckAdminPermission()
