@@ -50,7 +50,8 @@
            </table>
         </FooterTemplate>
     </asp:Repeater>
-    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+    <%--<asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>--%>
+    <b>Loại hợp đồng:</b>  <asp:DropDownList ID="drpRentType" runat="server" CssClass="form-control drp-renttype" OnSelectedIndexChanged="drpRentType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
     <script>
         $(function () {
             $('#<%=txtSearch.ClientID %>').keypress(function (e) {
