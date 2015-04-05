@@ -59,8 +59,9 @@ namespace RentBike
                                     db.SaveChanges();
 
                                     PayPeriod payPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId).OrderByDescending(c => c.PAY_DATE).FirstOrDefault();
-                                    int increateFeeCar = multipleFee * 500 * 10;
-                                    int increateFeeEquip = multipleFee * 1000 * 10;
+                                    decimal increateFeeCar = payPeriod.AMOUNT_PER_PERIOD + multipleFee * 500 * 10;
+                                    decimal increateFeeEquip = payPeriod.AMOUNT_PER_PERIOD * 1000 * 10;
+                                    decimal increateFeeOther = payPeriod.AMOUNT_PER_PERIOD;
 
                                     for (int i = 0; i <= percentDate; i++)
                                     {
@@ -71,13 +72,13 @@ namespace RentBike
                                         switch (contract.RENT_TYPE_ID)
                                         {
                                             case 1:
-                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + increateFeeCar;
+                                                pp1.AMOUNT_PER_PERIOD = increateFeeCar;
                                                 break;
                                             case 2:
-                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD + increateFeeEquip;
+                                                pp1.AMOUNT_PER_PERIOD = increateFeeEquip;
                                                 break;
                                             default:
-                                                pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD;
+                                                pp1.AMOUNT_PER_PERIOD = increateFeeOther;
                                                 break;
                                         }
                                         pp1.STATUS = true;
