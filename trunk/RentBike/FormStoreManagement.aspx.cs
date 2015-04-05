@@ -10,7 +10,7 @@ namespace RentBike
 {
     public partial class FormShopManagement : Page
     {
-        int pageSize = 4;
+        int pageSize = 20;
 
         //raise button click events on content page for the buttons on master page
         protected void Page_Init(object sender, EventArgs e)

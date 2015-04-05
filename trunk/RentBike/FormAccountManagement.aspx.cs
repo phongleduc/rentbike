@@ -10,7 +10,7 @@ namespace RentBike
 {
     public partial class FormAccountManagement : System.Web.UI.Page
     {
-        int pageSize = 10;
+        int pageSize = 20;
         private DropDownList drpStore;
 
         //raise button click events on content page for the buttons on master page

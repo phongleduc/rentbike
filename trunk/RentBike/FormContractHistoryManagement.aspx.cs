@@ -10,7 +10,7 @@ namespace RentBike
 {
     public partial class ContractHistoryManagement : System.Web.UI.Page
     {
-        int pageSize = 10;
+        int pageSize = 20;
         private DropDownList drpStore;
 
         //raise button click events on content page for the buttons on master page
@@ -33,16 +33,6 @@ namespace RentBike
                     LoadDataAdmin(0, string.Empty, 0);
                 else
                     LoadData(string.Empty, 0);
-
-                drpRentType.Items.Clear();
-                drpRentType.Items.Add(new ListItem("Tất cả", ""));
-                using (var db = new RentBikeEntities())
-                {
-                    foreach (RentType rentType in db.RentTypes.ToList())
-                    {
-                        drpRentType.Items.Add(new ListItem(rentType.NAME, rentType.ID.ToString()));
-                    }
-                }
             }
         }
 
@@ -55,53 +45,91 @@ namespace RentBike
                 LoadData(string.Empty, 0);
 
         }
-        private void LoadData(string strSearch, int rentType)
+
+        private void LoadData(string strSearch, int page)
         {
-            int storeid = Helper.parseInt(Session["store_id"].ToString());
+            // LOAD PAGER
+            int totalRecord = 0;
+            int storeid = Convert.ToInt16(Session["store_id"]); 
+
+            // LOAD DATA WITH PAGING
             List<CONTRACT_HISTORY_FULL_VW> dataList;
+            int skip = page * pageSize;
             using (var db = new RentBikeEntities())
             {
-                dataList = (from s in db.CONTRACT_HISTORY_FULL_VW
-                            where s.SEARCH_TEXT.Contains(strSearch) && s.STORE_ID == storeid
-                            select s).OrderByDescending(c => c.CLOSE_CONTRACT_DATE).ToList();
+                var st = from s in db.CONTRACT_HISTORY_FULL_VW
+                         where s.SEARCH_TEXT.Contains(strSearch) && s.STORE_ID == storeid
+                         orderby s.CLOSE_CONTRACT_DATE
+                         select s;
 
-                if (dataList.Any())
+                dataList = st.Skip(skip).Take(pageSize).ToList();
+
+                totalRecord = st.Count();
+                int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+                List<int> pageList = new List<int>();
+                for (int i = 1; i <= totalPage; i++)
                 {
-                    if (rentType != 0)
-                    {
-                        dataList = dataList.Where(c => c.RENT_TYPE_ID == rentType).ToList();
-                    }
-                    rptContractHistory.DataSource = dataList;
-                    rptContractHistory.DataBind();
+                    pageList.Add(i);
+                }
+
+                ddlPager.DataSource = pageList;
+                ddlPager.DataBind();
+                if (pageList.Count > 0)
+                {
+                    ddlPager.SelectedIndex = page;
                 }
             }
 
-
+            rptContractHistory.DataSource = dataList;
+            rptContractHistory.DataBind();
         }
 
-        private void LoadDataAdmin(int storeId, string strSearch, int rentType)
+        private void LoadDataAdmin(int storeId, string strSearch, int page)
         {
+            // LOAD DATA WITH PAGING
+            int totalRecord = 0;
             List<CONTRACT_HISTORY_FULL_VW> dataList;
+            int skip = page * pageSize;
             using (var db = new RentBikeEntities())
             {
-                dataList = (from s in db.CONTRACT_HISTORY_FULL_VW
-                            where s.SEARCH_TEXT.Contains(strSearch)
-                            select s).OrderByDescending(c => c.CLOSE_CONTRACT_DATE).ToList();
-                if (dataList.Any())
+                if (storeId != 0)
                 {
-                    if (storeId != 0)
-                    {
-                        dataList = dataList.Where(c => c.STORE_ID == storeId).ToList();
-                    }
+                    var st = from s in db.CONTRACT_HISTORY_FULL_VW
+                             where s.STORE_ID == storeId && s.SEARCH_TEXT.Contains(strSearch)
+                             orderby s.CLOSE_CONTRACT_DATE
+                             select s;
 
-                    if (rentType != 0)
-                    {
-                        dataList = dataList.Where(c => c.RENT_TYPE_ID == rentType).ToList();
-                    }
-                    rptContractHistory.DataSource = dataList;
-                    rptContractHistory.DataBind();
+                    dataList = st.Skip(skip).Take(pageSize).ToList();
+                    totalRecord = st.Count();
+                }
+                else
+                {
+                    var st = from s in db.CONTRACT_HISTORY_FULL_VW
+                             where s.SEARCH_TEXT.Contains(strSearch)
+                             orderby s.CLOSE_CONTRACT_DATE
+                             select s;
+
+                    dataList = st.Skip(skip).Take(pageSize).ToList();
+                    totalRecord = st.Count();
+                }
+
+                int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+                List<int> pageList = new List<int>();
+                for (int i = 1; i <= totalPage; i++)
+                {
+                    pageList.Add(i);
+                }
+
+                ddlPager.DataSource = pageList;
+                ddlPager.DataBind();
+                if (pageList.Count > 0)
+                {
+                    ddlPager.SelectedIndex = page;
                 }
             }
+
+            rptContractHistory.DataSource = dataList;
+            rptContractHistory.DataBind();
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)
@@ -109,12 +137,12 @@ namespace RentBike
             LoadData(txtSearch.Text.Trim(), 0);
         }
 
-        protected void drpRentType_SelectedIndexChanged(object sender, EventArgs e)
+        protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (CheckAdminPermission())
-                LoadDataAdmin(Helper.parseInt(drpStore.SelectedValue), txtSearch.Text.Trim(), Helper.parseInt(drpRentType.SelectedValue));
+                LoadDataAdmin(Helper.parseInt(drpStore.SelectedValue), txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
             else
-                LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpRentType.SelectedValue));
+                LoadData(txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
         }
 
         public bool CheckAdminPermission()
