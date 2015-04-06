@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="RentBikeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="RentBikeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="ID" />
@@ -47,6 +47,7 @@
           <Property Name="FEE_PER_DAY" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="RENT_DATE" Type="date" Nullable="false" />
           <Property Name="END_DATE" Type="date" Nullable="false" />
+          <Property Name="EXTEND_END_DATE" Type="date" />
           <Property Name="CLOSE_CONTRACT_DATE" Type="date" Nullable="false" />
           <Property Name="PAY_FEE_MESSAGE" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="NOTE" Type="nvarchar" MaxLength="500" Nullable="false" />
@@ -84,6 +85,7 @@
           <Property Name="CONTRACT_AMOUNT" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="RENT_DATE" Type="date" Nullable="false" />
           <Property Name="END_DATE" Type="date" Nullable="false" />
+          <Property Name="EXTEND_END_DATE" Type="date" />
           <Property Name="PAY_FEE_MESSAGE" Type="nvarchar" MaxLength="250" Nullable="false" />
           <Property Name="NOTE" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="REFERENCE_ID" Type="int" Nullable="false" />
@@ -254,6 +256,7 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_FULL_VW' does not have a p
             <PropertyRef Name="CUSTOMER_NAME" />
             <PropertyRef Name="LICENSE_NO" />
             <PropertyRef Name="PHONE" />
+            
             <PropertyRef Name="CUS_CITY_ID" />
             <PropertyRef Name="STORE_NAME" />
             <PropertyRef Name="CLOSE_CONTRACT_DATE" />
@@ -289,7 +292,7 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_FULL_VW' does not have a p
           <Property Name="REFERENCE_PHONE" Type="nvarchar" MaxLength="30" />
           <Property Name="SCHOOL_NAME" Type="nvarchar" MaxLength="100" />
           <Property Name="CLASS_NAME" Type="nvarchar" MaxLength="50" />
-          <Property Name="ADDRESS" Type="nvarchar" MaxLength="300" />
+          <Property Name="ADDRESS" Type="nvarchar" MaxLength="300" Nullable="false" />
           <Property Name="CUS_CITY_ID" Type="int" Nullable="false" />
           <Property Name="STORE_NAME" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="RENT_TYPE_NAME" Type="nvarchar" MaxLength="100" />
@@ -616,8 +619,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
     FROM [dbo].[STORE_FULL_VW] AS [STORE_FULL_VW]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="RentBikeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -687,6 +689,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
           <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
+          <Property Name="EXTEND_END_DATE" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="ContractHistory">
           <Key>
@@ -723,6 +726,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
           <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
+          <Property Name="EXTEND_END_DATE" Type="DateTime" Precision="0" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -903,7 +907,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="REFERENCE_PHONE" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="SCHOOL_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="CLASS_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ADDRESS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="ADDRESS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CUS_CITY_ID" Type="Int32" Nullable="false" />
           <Property Name="STORE_NAME" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="RENT_TYPE_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
@@ -1130,6 +1134,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="Contracts">
             <EntityTypeMapping TypeName="RentBikeModel.Contract">
               <MappingFragment StoreEntitySet="Contract">
+                <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
                 <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
@@ -1166,6 +1171,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="ContractHistories">
             <EntityTypeMapping TypeName="RentBikeModel.ContractHistory">
               <MappingFragment StoreEntitySet="ContractHistory">
+                <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
                 <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />

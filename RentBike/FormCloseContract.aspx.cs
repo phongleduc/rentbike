@@ -30,24 +30,24 @@ namespace RentBike
                     //TimeSpan ts = DateTime.Now.Date.Subtract(con.END_DATE);
                     //txtOverDate.Text = Math.Round(ts.TotalDays).ToString();
 
-                    int actualDay = DateTime.Now.Subtract(con.RENT_DATE).Days; 
-                    decimal paidAmount = db.InOuts.Where(c => c.CONTRACT_ID == id).Select(c => c.IN_AMOUNT).DefaultIfEmpty().Sum();
+                    //decimal paidAmount = db.InOuts.Where(c => c.CONTRACT_ID == id).Select(c => c.IN_AMOUNT).DefaultIfEmpty().Sum();
 
                     List<PayPeriod> lstPayperiod = db.PayPeriods.Where(c => c.CONTRACT_ID == id).ToList();
+                    decimal paidAmount = lstPayperiod.Where(c => c.ACTUAL_PAY > 0).Select(c => c.ACTUAL_PAY).DefaultIfEmpty().Sum();
                     decimal total = 0; // = db.PayPeriods.Where(c => c.CONTRACT_ID == id && c.PAY_DATE <= DateTime.Now).Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty().Sum();
 
                     for (DateTime date = con.RENT_DATE; date <= DateTime.Now; date = date.AddDays(1))
                     {
                         foreach (PayPeriod pay in lstPayperiod)
                         {
-                            if (date < pay.PAY_DATE.AddDays(10))
+                            if (date <= pay.PAY_DATE.AddDays(10))
                             {
                                 total += pay.AMOUNT_PER_PERIOD / 10; 
                                 break;
                             }
                         }  
                     }
-                    txtRealIncome.Text = string.Format("{0:0,0}", (con.CONTRACT_AMOUNT + total) - paidAmount);
+                    txtRealIncome.Text = string.Format("{0:0,0}", total - paidAmount);
                     txtReduceAmount.Text = "0";
                     //if (ts.TotalDays >= 0)
                     //{

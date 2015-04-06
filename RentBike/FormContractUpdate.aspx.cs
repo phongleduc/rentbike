@@ -44,7 +44,9 @@ namespace RentBike
                             if (contract != null)
                             {
                                 DateTime endDate = contract.END_DATE;
-                                int overDate = DateTime.Now.Subtract(endDate).Days;
+                                DateTime extendEndDate = contract.EXTEND_END_DATE == null ? contract.END_DATE : contract.EXTEND_END_DATE.Value;
+
+                                int overDate = DateTime.Now.Subtract(extendEndDate).Days;
                                 if (overDate > 0)
                                 {
                                     PayPeriod pp1;
@@ -54,9 +56,9 @@ namespace RentBike
                                     int percentDate = overDate / 30;
                                     int multipleFee = Convert.ToInt32(Decimal.Floor(contract.CONTRACT_AMOUNT / 1000000));
 
-                                    DateTime endDateUpdated = endDate.AddDays(30 * (percentDate + 1));
-                                    //contract.END_DATE = endDateUpdated;
-                                    //db.SaveChanges();
+                                    DateTime endDateUpdated = extendEndDate.AddDays(30 * (percentDate + 1));
+                                    contract.EXTEND_END_DATE = endDateUpdated;
+                                    db.SaveChanges();
 
                                     PayPeriod payPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId).OrderByDescending(c => c.PAY_DATE).FirstOrDefault();
                                     decimal increateFeeCar = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 500 * 10);
