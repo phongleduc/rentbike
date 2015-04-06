@@ -222,6 +222,9 @@ namespace RentBike
                                     }
                                     txtLicenseNumber.Text = cntrct.LICENSE_NO;
                                     txtCustomerName.Text = cntrct.CUSTOMER_NAME;
+                                    txtBirthDay.Text = string.Format("{0:dd/MM/yyyy}", cntrct.BIRTH_DAY);
+                                    txtRangeDate.Text = string.Format("{0:dd/MM/yyyy}", cntrct.LICENSE_RANGE_DATE);
+                                    txtPlaceDate.Text = cntrct.LICENSE_RANGE_PLACE;
                                     txtPhone.Text = cntrct.PHONE;
                                     txtPermanentResidence.Text = cntrct.PERMANENT_RESIDENCE;
                                     txtCurrentResidence.Text = cntrct.CURRENT_RESIDENCE;
@@ -238,6 +241,8 @@ namespace RentBike
                                     txtItemLicenseNo.Text = cntrct.ITEM_LICENSE_NO;
                                     txtSerial1.Text = cntrct.SERIAL_1;
                                     txtSerial2.Text = cntrct.SERIAL_2;
+                                    txtImplementer.Text = cntrct.IMPLEMENTER;
+                                    txtBackDocument.Text = cntrct.BACK_TO_DOCUMENTS;
                                     txtItemDetail.Text = cntrct.DETAIL;
                                     txtReferencePhone.Text = cntrct.REFERENCE_PHONE;
                                     txtSchool.Text = cntrct.SCHOOL_NAME;
@@ -432,8 +437,14 @@ namespace RentBike
                             using (var db = new RentBikeEntities())
                             {
                                 bool IsNewCust = false;
-                                int customerId = Helper.parseInt(id);
-                                Customer cusItem = db.Customers.FirstOrDefault(c => c.ID == customerId);
+                                Customer cusItem = null;
+                                if(!string.IsNullOrEmpty(copy) && copy == "1")
+                                {
+                                    int contractId = Helper.parseInt(id);
+                                    var contract = db.Contracts.Where(c => c.ID == contractId).FirstOrDefault();
+                                    cusItem = db.Customers.FirstOrDefault(c => c.ID == contract.CUSTOMER_ID);
+                                }
+
                                 if (cusItem == null)
                                 {
                                     IsNewCust = true;
