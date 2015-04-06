@@ -26,9 +26,7 @@ namespace RentBike
 
                     txtEndDate.Text = string.Format("{0:dd/MM/yyyy}", con.END_DATE);
                     txtAmount.Text = string.Format("{0:0,0}", con.CONTRACT_AMOUNT);
-
-                    //TimeSpan ts = DateTime.Now.Date.Subtract(con.END_DATE);
-                    //txtOverDate.Text = Math.Round(ts.TotalDays).ToString();
+                    txtOverDate.Text = DateTime.Now.Date.Subtract(con.END_DATE).TotalDays <= 0 ? "0" : DateTime.Now.Date.Subtract(con.END_DATE).TotalDays.ToString();
 
                     //decimal paidAmount = db.InOuts.Where(c => c.CONTRACT_ID == id).Select(c => c.IN_AMOUNT).DefaultIfEmpty().Sum();
 
