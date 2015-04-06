@@ -224,7 +224,7 @@ namespace RentBike
                     }
 
 
-                    rptInOut.DataSource = lst;
+                    rptInOut.DataSource = lst.OrderByDescending(c => c.Period);
                     rptInOut.DataBind();
                     decimal sumIn = 0;
                     decimal sumOut = 0;
@@ -424,7 +424,7 @@ namespace RentBike
                     }
 
 
-                    rptInOut.DataSource = lst;
+                    rptInOut.DataSource = lst.OrderByDescending(c =>c.Period);
                     rptInOut.DataBind();
                     decimal sumIn = 0;
                     decimal sumOut = 0;

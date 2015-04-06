@@ -44,5 +44,6 @@ namespace RentBike
         public Nullable<System.DateTime> CREATED_DATE { get; set; }
         public string UPDATED_BY { get; set; }
         public Nullable<System.DateTime> UPDATED_DATE { get; set; }
+        public Nullable<System.DateTime> EXTEND_END_DATE { get; set; }
     }
 }
