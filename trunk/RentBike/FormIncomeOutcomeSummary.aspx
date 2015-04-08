@@ -19,19 +19,19 @@
         </HeaderTemplate>
         <ItemTemplate>
             <tr>
-                <td><%# Eval("Period") %></td>
+                <td><%# Convert.ToDateTime(Eval("Period")).ToString("dd/MM/yyyy") %></td>
                 <td class="text-right"><%# Eval("BeginAmount").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("BeginAmount")) %></td>
                 <td class="text-right"><%# Eval("TotalIn").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("TotalIn")) %></td>
                 <td class="text-right"><%# Eval("TotalOut").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("TotalOut")) %></td>
                 <td class="text-right"><%# Eval("EndAmount").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("EndAmount")) %></td>
                 <td class="text-right">
-                    <a id='<%# String.Format("a-{0}-{1}", Eval("StoreId"), Eval("Period").ToString().Replace("/", "-")) %>' href='<%# String.Format("#detail-{0}-{1}", Eval("StoreId"), Eval("Period").ToString().Replace("/", "-")) %>' class="fancybox">Chi tiết...</a>
-                    <div id='<%# String.Format("detail-{0}-{1}", Eval("StoreId"), Eval("Period").ToString().Replace("/", "-")) %>' style="display: none;">
+                    <a id='<%# String.Format("a-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("Period")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' href='<%# String.Format("#detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("Period")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' class="fancybox">Chi tiết...</a>
+                    <div id='<%# String.Format("detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("Period")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' style="display: none;">
                         <div class="detail-header">Tổng hợp thu chi</div>
                         <table class="table table-striped table-hover border_table" border="1">
                             <tbody>
                                 <tr class="success">
-                                    <td colspan="2">Chi tiết ngày: <%# Eval("Period").ToString() %></td>
+                                    <td colspan="2">Chi tiết ngày: <%# Convert.ToDateTime(Eval("Period")).ToString("dd/MM/yyyy") %></td>
                                 </tr>
                                 <tr>
                                     <td>Dư đầu ngày:</td>

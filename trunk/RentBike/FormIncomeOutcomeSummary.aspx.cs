@@ -122,13 +122,13 @@ namespace RentBike
                     {
                         SummaryInfo si = new SummaryInfo();
                         si.StoreId = g.Record.ToList()[0].ID;
-                        si.Period = Convert.ToDateTime(g.Record.ToList()[0].Period).ToString("dd/MM/yyyy");
+                        si.Period = g.Record.ToList()[0].Period.Value;
                         si.TotalIn = g.Record.ToList()[0].TotalIn;
                         si.TotalOut = g.Record.ToList()[0].TotalOut;
                         si.BeginAmount = 0;
                         si.EndAmount = g.Record.ToList()[0].TotalIn - g.Record.ToList()[0].TotalOut;
 
-                        List<Contract> lstContract = GetContractFeeByDay(Convert.ToDateTime(g.Record.ToList()[0].Period), db);
+                        List<Contract> lstContract = GetContractFeeByDay(g.Record.ToList()[0].Period.Value, db);
 
                         IEnumerable<Contract> ieContract = lstContract.Where(x => x.RENT_TYPE_ID == 1);
                         if (ieContract.Any())
@@ -322,13 +322,13 @@ namespace RentBike
                     {
                         SummaryInfo si = new SummaryInfo();
                         si.StoreId = g.Record.ToList()[0].ID;
-                        si.Period = Convert.ToDateTime(g.Record.ToList()[0].Period).ToString("dd/MM/yyyy");
+                        si.Period = g.Record.ToList()[0].Period.Value;
                         si.TotalIn = g.Record.ToList()[0].TotalIn;
                         si.TotalOut = g.Record.ToList()[0].TotalOut;
                         si.BeginAmount = 0;
                         si.EndAmount = g.Record.ToList()[0].TotalIn - g.Record.ToList()[0].TotalOut;
 
-                        List<Contract> lstContract = GetContractFeeByDay(Convert.ToDateTime(g.Record.ToList()[0].Period), db);
+                        List<Contract> lstContract = GetContractFeeByDay(g.Record.ToList()[0].Period.Value, db);
 
                         IEnumerable<Contract> ieContract = lstContract.Where(x => x.RENT_TYPE_ID == 1);
                         if (ieContract.Any())
@@ -775,7 +775,7 @@ namespace RentBike
         { }
 
         public int StoreId { get; set; }
-        public string Period { get; set; }
+        public DateTime Period { get; set; }
         public decimal BeginAmount { get; set; }
         public decimal EndAmount { get; set; }
         public decimal TotalIn { get; set; }

@@ -227,7 +227,7 @@ namespace RentBike
                     {
                         SummaryInfo si = new SummaryInfo();
                         si.StoreId = g.Record.ToList()[0].ID;
-                        si.Period = Convert.ToDateTime(g.Record.ToList()[0].Period).ToString("dd/MM/yyyy");
+                        si.Period = g.Record.ToList()[0].Period.Value;
                         si.TotalIn = g.Record.ToList()[0].TotalIn;
                         si.TotalOut = g.Record.ToList()[0].TotalOut;
                         si.BeginAmount = 0;
@@ -306,7 +306,7 @@ namespace RentBike
                     {
                         SummaryInfo si = new SummaryInfo();
                         si.StoreId = g.Record.ToList()[0].ID;
-                        si.Period = Convert.ToDateTime(g.Record.ToList()[0].Period).ToString("dd/MM/yyyy");
+                        si.Period = g.Record.ToList()[0].Period.Value;
                         si.TotalIn = g.Record.ToList()[0].TotalIn;
                         si.TotalOut = g.Record.ToList()[0].TotalOut;
                         si.BeginAmount = 0;
