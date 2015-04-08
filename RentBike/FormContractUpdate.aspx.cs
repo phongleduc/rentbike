@@ -44,7 +44,7 @@ namespace RentBike
                             if (contract != null)
                             {
                                 DateTime endDate = contract.END_DATE;
-                                DateTime extendEndDate = contract.EXTEND_END_DATE == null ? contract.END_DATE : contract.EXTEND_END_DATE.Value;
+                                DateTime extendEndDate = contract.EXTEND_END_DATE == null ? contract.END_DATE.AddDays(-10) : contract.EXTEND_END_DATE.Value;
 
                                 int overDate = DateTime.Now.Subtract(extendEndDate).Days;
                                 if (overDate > 0)
