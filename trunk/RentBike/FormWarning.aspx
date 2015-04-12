@@ -45,7 +45,7 @@
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY")) * 10) %></td>
                 <td class="text-right"><%# Eval("PAYED_TIME") %> lần</td>
                 <td class="text-right"><%# Eval("NOTE") %></td>
-                <td class="text-center <%# ShowClass(Convert.ToDateTime(Eval("PAY_DATE"))) %>"><%# Convert.ToDateTime(Eval("PAY_DATE")).ToString("dd/MM/yyyy") %> <br />(<%# Eval("OVER_DATE") %>Ngày)
+                <td class="text-center <%# ShowClass(Convert.ToInt32(Eval("OVER_DATE"))) %>"><%# Convert.ToDateTime(Eval("PAY_DATE")).ToString("dd/MM/yyyy") %> <br />(<%# Eval("OVER_DATE") %>Ngày)
                     <asp:HiddenField ID ="hdfOverDay" Value='<%# Eval("OVER_DATE") %>' runat="server" />
                 </td>
                 <td>
