@@ -87,7 +87,7 @@ namespace RentBike
                         if (lstPeriodPayed != null && lstPeriodPayed.Any())
                         {
                             c.PAY_DATE = lstPeriodPayed.LastOrDefault().PAY_DATE;
-                            c.OVER_DATE = DateTime.Now.Subtract(c.PAY_DATE).Days;
+                            c.OVER_DATE = DateTime.Now.Subtract(c.PAY_DATE.AddDays(10)).Days;
                             c.PAYED_TIME = lstPeriodPayed.Count();
                         }
                         if (c.OVER_DATE >= 0)
@@ -162,9 +162,8 @@ namespace RentBike
             }
         }
 
-        public string ShowClass(DateTime endDate)
+        public string ShowClass(int overDate)
         {
-            double overDate = Math.Round(DateTime.Now.Date.Subtract(endDate).TotalDays);
             if (overDate <= 5)
             {
                 return "green";

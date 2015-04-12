@@ -94,8 +94,49 @@ namespace RentBike
                 }
             }
 
+            ReBuildData(dataList);
             rptInOut.DataSource = dataList;
             rptInOut.DataBind();
+        }
+
+        private void ReBuildData(List<INOUT_FULL_VW> dataList)
+        {
+            foreach (var data in dataList)
+            {
+                switch (data.INOUT_TYPE_NAME)
+                { 
+                    case "Trả lại phí thừa":
+                        switch (data.RENT_TYPE_ID)
+                        {
+                            case 1:
+                                data.INOUT_TYPE_NAME = "Trả lại phí thừa thuê xe";
+                                break;
+                            case 2:
+                                data.INOUT_TYPE_NAME = "Trả lại phí thừa thuê thiết bị";
+                                break;
+                            default:
+                                data.INOUT_TYPE_NAME = "Trả lại phí thừa thuê khác";
+                                break;
+                        }
+                        break;
+                    case "Thanh lý" :
+                        switch (data.RENT_TYPE_ID)
+                        {
+                            case 1:
+                                data.INOUT_TYPE_NAME = "Thanh lý thuê xe";
+                                break;
+                            case 2:
+                                data.INOUT_TYPE_NAME = "Thanh lý thuê thiết bị";
+                                break;
+                            default:
+                                data.INOUT_TYPE_NAME = "Thanh lý thuê khác";
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)

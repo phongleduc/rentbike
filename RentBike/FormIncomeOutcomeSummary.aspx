@@ -49,7 +49,10 @@
                                     <td>Thanh lý thuê xe:</td>
                                     <td><%# Eval("CloseFeeCar").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("CloseFeeCar")) %> VNĐ</td>
                                 </tr>
-
+                                <tr>
+                                    <td>Thừa phí thuê xe:</td>
+                                    <td><%# Eval("RedundantFeeCar").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("RedundantFeeCar")) %> VNĐ</td>
+                                </tr>
                                 <tr>
                                     <td>Cho thuê thiết bị:</td>
                                     <td><%# Eval("ContractFeeEquip").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("ContractFeeEquip")) %> VNĐ</td>
@@ -63,6 +66,10 @@
                                     <td><%# Eval("CloseFeeEquip").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("CloseFeeEquip")) %> VNĐ</td>
                                 </tr>
                                 <tr>
+                                    <td>Thừa phí thuê thiết bị:</td>
+                                    <td><%# Eval("RedundantFeeEquip").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("RedundantFeeEquip")) %> VNĐ</td>
+                                </tr>
+                                <tr>
                                     <td>Cho thuê khác...:</td>
                                     <td><%# Eval("ContractFeeOther").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("ContractFeeOther")) %> VNĐ</td>
                                 </tr>
@@ -74,14 +81,10 @@
                                     <td>Thanh lý thuê khác:</td>
                                     <td><%# Eval("CloseFeeOther").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("CloseFeeOther")) %> VNĐ</td>
                                 </tr>
-<%--                                <tr>
-                                    <td>Nợ phí:</td>
-                                    <td>0 VNĐ</td>
-                                </tr>
                                 <tr>
-                                    <td>Trả nợ phí:</td>
-                                    <td>0 VNĐ</td>
-                                </tr>--%>
+                                    <td>Thừa phí thuê khác:</td>
+                                    <td><%# Eval("RedundantFeeOther").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("RedundantFeeOther")) %> VNĐ</td>
+                                </tr>
                                 <tr>
                                     <td>Nhập vốn:</td>
                                     <td><%# Eval("InCapital").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("InCapital")) %> VNĐ</td>

@@ -26,7 +26,7 @@ namespace RentBike
                     if (permissionid != 1)
                     {
                         hplStoreManagement.Visible = false;
-                        hplPendingContract.Visible = false;
+                        //hplPendingContract.Visible = false;
                         hplCommonListSetting.Visible = false;
                         hplAccountManagement.Visible = false;
                         int storeid = Convert.ToInt16(Session["store_id"]);

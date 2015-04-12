@@ -117,18 +117,21 @@ namespace RentBike
 
             using (var db = new RentBikeEntities())
             {
+                var contract = db.Contracts.FirstOrDefault(c => c.ID == pp.CONTRACT_ID && c.CONTRACT_STATUS == true);
                 InOut io = new InOut();
                 io.IN_AMOUNT = Convert.ToDecimal(txtIncome.Text);
                 io.OUT_AMOUNT = 0;
                 io.CONTRACT_ID = pp.CONTRACT_ID;
                 io.PERIOD_ID = pp.ID;
-                //io.RENT_TYPE_ID = Convert.ToInt16(ddlRentType.SelectedValue);
+                io.RENT_TYPE_ID = contract.RENT_TYPE_ID;
                 io.INOUT_TYPE_ID = Convert.ToInt16(ddInOutType.SelectedValue);
                 io.PERIOD_DATE = pp.PAY_DATE;
                 io.MORE_INFO = txtMoreInfo.Text.Trim();
                 io.STORE_ID = Convert.ToInt16(Session["store_id"]);
                 io.SEARCH_TEXT = string.Format("{0} ", io.MORE_INFO);
                 io.INOUT_DATE = DateTime.Now;
+                io.CREATED_BY = Session["username"].ToString();
+                io.CREATED_DATE = DateTime.Now;
                 io.UPDATED_BY = Session["username"].ToString();
                 io.UPDATED_DATE = DateTime.Now;
 

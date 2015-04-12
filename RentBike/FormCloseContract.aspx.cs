@@ -28,11 +28,9 @@ namespace RentBike
                     txtAmount.Text = string.Format("{0:0,0}", con.CONTRACT_AMOUNT);
                     txtOverDate.Text = DateTime.Now.Date.Subtract(con.END_DATE).TotalDays <= 0 ? "0" : DateTime.Now.Date.Subtract(con.END_DATE).TotalDays.ToString();
 
-                    //decimal paidAmount = db.InOuts.Where(c => c.CONTRACT_ID == id).Select(c => c.IN_AMOUNT).DefaultIfEmpty().Sum();
-
                     List<PayPeriod> lstPayperiod = db.PayPeriods.Where(c => c.CONTRACT_ID == id).ToList();
                     decimal paidAmount = lstPayperiod.Where(c => c.ACTUAL_PAY > 0).Select(c => c.ACTUAL_PAY).DefaultIfEmpty().Sum();
-                    decimal total = 0; // = db.PayPeriods.Where(c => c.CONTRACT_ID == id && c.PAY_DATE <= DateTime.Now).Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty().Sum();
+                    decimal total = 0;
 
                     for (DateTime date = con.RENT_DATE; date <= DateTime.Now; date = date.AddDays(1))
                     {
@@ -40,31 +38,21 @@ namespace RentBike
                         {
                             if (date <= pay.PAY_DATE.AddDays(10))
                             {
-                                total += pay.AMOUNT_PER_PERIOD / 10; 
+                                total += pay.AMOUNT_PER_PERIOD / 10;
                                 break;
                             }
-                        }  
+                        }
                     }
-                    txtRealIncome.Text = string.Format("{0:0,0}", total - paidAmount);
-                    txtReduceAmount.Text = "0";
-                    //if (ts.TotalDays >= 0)
-                    //{
-                    //    txtRealIncome.Text = string.Format("{0:0,0}", Math.Round(con.FEE_PER_DAY * 30 - paidAmount + con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts.TotalDays))));
-                    //}
-                    //else
-                    //{
-                    //    TimeSpan ts1 = DateTime.Now.Subtract(con.RENT_DATE);
-                    //    txtRealIncome.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
-                    //    //txtPayFee.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
-                    //    //if (con.RENT_TYPE_ID == 2)
-                    //    //{
-                    //    //    txtRealIncome.Text = string.Format("{0:0,0}", Convert.ToInt32(con.FEE_PER_DAY) * 10);
-                    //    //}
-                    //    //else
-                    //    //{
-                    //    //    txtRealIncome.Text = string.Format("{0:0,0}", con.FEE_PER_DAY * Convert.ToDecimal(Math.Ceiling(ts1.TotalDays)) - paidAmount);
-                    //    //}
-                    //}
+                    if (total - paidAmount < 0)
+                    {
+                        txtRealIncome.Text = "0";
+                        txtReduceAmount.Text = string.Format("{0:0,0}", paidAmount - total);
+                    }
+                    else
+                    {
+                        txtRealIncome.Text = string.Format("{0:0,0}", total - paidAmount);
+                        txtReduceAmount.Text = "0";
+                    }
                 }
             }
         }
@@ -74,167 +62,160 @@ namespace RentBike
             using (TransactionScope trans = new TransactionScope())
             {
                 int contractId = Convert.ToInt16(Request.QueryString["ID"]);
-                CONTRACT_FULL_VW con = new CONTRACT_FULL_VW();
                 using (var db = new RentBikeEntities())
                 {
-                    var contract = db.CONTRACT_FULL_VW.First(c => c.ID == contractId);
-                    con = contract;
-                }
-
-                // INOUT --> IN amount
-                InOut io1 = new InOut();
-                io1.IN_AMOUNT = con.CONTRACT_AMOUNT;
-                io1.OUT_AMOUNT = 0;
-                io1.CONTRACT_ID = con.ID;
-                io1.PERIOD_ID = -1;
-                io1.PERIOD_DATE = new DateTime(1, 1, 1);
-                io1.RENT_TYPE_ID = con.RENT_TYPE_ID;
-                using (var db = new RentBikeEntities())
-                {
-                    var item = db.InOutTypes.First(s => s.NAME == "Thanh lý");
-                    io1.INOUT_TYPE_ID = item.ID;
-                }
-                io1.MORE_INFO = txtMoreInfo.Text.Trim();
-                io1.STORE_ID = con.STORE_ID;
-                io1.SEARCH_TEXT = string.Format("{0} {1} {2}", con.CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME);
-                io1.INOUT_DATE = DateTime.Now;
-                io1.CREATED_BY = Session["username"].ToString();
-                io1.CREATED_DATE = DateTime.Now;
-                io1.UPDATED_BY = Session["username"].ToString();
-                io1.UPDATED_DATE = DateTime.Now;
-
-                // IN --> Fee hoac la OUT neu tra truoc ngay cuoi cung cua ki da tra tien
-                InOut io2 = new InOut();
-                io2.RENT_TYPE_ID = con.RENT_TYPE_ID;
-                io2.CONTRACT_ID = con.ID;
-                io2.PERIOD_ID = -1;
-                io2.PERIOD_DATE = new DateTime(1, 1, 1);
-                io2.INOUT_DATE = DateTime.Now;
-                string feeName = string.Empty;
-                switch (con.RENT_TYPE_NAME)
-                {
-                    case "Cho thuê xe":
-                        feeName = "Phí thuê xe";
-                        break;
-                    case "Cho thuê thiết bị văn phòng":
-                        feeName = "Phí thuê thiết bị";
-                        break;
-                    case "Cho thuê mặt hàng khác":
-                        feeName = "Phí khác";
-                        break;
-                }
-
-                if (Convert.ToDecimal(txtRealIncome.Text) < 0)
-                {
-                    io2.IN_AMOUNT = 0;
-                    io2.OUT_AMOUNT = Math.Abs(Convert.ToDecimal(txtRealIncome.Text));
-                    feeName = "Trả lại phí thừa";
-                }
-                else
-                {
-                    io2.IN_AMOUNT = Convert.ToDecimal(txtRealIncome.Text.Replace(".", string.Empty));
-                    io2.OUT_AMOUNT = 0;
-                }
-
-                using (var db = new RentBikeEntities())
-                {
-                    var item = db.InOutTypes.First(s => s.NAME == feeName);
-                    io2.INOUT_TYPE_ID = item.ID;
-                }
-                io2.MORE_INFO = string.Format("Trả phí thừa hợp đồng {0}", con.CONTRACT_NO);
-                io2.PERIOD_DATE = DateTime.Now;
-                io2.STORE_ID = con.STORE_ID;
-                io2.SEARCH_TEXT = string.Format("{0} {1} {2}", con.CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME);
-                io2.INOUT_DATE = DateTime.Now;
-                io2.CREATED_BY = Session["username"].ToString();
-                io2.CREATED_DATE = DateTime.Now;
-                io2.UPDATED_BY = Session["username"].ToString();
-                io2.UPDATED_DATE = DateTime.Now;
-
-                // Out --> Fee reduce
-                decimal reduceAmount = Convert.ToDecimal(txtReduceAmount.Text.Replace(",", string.Empty));
-                InOut io3 = new InOut();
-                if (reduceAmount != 0)
-                {
-                    io3.CONTRACT_ID = con.ID;
-                    io3.IN_AMOUNT = 0;
-                    io3.OUT_AMOUNT = reduceAmount;
-                    io3.RENT_TYPE_ID = con.RENT_TYPE_ID;
-                    using (var db = new RentBikeEntities())
+                    var con = db.CONTRACT_FULL_VW.FirstOrDefault(c => c.ID == contractId);
+                    string closedContractName = string.Empty;
+                    switch (con.RENT_TYPE_ID)
                     {
-                        var item = db.InOutTypes.First(s => s.NAME == "Giảm trừ phí");
-                        io3.INOUT_TYPE_ID = item.ID;
+                        case 1:
+                            closedContractName = "Thanh lý thuê xe";
+                            break;
+                        case 2:
+                            closedContractName = "Thanh lý thuê thiết bị";
+                            break;
+                        default:
+                            closedContractName = "Thanh lý thuê khác";
+                            break;
                     }
-                    io3.MORE_INFO = txtMoreInfo.Text.Trim();
-                    io3.PERIOD_DATE = DateTime.Now;
-                    io3.STORE_ID = con.STORE_ID;
-                    io3.SEARCH_TEXT = string.Format("{0} {1} {2}", con.CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME);
-                    io3.INOUT_DATE = DateTime.Now;
-                    io3.CREATED_BY = Session["username"].ToString();
-                    io3.CREATED_DATE = DateTime.Now;
-                    io3.UPDATED_BY = Session["username"].ToString();
-                    io3.UPDATED_DATE = DateTime.Now;
-                }
+                    // INOUT --> IN amount
+                    InOut io1 = new InOut();
+                    io1.IN_AMOUNT = con.CONTRACT_AMOUNT;
+                    io1.OUT_AMOUNT = 0;
+                    io1.CONTRACT_ID = con.ID;
+                    io1.PERIOD_ID = -1;
+                    io1.PERIOD_DATE = new DateTime(1, 1, 1);
+                    io1.RENT_TYPE_ID = con.RENT_TYPE_ID;
 
-                using (var db = new RentBikeEntities())
-                {
+                    var item = db.InOutTypes.FirstOrDefault(s => s.NAME == "Thanh lý");
+                    io1.INOUT_TYPE_ID = item.ID;
+                    io1.MORE_INFO = txtMoreInfo.Text.Trim();
+                    io1.STORE_ID = con.STORE_ID;
+                    io1.SEARCH_TEXT = string.Format("{0} {1} {2} {3} {4}", con.CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME, closedContractName, txtMoreInfo.Text.Trim());
+                    io1.INOUT_DATE = DateTime.Now;
+                    io1.CREATED_BY = Session["username"].ToString();
+                    io1.CREATED_DATE = DateTime.Now;
+                    io1.UPDATED_BY = Session["username"].ToString();
+                    io1.UPDATED_DATE = DateTime.Now;
                     db.InOuts.Add(io1);
-                    db.InOuts.Add(io2);
-                    if (reduceAmount != 0)
+
+                    // IN --> Rent Fee
+                    if (!string.IsNullOrEmpty(txtRealIncome.Text))
                     {
-                        db.InOuts.Add(io3);
+                        decimal realInAmount = Convert.ToDecimal(txtRealIncome.Text.Replace(",", string.Empty));
+                        if (realInAmount > 0)
+                        {
+                            InOut io2 = new InOut();
+
+                            string feeName = string.Empty;
+                            switch (con.RENT_TYPE_NAME)
+                            {
+                                case "Cho thuê xe":
+                                    feeName = "Phí thuê xe";
+                                    break;
+                                case "Cho thuê thiết bị văn phòng":
+                                    feeName = "Phí thuê thiết bị";
+                                    break;
+                                case "Cho thuê mặt hàng khác":
+                                    feeName = "Phí khác";
+                                    break;
+                            }
+                            item = db.InOutTypes.First(s => s.NAME == feeName);
+
+                            io2.INOUT_TYPE_ID = item.ID;
+                            io2.RENT_TYPE_ID = con.RENT_TYPE_ID;
+                            io2.CONTRACT_ID = con.ID;
+                            io2.IN_AMOUNT = realInAmount;
+                            io2.OUT_AMOUNT = 0;
+                            io2.MORE_INFO = txtMoreInfo.Text;
+                            io2.PERIOD_DATE = DateTime.Now;
+                            io2.STORE_ID = con.STORE_ID;
+                            io2.SEARCH_TEXT = string.Format("{0} {1} {2} {3} {4}", con.CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME, feeName, txtMoreInfo.Text.Trim());
+                            io2.INOUT_DATE = DateTime.Now;
+                            io2.CREATED_BY = Session["username"].ToString();
+                            io2.CREATED_DATE = DateTime.Now;
+                            io2.UPDATED_BY = Session["username"].ToString();
+                            io2.UPDATED_DATE = DateTime.Now;
+                            db.InOuts.Add(io2);
+                        }
+                    }
+
+
+                    //Out --> Return redundant fee if the client comes before deadline date.
+                    if (!string.IsNullOrEmpty(txtReduceAmount.Text))
+                    {
+                        decimal reduceAmount = Convert.ToDecimal(txtReduceAmount.Text.Replace(",", string.Empty));
+                        if (reduceAmount > 0)
+                        {
+                            InOut io3 = new InOut();
+                            item = db.InOutTypes.FirstOrDefault(s => s.NAME == "Trả lại phí thừa");
+
+                            io3.INOUT_TYPE_ID = item.ID;
+                            io3.RENT_TYPE_ID = con.RENT_TYPE_ID;
+                            io3.CONTRACT_ID = con.ID;
+                            io3.IN_AMOUNT = 0;
+                            io3.OUT_AMOUNT = reduceAmount;
+                            io3.RENT_TYPE_ID = con.RENT_TYPE_ID;
+                            io3.MORE_INFO = txtMoreInfo.Text.Trim();
+                            io3.PERIOD_DATE = DateTime.Now;
+                            io3.STORE_ID = con.STORE_ID;
+                            io3.SEARCH_TEXT = string.Format("{0} {1} {2} {3} {4}", con.CONTRACT_NO, con.CUSTOMER_NAME, con.STORE_NAME, "Trả lại phí thừa", txtMoreInfo.Text.Trim());
+                            io3.INOUT_DATE = DateTime.Now;
+                            io3.CREATED_BY = Session["username"].ToString();
+                            io3.CREATED_DATE = DateTime.Now;
+                            io3.UPDATED_BY = Session["username"].ToString();
+                            io3.UPDATED_DATE = DateTime.Now;
+
+                            db.InOuts.Add(io3);
+                        }
                     }
                     db.SaveChanges();
                 }
-
                 // Writelog
                 WriteLog(CommonList.ACTION_CLOSE_CONTRACT, false);
 
-                // Update status contract
                 using (var db = new RentBikeEntities())
                 {
-                    var contract = db.Contracts.FirstOrDefault(c => c.ID == contractId);
-                    contract.CONTRACT_STATUS = false;
-                    contract.CLOSE_CONTRACT_DATE = DateTime.Now;
-                    db.SaveChanges();
-                }
+                    // Update status contract
+                    var con = db.Contracts.FirstOrDefault(c => c.ID == contractId);
+                    con.CONTRACT_STATUS = false;
+                    con.CLOSE_CONTRACT_DATE = DateTime.Now;
 
-                // Insert History row
-                ContractHistory ch = new ContractHistory();
-                ch.CONTRACT_ID = con.ID;
-                ch.CONTRACT_NO = con.CONTRACT_NO;
-                ch.CUSTOMER_ID = con.CUSTOMER_ID;
-                ch.CONTRACT_AMOUNT = con.CONTRACT_AMOUNT;
-                ch.DETAIL = con.DETAIL;
-                ch.RENT_DATE = con.RENT_DATE;
-                ch.END_DATE = con.END_DATE;
-                ch.FEE_PER_DAY = con.FEE_PER_DAY;
-                ch.ITEM_LICENSE_NO = con.ITEM_LICENSE_NO;
-                ch.ITEM_TYPE = con.ITEM_TYPE;
-                ch.NOTE = con.NOTE;
-                ch.REFERENCE_NAME = con.REFERENCE_NAME;
-                ch.RENT_TYPE_ID = con.RENT_TYPE_ID;
-                ch.SERIAL_1 = con.SERIAL_1;
-                ch.SERIAL_2 = con.SERIAL_2;
-                ch.STORE_ID = con.STORE_ID;
-                ch.SEARCH_TEXT = con.SEARCH_TEXT;
-                ch.PAY_FEE_MESSAGE = string.Empty;
-                ch.CLOSE_CONTRACT_DATE = DateTime.Now;
-                ch.REFERENCE_PHONE = con.REFERENCE_PHONE;
-                ch.SCHOOL_NAME = con.SCHOOL_NAME;
-                ch.CLASS_NAME = con.CLASS_NAME;
-                ch.IMPLEMENTER = con.IMPLEMENTER;
-                ch.BACK_TO_DOCUMENTS = con.BACK_TO_DOCUMENTS;
-                ch.CREATED_BY = Session["username"].ToString();
-                ch.CREATED_DATE = DateTime.Now;
-                ch.UPDATED_BY = Session["username"].ToString();
-                ch.UPDATED_DATE = DateTime.Now;
-                using (var db = new RentBikeEntities())
-                {
+                    // Insert History row
+                    ContractHistory ch = new ContractHistory();
+                    ch.CONTRACT_ID = con.ID;
+                    ch.CONTRACT_NO = con.CONTRACT_NO;
+                    ch.CUSTOMER_ID = con.CUSTOMER_ID;
+                    ch.CONTRACT_AMOUNT = con.CONTRACT_AMOUNT;
+                    ch.DETAIL = con.DETAIL;
+                    ch.RENT_DATE = con.RENT_DATE;
+                    ch.END_DATE = con.END_DATE;
+                    ch.FEE_PER_DAY = con.FEE_PER_DAY;
+                    ch.ITEM_LICENSE_NO = con.ITEM_LICENSE_NO;
+                    ch.ITEM_TYPE = con.ITEM_TYPE;
+                    ch.NOTE = con.NOTE;
+                    ch.REFERENCE_NAME = con.REFERENCE_NAME;
+                    ch.RENT_TYPE_ID = con.RENT_TYPE_ID;
+                    ch.SERIAL_1 = con.SERIAL_1;
+                    ch.SERIAL_2 = con.SERIAL_2;
+                    ch.STORE_ID = con.STORE_ID;
+                    ch.SEARCH_TEXT = con.SEARCH_TEXT;
+                    ch.PAY_FEE_MESSAGE = string.Empty;
+                    ch.CLOSE_CONTRACT_DATE = DateTime.Now;
+                    ch.REFERENCE_PHONE = con.REFERENCE_PHONE;
+                    ch.SCHOOL_NAME = con.SCHOOL_NAME;
+                    ch.CLASS_NAME = con.CLASS_NAME;
+                    ch.IMPLEMENTER = con.IMPLEMENTER;
+                    ch.BACK_TO_DOCUMENTS = con.BACK_TO_DOCUMENTS;
+                    ch.CREATED_BY = Session["username"].ToString();
+                    ch.CREATED_DATE = DateTime.Now;
+                    ch.UPDATED_BY = Session["username"].ToString();
+                    ch.UPDATED_DATE = DateTime.Now;
+
                     db.ContractHistories.Add(ch);
                     db.SaveChanges();
+                    trans.Complete();
                 }
-                trans.Complete();
             }
             Response.Redirect("FormContractManagement.aspx");
         }
@@ -278,7 +259,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.First(s => s.ACC == acc);
+                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;
