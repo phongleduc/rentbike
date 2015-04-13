@@ -54,15 +54,15 @@ namespace RentBike
                                     PayPeriod pp3;
 
                                     int percentDate = overDate / 30;
-                                    int multipleFee = Convert.ToInt32(Decimal.Floor(contract.CONTRACT_AMOUNT / 1000000));
+                                    int multipleFee = Convert.ToInt32(Decimal.Floor(contract.CONTRACT_AMOUNT / 100000));
 
                                     DateTime endDateUpdated = extendEndDate.AddDays(30 * (percentDate + 1));
                                     contract.EXTEND_END_DATE = endDateUpdated;
                                     db.SaveChanges();
 
                                     PayPeriod payPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId).OrderByDescending(c => c.PAY_DATE).FirstOrDefault();
-                                    decimal increateFeeCar = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 500 * 10);
-                                    decimal increateFeeEquip = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 1000 * 10);
+                                    decimal increateFeeCar = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 50 * 10);
+                                    decimal increateFeeEquip = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 100 * 10);
                                     decimal increateFeeOther = payPeriod.AMOUNT_PER_PERIOD;
 
                                     for (int i = 0; i <= percentDate; i++)

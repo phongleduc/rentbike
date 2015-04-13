@@ -36,20 +36,20 @@ namespace RentBike
             }
             else
             {
-                if (!string.IsNullOrEmpty(hfPager.Value))
-                {
-                    LoadData(txtDate.Text, txtSearch.Text, Convert.ToInt16(ddlPager.SelectedValue) - 1, storeId);
-                }
-                else
-                {
+                //if (!string.IsNullOrEmpty(hfPager.Value))
+                //{
+                //    LoadData(txtDate.Text, txtSearch.Text, Convert.ToInt16(ddlPager.SelectedValue) - 1, storeId);
+                //}
+                //else
+                //{
                     LoadData(txtDate.Text, txtSearch.Text, 0, storeId);
-                }
+                //}
             }
         }
 
         private void LoadData(string date, string strSearch, int page, int storeId)
         {
-            int totalRecord = 0;
+            //int totalRecord = 0;
             List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
             using (var db = new RentBikeEntities())
             {
@@ -90,8 +90,7 @@ namespace RentBike
                             c.OVER_DATE = DateTime.Now.Subtract(c.PAY_DATE.AddDays(10)).Days;
                             c.PAYED_TIME = lstPeriodPayed.Count();
                         }
-                        if (c.OVER_DATE >= 0)
-                            dataList.Add(c);
+                        dataList.Add(c);
                     }
                 }
                 if (!string.IsNullOrEmpty(searchDate))
@@ -99,26 +98,26 @@ namespace RentBike
                     dataList = dataList.Where(s => s.MUST_PAY_IN_TODAY == true).ToList();
                 }
 
-                totalRecord = Convert.ToInt16(dataList.Count());
-                int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-                List<int> pageList = new List<int>();
-                for (int i = 1; i <= totalPage; i++)
-                {
-                    pageList.Add(i);
-                }
+                //totalRecord = Convert.ToInt16(dataList.Count());
+                //int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+                //List<int> pageList = new List<int>();
+                //for (int i = 1; i <= totalPage; i++)
+                //{
+                //    pageList.Add(i);
+                //}
 
-                ddlPager.DataSource = pageList;
-                ddlPager.DataBind();
-                if (pageList.Count > 0)
-                {
-                    ddlPager.SelectedIndex = page;
-                }
+                //ddlPager.DataSource = pageList;
+                //ddlPager.DataBind();
+                //if (pageList.Count > 0)
+                //{
+                //    ddlPager.SelectedIndex = page;
+                //}
 
-                int skip = page * pageSize;
-                dataList = dataList.OrderByDescending(s => s.OVER_DATE).Skip(skip).Take(pageSize).ToList();
+                //int skip = page * pageSize;
+                //dataList = dataList.OrderByDescending(s => s.OVER_DATE).Skip(skip).Take(pageSize).ToList();
             }
 
-            rptWarning.DataSource = dataList;
+            rptWarning.DataSource = dataList.OrderByDescending(s => s.OVER_DATE);
             rptWarning.DataBind();
         }
 

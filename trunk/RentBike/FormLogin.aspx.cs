@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Security.Cryptography;
 using System.Text;
 using RentBike.Common;
+using System.Web.Security;
 
 namespace RentBike
 {
@@ -14,24 +15,43 @@ namespace RentBike
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+                if (Request.Cookies["UserName"] != null && Request.Cookies["Password"] != null)
+                {
+                    if (LoadUser(Request.Cookies["UserName"].Value, Request.Cookies["Password"].Value))
+                    {
+                        Response.Redirect("FormWarning.aspx", false);
+                    }
+                    else
+                    {
+                        Response.Redirect("FormLogin.aspx", false);
+                    }
+                }
+            }
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
             try
             {
-                if (LoadUser())
+                if (LoadUser(txtUsername.Text.Trim(), CommonList.EncryptPassword(txtPassword.Text.Trim())))
                 {
-                    WriteLog(CommonList.ACTION_LOGIN, false); 
-                    //if (Session["permission"].ToString() == "1")
-                    //{
-                    //    Response.Redirect("FormStoreManagement.aspx", false);
-                    //}
-                    //else
-                    //{
-                    //    Response.Redirect("FormContractManagement.aspx", false);
-                    //}
+                    if (chkRememberMe.Checked)
+                    {
+                        Response.Cookies["UserName"].Expires = DateTime.MaxValue;
+                        Response.Cookies["Password"].Expires = DateTime.MaxValue;
+                    }
+                    else
+                    {
+                        Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(-1);
+                        Response.Cookies["Password"].Expires = DateTime.Now.AddDays(-1);
+
+                    }
+                    Response.Cookies["UserName"].Value = txtUsername.Text.Trim();
+                    Response.Cookies["Password"].Value =  CommonList.EncryptPassword(txtPassword.Text.Trim());
+
+                    WriteLog(CommonList.ACTION_LOGIN, false);
                     Response.Redirect("FormWarning.aspx", false);
                 }
                 else
@@ -43,14 +63,11 @@ namespace RentBike
             {
                 WriteLog(ex.Message, true);
                 throw ex;
-            } 
+            }
         }
 
-        private bool LoadUser()
+        private bool LoadUser(string user, string password)
         {
-            string user = txtUsername.Text.Trim();
-            string password = CommonList.EncryptPassword(txtPassword.Text.Trim());
-
             List<Account> lst = new List<Account>();
             using (var db = new RentBikeEntities())
             {
@@ -125,11 +142,6 @@ namespace RentBike
                 db.Logs.Add(lg);
                 db.SaveChanges();
             }
-        }
-
-        protected void btnClear_Click(object sender, EventArgs e)
-        {
-            txtUsername.Text = txtPassword.Text = string.Empty;
         }
     }
 }
