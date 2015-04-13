@@ -20,8 +20,12 @@
     </table>
     <asp:Repeater ID="rptWarning" runat="server" OnItemDataBound="rptWarning_ItemDataBound">
         <HeaderTemplate>
-            <table class="table table-striped table-hover">
-                <thead>
+            <div class="text-right" style="margin-bottom:5px">
+                <a class="print" href="javascript:void(0);">
+                    <img src="App_Themes/Theme1/image/printer-blue.png" /></a>&nbsp;&nbsp;
+            </div>
+            <div id="areaToPrint">
+                <table class="table table-striped table-hover">
                     <tr class="success">
                         <th>#</th>
                         <th>Tên khách hàng</th>
@@ -33,8 +37,6 @@
                         <th class="text-center">Số ngày quá hạn</th>
                         <th class="text-center">Xử lý HĐ</th>
                     </tr>
-                </thead>
-                <tbody>
         </HeaderTemplate>
         <ItemTemplate>
             <tr id='<%# string.Format("HtmlTableRow{0}", Container.ItemIndex) %>'>
@@ -45,27 +47,30 @@
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY")) * 10) %></td>
                 <td class="text-right"><%# Eval("PAYED_TIME") %> lần</td>
                 <td class="text-right"><%# Eval("NOTE") %></td>
-                <td class="text-center <%# ShowClass(Convert.ToInt32(Eval("OVER_DATE"))) %>"><%# Convert.ToDateTime(Eval("PAY_DATE")).ToString("dd/MM/yyyy") %> <br />(<%# Eval("OVER_DATE") %>Ngày)
-                    <asp:HiddenField ID ="hdfOverDay" Value='<%# Eval("OVER_DATE") %>' runat="server" />
+                <td class="text-center <%# ShowClass(Convert.ToInt32(Eval("OVER_DATE"))) %>"><%# Convert.ToDateTime(Eval("PAY_DATE")).ToString("dd/MM/yyyy") %>
+                    <br />
+                    (<%# Eval("OVER_DATE") %>Ngày)
+                    <asp:HiddenField ID="hdfOverDay" Value='<%# Eval("OVER_DATE") %>' runat="server" />
                 </td>
                 <td>
                     <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>
-            </tbody>
-           </table>
+            </table>
+                </div>
         </FooterTemplate>
     </asp:Repeater>
-    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-    <asp:HiddenField ID="hfPager" runat="server" />
+
+    <%--    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+    <asp:HiddenField ID="hfPager" runat="server" />--%>
     <script>
         $(function () {
             $('#<%=txtDate.ClientID %>').datepicker();
 
-            $('#<%=ddlPager.ClientID %>').change(function () {
+<%--            $('#<%=ddlPager.ClientID %>').change(function () {
                 $('#<%=hfPager.ClientID %>').val($(this).val());
-            });
+            });--%>
 
             $('#<%=txtSearch.ClientID %>').keypress(function (e) {
                 if (e.which == 13) {
@@ -73,6 +78,22 @@
                     return false;
                 }
             });
+
+            var options = {};
+            $('a.print').click(function (e) {
+                //$(this).parent().next().printArea(options);
+                printDiv();
+            });
+
+            function printDiv() {
+                var divToPrint = $('#areaToPrint').clone();
+                divToPrint.prepend($("<h1 style='text-align:center;'>Thông báo</h1>"));
+                divToPrint.find('table').attr('border', '1');
+                newWin = window.open("");
+                newWin.document.write(divToPrint.html());
+                newWin.print();
+                newWin.close();
+            }
         });
     </script>
 </asp:Content>

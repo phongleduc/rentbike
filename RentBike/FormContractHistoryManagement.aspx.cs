@@ -80,7 +80,7 @@ namespace RentBike
                 }
             }
 
-            rptContractHistory.DataSource = dataList;
+            rptContractHistory.DataSource = dataList.OrderByDescending(c=>c.CLOSE_CONTRACT_DATE);
             rptContractHistory.DataBind();
         }
 
@@ -128,7 +128,7 @@ namespace RentBike
                 }
             }
 
-            rptContractHistory.DataSource = dataList;
+            rptContractHistory.DataSource = dataList.OrderByDescending(c => c.CLOSE_CONTRACT_DATE); ;
             rptContractHistory.DataBind();
         }
 

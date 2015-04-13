@@ -108,6 +108,8 @@ namespace RentBike
             finally
             {
                 Session.RemoveAll();
+                Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies["Password"].Expires = DateTime.Now.AddDays(-1);
                 Response.Redirect("FormLogin.aspx");
             }
         }

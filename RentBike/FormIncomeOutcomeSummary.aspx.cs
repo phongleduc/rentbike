@@ -231,19 +231,19 @@ namespace RentBike
                         inout = g.Record.Where(x => x.InOutTypeId == 19 && x.RentTypeId == 1);
                         if (inout.Any())
                         {
-                            si.RedundantFeeCar = inout.Sum(x => x.InAmount);
+                            si.RedundantFeeCar = inout.Sum(x => x.OutAmount);
                         }
 
                         inout = g.Record.Where(x => x.InOutTypeId == 19 && x.RentTypeId == 2);
                         if (inout.Any())
                         {
-                            si.RedundantFeeEquip = inout.Sum(x => x.InAmount);
+                            si.RedundantFeeEquip = inout.Sum(x => x.OutAmount);
                         }
 
                         inout = g.Record.Where(x => x.InOutTypeId == 19 && x.RentTypeId == 3);
                         if (inout.Any())
                         {
-                            si.RedundantFeeOther = inout.Sum(x => x.InAmount);
+                            si.RedundantFeeOther = inout.Sum(x => x.OutAmount);
                         }
                         
                         lst.Add(si);
@@ -467,19 +467,19 @@ namespace RentBike
                         inout = g.Record.Where(x => x.InOutTypeId == 19 && x.RentTypeId == 1);
                         if (inout.Any())
                         {
-                            si.RedundantFeeCar = inout.Sum(x => x.InAmount);
+                            si.RedundantFeeCar = inout.Sum(x => x.OutAmount);
                         }
 
                         inout = g.Record.Where(x => x.InOutTypeId == 19 && x.RentTypeId == 2);
                         if (inout.Any())
                         {
-                            si.RedundantFeeEquip = inout.Sum(x => x.InAmount);
+                            si.RedundantFeeEquip = inout.Sum(x => x.OutAmount);
                         }
 
                         inout = g.Record.Where(x => x.InOutTypeId == 19 && x.RentTypeId == 3);
                         if (inout.Any())
                         {
-                            si.RedundantFeeOther = inout.Sum(x => x.InAmount);
+                            si.RedundantFeeOther = inout.Sum(x => x.OutAmount);
                         }
 
                         lst.Add(si);
