@@ -147,6 +147,15 @@ namespace RentBike
                             txtPhone.Text = cntrct.PHONE;
                             txtPermanentResidence.Text = cntrct.PERMANENT_RESIDENCE;
                             txtCurrentResidence.Text = cntrct.CURRENT_RESIDENCE;
+                            if (cntrct.PHOTO != null)
+                            {
+                                fileUploadUserPhoto.Visible = false;
+                                imgUserPhoto.ImageUrl = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(cntrct.PHOTO));
+                            }
+                            else
+                            {
+                                imgUserPhoto.Visible = false;
+                            }
                             txtContractNo.Text = cntrct.CONTRACT_NO;
                             var rentType = db.RentTypes.Where(c => c.NAME == cntrct.RENT_TYPE_NAME).FirstOrDefault();
                             ddlRentType.SelectedValue = rentType.ID.ToString();
@@ -178,6 +187,7 @@ namespace RentBike
                     }
                     else // NEW
                     {
+                        imgUserPhoto.Visible = false;
                         IsNewContract = true;
                         btnFinishContract.Visible = false;
                         txtContractNo.Visible = false;
@@ -459,6 +469,8 @@ namespace RentBike
                                 cusItem.PHONE = txtPhone.Text.Trim();
                                 cusItem.PERMANENT_RESIDENCE = txtPermanentResidence.Text.Trim();
                                 cusItem.CURRENT_RESIDENCE = txtCurrentResidence.Text.Trim();
+                                if (fileUploadUserPhoto.HasFile)
+                                    cusItem.PHOTO = ImageHelper.CreateThumbnail(fileUploadUserPhoto.FileBytes, 128, 128);
 
                                 if (IsNewCust)
                                 {
@@ -663,16 +675,20 @@ namespace RentBike
                     else // EDIT
                     {
                         int contractId = Convert.ToInt32(id);
-                        using (var rbdb = new RentBikeEntities())
+                        using (var db = new RentBikeEntities())
                         {
-                            var item = rbdb.Contracts.FirstOrDefault(itm => itm.ID == contractId);
+                            var item = db.Contracts.FirstOrDefault(itm => itm.ID == contractId);
 
                             item.NOTE = txtNote.Text.Trim();
                             item.DETAIL = txtItemDetail.Text.Trim();
                             item.UPDATED_BY = Session["username"].ToString();
                             item.UPDATED_DATE = DateTime.Now;
 
-                            int num = rbdb.SaveChanges();
+                            var cusItem = db.Customers.FirstOrDefault(c => c.ID == item.CUSTOMER_ID);
+                            if (fileUploadUserPhoto.HasFile)
+                                cusItem.PHOTO = ImageHelper.CreateThumbnail(fileUploadUserPhoto.FileBytes, 128, 128);
+
+                            db.SaveChanges();
                         }
 
                         WriteLog(CommonList.ACTION_UPDATE_CONTRACT, false);

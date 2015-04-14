@@ -70,13 +70,13 @@ namespace RentBike.Common
 
                 foreach (Store store in rt)
                 {
-                    ddlSt.Items.Add(new ListItem(store.NAME, store.ID.ToString())); 
+                    ddlSt.Items.Add(new ListItem(store.NAME, store.ID.ToString()));
                 }
             }
         }
 
         public static string FormatedAsCurrency(int input)
-        {            
+        {
             return String.Format("{0:#,0.#} VNÐ", input);
         }
 
@@ -96,6 +96,21 @@ namespace RentBike.Common
             encrypted = strBuilder.ToString();
 
             return encrypted;
+        }
+
+        public static string ConvertByteImageToBase64String(byte[] data)
+        {
+            if (data != null && data.Length > 0)
+            {
+                StringBuilder base64Buidler = new StringBuilder();
+                base64Buidler.Append("data:");
+
+                base64Buidler.Append("image/png");
+                base64Buidler.Append(";base64,");
+                base64Buidler.Append(Convert.ToBase64String(data));
+                return base64Buidler.ToString();
+            }
+            return string.Empty;
         }
     }
 }

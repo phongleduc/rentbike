@@ -125,6 +125,7 @@
           <Property Name="EMAIL" Type="varchar" MaxLength="50" />
           <Property Name="PHONE" Type="nvarchar" MaxLength="30" Nullable="false" />
           <Property Name="ADDRESS" Type="nvarchar" MaxLength="300" />
+          <Property Name="PHOTO" Type="image" />
           <Property Name="CITY_ID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="InOut">
@@ -289,6 +290,7 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_FULL_VW' does not have a p
           <Property Name="CURRENT_RESIDENCE" Type="nvarchar" MaxLength="300" />
           <Property Name="BIRTH_DAY" Type="datetime" />
           <Property Name="EMAIL" Type="varchar" MaxLength="50" />
+          <Property Name="PHOTO" Type="image" />
           <Property Name="REFERENCE_PHONE" Type="nvarchar" MaxLength="30" />
           <Property Name="SCHOOL_NAME" Type="nvarchar" MaxLength="100" />
           <Property Name="CLASS_NAME" Type="nvarchar" MaxLength="50" />
@@ -377,6 +379,7 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_HISTORY_FULL_VW' does not 
           <Property Name="CURRENT_RESIDENCE" Type="nvarchar" MaxLength="300" />
           <Property Name="BIRTH_DAY" Type="datetime" />
           <Property Name="EMAIL" Type="varchar" MaxLength="50" />
+          <Property Name="PHOTO" Type="image" />
           <Property Name="RENT_TYPE_NAME" Type="nvarchar" MaxLength="100" />
           <Property Name="CLOSE_CONTRACT_DATE" Type="date" Nullable="false" />
         </EntityType>
@@ -506,6 +509,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
     [CONTRACT_FULL_VW].[CURRENT_RESIDENCE] AS [CURRENT_RESIDENCE], 
     [CONTRACT_FULL_VW].[BIRTH_DAY] AS [BIRTH_DAY], 
     [CONTRACT_FULL_VW].[EMAIL] AS [EMAIL], 
+    [CONTRACT_FULL_VW].[PHOTO] AS [PHOTO], 
     [CONTRACT_FULL_VW].[REFERENCE_PHONE] AS [REFERENCE_PHONE], 
     [CONTRACT_FULL_VW].[SCHOOL_NAME] AS [SCHOOL_NAME], 
     [CONTRACT_FULL_VW].[CLASS_NAME] AS [CLASS_NAME], 
@@ -566,6 +570,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
     [CONTRACT_HISTORY_FULL_VW].[CURRENT_RESIDENCE] AS [CURRENT_RESIDENCE], 
     [CONTRACT_HISTORY_FULL_VW].[BIRTH_DAY] AS [BIRTH_DAY], 
     [CONTRACT_HISTORY_FULL_VW].[EMAIL] AS [EMAIL], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO] AS [PHOTO], 
     [CONTRACT_HISTORY_FULL_VW].[RENT_TYPE_NAME] AS [RENT_TYPE_NAME], 
     [CONTRACT_HISTORY_FULL_VW].[CLOSE_CONTRACT_DATE] AS [CLOSE_CONTRACT_DATE]
     FROM [dbo].[CONTRACT_HISTORY_FULL_VW] AS [CONTRACT_HISTORY_FULL_VW]</DefiningQuery>
@@ -744,6 +749,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="PHONE" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ADDRESS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="CITY_ID" Type="Int32" Nullable="false" />
+          <Property Name="PHOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="InOut">
           <Key>
@@ -919,6 +925,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
           <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
+          <Property Name="PHOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="CONTRACT_HISTORY_FULL_VW">
           <Key>
@@ -992,6 +999,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="EMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="RENT_TYPE_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="CLOSE_CONTRACT_DATE" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="PHOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="INOUT_FULL_VW">
           <Key>
@@ -1209,6 +1217,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="Customers">
             <EntityTypeMapping TypeName="RentBikeModel.Customer">
               <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="NAME" ColumnName="NAME" />
                 <ScalarProperty Name="LICENSE_NO" ColumnName="LICENSE_NO" />
@@ -1338,6 +1347,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="CONTRACT_FULL_VW">
             <EntityTypeMapping TypeName="RentBikeModel.CONTRACT_FULL_VW">
               <MappingFragment StoreEntitySet="CONTRACT_FULL_VW">
+                <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
                 <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
@@ -1387,6 +1397,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="CONTRACT_HISTORY_FULL_VW">
             <EntityTypeMapping TypeName="RentBikeModel.CONTRACT_HISTORY_FULL_VW">
               <MappingFragment StoreEntitySet="CONTRACT_HISTORY_FULL_VW">
+                <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
                 <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />

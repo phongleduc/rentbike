@@ -96,6 +96,7 @@
     <Content Include="App_Themes\Theme1\image\grey-height-95.png" />
     <Content Include="App_Themes\Theme1\image\grey-height-98.png" />
     <Content Include="App_Themes\Theme1\image\header.png" />
+    <Content Include="App_Themes\Theme1\image\icon-user-default.png" />
     <Content Include="App_Themes\Theme1\image\loading.gif" />
     <Content Include="App_Themes\Theme1\image\off.png" />
     <Content Include="App_Themes\Theme1\image\printer-blue.png" />
@@ -169,6 +170,7 @@
     <Compile Include="City.cs">
       <DependentUpon>RentBike.tt</DependentUpon>
     </Compile>
+    <Compile Include="Common\ImageHelper.cs" />
     <Compile Include="Contract.cs">
       <DependentUpon>RentBike.tt</DependentUpon>
     </Compile>

@@ -57,5 +57,6 @@ namespace RentBike
         public string EMAIL { get; set; }
         public string RENT_TYPE_NAME { get; set; }
         public System.DateTime CLOSE_CONTRACT_DATE { get; set; }
+        public byte[] PHOTO { get; set; }
     }
 }

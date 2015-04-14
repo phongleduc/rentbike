@@ -53,10 +53,14 @@ namespace RentBike
             List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
             using (var db = new RentBikeEntities())
             {
-                var st = db.CONTRACT_FULL_VW.Where(c => c.SEARCH_TEXT.Contains(strSearch) && c.CONTRACT_STATUS == true);
+                var st = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true);
                 if (storeId != 0)
                 {
                     st = st.Where(c => c.STORE_ID == storeId);
+                }
+                if (!string.IsNullOrEmpty(strSearch))
+                { 
+                    st = st.Where(c => c.SEARCH_TEXT.Contains(strSearch));
                 }
                 st = st.OrderByDescending(c => c.ID);
 
