@@ -19,7 +19,7 @@ namespace RentBike
             }
             if (!IsPostBack)
             {
-                int id = Convert.ToInt16(Request.QueryString["ID"]);
+                int id = Convert.ToInt32(Request.QueryString["ID"]);
                 using (var db = new RentBikeEntities())
                 {
                     Contract con = db.Contracts.FirstOrDefault(c => c.ID == id);
@@ -61,7 +61,7 @@ namespace RentBike
         {
             using (TransactionScope trans = new TransactionScope())
             {
-                int contractId = Convert.ToInt16(Request.QueryString["ID"]);
+                int contractId = Convert.ToInt32(Request.QueryString["ID"]);
                 using (var db = new RentBikeEntities())
                 {
                     var con = db.CONTRACT_FULL_VW.FirstOrDefault(c => c.ID == contractId);

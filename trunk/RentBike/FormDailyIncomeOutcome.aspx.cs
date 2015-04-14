@@ -38,7 +38,7 @@ namespace RentBike
             {
                 if (!string.IsNullOrEmpty(hfPager.Value))
                 {
-                    LoadData(txtSearch.Text, txtDate.Text, Convert.ToInt16(ddlPager.SelectedValue) - 1, storeId);
+                    LoadData(txtSearch.Text, txtDate.Text, Convert.ToInt32(ddlPager.SelectedValue) - 1, storeId);
                 }
                 else
                 {
@@ -64,7 +64,7 @@ namespace RentBike
                         dataList = dataList.Where(s => s.INOUT_DATE.HasValue ? s.INOUT_DATE.Value.ToString("yyyyMMdd").Equals(date) : false).ToList();
 
                     }
-                    totalRecord = Convert.ToInt16(dataList.Count());
+                    totalRecord = Convert.ToInt32(dataList.Count());
                     dataList = dataList.Skip(skip).Take(pageSize).ToList();
                 }
                 else
@@ -76,7 +76,7 @@ namespace RentBike
                         dataList = dataList.Where(s => s.INOUT_DATE.HasValue ? s.INOUT_DATE.Value.ToString("yyyyMMdd").Equals(date) : false).ToList();
 
                     }
-                    totalRecord = Convert.ToInt16(dataList.Count());
+                    totalRecord = Convert.ToInt32(dataList.Count());
                     dataList = dataList.Skip(skip).Take(pageSize).ToList();
                 }
                 int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
@@ -151,7 +151,7 @@ namespace RentBike
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //LoadData(txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1, storeId);
+            //LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1, storeId);
         }
 
         public bool CheckAdminPermission()

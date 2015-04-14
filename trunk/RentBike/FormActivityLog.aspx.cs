@@ -47,13 +47,13 @@ namespace RentBike
         {
             // LOAD PAGER
             int totalRecord = 0;
-            int storeid = Convert.ToInt16(Session["store_id"]);
+            int storeid = Convert.ToInt32(Session["store_id"]);
             using (var db = new RentBikeEntities())
             {
                 var count = (from c in db.Logs
                              where c.SEARCH_TEXT.Contains(strSearch) && c.IS_CRASH == false && c.STORE_ID == storeid
                              select c).Count();
-                totalRecord = Convert.ToInt16(count);
+                totalRecord = Convert.ToInt32(count);
             }
 
             int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
@@ -98,14 +98,14 @@ namespace RentBike
                     var count = (from c in db.Logs
                                  where c.SEARCH_TEXT.Contains(strSearch) && c.IS_CRASH == false && (!string.IsNullOrEmpty(c.STORE) && c.STORE.Contains(drpStore.SelectedItem.Text))
                                  select c).Count();
-                    totalRecord = Convert.ToInt16(count);
+                    totalRecord = Convert.ToInt32(count);
                 }
                 else
                 {
                     var count = (from c in db.Logs
                                  where c.SEARCH_TEXT.Contains(strSearch) && c.IS_CRASH == false
                                  select c).Count();
-                    totalRecord = Convert.ToInt16(count);
+                    totalRecord = Convert.ToInt32(count);
                 }
             }
 
@@ -163,9 +163,9 @@ namespace RentBike
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (CheckAdminPermission())
-                LoadDataAdmin(Helper.parseInt(drpStore.SelectedValue), txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+                LoadDataAdmin(Helper.parseInt(drpStore.SelectedValue), txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
             else
-                LoadData(txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+                LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         public bool CheckAdminPermission()

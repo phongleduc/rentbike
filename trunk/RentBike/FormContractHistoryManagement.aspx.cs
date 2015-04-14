@@ -50,7 +50,7 @@ namespace RentBike
         {
             // LOAD PAGER
             int totalRecord = 0;
-            int storeid = Convert.ToInt16(Session["store_id"]); 
+            int storeid = Convert.ToInt32(Session["store_id"]); 
 
             // LOAD DATA WITH PAGING
             List<CONTRACT_HISTORY_FULL_VW> dataList;
@@ -62,9 +62,10 @@ namespace RentBike
                          orderby s.CLOSE_CONTRACT_DATE
                          select s;
 
-                dataList = st.Skip(skip).Take(pageSize).ToList();
+                dataList = st.OrderByDescending(c => c.CLOSE_CONTRACT_DATE).ToList();
+                totalRecord = dataList.Count();
 
-                totalRecord = st.Count();
+                dataList = dataList.Skip(skip).Take(pageSize).ToList();
                 int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
                 List<int> pageList = new List<int>();
                 for (int i = 1; i <= totalPage; i++)
@@ -80,7 +81,7 @@ namespace RentBike
                 }
             }
 
-            rptContractHistory.DataSource = dataList.OrderByDescending(c=>c.CLOSE_CONTRACT_DATE);
+            rptContractHistory.DataSource = dataList;
             rptContractHistory.DataBind();
         }
 
@@ -99,8 +100,10 @@ namespace RentBike
                              orderby s.CLOSE_CONTRACT_DATE
                              select s;
 
-                    dataList = st.Skip(skip).Take(pageSize).ToList();
-                    totalRecord = st.Count();
+                    dataList = st.OrderByDescending(c => c.CLOSE_CONTRACT_DATE).ToList();
+                    totalRecord = dataList.Count();
+
+                    dataList = dataList.Skip(skip).Take(pageSize).ToList();
                 }
                 else
                 {
@@ -109,8 +112,10 @@ namespace RentBike
                              orderby s.CLOSE_CONTRACT_DATE
                              select s;
 
-                    dataList = st.Skip(skip).Take(pageSize).ToList();
-                    totalRecord = st.Count();
+                    dataList = st.OrderByDescending(c => c.CLOSE_CONTRACT_DATE).ToList();
+                    totalRecord = dataList.Count();
+
+                    dataList = dataList.Skip(skip).Take(pageSize).ToList();
                 }
 
                 int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
@@ -128,7 +133,7 @@ namespace RentBike
                 }
             }
 
-            rptContractHistory.DataSource = dataList.OrderByDescending(c => c.CLOSE_CONTRACT_DATE); ;
+            rptContractHistory.DataSource = dataList;
             rptContractHistory.DataBind();
         }
 
@@ -140,9 +145,9 @@ namespace RentBike
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (CheckAdminPermission())
-                LoadDataAdmin(Helper.parseInt(drpStore.SelectedValue), txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+                LoadDataAdmin(Helper.parseInt(drpStore.SelectedValue), txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
             else
-                LoadData(txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+                LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         public bool CheckAdminPermission()

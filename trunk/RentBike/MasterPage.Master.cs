@@ -21,7 +21,7 @@ namespace RentBike
             {
                 try
                 {
-                    int permissionid = Convert.ToInt16(Session["permission"]);
+                    int permissionid = Convert.ToInt32(Session["permission"]);
                     LoadStore(permissionid);
                     if (permissionid != 1)
                     {
@@ -29,7 +29,7 @@ namespace RentBike
                         //hplPendingContract.Visible = false;
                         hplCommonListSetting.Visible = false;
                         hplAccountManagement.Visible = false;
-                        int storeid = Convert.ToInt16(Session["store_id"]);
+                        int storeid = Convert.ToInt32(Session["store_id"]);
                         CalcFeeStore(storeid);
                     }
                     else if (permissionid == 1)
@@ -42,7 +42,7 @@ namespace RentBike
                     }
 
                     txtUserFullName.Text = Session["name"].ToString();
-                    //int storeid = Convert.ToInt16(Session["store_id"]);
+                    //int storeid = Convert.ToInt32(Session["store_id"]);
                     //using (var db = new RentBikeEntities())
                     //{
                     //    var item = db.Stores.FirstOrDefault(s => s.ID == storeid);
@@ -131,7 +131,7 @@ namespace RentBike
                     }
                     else
                     {
-                        storeid = Convert.ToInt16(Session["store_id"]);
+                        storeid = Convert.ToInt32(Session["store_id"]);
                     }
                     var item = from itm in db.Stores
                                where itm.ID == storeid

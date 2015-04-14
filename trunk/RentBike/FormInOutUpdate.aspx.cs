@@ -19,7 +19,7 @@ namespace RentBike
             if (!IsPostBack)
             {
                 // LOAD PAYPERIOD
-                int periodId = Convert.ToInt16(Request.QueryString["ID"]);
+                int periodId = Convert.ToInt32(Request.QueryString["ID"]);
                 PayPeriod pp = new PayPeriod();
                 using (var db = new RentBikeEntities())
                 {
@@ -105,7 +105,7 @@ namespace RentBike
         protected void btnSave_Click(object sender, EventArgs e)
         {
             // SAVE INOUT
-            int periodId = Convert.ToInt16(Request.QueryString["ID"]);
+            int periodId = Convert.ToInt32(Request.QueryString["ID"]);
             PayPeriod pp = new PayPeriod();
             using (var db = new RentBikeEntities())
             {
@@ -124,10 +124,10 @@ namespace RentBike
                 io.CONTRACT_ID = pp.CONTRACT_ID;
                 io.PERIOD_ID = pp.ID;
                 io.RENT_TYPE_ID = contract.RENT_TYPE_ID;
-                io.INOUT_TYPE_ID = Convert.ToInt16(ddInOutType.SelectedValue);
+                io.INOUT_TYPE_ID = Convert.ToInt32(ddInOutType.SelectedValue);
                 io.PERIOD_DATE = pp.PAY_DATE;
                 io.MORE_INFO = txtMoreInfo.Text.Trim();
-                io.STORE_ID = Convert.ToInt16(Session["store_id"]);
+                io.STORE_ID = Convert.ToInt32(Session["store_id"]);
                 io.SEARCH_TEXT = string.Format("{0} ", io.MORE_INFO);
                 io.INOUT_DATE = DateTime.Now;
                 io.CREATED_BY = Session["username"].ToString();
@@ -217,7 +217,7 @@ namespace RentBike
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
-            int periodId = Convert.ToInt16(Request.QueryString["ID"]);
+            int periodId = Convert.ToInt32(Request.QueryString["ID"]);
             PayPeriod pp = new PayPeriod();
             using (var db = new RentBikeEntities())
             {

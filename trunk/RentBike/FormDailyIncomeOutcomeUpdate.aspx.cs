@@ -73,7 +73,7 @@ namespace RentBike
             using (TransactionScope ts = new TransactionScope())
             {
                 InOut io = new InOut();
-                io.INOUT_TYPE_ID = Convert.ToInt16(ddlInOutFee.SelectedValue);
+                io.INOUT_TYPE_ID = Convert.ToInt32(ddlInOutFee.SelectedValue);
                 io.MORE_INFO = txtMoreInfo.Text.Trim();
                 io.SEARCH_TEXT = string.Format("");
                 io.CONTRACT_ID = -1;
@@ -82,11 +82,11 @@ namespace RentBike
                 io.PERIOD_DATE = new DateTime(1, 1, 1);
                 if (ddlStore.Enabled == false)
                 {
-                    io.STORE_ID = Convert.ToInt16(Session["store_id"]);
+                    io.STORE_ID = Convert.ToInt32(Session["store_id"]);
                 }
                 else
                 {
-                    io.STORE_ID = Convert.ToInt16(ddlStore.SelectedValue);
+                    io.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
                 }
 
 

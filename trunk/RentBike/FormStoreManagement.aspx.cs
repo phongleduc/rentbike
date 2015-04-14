@@ -35,14 +35,14 @@ namespace RentBike
         protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             DropDownList drpStore = sender as DropDownList;
-            LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpStore.SelectedValue), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+            LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpStore.SelectedValue), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         private void CheckPermission()
         {
             string username = Convert.ToString(Session["username"]);
             string name = Convert.ToString(Session["name"]);
-            int permission = Convert.ToInt16(Session["permission"]);
+            int permission = Convert.ToInt32(Session["permission"]);
 
             if (string.IsNullOrEmpty(username))
             {
@@ -83,14 +83,14 @@ namespace RentBike
                     var count = (from c in db.Stores
                                  where c.SEARCH_TEXT.Contains(strSearch) && c.ID == storeId
                                  select c).Count();
-                    totalRecord = Convert.ToInt16(count);
+                    totalRecord = Convert.ToInt32(count);
                 }
                 else
                 {
                     var count = (from c in db.Stores
                                  where c.SEARCH_TEXT.Contains(strSearch)
                                  select c).Count();
-                    totalRecord = Convert.ToInt16(count);
+                    totalRecord = Convert.ToInt32(count);
                 }
             }
 
@@ -149,7 +149,7 @@ namespace RentBike
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadData(txtSearch.Text.Trim(), 0, Convert.ToInt16(ddlPager.SelectedValue) - 1);
+            LoadData(txtSearch.Text.Trim(), 0, Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)

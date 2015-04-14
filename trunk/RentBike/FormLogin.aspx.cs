@@ -136,7 +136,7 @@ namespace RentBike
             lg.IS_CRASH = isCrashed;
             lg.LOG_MSG = string.Format("Tài khoản {0} {1}thực hiện {2} vào lúc {3}", lg.ACCOUNT, strStore, lg.LOG_ACTION, lg.LOG_DATE);
             lg.SEARCH_TEXT = lg.LOG_MSG;
-            lg.STORE_ID = Convert.ToInt16(Session["store_id"]);
+            lg.STORE_ID = Convert.ToInt32(Session["store_id"]);
             using (var db = new RentBikeEntities())
             {
                 db.Logs.Add(lg);

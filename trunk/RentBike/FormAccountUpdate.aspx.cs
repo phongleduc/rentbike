@@ -46,7 +46,7 @@ namespace RentBike
                     //item.STORE_ID = 
                     txtName.Text = item.NAME;
                     //item.ADDRESS = txtAddress.Text.Trim();
-                    //item.CITY_ID = Convert.ToInt16(ddlCity.SelectedValue);
+                    //item.CITY_ID = Convert.ToInt32(ddlCity.SelectedValue);
                     txtPhone.Text = item.PHONE;
                     txtRegisterDate.Text = item.REGISTER_DATE.ToShortDateString();
                     rdbActive.Checked = item.ACTIVE;
@@ -158,11 +158,11 @@ namespace RentBike
                 item.PASSWORD = CommonList.EncryptPassword(txtNewPassword.Text.Trim());
                 txtOldPassword.Enabled = false;
                 txtConfirmPassword.Enabled = false;
-                item.PERMISSION_ID = Convert.ToInt16(ddlPermission.SelectedValue);
-                item.STORE_ID = Convert.ToInt16(ddlStore.SelectedValue);
+                item.PERMISSION_ID = Convert.ToInt32(ddlPermission.SelectedValue);
+                item.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
 
                 item.NAME = txtName.Text.Trim();
-                item.CITY_ID = Convert.ToInt16(ddlCity.SelectedValue);
+                item.CITY_ID = Convert.ToInt32(ddlCity.SelectedValue);
                 item.PHONE = txtPhone.Text.Trim();
                 item.REGISTER_DATE = Convert.ToDateTime(txtRegisterDate.Text);
                 item.ACTIVE = rdbActive.Checked;
@@ -192,10 +192,10 @@ namespace RentBike
                     {
                         item.PASSWORD = CommonList.EncryptPassword(txtNewPassword.Text.Trim());
                     }
-                    item.PERMISSION_ID = Convert.ToInt16(ddlPermission.SelectedValue);
-                    item.STORE_ID = Convert.ToInt16(ddlStore.SelectedValue);
+                    item.PERMISSION_ID = Convert.ToInt32(ddlPermission.SelectedValue);
+                    item.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
                     item.NAME = txtName.Text.Trim();
-                    item.CITY_ID = Convert.ToInt16(ddlCity.SelectedValue);
+                    item.CITY_ID = Convert.ToInt32(ddlCity.SelectedValue);
                     item.PHONE = txtPhone.Text.Trim();
                     item.REGISTER_DATE = Convert.ToDateTime(txtRegisterDate.Text);
                     item.ACTIVE = rdbActive.Checked;
@@ -215,7 +215,7 @@ namespace RentBike
 
         private void LoadPermission()
         {
-            int crtPermissionId = Convert.ToInt16(Session["permission"]);
+            int crtPermissionId = Convert.ToInt32(Session["permission"]);
             int filterId = crtPermissionId == 1 ? 1 : crtPermissionId + 1;
             List<AccountPermission> perList = new List<AccountPermission>();
             using (var db = new RentBikeEntities())
@@ -238,7 +238,7 @@ namespace RentBike
 
         //protected void ddlCity_SelectedIndexChanged(object sender, EventArgs e)
         //{
-        //    List<Store> lst = GetStoreByCity(Convert.ToInt16(ddlCity.SelectedValue));
+        //    List<Store> lst = GetStoreByCity(Convert.ToInt32(ddlCity.SelectedValue));
 
         //    LoadStore(lst);
         //}
