@@ -14,7 +14,7 @@
                 </tr>
             </tbody>
         </table>
-        <asp:Repeater ID="rptCustomer" runat="server" OnItemCommand="rptCustomer_ItemCommand">
+        <asp:Repeater ID="rptCustomer" runat="server">
             <HeaderTemplate>
                 <table class="table table-striped table-hover">
                     <thead>
@@ -26,7 +26,7 @@
                             <th>Địa chỉ</th>
                             <th>Số hợp đồng</th>
                             <th>Trạng thái</th>
-                            <th>Chọn</th>
+<%--                            <th>Chọn</th>--%>
                         </tr>
                     </thead>
                     <tbody>
@@ -43,8 +43,8 @@
                         <asp:HyperLink ID="hplContractInfo" runat="server" Text='<%# Eval("CONTRACT_NO") %>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink>
                     </td>
                     <td><%# Convert.ToBoolean(Eval("CONTRACT_STATUS")) ? "Chưa thanh lý" : "Đã thanh lý" %></td>
-                    <td>
-                        <asp:Button ID="btnChoose" runat="server" Text="Chọn" CssClass="btn btn-primary" CommandName="btnChoose" /></td>
+<%--                    <td>
+                        <asp:Button ID="btnChoose" runat="server" Text="Chọn" CssClass="btn btn-primary" CommandName="btnChoose" /></td>--%>
             </ItemTemplate>
             <FooterTemplate>
                 </tbody>

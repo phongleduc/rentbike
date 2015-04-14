@@ -187,7 +187,6 @@ namespace RentBike
                     }
                     else // NEW
                     {
-                        imgUserPhoto.Visible = false;
                         IsNewContract = true;
                         btnFinishContract.Visible = false;
                         txtContractNo.Visible = false;
@@ -238,6 +237,15 @@ namespace RentBike
                                     txtPhone.Text = cntrct.PHONE;
                                     txtPermanentResidence.Text = cntrct.PERMANENT_RESIDENCE;
                                     txtCurrentResidence.Text = cntrct.CURRENT_RESIDENCE;
+                                    if (cntrct.PHOTO != null)
+                                    {
+                                        fileUploadUserPhoto.Visible = false;
+                                        imgUserPhoto.ImageUrl = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(cntrct.PHOTO));
+                                    }
+                                    else
+                                    {
+                                        imgUserPhoto.Visible = false;
+                                    }
                                     txtContractNo.Text = cntrct.CONTRACT_NO;
                                     var rentType = db.RentTypes.Where(c => c.NAME == cntrct.RENT_TYPE_NAME).FirstOrDefault();
                                     ddlRentType.SelectedValue = rentType.ID.ToString();
@@ -712,19 +720,19 @@ namespace RentBike
                 CONTRACT_FULL_VW cntrct = db.CONTRACT_FULL_VW.Where(s => s.LICENSE_NO == licenseNo).FirstOrDefault();
                 if (cntrct != null && cntrct.CONTRACT_STATUS == true)
                 {
-                    LoadData(licenseNo, 0);
-                    if (storeId != 0 && storeId != cntrct.STORE_ID)
-                    {
-                        foreach (RepeaterItem rptItem in rptCustomer.Items)
-                        {
-                            if (rptItem.FindControl("hplContractInfo") != null)
-                                ((HyperLink)rptItem.FindControl("hplContractInfo")).Enabled = false;
+                    //LoadData(licenseNo, 0);
+                    //if (storeId != 0 && storeId != cntrct.STORE_ID)
+                    //{
+                    //    foreach (RepeaterItem rptItem in rptCustomer.Items)
+                    //    {
+                    //        if (rptItem.FindControl("hplContractInfo") != null)
+                    //            ((HyperLink)rptItem.FindControl("hplContractInfo")).Enabled = false;
 
-                            if (rptItem.FindControl("btnChoose") != null)
-                                ((Button)rptItem.FindControl("btnChoose")).Enabled = false;
-                        }
+                    //        if (rptItem.FindControl("btnChoose") != null)
+                    //            ((Button)rptItem.FindControl("btnChoose")).Enabled = false;
+                    //    }
 
-                    }
+                    //}
                     return 1;
                 }
                 else
@@ -868,33 +876,33 @@ namespace RentBike
             }
         }
 
-        protected void rptCustomer_ItemCommand(object source, RepeaterCommandEventArgs e)
-        {
-            if (e.CommandName == "btnChoose")
-            {
-                int idx = e.Item.ItemIndex;
-                int cusid = Convert.ToInt32(((HiddenField)rptCustomer.Items[idx].FindControl("hdfCustomerID")).Value);
-                hdfCus.Value = cusid.ToString();
-                List<Customer> lst = new List<Customer>();
-                using (var db = new RentBikeEntities())
-                {
-                    var item = from itm in db.Customers
-                               where itm.ID == cusid
-                               select itm;
+        //protected void rptCustomer_ItemCommand(object source, RepeaterCommandEventArgs e)
+        //{
+        //    if (e.CommandName == "btnChoose")
+        //    {
+        //        int idx = e.Item.ItemIndex;
+        //        int cusid = Convert.ToInt32(((HiddenField)rptCustomer.Items[idx].FindControl("hdfCustomerID")).Value);
+        //        hdfCus.Value = cusid.ToString();
+        //        List<Customer> lst = new List<Customer>();
+        //        using (var db = new RentBikeEntities())
+        //        {
+        //            var item = from itm in db.Customers
+        //                       where itm.ID == cusid
+        //                       select itm;
 
-                    lst = item.ToList();
-                }
+        //            lst = item.ToList();
+        //        }
 
-                if (lst.Count > 0)
-                {
-                    txtCustomerName.Text = lst[0].NAME;
-                    txtLicenseNumber.Text = lst[0].LICENSE_NO;
-                    txtPhone.Text = lst[0].PHONE;
-                    txtCurrentResidence.Text = lst[0].CURRENT_RESIDENCE;
-                }
+        //        if (lst.Count > 0)
+        //        {
+        //            txtCustomerName.Text = lst[0].NAME;
+        //            txtLicenseNumber.Text = lst[0].LICENSE_NO;
+        //            txtPhone.Text = lst[0].PHONE;
+        //            txtCurrentResidence.Text = lst[0].CURRENT_RESIDENCE;
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
 
         // NOT USE ANYMORE
