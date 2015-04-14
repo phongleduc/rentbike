@@ -113,6 +113,13 @@
                     <td>
                         <asp:TextBox ID="txtCurrentResidence" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
                 </tr>
+                <tr>
+                    <td class="text-right">Ảnh đại diện</td>
+                    <td>
+                        <asp:FileUpload ID="fileUploadUserPhoto" runat="server" CssClass="form-control input-sm"></asp:FileUpload>
+                        <asp:Image ID="imgUserPhoto" runat="server" AlternateText="" />
+                    </td>
+                </tr>
                 <tr class="success">
                     <td colspan="2" class="text-center"><strong>Thông tin hợp đồng</strong></td>
                 </tr>
