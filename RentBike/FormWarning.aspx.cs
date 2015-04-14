@@ -38,7 +38,7 @@ namespace RentBike
             {
                 //if (!string.IsNullOrEmpty(hfPager.Value))
                 //{
-                //    LoadData(txtDate.Text, txtSearch.Text, Convert.ToInt16(ddlPager.SelectedValue) - 1, storeId);
+                //    LoadData(txtDate.Text, txtSearch.Text, Convert.ToInt32(ddlPager.SelectedValue) - 1, storeId);
                 //}
                 //else
                 //{
@@ -77,6 +77,22 @@ namespace RentBike
                     var tmpLstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID).OrderByDescending(s => s.PAY_DATE).ToList();
                     if (tmpLstPeriod != null)
                     {
+                        decimal paidAmount = tmpLstPeriod.Where(s => s.ACTUAL_PAY > 0).Select(s => s.ACTUAL_PAY).DefaultIfEmpty().Sum();
+                        int paidNumberOfFee = 0;
+                        foreach (PayPeriod pp in tmpLstPeriod)
+                        {
+                            if (paidAmount <= 0)
+                                break;
+
+                            paidAmount -= pp.AMOUNT_PER_PERIOD;
+                            paidNumberOfFee += 1;
+                        }
+                        c.PAYED_TIME = paidNumberOfFee;
+
+                        PayPeriod pp1 = tmpLstPeriod.Where(s => s.PAY_DATE >= DateTime.Now).FirstOrDefault();
+                        if (pp1 != null)
+                            c.FEE_PER_DAY = pp1.AMOUNT_PER_PERIOD / 10;
+
                         var payItemToday = tmpLstPeriod.FirstOrDefault(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate) && s.ACTUAL_PAY < s.AMOUNT_PER_PERIOD);
                         if (payItemToday != null)
                         {
@@ -88,7 +104,7 @@ namespace RentBike
                         {
                             c.PAY_DATE = lstPeriodPayed.LastOrDefault().PAY_DATE;
                             c.OVER_DATE = DateTime.Now.Subtract(c.PAY_DATE.AddDays(10)).Days;
-                            c.PAYED_TIME = lstPeriodPayed.Count();
+                            //c.PAYED_TIME = lstPeriodPayed.Count();
                         }
                         dataList.Add(c);
                     }
@@ -98,7 +114,7 @@ namespace RentBike
                     dataList = dataList.Where(s => s.MUST_PAY_IN_TODAY == true).ToList();
                 }
 
-                //totalRecord = Convert.ToInt16(dataList.Count());
+                //totalRecord = Convert.ToInt32(dataList.Count());
                 //int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
                 //List<int> pageList = new List<int>();
                 //for (int i = 1; i <= totalPage; i++)
@@ -128,7 +144,7 @@ namespace RentBike
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //LoadData(txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+            //LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         protected void rptWarning_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -139,7 +155,7 @@ namespace RentBike
             //    if (DateTime.Now.Subtract(((CONTRACT_FULL_VW)e.Item.DataItem).END_DATE).Days < 10)
             //    {
             //        HtmlTableRow tr = (HtmlTableRow)e.Item.FindControl(string.Format("HtmlTableRow{0}", e.Item.ItemIndex));
-            //        int overDays = Convert.ToInt16(((HiddenField)e.Item.FindControl("hdfOverDay")).Value);
+            //        int overDays = Convert.ToInt32(((HiddenField)e.Item.FindControl("hdfOverDay")).Value);
             //        if (overDays < 10)
             //        {
             //            tr.Style.Add(HtmlTextWriterStyle.BackgroundColor, "Yellow");

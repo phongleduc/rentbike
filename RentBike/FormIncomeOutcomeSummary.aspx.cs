@@ -30,7 +30,7 @@ namespace RentBike
             {
                 
                 //CommonList.LoadStore(ddlStore);
-                int permissionid = Convert.ToInt16(Session["permission"]);
+                int permissionid = Convert.ToInt32(Session["permission"]);
                 LoadStore(permissionid);
             }
             LoadMiddle();
@@ -288,7 +288,7 @@ namespace RentBike
                 }
                 else
                 {
-                    int storeid = Convert.ToInt16(Session["store_id"]);
+                    int storeid = Convert.ToInt32(Session["store_id"]);
                     //var data = (from d in db.InOuts
                     //            where d.STORE_ID == storeid
                     //            group d by new
@@ -641,7 +641,7 @@ namespace RentBike
                 }
                 else // NOT ADMIN
                 {
-                    int storeid = Convert.ToInt16(Session["store_id"]);
+                    int storeid = Convert.ToInt32(Session["store_id"]);
                     var item1 = from itm1 in db.CONTRACT_FULL_VW
                                 where itm1.STORE_ID == storeid
                                 select itm1;
@@ -697,7 +697,7 @@ namespace RentBike
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            //int storeid = Convert.ToInt16(ddlStore.SelectedValue);
+            //int storeid = Convert.ToInt32(ddlStore.SelectedValue);
             //DateTime dt = Convert.ToDateTime(txtViewDate.Text);
             ////int year = Convert.ToDateTime(txtViewDate.Text).Year;
             ////int month = Convert.ToDateTime(txtViewDate.Text).Month;
@@ -740,7 +740,7 @@ namespace RentBike
 
 
             //if (CheckAdminPermission())
-            LoadDetailData(Convert.ToInt16(ddlStore.SelectedValue), txtViewDate.Text, 0);
+            LoadDetailData(Convert.ToInt32(ddlStore.SelectedValue), txtViewDate.Text, 0);
             //else
             //btnSearch.Enabled = false;
         }
@@ -825,7 +825,7 @@ namespace RentBike
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadDetailData(Convert.ToInt16(ddlStore.SelectedValue), txtViewDate.Text, Convert.ToInt16(ddlPager.SelectedValue) - 1);
+            LoadDetailData(Convert.ToInt32(ddlStore.SelectedValue), txtViewDate.Text, Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         private void LoadStore(int permissionid)

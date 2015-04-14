@@ -30,10 +30,10 @@ namespace RentBike
                 {
                     CommonList.LoadRentType(ddlRentType);
                     CommonList.LoadStore(ddlStore);
-                    hdfFeeRate.Value = (GetFeeRate(Convert.ToInt16(Session["store_id"])) / 10000).ToString();
+                    hdfFeeRate.Value = (GetFeeRate(Convert.ToInt32(Session["store_id"])) / 10000).ToString();
                     string id = Request.QueryString["ID"];
                     string copy = Request.QueryString["copy"];
-                    int storeId = Convert.ToInt16(Session["store_id"]);
+                    int storeId = Convert.ToInt32(Session["store_id"]);
 
                     if (!string.IsNullOrEmpty(id) && string.IsNullOrEmpty(copy)) // EDIT
                     {
@@ -199,7 +199,7 @@ namespace RentBike
                             {
 
                             }
-                            RentTypeID = Convert.ToInt16(ddlRentType.SelectedValue);
+                            RentTypeID = Convert.ToInt32(ddlRentType.SelectedValue);
                             txtRentDate.Text = string.Format("{0:dd/MM/yyyy}", DateTime.Now);
                             txtEndDate.Text = string.Format("{0:dd/MM/yyyy}", DateTime.Now.AddDays(29));
 
@@ -269,7 +269,7 @@ namespace RentBike
                 var count = (from c in db.Contracts
                              where c.SEARCH_TEXT.Contains(strSearch)
                              select c).Count();
-                totalRecord = Convert.ToInt16(count);
+                totalRecord = Convert.ToInt32(count);
             }
 
             int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
@@ -428,7 +428,7 @@ namespace RentBike
                         if (status == 1)
                         {
                             //LoadData(txtLicenseNumber.Text.Trim(), 0);
-                            RentTypeID = Convert.ToInt16(ddlRentType.SelectedValue);
+                            RentTypeID = Convert.ToInt32(ddlRentType.SelectedValue);
                             lblMessage.Text = string.Format("Hợp đồng với CMT {0} chưa được thanh lý.", txtLicenseNumber.Text.Trim());
                             lblMessage.ForeColor = Color.Red;
                         }
@@ -487,7 +487,7 @@ namespace RentBike
 
                             // New Contract
                             Contract item = new Contract();
-                            item.RENT_TYPE_ID = Convert.ToInt16(ddlRentType.SelectedValue);
+                            item.RENT_TYPE_ID = Convert.ToInt32(ddlRentType.SelectedValue);
                             item.FEE_PER_DAY = Math.Round(Convert.ToDecimal(txtFeePerDay.Text.Replace(",", string.Empty)));
                             if (!string.IsNullOrEmpty(txtRentDate.Text))
                             {
@@ -517,7 +517,7 @@ namespace RentBike
                             item.IMPLEMENTER = txtImplementer.Text.Trim();
                             item.BACK_TO_DOCUMENTS = txtBackDocument.Text.Trim();
                             item.DETAIL = txtItemDetail.Text.Trim();
-                            item.CUSTOMER_ID = hdfCus.Value != string.Empty ? Convert.ToInt16(hdfCus.Value) : item.CUSTOMER_ID = cusid;
+                            item.CUSTOMER_ID = hdfCus.Value != string.Empty ? Convert.ToInt32(hdfCus.Value) : item.CUSTOMER_ID = cusid;
                             item.CONTRACT_STATUS = true;
                             item.CONTRACT_AMOUNT = Convert.ToDecimal(txtAmount.Text.Replace(",", string.Empty));
                             item.CREATED_BY = Session["username"].ToString();
@@ -526,9 +526,9 @@ namespace RentBike
                             item.UPDATED_DATE = DateTime.Now;
                             //item.CONTRACT_NO = txtContractNo.Text.Trim();
                             if (ddlStore.Enabled == true)
-                                item.STORE_ID = Convert.ToInt16(ddlStore.SelectedValue);
+                                item.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
                             else
-                                item.STORE_ID = Convert.ToInt16(Session["store_id"]);
+                                item.STORE_ID = Convert.ToInt32(Session["store_id"]);
                             item.SEARCH_TEXT = string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}",
                                                             txtCustomerName.Text.Trim(),
                                                             txtBirthDay.Text.Trim(),
@@ -608,13 +608,13 @@ namespace RentBike
                             io.CONTRACT_ID = item.ID;
                             io.IN_AMOUNT = 0;
                             io.OUT_AMOUNT = Convert.ToDecimal(txtAmount.Text);
-                            io.RENT_TYPE_ID = Convert.ToInt16(ddlRentType.SelectedValue);
+                            io.RENT_TYPE_ID = Convert.ToInt32(ddlRentType.SelectedValue);
                             io.PERIOD_DATE = DateTime.Now;
                             io.MORE_INFO = string.Format("Cho khách {0} thuê: {1} ngày {2} trị giá {3}", txtCustomerName.Text.Trim(), txtItemName.Text.Trim(), DateTime.Now.ToString("dd/MM/yyyy"), txtAmount.Text.Trim());
                             if (ddlStore.Enabled == true)
-                                io.STORE_ID = Convert.ToInt16(ddlStore.SelectedValue);
+                                io.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
                             else
-                                io.STORE_ID = Convert.ToInt16(Session["store_id"]);
+                                io.STORE_ID = Convert.ToInt32(Session["store_id"]);
                             io.SEARCH_TEXT = string.Format("{0} ", io.MORE_INFO);
                             io.INOUT_DATE = DateTime.Now;
                             io.CREATED_BY = Session["username"].ToString();
@@ -662,7 +662,7 @@ namespace RentBike
                     }
                     else // EDIT
                     {
-                        int contractId = Convert.ToInt16(id);
+                        int contractId = Convert.ToInt32(id);
                         using (var rbdb = new RentBikeEntities())
                         {
                             var item = rbdb.Contracts.FirstOrDefault(itm => itm.ID == contractId);
@@ -692,7 +692,7 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
-                int storeId = Convert.ToInt16(Session["store_id"]);
+                int storeId = Convert.ToInt32(Session["store_id"]);
                 CONTRACT_FULL_VW cntrct = db.CONTRACT_FULL_VW.Where(s => s.LICENSE_NO == licenseNo).FirstOrDefault();
                 if (cntrct != null && cntrct.CONTRACT_STATUS == true)
                 {
@@ -726,7 +726,7 @@ namespace RentBike
             string id = Request.QueryString["ID"];
             if (!string.IsNullOrEmpty(id))
             {
-                int contractID = Convert.ToInt16(id);
+                int contractID = Convert.ToInt32(id);
                 List<PayPeriod> lst;
                 using (var db = new RentBikeEntities())
                 {
@@ -800,7 +800,7 @@ namespace RentBike
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadData(txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+            LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         private decimal GetFeeRate(int storeId)
@@ -857,7 +857,7 @@ namespace RentBike
             if (e.CommandName == "btnChoose")
             {
                 int idx = e.Item.ItemIndex;
-                int cusid = Convert.ToInt16(((HiddenField)rptCustomer.Items[idx].FindControl("hdfCustomerID")).Value);
+                int cusid = Convert.ToInt32(((HiddenField)rptCustomer.Items[idx].FindControl("hdfCustomerID")).Value);
                 hdfCus.Value = cusid.ToString();
                 List<Customer> lst = new List<Customer>();
                 using (var db = new RentBikeEntities())

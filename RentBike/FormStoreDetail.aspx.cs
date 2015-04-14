@@ -115,7 +115,7 @@ namespace RentBike
                 Store st = new Store();
                 st.NAME = txtName.Text.Trim();
                 st.ADDRESS = txtAddress.Text.Trim();
-                st.CITY_ID = Convert.ToInt16(ddlCity.SelectedValue);
+                st.CITY_ID = Convert.ToInt32(ddlCity.SelectedValue);
                 st.PHONE = txtPhone.Text.Trim();
                 st.FAX = string.Empty;
                 st.START_CAPITAL = Convert.ToDecimal(txtStartCapital.Text);
@@ -179,7 +179,7 @@ namespace RentBike
 
                 st.NAME = txtName.Text.Trim();
                 st.ADDRESS = txtAddress.Text.Trim();
-                st.CITY_ID = Convert.ToInt16(ddlCity.SelectedValue);
+                st.CITY_ID = Convert.ToInt32(ddlCity.SelectedValue);
                 st.PHONE = txtPhone.Text.Trim();
                 st.FAX = string.Empty;
                 st.START_CAPITAL = Convert.ToDecimal(txtStartCapital.Text);

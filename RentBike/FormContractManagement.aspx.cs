@@ -49,7 +49,7 @@ namespace RentBike
                 LoadData(string.Empty, Helper.parseInt(drpRentType.SelectedValue));
 
             LoadGeneralInfo();
-            //LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpStore.SelectedValue), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+            //LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpStore.SelectedValue), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         private void LoadData(string strSearch, int rentType)
@@ -153,9 +153,9 @@ namespace RentBike
         //protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         //{
         //    if (CheckAdminPermission())
-        //        LoadDataAdmin(txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+        //        LoadDataAdmin(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         //    else
-        //        LoadData(txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+        //        LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         //}
 
         protected void drpRentType_SelectedIndexChanged(object sender, EventArgs e)
@@ -194,7 +194,7 @@ namespace RentBike
 
         private int GetNoRentBikeContract()
         {
-            int storeid = Convert.ToInt16(Session["store_id"]);
+            int storeid = Convert.ToInt32(Session["store_id"]);
             int no = 0;
             using (var db = new RentBikeEntities())
             {
@@ -205,7 +205,7 @@ namespace RentBike
 
                 if (item != null && item.Any())
                 {
-                    no = Convert.ToInt16(item.Count());
+                    no = Convert.ToInt32(item.Count());
                     TotalFeeBike = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                 }
             }
@@ -227,7 +227,7 @@ namespace RentBike
 
                     if (item != null && item.Any())
                     {
-                        no = Convert.ToInt16(item.Count());
+                        no = Convert.ToInt32(item.Count());
                         TotalFeeBike = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
@@ -239,7 +239,7 @@ namespace RentBike
 
                     if (item != null && item.Any())
                     {
-                        no = Convert.ToInt16(item.Count());
+                        no = Convert.ToInt32(item.Count());
                         TotalFeeBike = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
@@ -250,7 +250,7 @@ namespace RentBike
 
         private int GetNoRentOfficeEquipContract()
         {
-            int storeid = Convert.ToInt16(Session["store_id"]);
+            int storeid = Convert.ToInt32(Session["store_id"]);
             int no = 0;
             using (var db = new RentBikeEntities())
             {
@@ -261,7 +261,7 @@ namespace RentBike
 
                 if (item != null && item.Any())
                 {
-                    no = Convert.ToInt16(item.Count());
+                    no = Convert.ToInt32(item.Count());
                     TotalFeeEquip = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                 }
             }
@@ -283,7 +283,7 @@ namespace RentBike
 
                     if (item != null && item.Any())
                     {
-                        no = Convert.ToInt16(item.Count());
+                        no = Convert.ToInt32(item.Count());
                         TotalFeeEquip = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
@@ -295,7 +295,7 @@ namespace RentBike
 
                     if (item != null && item.Any())
                     {
-                        no = Convert.ToInt16(item.Count());
+                        no = Convert.ToInt32(item.Count());
                         TotalFeeEquip = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
@@ -306,7 +306,7 @@ namespace RentBike
 
         private int GetNoRentOtherContract()
         {
-            int storeid = Convert.ToInt16(Session["store_id"]);
+            int storeid = Convert.ToInt32(Session["store_id"]);
             int no = 0;
             using (var db = new RentBikeEntities())
             {
@@ -317,7 +317,7 @@ namespace RentBike
 
                 if (item != null && item.Any())
                 {
-                    no = Convert.ToInt16(item.Count());
+                    no = Convert.ToInt32(item.Count());
                     TotalFeeOther = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                 }
             }
@@ -339,7 +339,7 @@ namespace RentBike
 
                     if (item != null && item.Any())
                     {
-                        no = Convert.ToInt16(item.Count());
+                        no = Convert.ToInt32(item.Count());
                         TotalFeeOther = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
@@ -351,7 +351,7 @@ namespace RentBike
 
                     if (item != null && item.Any())
                     {
-                        no = Convert.ToInt16(item.Count());
+                        no = Convert.ToInt32(item.Count());
                         TotalFeeOther = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
@@ -362,7 +362,7 @@ namespace RentBike
 
         private int GetNoOfNotFinishedContract()
         {
-            int storeid = Convert.ToInt16(Session["store_id"]);
+            int storeid = Convert.ToInt32(Session["store_id"]);
             int no = 0;
             using (var db = new RentBikeEntities())
             {
@@ -371,7 +371,7 @@ namespace RentBike
                             && itm.STORE_ID == storeid
                             select itm).Count();
 
-                no = Convert.ToInt16(item);
+                no = Convert.ToInt32(item);
             }
 
             return no;
@@ -389,7 +389,7 @@ namespace RentBike
                                 where itm.CONTRACT_STATUS == true && itm.STORE_ID == storeid// true == active (not finished contract)
                                 select itm).Count();
 
-                    no = Convert.ToInt16(item);
+                    no = Convert.ToInt32(item);
                 }
                 else
                 {
@@ -397,7 +397,7 @@ namespace RentBike
                                 where itm.CONTRACT_STATUS == true// true == active (not finished contract)
                                 select itm).Count();
 
-                    no = Convert.ToInt16(item);
+                    no = Convert.ToInt32(item);
                 }
             }
 
@@ -406,7 +406,7 @@ namespace RentBike
 
         private decimal GetAmountOfNotFinishedContract()
         {
-            int storeid = Convert.ToInt16(Session["store_id"]);
+            int storeid = Convert.ToInt32(Session["store_id"]);
             decimal amount = 0;
             List<Contract> lst = new List<Contract>();
             using (var db = new RentBikeEntities())

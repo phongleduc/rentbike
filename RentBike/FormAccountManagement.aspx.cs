@@ -51,14 +51,14 @@ namespace RentBike
                     var count = (from c in db.Accounts
                                  where c.SEARCH_TEXT.Contains(strSearch) && c.STORE_ID == storeId
                                  select c).Count();
-                    totalRecord = Convert.ToInt16(count);
+                    totalRecord = Convert.ToInt32(count);
                 }
                 else
                 {
                     var count = (from c in db.Accounts
                                  where c.SEARCH_TEXT.Contains(strSearch)
                                  select c).Count();
-                    totalRecord = Convert.ToInt16(count);
+                    totalRecord = Convert.ToInt32(count);
                 }
             }
 
@@ -113,7 +113,7 @@ namespace RentBike
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadData(Helper.parseInt(drpStore.SelectedValue), txtSearch.Text.Trim(), Convert.ToInt16(ddlPager.SelectedValue) - 1);
+            LoadData(Helper.parseInt(drpStore.SelectedValue), txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)

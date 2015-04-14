@@ -34,7 +34,7 @@ namespace RentBike
                 var count = (from c in db.RentTypes
                              //where c.SEARCH_TEXT.Contains(strSearch)
                              select c).Count();
-                totalRecord = Convert.ToInt16(count);
+                totalRecord = Convert.ToInt32(count);
             }
 
             int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
@@ -70,7 +70,7 @@ namespace RentBike
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadData(string.Empty, Convert.ToInt16(ddlPager.SelectedValue) - 1);
+            LoadData(string.Empty, Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
     }
 }

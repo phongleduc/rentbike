@@ -87,6 +87,7 @@
 
             function printDiv() {
                 var divToPrint = $('#areaToPrint').clone();
+                divToPrint.find('table').find("tr").find("th:last, td:last").remove();
                 divToPrint.prepend($("<h1 style='text-align:center;'>Thông báo</h1>"));
                 divToPrint.find('table').attr('border', '1');
                 newWin = window.open("");
