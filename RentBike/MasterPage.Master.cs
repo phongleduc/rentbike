@@ -23,11 +23,11 @@ namespace RentBike
                 {
                     int permissionid = Convert.ToInt32(Session["permission"]);
                     LoadStore(permissionid);
+                    hplCommonListSetting.Visible = false;
                     if (permissionid != 1)
                     {
                         hplStoreManagement.Visible = false;
                         //hplPendingContract.Visible = false;
-                        hplCommonListSetting.Visible = false;
                         hplAccountManagement.Visible = false;
                         int storeid = Convert.ToInt32(Session["store_id"]);
                         CalcFeeStore(storeid);
