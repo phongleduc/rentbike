@@ -148,24 +148,6 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.TextBox txtCurrentResidence;
         
         /// <summary>
-        /// fileUploadUserPhoto control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fileUploadUserPhoto;
-        
-        /// <summary>
-        /// imgUserPhoto control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Image imgUserPhoto;
-        
-        /// <summary>
         /// txtContractNo control.
         /// </summary>
         /// <remarks>
@@ -344,6 +326,24 @@ namespace RentBike {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtClass;
+        
+        /// <summary>
+        /// fileUploadPhoto control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.FileUpload fileUploadPhoto;
+        
+        /// <summary>
+        /// litPhoto control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litPhoto;
         
         /// <summary>
         /// txtItemDetail control.

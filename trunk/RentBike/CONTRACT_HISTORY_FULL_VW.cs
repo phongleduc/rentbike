@@ -58,5 +58,15 @@ namespace RentBike
         public string RENT_TYPE_NAME { get; set; }
         public System.DateTime CLOSE_CONTRACT_DATE { get; set; }
         public byte[] PHOTO { get; set; }
+        public string PHOTO_1 { get; set; }
+        public string THUMBNAIL_PHOTO_1 { get; set; }
+        public string PHOTO_2 { get; set; }
+        public string THUMBNAIL_PHOTO_2 { get; set; }
+        public string PHOTO_3 { get; set; }
+        public string THUMBNAIL_PHOTO_3 { get; set; }
+        public string PHOTO_4 { get; set; }
+        public string THUMBNAIL_PHOTO_4 { get; set; }
+        public string PHOTO_5 { get; set; }
+        public string THUMBNAIL_PHOTO_5 { get; set; }
     }
 }

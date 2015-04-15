@@ -45,5 +45,15 @@ namespace RentBike
         public string UPDATED_BY { get; set; }
         public Nullable<System.DateTime> UPDATED_DATE { get; set; }
         public Nullable<System.DateTime> EXTEND_END_DATE { get; set; }
+        public string PHOTO_1 { get; set; }
+        public string THUMBNAIL_PHOTO_1 { get; set; }
+        public string PHOTO_2 { get; set; }
+        public string THUMBNAIL_PHOTO_2 { get; set; }
+        public string PHOTO_3 { get; set; }
+        public string THUMBNAIL_PHOTO_3 { get; set; }
+        public string PHOTO_4 { get; set; }
+        public string THUMBNAIL_PHOTO_4 { get; set; }
+        public string PHOTO_5 { get; set; }
+        public string THUMBNAIL_PHOTO_5 { get; set; }
     }
 }

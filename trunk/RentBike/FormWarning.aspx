@@ -34,7 +34,7 @@
                         <th class="text-right">Giá trị HĐ/Phí</th>
                         <th class="text-right">Số lần đóng phí</th>
                         <th class="text-center">Thông báo</th>
-                        <th class="text-center">Số ngày quá hạn</th>
+                        <th class="text-center">Số ngày đã làm</th>
                         <th class="text-center">Xử lý HĐ</th>
                     </tr>
         </HeaderTemplate>
@@ -47,11 +47,7 @@
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY")) * 10) %></td>
                 <td class="text-right"><%# Eval("PAYED_TIME") %> lần</td>
                 <td class="text-right"><%# Eval("NOTE") %></td>
-                <td class="text-center <%# ShowClass(Convert.ToInt32(Eval("OVER_DATE"))) %>"><%# Convert.ToDateTime(Eval("PAY_DATE")).ToString("dd/MM/yyyy") %>
-                    <br />
-                    (<%# Eval("OVER_DATE") %>Ngày)
-                    <asp:HiddenField ID="hdfOverDay" Value='<%# Eval("OVER_DATE") %>' runat="server" />
-                </td>
+                <td class="text-center"><%# Eval("OVER_DATE") %> Ngày <br /><span style="color:red">(<%# Convert.ToDateTime(Eval("RENT_DATE")).ToString("dd/MM/yyyy") %>)</span></td>
                 <td>
                     <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
@@ -90,6 +86,7 @@
                 divToPrint.find('table').find("tr").find("th:last, td:last").remove();
                 divToPrint.prepend($("<h1 style='text-align:center;'>Thông báo</h1>"));
                 divToPrint.find('table').attr('border', '1');
+                divToPrint.find('table').css('width', '100%');
                 newWin = window.open("");
                 newWin.document.write(divToPrint.html());
                 newWin.print();

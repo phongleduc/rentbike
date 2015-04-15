@@ -68,6 +68,16 @@
           <Property Name="IMPLEMENTER" Type="nvarchar" MaxLength="50" />
           <Property Name="BACK_TO_DOCUMENTS" Type="nvarchar" MaxLength="300" />
           <Property Name="CONTRACT_NO" Type="varchar" MaxLength="13" StoreGeneratedPattern="Computed" />
+          <Property Name="PHOTO_1" Type="varchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_1" Type="varchar" MaxLength="300" />
+          <Property Name="PHOTO_2" Type="varchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_2" Type="varchar" MaxLength="300" />
+          <Property Name="PHOTO_3" Type="varchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_3" Type="varchar" MaxLength="300" />
+          <Property Name="PHOTO_4" Type="varchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_4" Type="varchar" MaxLength="300" />
+          <Property Name="PHOTO_5" Type="varchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_5" Type="varchar" MaxLength="300" />
           <Property Name="CREATED_BY" Type="nvarchar" MaxLength="50" />
           <Property Name="CREATED_DATE" Type="datetime" />
           <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
@@ -105,6 +115,16 @@
           <Property Name="IMPLEMENTER" Type="nvarchar" MaxLength="50" />
           <Property Name="BACK_TO_DOCUMENTS" Type="nvarchar" MaxLength="300" />
           <Property Name="CONTRACT_NO" Type="nvarchar" MaxLength="20" />
+          <Property Name="PHOTO_1" Type="nvarchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_1" Type="nvarchar" MaxLength="300" />
+          <Property Name="PHOTO_2" Type="nvarchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_2" Type="nvarchar" MaxLength="300" />
+          <Property Name="PHOTO_3" Type="nvarchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_3" Type="nvarchar" MaxLength="300" />
+          <Property Name="PHOTO_4" Type="nvarchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_4" Type="nvarchar" MaxLength="300" />
+          <Property Name="PHOTO_5" Type="nvarchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_5" Type="nvarchar" MaxLength="300" />
           <Property Name="CREATED_BY" Type="nvarchar" MaxLength="50" />
           <Property Name="CREATED_DATE" Type="datetime" />
           <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
@@ -279,6 +299,16 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_FULL_VW' does not have a p
           <Property Name="SERIAL_1" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="SERIAL_2" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="DETAIL" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="PHOTO_1" Type="varchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_1" Type="varchar" MaxLength="300" />
+          <Property Name="PHOTO_2" Type="varchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_2" Type="varchar" MaxLength="300" />
+          <Property Name="PHOTO_3" Type="varchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_3" Type="varchar" MaxLength="300" />
+          <Property Name="PHOTO_4" Type="varchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_4" Type="varchar" MaxLength="300" />
+          <Property Name="PHOTO_5" Type="varchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_5" Type="varchar" MaxLength="300" />
           <Property Name="SEARCH_TEXT" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="CONTRACT_STATUS" Type="bit" Nullable="false" />
           <Property Name="CUSTOMER_NAME" Type="nvarchar" MaxLength="80" Nullable="false" />
@@ -364,6 +394,16 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_HISTORY_FULL_VW' does not 
           <Property Name="CONTRACT_NO" Type="nvarchar" MaxLength="20" />
           <Property Name="IMPLEMENTER" Type="nvarchar" MaxLength="50" />
           <Property Name="BACK_TO_DOCUMENTS" Type="nvarchar" MaxLength="300" />
+          <Property Name="PHOTO_1" Type="nvarchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_1" Type="nvarchar" MaxLength="300" />
+          <Property Name="PHOTO_2" Type="nvarchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_2" Type="nvarchar" MaxLength="300" />
+          <Property Name="PHOTO_3" Type="nvarchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_3" Type="nvarchar" MaxLength="300" />
+          <Property Name="PHOTO_4" Type="nvarchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_4" Type="nvarchar" MaxLength="300" />
+          <Property Name="PHOTO_5" Type="nvarchar" MaxLength="300" />
+          <Property Name="THUMBNAIL_PHOTO_5" Type="nvarchar" MaxLength="300" />
           <Property Name="CREATED_BY" Type="nvarchar" MaxLength="50" />
           <Property Name="CREATED_DATE" Type="datetime" />
           <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
@@ -498,6 +538,16 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
     [CONTRACT_FULL_VW].[SERIAL_1] AS [SERIAL_1], 
     [CONTRACT_FULL_VW].[SERIAL_2] AS [SERIAL_2], 
     [CONTRACT_FULL_VW].[DETAIL] AS [DETAIL], 
+    [CONTRACT_FULL_VW].[PHOTO_1] AS [PHOTO_1], 
+    [CONTRACT_FULL_VW].[THUMBNAIL_PHOTO_1] AS [THUMBNAIL_PHOTO_1], 
+    [CONTRACT_FULL_VW].[PHOTO_2] AS [PHOTO_2], 
+    [CONTRACT_FULL_VW].[THUMBNAIL_PHOTO_2] AS [THUMBNAIL_PHOTO_2], 
+    [CONTRACT_FULL_VW].[PHOTO_3] AS [PHOTO_3], 
+    [CONTRACT_FULL_VW].[THUMBNAIL_PHOTO_3] AS [THUMBNAIL_PHOTO_3], 
+    [CONTRACT_FULL_VW].[PHOTO_4] AS [PHOTO_4], 
+    [CONTRACT_FULL_VW].[THUMBNAIL_PHOTO_4] AS [THUMBNAIL_PHOTO_4], 
+    [CONTRACT_FULL_VW].[PHOTO_5] AS [PHOTO_5], 
+    [CONTRACT_FULL_VW].[THUMBNAIL_PHOTO_5] AS [THUMBNAIL_PHOTO_5], 
     [CONTRACT_FULL_VW].[SEARCH_TEXT] AS [SEARCH_TEXT], 
     [CONTRACT_FULL_VW].[CONTRACT_STATUS] AS [CONTRACT_STATUS], 
     [CONTRACT_FULL_VW].[CUSTOMER_NAME] AS [CUSTOMER_NAME], 
@@ -555,6 +605,16 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
     [CONTRACT_HISTORY_FULL_VW].[CONTRACT_NO] AS [CONTRACT_NO], 
     [CONTRACT_HISTORY_FULL_VW].[IMPLEMENTER] AS [IMPLEMENTER], 
     [CONTRACT_HISTORY_FULL_VW].[BACK_TO_DOCUMENTS] AS [BACK_TO_DOCUMENTS], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO_1] AS [PHOTO_1], 
+    [CONTRACT_HISTORY_FULL_VW].[THUMBNAIL_PHOTO_1] AS [THUMBNAIL_PHOTO_1], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO_2] AS [PHOTO_2], 
+    [CONTRACT_HISTORY_FULL_VW].[THUMBNAIL_PHOTO_2] AS [THUMBNAIL_PHOTO_2], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO_3] AS [PHOTO_3], 
+    [CONTRACT_HISTORY_FULL_VW].[THUMBNAIL_PHOTO_3] AS [THUMBNAIL_PHOTO_3], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO_4] AS [PHOTO_4], 
+    [CONTRACT_HISTORY_FULL_VW].[THUMBNAIL_PHOTO_4] AS [THUMBNAIL_PHOTO_4], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO_5] AS [PHOTO_5], 
+    [CONTRACT_HISTORY_FULL_VW].[THUMBNAIL_PHOTO_5] AS [THUMBNAIL_PHOTO_5], 
     [CONTRACT_HISTORY_FULL_VW].[CREATED_BY] AS [CREATED_BY], 
     [CONTRACT_HISTORY_FULL_VW].[CREATED_DATE] AS [CREATED_DATE], 
     [CONTRACT_HISTORY_FULL_VW].[UPDATED_BY] AS [UPDATED_BY], 
@@ -695,6 +755,16 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
           <Property Name="EXTEND_END_DATE" Type="DateTime" Precision="0" />
+          <Property Name="PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ContractHistory">
           <Key>
@@ -732,6 +802,16 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
           <Property Name="EXTEND_END_DATE" Type="DateTime" Precision="0" />
+          <Property Name="PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="THUMBNAIL_PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="THUMBNAIL_PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="THUMBNAIL_PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="THUMBNAIL_PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="THUMBNAIL_PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -926,6 +1006,16 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
           <Property Name="PHOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="CONTRACT_HISTORY_FULL_VW">
           <Key>
@@ -1000,6 +1090,16 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="RENT_TYPE_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="CLOSE_CONTRACT_DATE" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="PHOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="THUMBNAIL_PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="THUMBNAIL_PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="THUMBNAIL_PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="THUMBNAIL_PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="THUMBNAIL_PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="INOUT_FULL_VW">
           <Key>
@@ -1142,6 +1242,16 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="Contracts">
             <EntityTypeMapping TypeName="RentBikeModel.Contract">
               <MappingFragment StoreEntitySet="Contract">
+                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
                 <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
@@ -1179,6 +1289,16 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="ContractHistories">
             <EntityTypeMapping TypeName="RentBikeModel.ContractHistory">
               <MappingFragment StoreEntitySet="ContractHistory">
+                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
                 <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
@@ -1347,6 +1467,16 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="CONTRACT_FULL_VW">
             <EntityTypeMapping TypeName="RentBikeModel.CONTRACT_FULL_VW">
               <MappingFragment StoreEntitySet="CONTRACT_FULL_VW">
+                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
                 <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
@@ -1397,6 +1527,16 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="CONTRACT_HISTORY_FULL_VW">
             <EntityTypeMapping TypeName="RentBikeModel.CONTRACT_HISTORY_FULL_VW">
               <MappingFragment StoreEntitySet="CONTRACT_HISTORY_FULL_VW">
+                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
                 <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />

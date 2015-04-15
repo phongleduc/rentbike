@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Transactions;
@@ -147,15 +148,6 @@ namespace RentBike
                             txtPhone.Text = cntrct.PHONE;
                             txtPermanentResidence.Text = cntrct.PERMANENT_RESIDENCE;
                             txtCurrentResidence.Text = cntrct.CURRENT_RESIDENCE;
-                            if (cntrct.PHOTO != null)
-                            {
-                                fileUploadUserPhoto.Visible = false;
-                                imgUserPhoto.ImageUrl = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(cntrct.PHOTO));
-                            }
-                            else
-                            {
-                                imgUserPhoto.Visible = false;
-                            }
                             txtContractNo.Text = cntrct.CONTRACT_NO;
                             var rentType = db.RentTypes.Where(c => c.NAME == cntrct.RENT_TYPE_NAME).FirstOrDefault();
                             ddlRentType.SelectedValue = rentType.ID.ToString();
@@ -177,6 +169,8 @@ namespace RentBike
                             txtReferencePhone.Text = cntrct.REFERENCE_PHONE;
                             txtSchool.Text = cntrct.SCHOOL_NAME;
                             txtClass.Text = cntrct.CLASS_NAME;
+
+                            BuildPhotoLibrary(cntrct);
 
                             txtLicenseNumber.Enabled = txtCustomerName.Enabled = txtBirthDay.Enabled = txtRangeDate.Enabled = txtPlaceDate.Enabled = ddlStore.Enabled = txtPhone.Enabled = txtPermanentResidence.Enabled = txtCurrentResidence.Enabled = false;
                             txtContractNo.Enabled = ddlRentType.Enabled = txtAmount.Enabled = txtFeePerDay.Enabled = txtRentDate.Enabled = txtEndDate.Enabled = false;
@@ -237,15 +231,6 @@ namespace RentBike
                                     txtPhone.Text = cntrct.PHONE;
                                     txtPermanentResidence.Text = cntrct.PERMANENT_RESIDENCE;
                                     txtCurrentResidence.Text = cntrct.CURRENT_RESIDENCE;
-                                    if (cntrct.PHOTO != null)
-                                    {
-                                        fileUploadUserPhoto.Visible = false;
-                                        imgUserPhoto.ImageUrl = string.Format("data:image/png;base64,{0}", Convert.ToBase64String(cntrct.PHOTO));
-                                    }
-                                    else
-                                    {
-                                        imgUserPhoto.Visible = false;
-                                    }
                                     txtContractNo.Text = cntrct.CONTRACT_NO;
                                     var rentType = db.RentTypes.Where(c => c.NAME == cntrct.RENT_TYPE_NAME).FirstOrDefault();
                                     ddlRentType.SelectedValue = rentType.ID.ToString();
@@ -265,6 +250,8 @@ namespace RentBike
                                     txtReferencePhone.Text = cntrct.REFERENCE_PHONE;
                                     txtSchool.Text = cntrct.SCHOOL_NAME;
                                     txtClass.Text = cntrct.CLASS_NAME;
+
+                                    BuildPhotoLibrary(cntrct);
                                 }
                             }
                         }
@@ -275,6 +262,116 @@ namespace RentBike
                     lblMessage.Text = ex.Message;
                     lblMessage.CssClass = "text-center text-danger";
                 }
+            }
+        }
+
+        private void BuildPhotoLibrary(CONTRACT_FULL_VW cntrct)
+        {
+            // Initialize StringWriter instance.
+            StringWriter stringWriter = new StringWriter();
+
+            // Put HtmlTextWriter in using block because it needs to call Dispose.
+            using (HtmlTextWriter writer = new HtmlTextWriter(stringWriter))
+            {
+                writer.RenderBeginTag(HtmlTextWriterTag.P);
+                if (!string.IsNullOrEmpty(cntrct.PHOTO_1) && !string.IsNullOrEmpty(cntrct.THUMBNAIL_PHOTO_1))
+                {
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
+                    writer.AddAttribute("data-fancybox-group", "button");
+                    writer.AddAttribute(HtmlTextWriterAttribute.Href, cntrct.PHOTO_1);
+                    writer.RenderBeginTag(HtmlTextWriterTag.A);
+
+                    writer.AddAttribute("src", cntrct.THUMBNAIL_PHOTO_1);
+                    writer.AddAttribute("alt", "");
+                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
+                    writer.RenderEndTag(); //End of Img
+
+                    writer.RenderEndTag(); //End of A
+                }
+                if (!string.IsNullOrEmpty(cntrct.PHOTO_2) && !string.IsNullOrEmpty(cntrct.THUMBNAIL_PHOTO_2))
+                {
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
+                    writer.AddAttribute("data-fancybox-group", "button");
+                    writer.AddAttribute(HtmlTextWriterAttribute.Href, cntrct.PHOTO_2);
+                    writer.RenderBeginTag(HtmlTextWriterTag.A);
+
+                    writer.AddAttribute("src", cntrct.THUMBNAIL_PHOTO_2);
+                    writer.AddAttribute("alt", "");
+                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
+                    writer.RenderEndTag(); //End of Img
+
+                    writer.RenderEndTag(); //End of A
+                }
+                if (!string.IsNullOrEmpty(cntrct.PHOTO_3) && !string.IsNullOrEmpty(cntrct.THUMBNAIL_PHOTO_3))
+                {
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
+                    writer.AddAttribute("data-fancybox-group", "button");
+                    writer.AddAttribute(HtmlTextWriterAttribute.Href, cntrct.PHOTO_3);
+                    writer.RenderBeginTag(HtmlTextWriterTag.A);
+
+                    writer.AddAttribute("src", cntrct.THUMBNAIL_PHOTO_3);
+                    writer.AddAttribute("alt", "");
+                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
+                    writer.RenderEndTag(); //End of Img
+
+                    writer.RenderEndTag(); //End of A
+                }
+                if (!string.IsNullOrEmpty(cntrct.PHOTO_4) && !string.IsNullOrEmpty(cntrct.THUMBNAIL_PHOTO_4))
+                {
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
+                    writer.AddAttribute("data-fancybox-group", "button");
+                    writer.AddAttribute(HtmlTextWriterAttribute.Href, cntrct.PHOTO_4);
+                    writer.RenderBeginTag(HtmlTextWriterTag.A);
+
+                    writer.AddAttribute("src", cntrct.THUMBNAIL_PHOTO_4);
+                    writer.AddAttribute("alt", "");
+                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
+                    writer.RenderEndTag(); //End of Img
+
+                    writer.RenderEndTag(); //End of A
+                }
+                if (!string.IsNullOrEmpty(cntrct.PHOTO_5) && !string.IsNullOrEmpty(cntrct.THUMBNAIL_PHOTO_5))
+                {
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
+                    writer.AddAttribute("data-fancybox-group", "button");
+                    writer.AddAttribute(HtmlTextWriterAttribute.Href, cntrct.PHOTO_5);
+                    writer.RenderBeginTag(HtmlTextWriterTag.A);
+
+                    writer.AddAttribute("src", cntrct.THUMBNAIL_PHOTO_5);
+                    writer.AddAttribute("alt", "");
+                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
+                    writer.RenderEndTag(); //End of Img
+
+                    writer.RenderEndTag(); //End of A
+                }
+                writer.RenderEndTag();  //End of P
+
+                litPhoto.Text = stringWriter.ToString();
+            }
+        }
+        private StringWriter BuildPhotoData(string photo, string thumbnailPhoto)
+        {
+            // Initialize StringWriter instance.
+            StringWriter stringWriter = new StringWriter();
+
+            // Put HtmlTextWriter in using block because it needs to call Dispose.
+            using (HtmlTextWriter writer = new HtmlTextWriter(stringWriter))
+            {
+                if (!string.IsNullOrEmpty(photo) && !string.IsNullOrEmpty(thumbnailPhoto))
+                {
+                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
+                    writer.AddAttribute("data-fancybox-group", "button");
+                    writer.AddAttribute(HtmlTextWriterAttribute.Href, photo);
+                    writer.RenderBeginTag(HtmlTextWriterTag.A);
+
+                    writer.AddAttribute("src", thumbnailPhoto);
+                    writer.AddAttribute("alt", "");
+                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
+                    writer.RenderEndTag(); //End of Img
+
+                    writer.RenderEndTag(); //End of A
+                }
+                return stringWriter;
             }
         }
 
@@ -422,6 +519,10 @@ namespace RentBike
                     return "Bạn phải nhập tên lớp.";
                 }
             }
+            if (Request.Files.Count > 5)
+            {
+                return "Bạn không thể chọn quá 5 file ảnh.";
+            }
             return string.Empty;
         }
 
@@ -442,243 +543,204 @@ namespace RentBike
                             lblMessage.Text = result;
                             return;
                         }
-                        int status = ExistingContract(txtLicenseNumber.Text.Trim());
-                        if (status == 1)
+                        using (var db = new RentBikeEntities())
                         {
-                            //LoadData(txtLicenseNumber.Text.Trim(), 0);
-                            RentTypeID = Convert.ToInt32(ddlRentType.SelectedValue);
-                            lblMessage.Text = string.Format("Hợp đồng với CMT {0} chưa được thanh lý.", txtLicenseNumber.Text.Trim());
-                            lblMessage.ForeColor = Color.Red;
+                            bool IsNewCust = false;
+                            Customer cusItem = db.Customers.FirstOrDefault(c => c.LICENSE_NO == txtLicenseNumber.Text.Trim() && c.NAME == txtCustomerName.Text.Trim());
+                            if (cusItem == null)
+                            {
+                                IsNewCust = true;
+                                cusItem = new Customer();
+                            }
+
+                            cusItem.NAME = txtCustomerName.Text.Trim();
+                            cusItem.BIRTH_DAY = DateTime.ParseExact(txtBirthDay.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            cusItem.LICENSE_NO = txtLicenseNumber.Text.Trim();
+                            cusItem.LICENSE_RANGE_DATE = DateTime.ParseExact(txtRangeDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            cusItem.LICENSE_RANGE_PLACE = txtPlaceDate.Text.Trim();
+                            cusItem.PHONE = txtPhone.Text.Trim();
+                            cusItem.PERMANENT_RESIDENCE = txtPermanentResidence.Text.Trim();
+                            cusItem.CURRENT_RESIDENCE = txtCurrentResidence.Text.Trim();
+
+                            if (IsNewCust)
+                            {
+                                db.Customers.Add(cusItem);
+                            }
+                            db.SaveChanges();
+                            cusid = cusItem.ID;
+                        }
+
+                        // New Contract
+                        Contract item = new Contract();
+                        item.RENT_TYPE_ID = Convert.ToInt32(ddlRentType.SelectedValue);
+                        item.FEE_PER_DAY = Math.Round(Convert.ToDecimal(txtFeePerDay.Text.Replace(",", string.Empty)));
+                        if (!string.IsNullOrEmpty(txtRentDate.Text))
+                        {
+                            item.RENT_DATE = DateTime.ParseExact(txtRentDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                         }
                         else
+                            item.RENT_DATE = DateTime.Now;
+
+                        if (!string.IsNullOrEmpty(txtEndDate.Text))
                         {
-                            using (var db = new RentBikeEntities())
-                            {
-                                bool IsNewCust = false;
-                                Customer cusItem = null;
-                                if(!string.IsNullOrEmpty(copy) && copy == "1")
-                                {
-                                    int contractId = Helper.parseInt(id);
-                                    var contract = db.Contracts.Where(c => c.ID == contractId).FirstOrDefault();
-                                    cusItem = db.Customers.FirstOrDefault(c => c.ID == contract.CUSTOMER_ID);
-                                }
-
-                                if (cusItem == null)
-                                {
-                                    IsNewCust = true;
-                                    cusItem = new Customer();
-                                }
-
-                                cusItem.NAME = txtCustomerName.Text.Trim();
-                                cusItem.BIRTH_DAY = DateTime.ParseExact(txtBirthDay.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                                cusItem.LICENSE_NO = txtLicenseNumber.Text.Trim();
-                                cusItem.LICENSE_RANGE_DATE = DateTime.ParseExact(txtRangeDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                                cusItem.LICENSE_RANGE_PLACE = txtPlaceDate.Text.Trim();
-                                cusItem.PHONE = txtPhone.Text.Trim();
-                                cusItem.PERMANENT_RESIDENCE = txtPermanentResidence.Text.Trim();
-                                cusItem.CURRENT_RESIDENCE = txtCurrentResidence.Text.Trim();
-                                if (fileUploadUserPhoto.HasFile)
-                                    cusItem.PHOTO = ImageHelper.CreateThumbnail(fileUploadUserPhoto.FileBytes, 128, 128);
-
-                                if (IsNewCust)
-                                {
-                                    var citm = from itm in db.Customers
-                                               where itm.LICENSE_NO == cusItem.LICENSE_NO
-                                               select itm;
-                                    List<Customer> cLst = citm.ToList();
-
-                                    if (cLst.Count > 0)
-                                    {
-                                        cusid = cLst[0].ID;
-                                    }
-                                    else
-                                    {
-                                        db.Customers.Add(cusItem);
-                                        db.SaveChanges();
-                                        cusid = cusItem.ID;
-                                    }
-                                }
-                                else
-                                {
-                                    db.SaveChanges();
-                                    cusid = cusItem.ID;
-                                }
-                            }
-
-                            // New Contract
-                            Contract item = new Contract();
-                            item.RENT_TYPE_ID = Convert.ToInt32(ddlRentType.SelectedValue);
-                            item.FEE_PER_DAY = Math.Round(Convert.ToDecimal(txtFeePerDay.Text.Replace(",", string.Empty)));
-                            if (!string.IsNullOrEmpty(txtRentDate.Text))
-                            {
-                                item.RENT_DATE = DateTime.ParseExact(txtRentDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                            }
-                            else
-                                item.RENT_DATE = DateTime.Now;
-
-                            if (!string.IsNullOrEmpty(txtEndDate.Text))
-                            {
-                                item.END_DATE = DateTime.ParseExact(txtEndDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                            }
-                            else
-                                item.END_DATE = item.RENT_DATE.AddDays(29);
-                            item.CLOSE_CONTRACT_DATE = new DateTime(1, 1, 1);
-                            item.PAY_FEE_MESSAGE = string.Empty;
-                            item.NOTE = txtNote.Text;
-                            item.REFERENCE_ID = -1;
-                            item.REFERENCE_NAME = txtReferencePerson.Text.Trim();
-                            item.ITEM_TYPE = txtItemName.Text.Trim();
-                            item.ITEM_LICENSE_NO = txtItemLicenseNo.Text.Trim();
-                            item.SERIAL_1 = txtSerial1.Text.Trim();
-                            item.SERIAL_2 = txtSerial2.Text.Trim();
-                            item.REFERENCE_PHONE = txtReferencePhone.Text.Trim();
-                            item.SCHOOL_NAME = txtSchool.Text.Trim();
-                            item.CLASS_NAME = txtClass.Text.Trim();
-                            item.IMPLEMENTER = txtImplementer.Text.Trim();
-                            item.BACK_TO_DOCUMENTS = txtBackDocument.Text.Trim();
-                            item.DETAIL = txtItemDetail.Text.Trim();
-                            item.CUSTOMER_ID = hdfCus.Value != string.Empty ? Convert.ToInt32(hdfCus.Value) : item.CUSTOMER_ID = cusid;
-                            item.CONTRACT_STATUS = true;
-                            item.CONTRACT_AMOUNT = Convert.ToDecimal(txtAmount.Text.Replace(",", string.Empty));
-                            item.CREATED_BY = Session["username"].ToString();
-                            item.CREATED_DATE = DateTime.Now;
-                            item.UPDATED_BY = Session["username"].ToString();
-                            item.UPDATED_DATE = DateTime.Now;
-                            //item.CONTRACT_NO = txtContractNo.Text.Trim();
-                            if (ddlStore.Enabled == true)
-                                item.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
-                            else
-                                item.STORE_ID = Convert.ToInt32(Session["store_id"]);
-                            item.SEARCH_TEXT = string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}",
-                                                            txtCustomerName.Text.Trim(),
-                                                            txtBirthDay.Text.Trim(),
-                                                            txtLicenseNumber.Text.Trim(),
-                                                            txtRangeDate.Text.Trim(),
-                                                            txtPermanentResidence.Text.Trim(),
-                                                            txtCurrentResidence.Text.Trim(),
-                                                            txtPhone.Text.Trim(),
-                                                            item.CONTRACT_NO,
-                                                            item.RENT_DATE.ToString("dd/MM/yyyy"));
-
-                            using (var db = new RentBikeEntities())
-                            {
-                                db.Contracts.Add(item);
-                                db.SaveChanges();
-                            }
-
-                            DateTime periodTime = DateTime.Now;
-                            if (!string.IsNullOrEmpty(txtRentDate.Text))
-                            {
-                                periodTime = DateTime.ParseExact(txtRentDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                            }
-                            PayPeriod pp1 = new PayPeriod();
-                            pp1.CONTRACT_ID = item.ID;
-                            pp1.PAY_DATE = periodTime;
-                            //if (ddlRentType.SelectedValue == "2")
-                            //{
-                            //    pp1.PAY_DATE = periodTime;
-                            //}
-                            //else
-                            //{
-                            //    pp1.PAY_DATE = periodTime.AddDays(9);
-                            //}
-                            pp1.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
-                            pp1.STATUS = true;
-                            pp1.ACTUAL_PAY = 0;
-
-                            PayPeriod pp2 = new PayPeriod();
-                            pp2.CONTRACT_ID = item.ID;
-                            pp2.PAY_DATE = periodTime.AddDays(9);
-                            //if (ddlRentType.SelectedValue == "2")
-                            //{
-                            //    pp2.PAY_DATE = periodTime.AddDays(9);
-                            //}
-                            //else
-                            //{
-                            //    pp2.PAY_DATE = periodTime.AddDays(19);
-                            //}
-                            pp2.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
-                            pp2.STATUS = true;
-                            pp2.ACTUAL_PAY = 0;
-
-                            PayPeriod pp3 = new PayPeriod();
-                            pp3.CONTRACT_ID = item.ID;
-                            pp3.PAY_DATE = periodTime.AddDays(19);
-                            //if (ddlRentType.SelectedValue == "2")
-                            //{
-                            //    pp3.PAY_DATE = periodTime.AddDays(19);
-                            //}
-                            //else
-                            //{
-                            //    pp3.PAY_DATE = periodTime.AddDays(29);
-                            //}
-                            pp3.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
-                            pp3.STATUS = true;
-                            pp3.ACTUAL_PAY = 0;
-
-                            using (var rbdb = new RentBikeEntities())
-                            {
-                                rbdb.PayPeriods.Add(pp1);
-                                rbdb.PayPeriods.Add(pp2);
-                                rbdb.PayPeriods.Add(pp3);
-                                rbdb.SaveChanges();
-                            }
-
-                            InOut io = new InOut();
-                            io.CONTRACT_ID = item.ID;
-                            io.IN_AMOUNT = 0;
-                            io.OUT_AMOUNT = Convert.ToDecimal(txtAmount.Text);
-                            io.RENT_TYPE_ID = Convert.ToInt32(ddlRentType.SelectedValue);
-                            io.PERIOD_DATE = DateTime.Now;
-                            io.MORE_INFO = string.Format("Cho khách {0} thuê: {1} ngày {2} trị giá {3}", txtCustomerName.Text.Trim(), txtItemName.Text.Trim(), DateTime.Now.ToString("dd/MM/yyyy"), txtAmount.Text.Trim());
-                            if (ddlStore.Enabled == true)
-                                io.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
-                            else
-                                io.STORE_ID = Convert.ToInt32(Session["store_id"]);
-                            io.SEARCH_TEXT = string.Format("{0} ", io.MORE_INFO);
-                            io.INOUT_DATE = DateTime.Now;
-                            io.CREATED_BY = Session["username"].ToString();
-                            io.CREATED_DATE = DateTime.Now;
-                            io.UPDATED_BY = Session["username"].ToString();
-                            io.UPDATED_DATE = DateTime.Now;
-                            switch (ddlRentType.SelectedValue)
-                            {
-                                case "1":
-                                    io.INOUT_TYPE_ID = 17;
-                                    break;
-                                case "2":
-                                    io.INOUT_TYPE_ID = 22;
-                                    break;
-                                case "3":
-                                    io.INOUT_TYPE_ID = 23;
-                                    break;
-                                default:
-                                    List<InOutType> lstiot = new List<InOutType>();
-                                    using (var db = new RentBikeEntities())
-                                    {
-                                        var iot = from itm in db.InOutTypes
-                                                  where itm.IS_CONTRACT == true && itm.ACTIVE == false && itm.IS_INCOME == false
-                                                  select itm;
-
-                                        lstiot = iot.ToList();
-                                        if (lstiot.Count > 0)
-                                        {
-                                            io.INOUT_TYPE_ID = lstiot[0].ID;
-                                        }
-                                    }
-                                    break;
-                            }
-                            using (var rbdb = new RentBikeEntities())
-                            {
-                                rbdb.InOuts.Add(io);
-                                rbdb.SaveChanges();
-                            }
-
-                            WriteLog(CommonList.ACTION_CREATE_CONTRACT, false);
-                            ts.Complete();
-                            Response.Redirect("FormContractManagement.aspx");
+                            item.END_DATE = DateTime.ParseExact(txtEndDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        }
+                        else
+                            item.END_DATE = item.RENT_DATE.AddDays(29);
+                        item.CLOSE_CONTRACT_DATE = new DateTime(1, 1, 1);
+                        item.PAY_FEE_MESSAGE = string.Empty;
+                        item.NOTE = txtNote.Text;
+                        item.REFERENCE_ID = -1;
+                        item.REFERENCE_NAME = txtReferencePerson.Text.Trim();
+                        item.ITEM_TYPE = txtItemName.Text.Trim();
+                        item.ITEM_LICENSE_NO = txtItemLicenseNo.Text.Trim();
+                        item.SERIAL_1 = txtSerial1.Text.Trim();
+                        item.SERIAL_2 = txtSerial2.Text.Trim();
+                        item.REFERENCE_PHONE = txtReferencePhone.Text.Trim();
+                        item.SCHOOL_NAME = txtSchool.Text.Trim();
+                        item.CLASS_NAME = txtClass.Text.Trim();
+                        item.IMPLEMENTER = txtImplementer.Text.Trim();
+                        item.BACK_TO_DOCUMENTS = txtBackDocument.Text.Trim();
+                        item.DETAIL = txtItemDetail.Text.Trim();
+                        item.CUSTOMER_ID = cusid;
+                        item.CONTRACT_STATUS = true;
+                        item.CONTRACT_AMOUNT = Convert.ToDecimal(txtAmount.Text.Replace(",", string.Empty));
+                        item.CREATED_BY = Session["username"].ToString();
+                        item.CREATED_DATE = DateTime.Now;
+                        item.UPDATED_BY = Session["username"].ToString();
+                        item.UPDATED_DATE = DateTime.Now;
+                        //item.CONTRACT_NO = txtContractNo.Text.Trim();
+                        if (ddlStore.Enabled == true)
+                            item.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
+                        else
+                            item.STORE_ID = Convert.ToInt32(Session["store_id"]);
+                        item.SEARCH_TEXT = string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}",
+                                                        txtCustomerName.Text.Trim(),
+                                                        txtBirthDay.Text.Trim(),
+                                                        txtLicenseNumber.Text.Trim(),
+                                                        txtRangeDate.Text.Trim(),
+                                                        txtPermanentResidence.Text.Trim(),
+                                                        txtCurrentResidence.Text.Trim(),
+                                                        txtPhone.Text.Trim(),
+                                                        item.CONTRACT_NO,
+                                                        item.RENT_DATE.ToString("dd/MM/yyyy"));
+                        SavePhoto(item);
+                        using (var db = new RentBikeEntities())
+                        {
+                            db.Contracts.Add(item);
+                            db.SaveChanges();
                         }
 
+                        DateTime periodTime = DateTime.Now;
+                        if (!string.IsNullOrEmpty(txtRentDate.Text))
+                        {
+                            periodTime = DateTime.ParseExact(txtRentDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                        }
+                        PayPeriod pp1 = new PayPeriod();
+                        pp1.CONTRACT_ID = item.ID;
+                        pp1.PAY_DATE = periodTime;
+                        //if (ddlRentType.SelectedValue == "2")
+                        //{
+                        //    pp1.PAY_DATE = periodTime;
+                        //}
+                        //else
+                        //{
+                        //    pp1.PAY_DATE = periodTime.AddDays(9);
+                        //}
+                        pp1.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
+                        pp1.STATUS = true;
+                        pp1.ACTUAL_PAY = 0;
+
+                        PayPeriod pp2 = new PayPeriod();
+                        pp2.CONTRACT_ID = item.ID;
+                        pp2.PAY_DATE = periodTime.AddDays(9);
+                        //if (ddlRentType.SelectedValue == "2")
+                        //{
+                        //    pp2.PAY_DATE = periodTime.AddDays(9);
+                        //}
+                        //else
+                        //{
+                        //    pp2.PAY_DATE = periodTime.AddDays(19);
+                        //}
+                        pp2.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
+                        pp2.STATUS = true;
+                        pp2.ACTUAL_PAY = 0;
+
+                        PayPeriod pp3 = new PayPeriod();
+                        pp3.CONTRACT_ID = item.ID;
+                        pp3.PAY_DATE = periodTime.AddDays(19);
+                        //if (ddlRentType.SelectedValue == "2")
+                        //{
+                        //    pp3.PAY_DATE = periodTime.AddDays(19);
+                        //}
+                        //else
+                        //{
+                        //    pp3.PAY_DATE = periodTime.AddDays(29);
+                        //}
+                        pp3.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
+                        pp3.STATUS = true;
+                        pp3.ACTUAL_PAY = 0;
+
+                        using (var rbdb = new RentBikeEntities())
+                        {
+                            rbdb.PayPeriods.Add(pp1);
+                            rbdb.PayPeriods.Add(pp2);
+                            rbdb.PayPeriods.Add(pp3);
+                            rbdb.SaveChanges();
+                        }
+
+                        InOut io = new InOut();
+                        io.CONTRACT_ID = item.ID;
+                        io.IN_AMOUNT = 0;
+                        io.OUT_AMOUNT = Convert.ToDecimal(txtAmount.Text);
+                        io.RENT_TYPE_ID = Convert.ToInt32(ddlRentType.SelectedValue);
+                        io.PERIOD_DATE = DateTime.Now;
+                        io.MORE_INFO = string.Format("Cho khách {0} thuê: {1} ngày {2} trị giá {3}", txtCustomerName.Text.Trim(), txtItemName.Text.Trim(), DateTime.Now.ToString("dd/MM/yyyy"), txtAmount.Text.Trim());
+                        if (ddlStore.Enabled == true)
+                            io.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
+                        else
+                            io.STORE_ID = Convert.ToInt32(Session["store_id"]);
+                        io.SEARCH_TEXT = string.Format("{0} ", io.MORE_INFO);
+                        io.INOUT_DATE = DateTime.Now;
+                        io.CREATED_BY = Session["username"].ToString();
+                        io.CREATED_DATE = DateTime.Now;
+                        io.UPDATED_BY = Session["username"].ToString();
+                        io.UPDATED_DATE = DateTime.Now;
+                        switch (ddlRentType.SelectedValue)
+                        {
+                            case "1":
+                                io.INOUT_TYPE_ID = 17;
+                                break;
+                            case "2":
+                                io.INOUT_TYPE_ID = 22;
+                                break;
+                            case "3":
+                                io.INOUT_TYPE_ID = 23;
+                                break;
+                            default:
+                                List<InOutType> lstiot = new List<InOutType>();
+                                using (var db = new RentBikeEntities())
+                                {
+                                    var iot = from itm in db.InOutTypes
+                                              where itm.IS_CONTRACT == true && itm.ACTIVE == false && itm.IS_INCOME == false
+                                              select itm;
+
+                                    lstiot = iot.ToList();
+                                    if (lstiot.Count > 0)
+                                    {
+                                        io.INOUT_TYPE_ID = lstiot[0].ID;
+                                    }
+                                }
+                                break;
+                        }
+                        using (var rbdb = new RentBikeEntities())
+                        {
+                            rbdb.InOuts.Add(io);
+                            rbdb.SaveChanges();
+                        }
+
+                        WriteLog(CommonList.ACTION_CREATE_CONTRACT, false);
+                        ts.Complete();
                     }
                     else // EDIT
                     {
@@ -691,18 +753,18 @@ namespace RentBike
                             item.DETAIL = txtItemDetail.Text.Trim();
                             item.UPDATED_BY = Session["username"].ToString();
                             item.UPDATED_DATE = DateTime.Now;
-
-                            var cusItem = db.Customers.FirstOrDefault(c => c.ID == item.CUSTOMER_ID);
-                            if (fileUploadUserPhoto.HasFile)
-                                cusItem.PHOTO = ImageHelper.CreateThumbnail(fileUploadUserPhoto.FileBytes, 128, 128);
+                            SavePhoto(item);
+                            //var cusItem = db.Customers.FirstOrDefault(c => c.ID == item.CUSTOMER_ID);
+                            //if (fileUploadUserPhoto.HasFile)
+                            //    cusItem.PHOTO = ImageHelper.CreateThumbnail(fileUploadUserPhoto.FileBytes, 128, 128);
 
                             db.SaveChanges();
                         }
 
                         WriteLog(CommonList.ACTION_UPDATE_CONTRACT, false);
                         ts.Complete();
-                        Response.Redirect("FormContractManagement.aspx");
                     }
+                    Response.Redirect("FormContractManagement.aspx", false);
                 }
             }
             catch (Exception ex)
@@ -710,6 +772,94 @@ namespace RentBike
                 lblMessage.Text = ex.Message;
                 lblMessage.CssClass = "text-center text-danger";
             }
+        }
+
+        private void SavePhoto(Contract item)
+        {
+            string filepath = Server.MapPath("\\upload");
+            HttpFileCollection uploadedFiles = Request.Files;
+            for (int i = 0; i < uploadedFiles.Count; i++)
+            {
+                HttpPostedFile userPostedFile = uploadedFiles[i];
+                try
+                {
+                    if (userPostedFile.ContentLength > 0)
+                    {
+                        byte[] fileData = null;
+                        using (var binaryReader = new BinaryReader(userPostedFile.InputStream))
+                        {
+                            fileData = binaryReader.ReadBytes(userPostedFile.ContentLength);
+                        }
+                        byte[] photo = ImageHelper.CreateThumbnail(fileData, 612, 612);
+                        byte[] thumbnailPhoto = ImageHelper.CreateThumbnail(fileData, 128, 128);
+
+                        string guid = Guid.NewGuid().ToString();
+                        string datetime = DateTime.Now.ToString("yyyyMMddhhmmssfff");
+
+                        string photoPath = filepath + "\\" + guid + "-" + datetime + "-" + (i + 1) + "_b" + ".png";
+                        string thumbnailPhotoPath = filepath + "\\" + guid + "-" + datetime + "-" + (i + 1) + "_s" + ".png";
+
+                        using (var fs = new BinaryWriter(new FileStream(photoPath, FileMode.Append, FileAccess.Write)))
+                        {
+                            fs.Write(photo);
+                        }
+                        using (var fs = new BinaryWriter(new FileStream(thumbnailPhotoPath, FileMode.Append, FileAccess.Write)))
+                        {
+                            fs.Write(thumbnailPhoto);
+                        }
+
+                        switch (i)
+                        {
+                            case 0:
+                                DeletePhoto(item.PHOTO_1);
+                                DeletePhoto(item.THUMBNAIL_PHOTO_1);
+                                item.PHOTO_1 = photoPath.Replace(Server.MapPath("~"), string.Empty);
+                                item.THUMBNAIL_PHOTO_1 = thumbnailPhotoPath.Replace(Server.MapPath("~"), string.Empty);
+                                break;
+                            case 1:
+                                DeletePhoto(item.PHOTO_2);
+                                DeletePhoto(item.THUMBNAIL_PHOTO_2);
+                                item.PHOTO_2 = photoPath.Replace(Server.MapPath("~"), string.Empty);
+                                item.THUMBNAIL_PHOTO_2 = thumbnailPhotoPath.Replace(Server.MapPath("~"), string.Empty);
+                                break;
+                            case 2:
+                                DeletePhoto(item.PHOTO_3);
+                                DeletePhoto(item.THUMBNAIL_PHOTO_3);
+                                item.PHOTO_3 = photoPath.Replace(Server.MapPath("~"), string.Empty);
+                                item.THUMBNAIL_PHOTO_3 = thumbnailPhotoPath.Replace(Server.MapPath("~"), string.Empty);
+                                break;
+                            case 3:
+                                DeletePhoto(item.PHOTO_4);
+                                DeletePhoto(item.THUMBNAIL_PHOTO_4);
+                                item.PHOTO_4 = photoPath.Replace(Server.MapPath("~"), string.Empty);
+                                item.THUMBNAIL_PHOTO_4 = thumbnailPhotoPath.Replace(Server.MapPath("~"), string.Empty);
+                                break;
+                            case 4:
+                                DeletePhoto(item.PHOTO_5);
+                                DeletePhoto(item.THUMBNAIL_PHOTO_5);
+                                item.PHOTO_5 = photoPath.Replace(Server.MapPath("~"), string.Empty);
+                                item.THUMBNAIL_PHOTO_5 = thumbnailPhotoPath.Replace(Server.MapPath("~"), string.Empty);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+
+        private void DeletePhoto(string path)
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(path) && File.Exists(Server.MapPath("~") + path))
+                    File.Delete(Server.MapPath("~") + path);
+            }
+            catch { ; }
         }
 
         private int ExistingContract(string licenseNo)

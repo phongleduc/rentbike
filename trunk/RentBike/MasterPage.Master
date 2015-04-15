@@ -8,13 +8,13 @@
     <link rel="stylesheet" type="text/css" href="\App_Themes\Theme1\css\stylesheet.css" />
     <link rel="stylesheet" type="text/css" href="\App_Themes\Theme1\css\jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href="\App_Themes\Theme1\css\bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="\App_Themes\Theme1\css\jquery.fancybox.css" />
+    <link rel="stylesheet" type="text/css" href="\script\fancybox\jquery.fancybox.css" />
     <link rel="stylesheet" type="text/css" href="\App_Themes\Theme1\css\PrintArea.css" />
 
     <script src="script/jquery-1.10.2.min.js"></script>
     <script src="script/jquery-ui.js"></script>
     <script src="script/jquery.validate.js"></script>
-    <script src="script/jquery.fancybox.js"></script>
+    <script src="script/fancybox/jquery.fancybox.js"></script>
     <script src="script/jquery.price_format.1.8.min.js"></script>
     <script src="script/jquery.PrintArea.js"></script>
     <asp:ContentPlaceHolder ID="head" runat="server">
