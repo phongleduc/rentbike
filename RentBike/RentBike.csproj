@@ -72,7 +72,6 @@
     <Content Include="App_Themes\Theme1\css\cmxformTemplate.css" />
     <Content Include="App_Themes\Theme1\css\core.css" />
     <Content Include="App_Themes\Theme1\css\jquery-ui.css" />
-    <Content Include="App_Themes\Theme1\css\jquery.fancybox.css" />
     <Content Include="App_Themes\Theme1\css\PrintArea.css" />
     <Content Include="App_Themes\Theme1\css\reset.css" />
     <Content Include="App_Themes\Theme1\css\screen.css" />
@@ -84,11 +83,6 @@
     <Content Include="App_Themes\Theme1\image\cmxform-divider.gif" />
     <Content Include="App_Themes\Theme1\image\cmxform-fieldset.gif" />
     <Content Include="App_Themes\Theme1\image\cyan-dot.png" />
-    <Content Include="App_Themes\Theme1\image\fancybox_loading%402x.gif" />
-    <Content Include="App_Themes\Theme1\image\fancybox_loading.gif" />
-    <Content Include="App_Themes\Theme1\image\fancybox_overlay.png" />
-    <Content Include="App_Themes\Theme1\image\fancybox_sprite%402x.png" />
-    <Content Include="App_Themes\Theme1\image\fancybox_sprite.png" />
     <Content Include="App_Themes\Theme1\image\footer.png" />
     <Content Include="App_Themes\Theme1\image\grey-dot.png" />
     <Content Include="App_Themes\Theme1\image\grey-height-100.png" />
@@ -103,6 +97,21 @@
     <Content Include="App_Themes\Theme1\image\tick-blue.png" />
     <Content Include="App_Themes\Theme1\image\tick-orange.png" />
     <Content Include="App_Themes\Theme1\image\unchecked.gif" />
+    <Content Include="script\fancybox\blank.gif" />
+    <Content Include="script\fancybox\fancybox_loading%402x.gif" />
+    <Content Include="script\fancybox\fancybox_loading.gif" />
+    <Content Include="script\fancybox\fancybox_overlay.png" />
+    <Content Include="script\fancybox\fancybox_sprite%402x.png" />
+    <Content Include="script\fancybox\fancybox_sprite.png" />
+    <Content Include="script\fancybox\helpers\fancybox_buttons.png" />
+    <Content Include="script\fancybox\helpers\jquery.fancybox-buttons.css" />
+    <Content Include="script\fancybox\helpers\jquery.fancybox-buttons.js" />
+    <Content Include="script\fancybox\helpers\jquery.fancybox-media.js" />
+    <Content Include="script\fancybox\helpers\jquery.fancybox-thumbs.css" />
+    <Content Include="script\fancybox\helpers\jquery.fancybox-thumbs.js" />
+    <Content Include="script\fancybox\jquery.fancybox.css" />
+    <Content Include="script\fancybox\jquery.fancybox.js" />
+    <Content Include="script\fancybox\jquery.fancybox.pack.js" />
     <Content Include="FormAccountManagement.aspx" />
     <Content Include="FormAccountUpdate.aspx" />
     <Content Include="FormAction.aspx" />
@@ -420,6 +429,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Themes\Theme1\js\" />
+    <Folder Include="upload\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_LocalResources\SearchTextPatternResource.resx">

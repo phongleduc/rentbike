@@ -113,13 +113,6 @@
                     <td>
                         <asp:TextBox ID="txtCurrentResidence" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
                 </tr>
-                <tr>
-                    <td class="text-right">Ảnh đại diện</td>
-                    <td>
-                        <asp:FileUpload ID="fileUploadUserPhoto" runat="server" CssClass="form-control input-sm"></asp:FileUpload>
-                        <asp:Image ID="imgUserPhoto" runat="server" AlternateText="" />
-                    </td>
-                </tr>
                 <tr class="success">
                     <td colspan="2" class="text-center"><strong>Thông tin hợp đồng</strong></td>
                 </tr>
@@ -252,6 +245,13 @@
                     <td>
                         <asp:TextBox ID="txtClass" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
                 </tr>
+                <tr id="trPhoto">
+                    <td class="text-right">Ảnh lưu trữ</td>
+                    <td>
+                        <asp:FileUpload ID="fileUploadPhoto" runat="server" AllowMultiple="true" CssClass="form-control input-sm"></asp:FileUpload>
+                        <asp:Literal ID="litPhoto" runat="server"></asp:Literal>
+                    </td>
+                </tr>
                 <tr>
                     <td class="text-right">Chi tiết </td>
                     <td>
@@ -266,6 +266,9 @@
             </tbody>
         </table>
     </asp:Panel>
+    	<!-- Add Button helper (this is optional) -->
+	<link rel="stylesheet" type="text/css" href="script/fancybox/helpers/jquery.fancybox-buttons.css?v=1.0.5" />
+	<script type="text/javascript" src="script/fancybox/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
     <script>
         $(document).ready(function () {
             $('#<%=txtRentDate.ClientID %>').datepicker({
@@ -319,6 +322,31 @@
                 if (e.which == 13) {
                     $('#<%=btnSave.ClientID %>').click();
                     return false;
+                }
+            });
+
+            /*
+             *  Button helper. Disable animations, hide close button, change title type and content
+             */
+
+            $('.fancybox-buttons').fancybox({
+                openEffect: 'none',
+                closeEffect: 'none',
+
+                prevEffect: 'none',
+                nextEffect: 'none',
+
+                closeBtn: false,
+
+                helpers: {
+                    title: {
+                        type: 'inside'
+                    },
+                    buttons: {}
+                },
+
+                afterLoad: function () {
+                    this.title = 'Image ' + (this.index + 1) + ' of ' + this.group.length + (this.title ? ' - ' + this.title : '');
                 }
             });
         });

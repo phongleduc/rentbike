@@ -207,6 +207,16 @@ namespace RentBike
                     ch.CLASS_NAME = con.CLASS_NAME;
                     ch.IMPLEMENTER = con.IMPLEMENTER;
                     ch.BACK_TO_DOCUMENTS = con.BACK_TO_DOCUMENTS;
+                    ch.PHOTO_1 = con.PHOTO_1;
+                    ch.THUMBNAIL_PHOTO_1 = con.THUMBNAIL_PHOTO_1;
+                    ch.PHOTO_2 = con.PHOTO_2;
+                    ch.THUMBNAIL_PHOTO_2 = con.THUMBNAIL_PHOTO_2;
+                    ch.PHOTO_3 = con.PHOTO_3;
+                    ch.THUMBNAIL_PHOTO_3 = con.THUMBNAIL_PHOTO_3;
+                    ch.PHOTO_4 = con.PHOTO_4;
+                    ch.THUMBNAIL_PHOTO_4 = con.THUMBNAIL_PHOTO_4;
+                    ch.PHOTO_5 = con.PHOTO_5;
+                    ch.THUMBNAIL_PHOTO_5 = con.THUMBNAIL_PHOTO_5;
                     ch.CREATED_BY = Session["username"].ToString();
                     ch.CREATED_DATE = DateTime.Now;
                     ch.UPDATED_BY = Session["username"].ToString();
