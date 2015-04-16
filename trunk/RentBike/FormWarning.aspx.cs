@@ -1,6 +1,7 @@
 ﻿using RentBike.Common;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -13,6 +14,7 @@ namespace RentBike
     {
         int pageSize = 20;
         int storeId = 0;
+        public string SearchDate { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["store_id"] == null)
@@ -44,6 +46,14 @@ namespace RentBike
                 //{
                     LoadData(txtDate.Text, txtSearch.Text, 0, storeId);
                 //}
+            }
+            if (!string.IsNullOrEmpty(txtDate.Text))
+            {
+                SearchDate = Convert.ToDateTime(txtDate.Text).ToString("dd/MM/yyyy");
+            }
+            else
+            {
+                SearchDate = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
             }
         }
 
@@ -92,22 +102,19 @@ namespace RentBike
                             paidNumberOfFee += 1;
                         }
                         c.PAYED_TIME = paidNumberOfFee;
-
-                        PayPeriod pp1 = tmpLstPeriod.Where(s => s.PAY_DATE >= DateTime.Now).FirstOrDefault();
-                        if (pp1 != null)
-                            c.FEE_PER_DAY = pp1.AMOUNT_PER_PERIOD / 10;
-
                         c.OVER_DATE = DateTime.Now.Subtract(c.RENT_DATE).Days + 1;
 
                         if (!string.IsNullOrEmpty(searchDate))
                         {
                             if (tmpLstPeriod.Any(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate)))
                             {
+                                c.FEE_PER_DAY = tmpLstPeriod.FirstOrDefault(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate)).AMOUNT_PER_PERIOD / 10;
                                 dataList.Add(c);
                             }
                         }
-                        else if (tmpLstPeriod.Any(s =>s.PAY_DATE.ToString("yyyyMMdd").Equals(DateTime.Now.ToString("yyyyMMdd"))))
+                        else if (tmpLstPeriod.Any(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(DateTime.Now.ToString("yyyyMMdd"))))
                         {
+                            c.FEE_PER_DAY = tmpLstPeriod.FirstOrDefault(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(DateTime.Now.ToString("yyyyMMdd"))).AMOUNT_PER_PERIOD / 10;
                             dataList.Add(c);
                         }
                     }
