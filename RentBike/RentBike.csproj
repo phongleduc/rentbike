@@ -97,6 +97,7 @@
     <Content Include="App_Themes\Theme1\image\tick-blue.png" />
     <Content Include="App_Themes\Theme1\image\tick-orange.png" />
     <Content Include="App_Themes\Theme1\image\unchecked.gif" />
+    <Content Include="script\date.js" />
     <Content Include="script\fancybox\blank.gif" />
     <Content Include="script\fancybox\fancybox_loading%402x.gif" />
     <Content Include="script\fancybox\fancybox_loading.gif" />

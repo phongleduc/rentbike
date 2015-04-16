@@ -61,7 +61,7 @@ namespace RentBike
                                     contract.EXTEND_END_DATE = endDateUpdated;
                                     db.SaveChanges();
 
-                                    PayPeriod payPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId).OrderByDescending(c => c.PAY_DATE).FirstOrDefault();
+                                    PayPeriod payPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId).OrderBy(c => c.PAY_DATE).FirstOrDefault();
                                     decimal increateFeeCar = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 50 * 10);
                                     decimal increateFeeEquip = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 100 * 10);
                                     decimal increateFeeOther = payPeriod.AMOUNT_PER_PERIOD;
@@ -75,10 +75,16 @@ namespace RentBike
                                         switch (contract.RENT_TYPE_ID)
                                         {
                                             case 1:
-                                                pp1.AMOUNT_PER_PERIOD = increateFeeCar;
+                                                if (payPeriod.AMOUNT_PER_PERIOD < 40000)
+                                                    pp1.AMOUNT_PER_PERIOD = increateFeeCar;
+                                                else
+                                                    pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD;
                                                 break;
                                             case 2:
-                                                pp1.AMOUNT_PER_PERIOD = increateFeeEquip;
+                                                if (payPeriod.AMOUNT_PER_PERIOD < 60000)
+                                                    pp1.AMOUNT_PER_PERIOD = increateFeeEquip;
+                                                else
+                                                    pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD;
                                                 break;
                                             default:
                                                 pp1.AMOUNT_PER_PERIOD = increateFeeOther;
@@ -172,7 +178,7 @@ namespace RentBike
 
                             BuildPhotoLibrary(cntrct);
 
-                            txtLicenseNumber.Enabled = txtCustomerName.Enabled = txtBirthDay.Enabled = txtRangeDate.Enabled = txtPlaceDate.Enabled = ddlStore.Enabled = txtPhone.Enabled = txtPermanentResidence.Enabled = txtCurrentResidence.Enabled = false;
+                            txtLicenseNumber.Enabled = txtCustomerName.Enabled = txtBirthDay.Enabled = txtRangeDate.Enabled = txtPlaceDate.Enabled = ddlStore.Enabled = txtPermanentResidence.Enabled = false;
                             txtContractNo.Enabled = ddlRentType.Enabled = txtAmount.Enabled = txtFeePerDay.Enabled = txtRentDate.Enabled = txtEndDate.Enabled = false;
                             txtReferencePerson.Enabled = txtItemName.Enabled = txtItemLicenseNo.Enabled = txtSerial1.Enabled = txtSerial2.Enabled = txtImplementer.Enabled = txtBackDocument.Enabled = txtReferencePhone.Enabled = txtSchool.Enabled = txtClass.Enabled = false;
 
@@ -754,9 +760,12 @@ namespace RentBike
                             item.UPDATED_BY = Session["username"].ToString();
                             item.UPDATED_DATE = DateTime.Now;
                             SavePhoto(item);
-                            //var cusItem = db.Customers.FirstOrDefault(c => c.ID == item.CUSTOMER_ID);
-                            //if (fileUploadUserPhoto.HasFile)
-                            //    cusItem.PHOTO = ImageHelper.CreateThumbnail(fileUploadUserPhoto.FileBytes, 128, 128);
+                            var cusItem = db.Customers.FirstOrDefault(c => c.ID == item.CUSTOMER_ID);
+                            if (cusItem != null)
+                            {
+                                cusItem.PHONE = txtPhone.Text;
+                                cusItem.CURRENT_RESIDENCE = txtCurrentResidence.Text;
+                            }
 
                             db.SaveChanges();
                         }
