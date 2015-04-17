@@ -61,30 +61,32 @@ namespace RentBike
                                     contract.EXTEND_END_DATE = endDateUpdated;
                                     db.SaveChanges();
 
-                                    PayPeriod payPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId).OrderBy(c => c.PAY_DATE).FirstOrDefault();
-                                    decimal increateFeeCar = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 50 * 10);
-                                    decimal increateFeeEquip = payPeriod.AMOUNT_PER_PERIOD + (multipleFee * 100 * 10);
-                                    decimal increateFeeOther = payPeriod.AMOUNT_PER_PERIOD;
+                                    var listPayPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId);
+                                    PayPeriod firstPayPeriod = listPayPeriod.OrderBy(c => c.PAY_DATE).FirstOrDefault();
+                                    PayPeriod lastPayPeriod = listPayPeriod.OrderByDescending(c => c.PAY_DATE).FirstOrDefault();
+                                    decimal increateFeeCar = firstPayPeriod.AMOUNT_PER_PERIOD + (multipleFee * 50 * 10);
+                                    decimal increateFeeEquip = firstPayPeriod.AMOUNT_PER_PERIOD + (multipleFee * 100 * 10);
+                                    decimal increateFeeOther = firstPayPeriod.AMOUNT_PER_PERIOD;
 
                                     for (int i = 0; i <= percentDate; i++)
                                     {
 
                                         pp1 = new PayPeriod();
                                         pp1.CONTRACT_ID = contractId;
-                                        pp1.PAY_DATE = payPeriod.PAY_DATE.AddDays(10);
+                                        pp1.PAY_DATE = lastPayPeriod.PAY_DATE.AddDays(10);
                                         switch (contract.RENT_TYPE_ID)
                                         {
                                             case 1:
-                                                if (payPeriod.AMOUNT_PER_PERIOD < 40000)
+                                                if (firstPayPeriod.AMOUNT_PER_PERIOD < 40000)
                                                     pp1.AMOUNT_PER_PERIOD = increateFeeCar;
                                                 else
-                                                    pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD;
+                                                    pp1.AMOUNT_PER_PERIOD = firstPayPeriod.AMOUNT_PER_PERIOD;
                                                 break;
                                             case 2:
-                                                if (payPeriod.AMOUNT_PER_PERIOD < 60000)
+                                                if (firstPayPeriod.AMOUNT_PER_PERIOD < 60000)
                                                     pp1.AMOUNT_PER_PERIOD = increateFeeEquip;
                                                 else
-                                                    pp1.AMOUNT_PER_PERIOD = payPeriod.AMOUNT_PER_PERIOD;
+                                                    pp1.AMOUNT_PER_PERIOD = firstPayPeriod.AMOUNT_PER_PERIOD;
                                                 break;
                                             default:
                                                 pp1.AMOUNT_PER_PERIOD = increateFeeOther;
@@ -113,7 +115,7 @@ namespace RentBike
 
                                         db.SaveChanges();
 
-                                        payPeriod = pp3;
+                                        lastPayPeriod = pp3;
                                     }
                                 }
                             }
