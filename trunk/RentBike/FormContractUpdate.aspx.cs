@@ -77,13 +77,13 @@ namespace RentBike
                                         switch (contract.RENT_TYPE_ID)
                                         {
                                             case 1:
-                                                if (firstPayPeriod.AMOUNT_PER_PERIOD < 40000)
+                                                if (((contract.FEE_PER_DAY / multipleFee) * 10) < 4000)
                                                     pp1.AMOUNT_PER_PERIOD = increateFeeCar;
                                                 else
                                                     pp1.AMOUNT_PER_PERIOD = firstPayPeriod.AMOUNT_PER_PERIOD;
                                                 break;
                                             case 2:
-                                                if (firstPayPeriod.AMOUNT_PER_PERIOD < 60000)
+                                                if (((contract.FEE_PER_DAY / multipleFee) * 10) < 6000)
                                                     pp1.AMOUNT_PER_PERIOD = increateFeeEquip;
                                                 else
                                                     pp1.AMOUNT_PER_PERIOD = firstPayPeriod.AMOUNT_PER_PERIOD;
