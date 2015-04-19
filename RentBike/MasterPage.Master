@@ -46,7 +46,7 @@
                     <li class="color-info">
                         <asp:HyperLink ID="hplIncomeOutcomeSummary" Text="Tổng hợp thu chi" runat="server" CssClass="color-text-white" NavigateUrl="FormIncomeOutcomeSummary.aspx"></asp:HyperLink></li>
                     <li class="color-success">
-                        <asp:HyperLink ID="hplWarning" Text="Thông báo" runat="server" CssClass="color-text-white" NavigateUrl="FormWarning.aspx"></asp:HyperLink></li>
+                        <asp:HyperLink ID="hplWarning" Text="Danh Sách Gọi Phí" runat="server" CssClass="color-text-white" NavigateUrl="FormWarning.aspx"></asp:HyperLink></li>
                     <li class="color-danger">
                         <asp:HyperLink ID="hplActivityLog" Text="Nhật ký hoạt động" runat="server" CssClass="color-text-white" NavigateUrl="FormActivityLog.aspx"></asp:HyperLink></li>
                     <li class="color-warning">

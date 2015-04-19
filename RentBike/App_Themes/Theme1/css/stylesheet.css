@@ -140,3 +140,15 @@ label.valid {
 	width: 16px;
 	height: 16px;
 }
+
+.background-red {
+    background-color: #FB989D;
+}
+
+.background-amber {
+    background-color: #F2BD93;
+}
+
+.background-green {
+    background-color: #96F9B9;
+}
