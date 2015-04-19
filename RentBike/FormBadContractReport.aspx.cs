@@ -17,14 +17,11 @@ namespace RentBike
             {
                 Response.Redirect("FormLogin.aspx");
             }
-            if (!IsPostBack)
+            using (var db = new RentBikeEntities())
             {
-                using (var db = new RentBikeEntities())
-                {
-                    List<CONTRACT_FULL_VW> result = GetResultList(db);
-                    LoadGeneralInfo(result);
-                    LoadData(string.Empty, 0, result, db);
-                }
+                List<CONTRACT_FULL_VW> result = GetResultList(db);
+                LoadGeneralInfo(result);
+                LoadData(string.Empty, 0, result, db);
             }
         }
 
@@ -51,6 +48,11 @@ namespace RentBike
                 int storeid = Helper.parseInt(Session["store_id"].ToString());
                 data = db.CONTRACT_FULL_VW.ToList().Where(c => c.CONTRACT_STATUS == true && c.STORE_ID == storeid)
                     .OrderByDescending(c => c.ID).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(txtSearch.Text))
+            {
+                data = data.Where(s => s.SEARCH_TEXT.Contains(txtSearch.Text)).ToList();
             }
 
             var result = new List<CONTRACT_FULL_VW>();
@@ -108,6 +110,10 @@ namespace RentBike
             Response.Redirect("FormContractUpdate.aspx");
         }
 
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            //LoadData(txtSearch.Text.Trim(), 0);
+        }
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {

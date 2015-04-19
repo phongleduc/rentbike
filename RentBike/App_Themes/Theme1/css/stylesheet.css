@@ -71,6 +71,7 @@ body {
 .color-warning{background-color:#f39c12;}
 .color-success{background-color:#18bc9c}
 .color-info{background-color:#3498db}
+.color-gray{background-color:#777777}
 .color-text-white {color:white;}
 .color-text-white:hover{color:black; font-weight: bolder;}
 

@@ -1,15 +1,12 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormWarning.aspx.cs" Inherits="RentBike.FormWarning" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormReport.aspx.cs" Inherits="RentBike.FormReport" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h2>DANH SÁCH GỌI PHÍ</h2>
+    <h2>THÔNG BÁO</h2>
     <table class="table table-striped table-hover ">
         <tbody>
             <tr>
-                <td>
-                    <div class="col-lg-4">
-                        <asp:TextBox ID="txtDate" runat="server" CssClass="form-control input-md" placeholder="Hợp đồng đến hạn trong ngày"></asp:TextBox>
-                    </div>
-                    <div class="col-lg-7">
+                <td style="width:50%;">
+                    <div class="col-lg-15">
                         <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control input-md" placeholder="Tìm kiếm"></asp:TextBox>
                     </div>
                 </td>
@@ -62,7 +59,7 @@
     <asp:HiddenField ID="hfPager" runat="server" />--%>
     <script>
         $(function () {
-            $('#<%=txtDate.ClientID %>').datepicker();
+<%--            $('#<%=txtDate.ClientID %>').datepicker();--%>
 
 <%--            $('#<%=ddlPager.ClientID %>').change(function () {
                 $('#<%=hfPager.ClientID %>').val($(this).val());
@@ -84,8 +81,8 @@
             function printDiv() {
                 var divToPrint = $('#areaToPrint').clone();
                 divToPrint.find('table').find("tr").find("th:last, td:last").remove();
-                divToPrint.prepend($("<h3 style='text-align:center;'>" + "Ngày <%= SearchDate%>" + "</h3>"));
-                divToPrint.prepend($("<h1 style='text-align:center;'>Thông báo</h1>"));
+                divToPrint.prepend($("<h3 style='text-align:center;'>" + "Ngày <%= DateTime.Now.ToString("dd/MM/yyyy")%>" + "</h3>"));
+                divToPrint.prepend($("<h1 style='text-align:center;'>Thông Báo</h1>"));
                 divToPrint.find('table').css('width', '100%');
                 divToPrint.find('table').css('border-collapse', 'collapse');
                 divToPrint.find('table').find("tr").css('border', '1px solid black');
