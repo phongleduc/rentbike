@@ -39,21 +39,23 @@
                         <asp:HyperLink ID="hplStoreManagement" Text="Quản lý cửa hàng" runat="server" CssClass="color-text-white" NavigateUrl="FormStoreManagement.aspx"></asp:HyperLink></li>
                     <li class="color-success">
                         <asp:HyperLink ID="hplContractManagement" Text="Quản lý hợp đồng" runat="server" CssClass="color-text-white" NavigateUrl="FormContractManagement.aspx"></asp:HyperLink></li>
-                    <li class="color-danger">
+                    <li class="color-gray">
                         <asp:HyperLink ID="hplContractHistoryManagement" Text="Hợp đồng cũ" runat="server" CssClass="color-text-white" NavigateUrl="FormContractHistoryManagement.aspx"></asp:HyperLink></li>
                     <li class="color-warning">
                         <asp:HyperLink ID="hplDailyIncomeOutcome" Text="Chi tiết hàng ngày" runat="server" CssClass="color-text-white" NavigateUrl="FormDailyIncomeOutcome.aspx"></asp:HyperLink></li>
                     <li class="color-info">
                         <asp:HyperLink ID="hplIncomeOutcomeSummary" Text="Tổng hợp thu chi" runat="server" CssClass="color-text-white" NavigateUrl="FormIncomeOutcomeSummary.aspx"></asp:HyperLink></li>
-                    <li class="color-success">
-                        <asp:HyperLink ID="hplWarning" Text="Danh Sách Gọi Phí" runat="server" CssClass="color-text-white" NavigateUrl="FormWarning.aspx"></asp:HyperLink></li>
                     <li class="color-danger">
+                        <asp:HyperLink ID="hplWarning" Text="Danh Sách Gọi Phí" runat="server" CssClass="color-text-white" NavigateUrl="FormWarning.aspx"></asp:HyperLink></li>
+                     <li class="color-warning">
+                        <asp:HyperLink ID="hplReport" Text="Thông báo" runat="server" CssClass="color-text-white" NavigateUrl="FormReport.aspx"></asp:HyperLink></li>
+                    <li class="color-info">
                         <asp:HyperLink ID="hplActivityLog" Text="Nhật ký hoạt động" runat="server" CssClass="color-text-white" NavigateUrl="FormActivityLog.aspx"></asp:HyperLink></li>
                     <li class="color-warning">
                         <asp:HyperLink ID="hplAccountManagement" Text="Quản lý tài khoản" runat="server" CssClass="color-text-white" NavigateUrl="FormAccountManagement.aspx"></asp:HyperLink></li>
                     <li class="color-info">
                         <asp:HyperLink ID="hplCommonListSetting" Text="Cài đặt danh mục" runat="server" CssClass="color-text-white" NavigateUrl="FormCommonListSetting.aspx"></asp:HyperLink></li>
-                    <li class="color-success">
+                    <li class="color-danger">
                         <asp:HyperLink ID="hplPendingContract" Text="Hợp đồng xấu" runat="server" CssClass="color-text-white" NavigateUrl="FormBadContractReport.aspx"></asp:HyperLink></li>
                 </ul>
             </div>

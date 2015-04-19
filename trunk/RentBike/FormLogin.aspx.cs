@@ -21,7 +21,7 @@ namespace RentBike
                 {
                     if (LoadUser(Request.Cookies["UserName"].Value, Request.Cookies["Password"].Value))
                     {
-                        Response.Redirect("FormWarning.aspx", false);
+                        Response.Redirect("FormReport.aspx", false);
                     }
                     else
                     {
@@ -52,7 +52,7 @@ namespace RentBike
                     Response.Cookies["Password"].Value =  CommonList.EncryptPassword(txtPassword.Text.Trim());
 
                     WriteLog(CommonList.ACTION_LOGIN, false);
-                    Response.Redirect("FormWarning.aspx", false);
+                    Response.Redirect("FormReport.aspx", false);
                 }
                 else
                 {
