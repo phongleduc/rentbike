@@ -44,7 +44,7 @@ namespace RentBike
                 //}
                 //else
                 //{
-                    LoadData(txtDate.Text, txtSearch.Text, 0, storeId);
+                LoadData(txtDate.Text, txtSearch.Text, 0, storeId);
                 //}
             }
             if (!string.IsNullOrEmpty(txtDate.Text))
@@ -63,13 +63,13 @@ namespace RentBike
             List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
             using (var db = new RentBikeEntities())
             {
-                var st = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true);
+                var st = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true);
                 if (storeId != 0)
                 {
                     st = st.Where(c => c.STORE_ID == storeId);
                 }
                 if (!string.IsNullOrEmpty(strSearch))
-                { 
+                {
                     st = st.Where(c => c.SEARCH_TEXT.Contains(strSearch));
                 }
                 st = st.OrderByDescending(c => c.ID);
@@ -83,38 +83,90 @@ namespace RentBike
                 var lstPeriod = db.PayPeriods.Where(s => s.STATUS == true).ToList();
                 foreach (CONTRACT_FULL_VW c in st)
                 {
+                    var inOutList = db.InOuts.Where(s =>s.CONTRACT_ID == c.ID).ToList();
+
                     c.PAYED_TIME = 0;
                     c.PAY_DATE = c.RENT_DATE;
-                    c.OVER_DATE = DateTime.Now.Subtract(c.PAY_DATE).Days;
-                    c.MUST_PAY_IN_TODAY = false;
+                    c.DAY_DONE = DateTime.Now.Subtract(c.PAY_DATE).Days;
+
+                    DateTime nowDate = DateTime.Now;
+                    if (!string.IsNullOrEmpty(date))
+                    {
+                        nowDate = Convert.ToDateTime(date);
+                    }
                     string contactId = c.ID.ToString();
-                    var tmpLstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID).OrderByDescending(s => s.PAY_DATE).ToList();
+                    var tmpLstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID);
                     if (tmpLstPeriod != null)
                     {
                         decimal paidAmount = tmpLstPeriod.Where(s => s.ACTUAL_PAY > 0).Select(s => s.ACTUAL_PAY).DefaultIfEmpty().Sum();
                         int paidNumberOfFee = 0;
+                        bool paidFull = false;
                         foreach (PayPeriod pp in tmpLstPeriod)
                         {
-                            if (paidAmount <= 0)
+                            if (pp.AMOUNT_PER_PERIOD == 0)
+                            {
+                                c.OVER_DATE = 0;
                                 break;
-
+                            }
                             paidAmount -= pp.AMOUNT_PER_PERIOD;
                             paidNumberOfFee += 1;
+                            if (paidAmount <= 0)
+                            {
+                                if (paidAmount == 0)
+                                    paidFull = true;
+
+                                c.OVER_DATE = nowDate.Subtract(pp.PAY_DATE).Days;
+                                c.PAY_DATE = pp.PAY_DATE;
+                                c.PERIOD_ID = pp.ID;
+                                break;
+                            }
                         }
                         c.PAYED_TIME = paidNumberOfFee;
-                        c.OVER_DATE = DateTime.Now.Subtract(c.RENT_DATE).Days + 1;
+                        c.DAY_DONE = DateTime.Now.Subtract(c.RENT_DATE).Days + 1;
+
+                        if (string.IsNullOrEmpty(date) || DateTime.Now.Subtract(Convert.ToDateTime(date)).Days <= 0)
+                        {
+                            if (paidFull && c.OVER_DATE <= 0)
+                            {
+                                c.CSS_CLASS = "background-green";
+                            }
+                            else if (c.OVER_DATE > 10)
+                            {
+                                c.CSS_CLASS = "background-red";
+                            }
+                        }
+                        else
+                        {
+                            if (c.OVER_DATE <= 0)
+                            {
+                                var inout = inOutList.Where(s => s.PERIOD_ID == c.PERIOD_ID).OrderByDescending(s => s.CREATED_DATE).FirstOrDefault();
+                                if (inout != null && inout.CREATED_DATE.HasValue && inout.CREATED_DATE.Value.Subtract(nowDate).Days > 0)
+                                {
+                                    c.CSS_CLASS = "background-amber";
+                                }
+                                else
+                                {
+                                    c.CSS_CLASS = "background-green";
+                                }
+                            }
+                            else
+                            {
+                                c.CSS_CLASS = "background-red";
+                            }
+                        }
+
 
                         if (!string.IsNullOrEmpty(searchDate))
                         {
                             if (tmpLstPeriod.Any(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate)))
                             {
-                                c.FEE_PER_DAY = tmpLstPeriod.FirstOrDefault(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate)).AMOUNT_PER_PERIOD / 10;
+                                c.FEE_PER_DAY = tmpLstPeriod.FirstOrDefault(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate)).AMOUNT_PER_PERIOD;
                                 dataList.Add(c);
                             }
                         }
                         else if (tmpLstPeriod.Any(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(DateTime.Now.ToString("yyyyMMdd"))))
                         {
-                            c.FEE_PER_DAY = tmpLstPeriod.FirstOrDefault(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(DateTime.Now.ToString("yyyyMMdd"))).AMOUNT_PER_PERIOD / 10;
+                            c.FEE_PER_DAY = tmpLstPeriod.FirstOrDefault(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(DateTime.Now.ToString("yyyyMMdd"))).AMOUNT_PER_PERIOD;
                             dataList.Add(c);
                         }
                     }
@@ -125,7 +177,7 @@ namespace RentBike
                 }
             }
 
-            rptWarning.DataSource = dataList.OrderByDescending(c =>c.OVER_DATE);
+            rptWarning.DataSource = dataList.OrderByDescending(c => c.DAY_DONE);
             rptWarning.DataBind();
         }
 
@@ -190,8 +242,10 @@ namespace RentBike
     public partial class CONTRACT_FULL_VW
     {
         public int OVER_DATE { get; set; }
+        public int DAY_DONE { get; set; }
         public DateTime PAY_DATE { get; set; }
         public int PAYED_TIME { get; set; }
-        public bool MUST_PAY_IN_TODAY { get; set; }
+        public int PERIOD_ID { get; set; }
+        public string CSS_CLASS { get; set; }
     }
 }

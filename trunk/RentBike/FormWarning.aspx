@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormWarning.aspx.cs" Inherits="RentBike.FormWarning" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h2>THÔNG BÁO</h2>
+    <h2>DANH SÁCH GỌI PHÍ</h2>
     <table class="table table-striped table-hover ">
         <tbody>
             <tr>
@@ -25,7 +25,7 @@
                     <img src="App_Themes/Theme1/image/printer-blue.png" /></a>&nbsp;&nbsp;
             </div>
             <div id="areaToPrint">
-                <table class="table table-striped table-hover">
+                <table class="table">
                     <tr class="success">
                         <th>#</th>
                         <th>Tên khách hàng</th>
@@ -39,7 +39,7 @@
                     </tr>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr id='<%# string.Format("HtmlTableRow{0}", Container.ItemIndex) %>'>
+            <tr id='<%# string.Format("HtmlTableRow{0}", Container.ItemIndex) %>' class="<%# Eval("CSS_CLASS") %>">
                 <td><%# Container.ItemIndex + 1 %></td>
                 <td><%# Eval("CUSTOMER_NAME") %><br />(<%# Convert.ToDateTime(Eval("BIRTH_DAY")).ToString("dd/MM/yyyy") %>)</td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
@@ -47,7 +47,7 @@
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY"))) %></td>
                 <td class="text-right"><%# Eval("PAYED_TIME") %> lần</td>
                 <td class="text-right"><%# Eval("NOTE") %></td>
-                <td class="text-center"><%# Eval("OVER_DATE") %> Ngày <br /><span style="color:red">(<%# Convert.ToDateTime(Eval("RENT_DATE")).ToString("dd/MM/yyyy") %>)</span></td>
+                <td class="text-center"><%# Eval("DAY_DONE") %> Ngày <br /><span style="color:red">(<%# Convert.ToDateTime(Eval("RENT_DATE")).ToString("dd/MM/yyyy") %>)</span></td>
                 <td>
                     <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
@@ -85,7 +85,7 @@
                 var divToPrint = $('#areaToPrint').clone();
                 divToPrint.find('table').find("tr").find("th:last, td:last").remove();
                 divToPrint.prepend($("<h3 style='text-align:center;'>" + "Ngày <%= SearchDate%>" + "</h3>"));
-                divToPrint.prepend($("<h1 style='text-align:center;'>Thông báo</h1>"));
+                divToPrint.prepend($("<h1 style='text-align:center;'>Danh Sách Gọi Phí</h1>"));
                 divToPrint.find('table').css('width', '100%');
                 divToPrint.find('table').css('border-collapse', 'collapse');
                 divToPrint.find('table').find("tr").css('border', '1px solid black');
