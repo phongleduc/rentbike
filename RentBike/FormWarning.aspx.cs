@@ -83,7 +83,7 @@ namespace RentBike
                 var lstPeriod = db.PayPeriods.Where(s => s.STATUS == true).ToList();
                 foreach (CONTRACT_FULL_VW c in st)
                 {
-                    var inOutList = db.InOuts.Where(s =>s.CONTRACT_ID == c.ID).ToList();
+                    var inOutList = db.InOuts.Where(s => s.CONTRACT_ID == c.ID).ToList();
 
                     c.PAYED_TIME = 0;
                     c.PAY_DATE = c.RENT_DATE;
@@ -112,12 +112,11 @@ namespace RentBike
                             paidNumberOfFee += 1;
                             if (paidAmount <= 0)
                             {
-                                if (paidAmount == 0)
-                                    paidFull = true;
-
                                 c.OVER_DATE = nowDate.Subtract(pp.PAY_DATE).Days;
                                 c.PAY_DATE = pp.PAY_DATE;
                                 c.PERIOD_ID = pp.ID;
+                                if (paidAmount == 0 || c.OVER_DATE <= 0)
+                                    paidFull = true;
                                 break;
                             }
                         }
@@ -154,7 +153,6 @@ namespace RentBike
                                 c.CSS_CLASS = "background-red";
                             }
                         }
-
 
                         if (!string.IsNullOrEmpty(searchDate))
                         {
