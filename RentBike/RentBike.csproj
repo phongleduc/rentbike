@@ -167,9 +167,6 @@
     <Content Include="script\jquery.price_format.1.8.min.js" />
     <Content Include="script\jquery.PrintArea.js" />
     <Content Include="script\jquery.validate.js" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs">
@@ -425,13 +422,6 @@
       <DependentUpon>RentBike.edmx</DependentUpon>
       <LastGenOutput>RentBike.cs</LastGenOutput>
     </Content>
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

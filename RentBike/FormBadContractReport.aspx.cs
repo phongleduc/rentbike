@@ -10,7 +10,6 @@ namespace RentBike
 {
     public partial class FormBadContractReport : System.Web.UI.Page
     {
-        int pageSize = 20;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["store_id"] == null)
@@ -21,7 +20,7 @@ namespace RentBike
             {
                 List<CONTRACT_FULL_VW> result = GetResultList(db);
                 LoadGeneralInfo(result);
-                LoadData(string.Empty, 0, result, db);
+                LoadData(result, db);
             }
         }
 
@@ -76,32 +75,12 @@ namespace RentBike
                     totalPayed -= pp.AMOUNT_PER_PERIOD;
                 }
             }
-            return result.OrderByDescending(c => c.OVER_DATE).ToList();
+            return result.OrderBy(c => c.OVER_DATE).ToList();
         }
 
-        private void LoadData(string strSearch, int page, List<CONTRACT_FULL_VW> data, RentBikeEntities db)
+        private void LoadData(List<CONTRACT_FULL_VW> data, RentBikeEntities db)
         {
-            int totalRecord = 0;
-            totalRecord = data.Count();
-            int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-            List<int> pageList = new List<int>();
-            for (int i = 1; i <= totalPage; i++)
-            {
-                pageList.Add(i);
-            }
-
-            ddlPager.DataSource = pageList;
-            ddlPager.DataBind();
-            if (pageList.Count > 0)
-            {
-                ddlPager.SelectedIndex = page;
-            }
-
-            // LOAD DATA WITH PAGING
-            int skip = page * pageSize;
-
-            List<CONTRACT_FULL_VW> dataList = data.Skip(skip).Take(pageSize).ToList();
-            rptContract.DataSource = dataList;
+            rptContract.DataSource = data;
             rptContract.DataBind();
 
         }
@@ -113,16 +92,6 @@ namespace RentBike
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             //LoadData(txtSearch.Text.Trim(), 0);
-        }
-
-        protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            using (var db = new RentBikeEntities())
-            {
-                List<CONTRACT_FULL_VW> result = GetResultList(db);
-                LoadGeneralInfo(result);
-                LoadData(string.Empty, Helper.parseInt(ddlPager.SelectedValue) - 1, result, db);
-            }
         }
 
         private void LoadGeneralInfo(List<CONTRACT_FULL_VW> lstContract)

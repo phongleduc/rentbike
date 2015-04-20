@@ -85,7 +85,7 @@
                 var divToPrint = $('#areaToPrint').clone();
                 divToPrint.find('table').find("tr").find("th:last, td:last").remove();
                 divToPrint.prepend($("<h3 style='text-align:center;'>" + "Ngày <%= SearchDate%>" + "</h3>"));
-                divToPrint.prepend($("<h1 style='text-align:center;'>Thông báo</h1>"));
+                divToPrint.prepend($("<h1 style='text-align:center;'>Danh Sách Gọi Phí</h1>"));
                 divToPrint.find('table').css('width', '100%');
                 divToPrint.find('table').css('border-collapse', 'collapse');
                 divToPrint.find('table').find("tr").css('border', '1px solid black');
