@@ -138,8 +138,8 @@ namespace RentBike
                         {
                             if (c.OVER_DATE <= 0)
                             {
-                                var inout = inOutList.Where(s => s.PERIOD_ID == c.PERIOD_ID).OrderByDescending(s => s.CREATED_DATE).FirstOrDefault();
-                                if (inout != null && inout.CREATED_DATE.HasValue && inout.CREATED_DATE.Value.Subtract(nowDate).Days > 0)
+                                var inout = inOutList.Where(s => s.PERIOD_DATE.ToString("yyyyMMdd").Equals(nowDate.ToString("yyyyMMdd"))).OrderByDescending(s => s.INOUT_DATE).FirstOrDefault();
+                                if (inout != null && inout.INOUT_DATE.HasValue && inout.INOUT_DATE.Value.Subtract(nowDate).Days > 0)
                                 {
                                     c.CSS_CLASS = "background-amber";
                                 }

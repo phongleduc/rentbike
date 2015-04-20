@@ -12,7 +12,6 @@ namespace RentBike
 {
     public partial class FormReport : System.Web.UI.Page
     {
-        int pageSize = 20;
         int storeId = 0;
         public string SearchDate { get; set; }
         protected void Page_Load(object sender, EventArgs e)
@@ -85,10 +84,10 @@ namespace RentBike
                             paidNumberOfFee += 1;
                             if (paidAmount <= 0)
                             {
-                                c.OVER_DATE = DateTime.Now.Subtract(pp.PAY_DATE).Days;
+                                c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE).Days;
                                 c.PAY_DATE = pp.PAY_DATE;
                                 c.PERIOD_ID = pp.ID;
-                                if (c.OVER_DATE > 0 && c.OVER_DATE <= 50)
+                                if (c.OVER_DATE >= 10 && c.OVER_DATE <= 50)
                                     bAdd = true;
                                 break;
                             }
@@ -96,7 +95,7 @@ namespace RentBike
                         c.PAYED_TIME = paidNumberOfFee;
                         c.DAY_DONE = DateTime.Now.Subtract(c.RENT_DATE).Days + 1;
 
-                        if(bAdd)
+                        if (bAdd)
                         {
                             dataList.Add(c);
                         }

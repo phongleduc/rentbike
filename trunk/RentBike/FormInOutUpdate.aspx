@@ -21,7 +21,7 @@
                 <td class="text-center"><%# Container.ItemIndex + 1 %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", (Eval("IN_AMOUNT").ToString() == "0" ? string.Empty : Eval("IN_AMOUNT"))) %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", (Eval("OUT_AMOUNT").ToString() == "0" ? string.Empty : Eval("OUT_AMOUNT"))) %></td>
-                <td class="text-center"><%# string.Format("{0:dd/MM/yyyy}", Eval("CREATED_DATE") == null ? Eval("PERIOD_DATE") : Eval("CREATED_DATE")) %></td>
+                <td class="text-center"><%# string.Format("{0:dd/MM/yyyy}", Eval("INOUT_DATE") == null ? Eval("PERIOD_DATE") : Eval("INOUT_DATE")) %></td>
                 <td class="text-center"><%# string.Format("{0:dd/MM/yyyy}", Eval("PERIOD_DATE")) %></td>
             </tr>
         </ItemTemplate>

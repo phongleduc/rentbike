@@ -60,6 +60,7 @@
                         <th class="text-center">Đã trả phí hết ngày</th>
                         <th class="text-center">Số ngày chậm</th>
                         <th class="text-center">Tổng tiền phí</th>
+                        <th class="text-center">Xử lý HĐ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,6 +75,8 @@
                 <td class="text-center"><%# String.Format("{0:dd/MM/yyyy}", Eval("PAY_DATE"))%></td>
                 <td class="text-center red"><%# Eval("OVER_DATE")%> Ngày</td>
                 <td class="text-center"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY")) * Convert.ToDecimal(Eval("OVER_DATE"))) %> VNĐ</td>
+                <td>
+                    <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>
@@ -81,5 +84,4 @@
            </table>
         </FooterTemplate>
     </asp:Repeater>
-    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
 </asp:Content>

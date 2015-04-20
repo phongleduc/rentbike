@@ -180,9 +180,7 @@ namespace RentBike
 
                             BuildPhotoLibrary(cntrct);
 
-                            txtLicenseNumber.Enabled = txtCustomerName.Enabled = txtBirthDay.Enabled = txtRangeDate.Enabled = txtPlaceDate.Enabled = ddlStore.Enabled = txtPermanentResidence.Enabled = false;
-                            txtContractNo.Enabled = ddlRentType.Enabled = txtAmount.Enabled = txtFeePerDay.Enabled = txtRentDate.Enabled = txtEndDate.Enabled = false;
-                            txtReferencePerson.Enabled = txtItemName.Enabled = txtItemLicenseNo.Enabled = txtSerial1.Enabled = txtSerial2.Enabled = txtImplementer.Enabled = txtBackDocument.Enabled = txtReferencePhone.Enabled = txtSchool.Enabled = txtClass.Enabled = false;
+                            ddlStore.Enabled = txtContractNo.Enabled = ddlRentType.Enabled = txtAmount.Enabled = txtFeePerDay.Enabled = txtRentDate.Enabled = txtEndDate.Enabled = false;
 
                             LoadPayFeeSchedule();
                         }
@@ -757,16 +755,34 @@ namespace RentBike
                         {
                             var item = db.Contracts.FirstOrDefault(itm => itm.ID == contractId);
 
-                            item.NOTE = txtNote.Text.Trim();
+                            item.NOTE = txtNote.Text;
+                            item.REFERENCE_ID = -1;
+                            item.REFERENCE_NAME = txtReferencePerson.Text.Trim();
+                            item.ITEM_TYPE = txtItemName.Text.Trim();
+                            item.ITEM_LICENSE_NO = txtItemLicenseNo.Text.Trim();
+                            item.SERIAL_1 = txtSerial1.Text.Trim();
+                            item.SERIAL_2 = txtSerial2.Text.Trim();
+                            item.REFERENCE_PHONE = txtReferencePhone.Text.Trim();
+                            item.SCHOOL_NAME = txtSchool.Text.Trim();
+                            item.CLASS_NAME = txtClass.Text.Trim();
+                            item.IMPLEMENTER = txtImplementer.Text.Trim();
+                            item.BACK_TO_DOCUMENTS = txtBackDocument.Text.Trim();
                             item.DETAIL = txtItemDetail.Text.Trim();
+
                             item.UPDATED_BY = Session["username"].ToString();
                             item.UPDATED_DATE = DateTime.Now;
                             SavePhoto(item);
                             var cusItem = db.Customers.FirstOrDefault(c => c.ID == item.CUSTOMER_ID);
                             if (cusItem != null)
                             {
-                                cusItem.PHONE = txtPhone.Text;
-                                cusItem.CURRENT_RESIDENCE = txtCurrentResidence.Text;
+                                cusItem.NAME = txtCustomerName.Text.Trim();
+                                cusItem.BIRTH_DAY = DateTime.ParseExact(txtBirthDay.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                cusItem.LICENSE_NO = txtLicenseNumber.Text.Trim();
+                                cusItem.LICENSE_RANGE_DATE = DateTime.ParseExact(txtRangeDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                                cusItem.LICENSE_RANGE_PLACE = txtPlaceDate.Text.Trim();
+                                cusItem.PHONE = txtPhone.Text.Trim();
+                                cusItem.PERMANENT_RESIDENCE = txtPermanentResidence.Text.Trim();
+                                cusItem.CURRENT_RESIDENCE = txtCurrentResidence.Text.Trim();
                             }
 
                             db.SaveChanges();
