@@ -84,20 +84,28 @@ namespace RentBike
                             paidNumberOfFee += 1;
                             if (paidAmount <= 0)
                             {
-                                c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE).Days - 10;
-                                c.PAY_DATE = pp.PAY_DATE.AddDays(10);
-                                c.FEE_PER_DAY = pp.AMOUNT_PER_PERIOD;
+                                if (paidAmount < 0)
+                                {
+                                    c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE).Days;
+                                    c.PAY_DATE = pp.PAY_DATE;
+                                }
+                                else
+                                {
+                                    c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE).Days - 10;
+                                    c.PAY_DATE = pp.PAY_DATE.AddDays(10);
+                                }
                                 c.PERIOD_ID = pp.ID;
                                 if (c.OVER_DATE >= 0 && c.OVER_DATE <= 50)
                                     bAdd = true;
                                 break;
                             }
                         }
-                        c.PAYED_TIME = paidNumberOfFee;
-                        c.DAY_DONE = DateTime.Now.Subtract(c.RENT_DATE).Days + 1;
 
                         if (bAdd)
                         {
+                            c.PAYED_TIME = paidNumberOfFee;
+                            c.DAY_DONE = DateTime.Now.Subtract(c.RENT_DATE).Days + 1;
+                            c.FEE_PER_DAY = tmpLstPeriod.Where(s => DateTime.Today.Subtract(s.PAY_DATE).Days >= 0).OrderByDescending(s => s.PAY_DATE).FirstOrDefault().AMOUNT_PER_PERIOD;
                             dataList.Add(c);
                         }
                     }

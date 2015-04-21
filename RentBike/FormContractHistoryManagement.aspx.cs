@@ -62,7 +62,7 @@ namespace RentBike
                          orderby s.CLOSE_CONTRACT_DATE
                          select s;
 
-                dataList = st.OrderByDescending(c => c.CLOSE_CONTRACT_DATE).ToList();
+                dataList = st.ToList();
                 totalRecord = dataList.Count();
 
                 dataList = dataList.Skip(skip).Take(pageSize).ToList();
@@ -100,7 +100,7 @@ namespace RentBike
                              orderby s.CLOSE_CONTRACT_DATE
                              select s;
 
-                    dataList = st.OrderByDescending(c => c.CLOSE_CONTRACT_DATE).ToList();
+                    dataList = st.ToList();
                     totalRecord = dataList.Count();
 
                     dataList = dataList.Skip(skip).Take(pageSize).ToList();
@@ -112,7 +112,7 @@ namespace RentBike
                              orderby s.CLOSE_CONTRACT_DATE
                              select s;
 
-                    dataList = st.OrderByDescending(c => c.CLOSE_CONTRACT_DATE).ToList();
+                    dataList = st.ToList();
                     totalRecord = dataList.Count();
 
                     dataList = dataList.Skip(skip).Take(pageSize).ToList();
