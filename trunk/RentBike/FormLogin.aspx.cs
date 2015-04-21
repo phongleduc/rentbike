@@ -66,6 +66,25 @@ namespace RentBike
             }
         }
 
+        private void AutoUpdateContract()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                db.Configuration.AutoDetectChangesEnabled = false;
+                db.Configuration.ValidateOnSaveEnabled = false;
+
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                if (Session["store_id"] != null)
+                {
+                    contracts = contracts.Where(c => c.STORE_ID == Helper.parseInt(Convert.ToString(Session["store_id"]))).ToList();
+                }
+                foreach (var contract in contracts)
+                {
+                    CommonList.AutoExtendContract(db, contract);
+                }
+            }
+        }
+
         private bool LoadUser(string user, string password)
         {
             List<Account> lst = new List<Account>();
@@ -116,6 +135,7 @@ namespace RentBike
                     }
                 }
             }
+            AutoUpdateContract();
 
             return lst.Count > 0;
         }
