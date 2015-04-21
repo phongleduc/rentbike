@@ -31,7 +31,7 @@
                         <th class="text-right">Giá trị HĐ/Phí</th>
                         <th class="text-right">Số lần đóng phí</th>
                         <th class="text-center">Thông báo</th>
-                        <th class="text-center">Số ngày đã làm</th>
+                        <th class="text-center">Số ngày quá hạn</th>
                         <th class="text-center">Xử lý HĐ</th>
                     </tr>
         </HeaderTemplate>
@@ -44,7 +44,7 @@
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY"))) %></td>
                 <td class="text-right"><%# Eval("PAYED_TIME") %> lần</td>
                 <td class="text-right"><%# Eval("NOTE") %></td>
-                <td class="text-center"><%# Eval("DAY_DONE") %> Ngày <br /><span style="color:red">(<%# Convert.ToDateTime(Eval("RENT_DATE")).ToString("dd/MM/yyyy") %>)</span></td>
+                <td class="text-center"><%# Eval("OVER_DATE") %> Ngày <br /><span style="color:red">(<%# Convert.ToDateTime(Eval("PAY_DATE")).ToString("dd/MM/yyyy") %>)</span></td>
                 <td>
                     <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
