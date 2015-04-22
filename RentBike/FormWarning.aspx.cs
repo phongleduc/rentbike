@@ -109,7 +109,9 @@ namespace RentBike
                                 break;
                             }
                             paidAmount -= pp.AMOUNT_PER_PERIOD;
-                            paidNumberOfFee += 1;
+                            if (paidAmount >= 0)
+                                paidNumberOfFee += 1;
+
                             if (paidAmount <= 0)
                             {
                                 c.OVER_DATE = nowDate.Subtract(pp.PAY_DATE).Days;

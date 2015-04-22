@@ -41,6 +41,9 @@ namespace RentBike
                         using (var db = new RentBikeEntities())
                         {
                             int contractId = Helper.parseInt(id);
+                            var contract = db.Contracts.Where(c => c.CONTRACT_STATUS == true && c.ID == contractId).FirstOrDefault();
+                            CommonList.AutoExtendContract(db, contract);
+
                             IsNewContract = false;
                             ContractID = id;
                             List<CONTRACT_FULL_VW> lst;
@@ -514,6 +517,7 @@ namespace RentBike
                         }
                         else
                             item.END_DATE = item.RENT_DATE.AddDays(29);
+                        item.EXTEND_END_DATE = item.END_DATE;
                         item.CLOSE_CONTRACT_DATE = new DateTime(1, 1, 1);
                         item.PAY_FEE_MESSAGE = string.Empty;
                         item.NOTE = txtNote.Text;

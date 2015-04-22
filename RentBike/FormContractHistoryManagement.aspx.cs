@@ -59,10 +59,9 @@ namespace RentBike
             {
                 var st = from s in db.CONTRACT_HISTORY_FULL_VW
                          where s.SEARCH_TEXT.Contains(strSearch) && s.STORE_ID == storeid
-                         orderby s.CLOSE_CONTRACT_DATE
                          select s;
 
-                dataList = st.ToList();
+                dataList = st.OrderByDescending(c =>c.CREATED_DATE).ToList();
                 totalRecord = dataList.Count();
 
                 dataList = dataList.Skip(skip).Take(pageSize).ToList();
@@ -97,10 +96,9 @@ namespace RentBike
                 {
                     var st = from s in db.CONTRACT_HISTORY_FULL_VW
                              where s.STORE_ID == storeId && s.SEARCH_TEXT.Contains(strSearch)
-                             orderby s.CLOSE_CONTRACT_DATE
                              select s;
 
-                    dataList = st.ToList();
+                    dataList = st.OrderByDescending(c => c.CREATED_DATE).ToList();
                     totalRecord = dataList.Count();
 
                     dataList = dataList.Skip(skip).Take(pageSize).ToList();
@@ -109,11 +107,10 @@ namespace RentBike
                 {
                     var st = from s in db.CONTRACT_HISTORY_FULL_VW
                              where s.SEARCH_TEXT.Contains(strSearch)
-                             orderby s.CLOSE_CONTRACT_DATE
                              select s;
 
                     dataList = st.ToList();
-                    totalRecord = dataList.Count();
+                    totalRecord = dataList.OrderByDescending(c => c.CREATED_DATE).Count();
 
                     dataList = dataList.Skip(skip).Take(pageSize).ToList();
                 }

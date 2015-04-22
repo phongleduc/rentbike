@@ -49,7 +49,7 @@ namespace RentBike
 
                     }
                     Response.Cookies["UserName"].Value = txtUsername.Text.Trim();
-                    Response.Cookies["Password"].Value =  CommonList.EncryptPassword(txtPassword.Text.Trim());
+                    Response.Cookies["Password"].Value = CommonList.EncryptPassword(txtPassword.Text.Trim());
 
                     WriteLog(CommonList.ACTION_LOGIN, false);
                     Response.Redirect("FormReport.aspx", false);
@@ -81,6 +81,30 @@ namespace RentBike
                 foreach (var contract in contracts)
                 {
                     CommonList.AutoExtendContract(db, contract);
+                }
+            }
+        }
+
+        private void AutoUpdatePeriod()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                if (Session["store_id"] != null)
+                {
+                    contracts = contracts.Where(c => c.STORE_ID == Helper.parseInt(Convert.ToString(Session["store_id"]))).ToList();
+                }
+                foreach (var contract in contracts)
+                {
+                    List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList(); 
+                    if (!contract.EXTEND_END_DATE.HasValue)
+                    {
+                        contract.EXTEND_END_DATE = contract.END_DATE;
+                    }
+
+                    DateTime extendDate = contract.EXTEND_END_DATE.Value.AddDays(-10);
+                    db.PayPeriods.RemoveRange(lstPay.Where(c =>c.PAY_DATE > extendDate));
+                    db.SaveChanges();
                 }
             }
         }
@@ -135,8 +159,8 @@ namespace RentBike
                     }
                 }
             }
-            AutoUpdateContract();
-
+            //AutoUpdateContract();
+            //AutoUpdatePeriod();
             return lst.Count > 0;
         }
 
