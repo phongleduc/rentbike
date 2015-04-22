@@ -117,9 +117,9 @@ namespace RentBike.Common
             if (contract != null)
             {
                 DateTime endDate = contract.END_DATE;
-                DateTime extendEndDate = contract.EXTEND_END_DATE == null ? contract.END_DATE.AddDays(-10) : contract.EXTEND_END_DATE.Value;
+                DateTime extendEndDate = contract.EXTEND_END_DATE == null ? contract.END_DATE.AddDays(-10) : contract.EXTEND_END_DATE.Value.AddDays(-10);
 
-                int overDate = DateTime.Now.Subtract(extendEndDate).Days;
+                int overDate = DateTime.Today.Subtract(extendEndDate).Days;
                 if (overDate > 0)
                 {
                     PayPeriod pp1;
@@ -142,6 +142,10 @@ namespace RentBike.Common
 
                     for (int i = 0; i <= percentDate; i++)
                     {
+                        if (lastPayPeriod.PAY_DATE.Subtract(contract.EXTEND_END_DATE.Value.AddDays(-10)).Days >= 0)
+                        {
+                            break;
+                        }
 
                         pp1 = new PayPeriod();
                         pp1.CONTRACT_ID = contract.ID;
