@@ -115,6 +115,10 @@ namespace RentBike
                             if (paidAmount <= 0)
                             {
                                 c.OVER_DATE = nowDate.Subtract(pp.PAY_DATE).Days;
+                                if (paidAmount < 0 && tmpLstPeriod.Any(s => s.PAY_DATE == pp.PAY_DATE.AddDays(9)))
+                                {
+                                    c.OVER_DATE = nowDate.Subtract(pp.PAY_DATE).Days + 2;
+                                }
                                 c.PAY_DATE = pp.PAY_DATE;
                                 c.PERIOD_ID = pp.ID;
                                 if (paidAmount == 0 || c.OVER_DATE <= 0)
@@ -156,6 +160,9 @@ namespace RentBike
                             }
                         }
 
+                        if(c.FEE_PER_DAY == 0)
+                            c.CSS_CLASS = "background-green";
+
                         if (!string.IsNullOrEmpty(searchDate))
                         {
                             if (tmpLstPeriod.Any(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate)))
@@ -177,7 +184,7 @@ namespace RentBike
                 }
             }
 
-            rptWarning.DataSource = dataList.OrderByDescending(c => c.DAY_DONE);
+            rptWarning.DataSource = dataList.OrderBy(c => c.DAY_DONE);
             rptWarning.DataBind();
         }
 
