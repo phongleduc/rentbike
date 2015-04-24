@@ -89,13 +89,6 @@ namespace RentBike
             {
                 var itemLst = db.InOuts.Where(s => s.PERIOD_ID == pp.ID);
                 payList = itemLst.ToList();
-
-                //PayPeriod payPeriod = db.PayPeriods.FirstOrDefault(c => c.CONTRACT_ID == pp.CONTRACT_ID && c.ID == pp.ID);
-                //if(payPeriod != null)
-                //{
-                //    payPeriod.ACTUAL_PAY = payList.Select(c => c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
-                //    db.SaveChanges();
-                //}
             }
 
             rptContractInOut.DataSource = payList;
@@ -183,20 +176,6 @@ namespace RentBike
                         if (totalActualPay > totalPerAmount)
                             remain = totalActualPay - totalPerAmount;
                     }
-                    //else if (period_id == lstPeriod[1].ID)
-                    //{
-                    //    if (lstPeriod[0].ACTUAL_PAY > lstPeriod[0].AMOUNT_PER_PERIOD)
-                    //    {
-                    //        remain = lstPeriod[0].ACTUAL_PAY - lstPeriod[0].AMOUNT_PER_PERIOD;
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    if ((lstPeriod[0].ACTUAL_PAY + lstPeriod[1].ACTUAL_PAY ) > (lstPeriod[0].AMOUNT_PER_PERIOD * 2))
-                    //    {
-                    //        remain = (lstPeriod[0].ACTUAL_PAY + lstPeriod[1].ACTUAL_PAY) - (lstPeriod[0].AMOUNT_PER_PERIOD * 2);
-                    //    }
-                    //}
                 }
 
                 if (pp.AMOUNT_PER_PERIOD - total > 0)

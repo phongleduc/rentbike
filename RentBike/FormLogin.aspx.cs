@@ -85,21 +85,46 @@ namespace RentBike
             }
         }
 
+        private void AutoUpdateContract1()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                //if (Session["store_id"] != null)
+                //{
+                //    contracts = contracts.Where(c => c.STORE_ID == Helper.parseInt(Convert.ToString(Session["store_id"]))).ToList();
+                //}
+                foreach (var contract in contracts)
+                {
+                    if (contract.FEE_PER_DAY == 0)
+                    {
+                        List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
+                        foreach (PayPeriod pp in lstPay)
+                        {
+                            pp.AMOUNT_PER_PERIOD = 0;
+                        }
+                    }
+                }
+                db.SaveChanges();
+            }
+        }
+
         private void AutoUpdatePeriod()
         {
             using (var db = new RentBikeEntities())
             {
                 var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
-                if (Session["store_id"] != null)
-                {
-                    contracts = contracts.Where(c => c.STORE_ID == Helper.parseInt(Convert.ToString(Session["store_id"]))).ToList();
-                }
+                //if (Session["store_id"] != null)
+                //{
+                //    contracts = contracts.Where(c => c.STORE_ID == Helper.parseInt(Convert.ToString(Session["store_id"]))).ToList();
+                //}
                 foreach (var contract in contracts)
                 {
                     List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList(); 
                     if (!contract.EXTEND_END_DATE.HasValue)
                     {
                         contract.EXTEND_END_DATE = contract.END_DATE;
+                        db.SaveChanges();
                     }
 
                     DateTime extendDate = contract.EXTEND_END_DATE.Value.AddDays(-10);
@@ -159,7 +184,7 @@ namespace RentBike
                     }
                 }
             }
-            //AutoUpdateContract();
+            //AutoUpdateContract1();
             //AutoUpdatePeriod();
             return lst.Count > 0;
         }

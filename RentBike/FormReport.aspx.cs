@@ -93,8 +93,16 @@ namespace RentBike
                                 }
                                 else
                                 {
-                                    c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE).Days - 10;
-                                    c.PAY_DATE = pp.PAY_DATE.AddDays(10);
+                                    if (tmpLstPeriod.Any(s => s.PAY_DATE == pp.PAY_DATE.AddDays(9)))
+                                    {
+                                        c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE.AddDays(9)).Days;
+                                        c.PAY_DATE = pp.PAY_DATE.AddDays(9);
+                                    }
+                                    else
+                                    {
+                                        c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE.AddDays(10)).Days;
+                                        c.PAY_DATE = pp.PAY_DATE.AddDays(10);
+                                    }
                                 }
                                 c.PERIOD_ID = pp.ID;
                                 if (c.OVER_DATE >= 0 && c.OVER_DATE <= 50)
