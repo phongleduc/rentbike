@@ -108,7 +108,6 @@ namespace RentBike
                 db.SaveChanges();
             }
         }
-
         private void AutoUpdatePeriod()
         {
             using (var db = new RentBikeEntities())
@@ -129,6 +128,36 @@ namespace RentBike
 
                     DateTime extendDate = contract.EXTEND_END_DATE.Value.AddDays(-10);
                     db.PayPeriods.RemoveRange(lstPay.Where(c =>c.PAY_DATE > extendDate));
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        private void AutoUpdatePeriod1()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                foreach (var contract in contracts)
+                {
+                    List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
+                    int div = lstPay.Count % 3;
+                    if (div > 0)
+                    {
+                        div = 3 - div;
+                        PayPeriod lastPay =  lstPay.LastOrDefault();
+                        for (int i = 1; i <= div; i++)
+                        {
+                            PayPeriod pp = new PayPeriod();
+                            pp.CONTRACT_ID = contract.ID;
+                            pp.PAY_DATE = lastPay.PAY_DATE.AddDays(i * 10);
+                            pp.AMOUNT_PER_PERIOD = lastPay.AMOUNT_PER_PERIOD;
+                            pp.STATUS = true;
+                            pp.ACTUAL_PAY = 0;
+
+                            db.PayPeriods.Add(pp);
+                        }
+                    }
                     db.SaveChanges();
                 }
             }
@@ -184,7 +213,8 @@ namespace RentBike
                     }
                 }
             }
-            //AutoUpdateContract1();
+            //AutoUpdatePeriod1();
+            AutoUpdateContract();
             //AutoUpdatePeriod();
             return lst.Count > 0;
         }

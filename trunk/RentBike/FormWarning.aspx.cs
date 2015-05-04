@@ -89,13 +89,13 @@ namespace RentBike
                     c.PAY_DATE = c.RENT_DATE;
                     c.DAY_DONE = DateTime.Now.Subtract(c.PAY_DATE).Days;
 
-                    DateTime nowDate = DateTime.Now;
+                    DateTime nowDate = DateTime.Today;
                     if (!string.IsNullOrEmpty(date))
                     {
                         nowDate = Convert.ToDateTime(date);
                     }
                     string contactId = c.ID.ToString();
-                    var tmpLstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID);
+                    var tmpLstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID).ToList();
                     if (tmpLstPeriod != null)
                     {
                         decimal paidAmount = tmpLstPeriod.Where(s => s.ACTUAL_PAY > 0).Select(s => s.ACTUAL_PAY).DefaultIfEmpty().Sum();
@@ -103,6 +103,7 @@ namespace RentBike
                         bool paidFull = false;
                         foreach (PayPeriod pp in tmpLstPeriod)
                         {
+                            c.PERIOD_MESSAGE = GetPeriodMessage(tmpLstPeriod, nowDate);
                             if (pp.AMOUNT_PER_PERIOD == 0)
                             {
                                 c.OVER_DATE = 0;
@@ -160,7 +161,7 @@ namespace RentBike
                             }
                         }
 
-                        if(c.FEE_PER_DAY == 0)
+                        if (c.FEE_PER_DAY == 0)
                             c.CSS_CLASS = "background-green";
 
                         if (!string.IsNullOrEmpty(searchDate))
@@ -244,6 +245,37 @@ namespace RentBike
             }
             return string.Empty;
         }
+        private string GetPeriodMessage(List<PayPeriod> listPay, DateTime searchDate)
+        {
+            var index = listPay.FindIndex(c => c.PAY_DATE == searchDate) + 1;
+            var periodNum = index;
+            var monthNum = 1;
+
+            periodNum = periodNum % 3 == 0 ? 3 : periodNum % 3;
+
+            for (int i = 1; i <= index; i++)
+            {
+                if (i % 3 == 0)
+                    monthNum += 1;
+            }
+
+            if (index <= 3)
+            {
+                return "Kỳ " + periodNum;
+            }
+            else
+            {
+                if (periodNum % 3 == 1)
+                    return "Hết hạn T" + (monthNum - 1);
+                else
+                {
+                    if (periodNum % 3 == 0)
+                        return "Kỳ " + periodNum + " - T" + (monthNum - 1);
+                    else
+                        return "Kỳ " + periodNum + " - T" + monthNum;
+                }
+            }
+        }
     }
 
     public partial class CONTRACT_FULL_VW
@@ -253,6 +285,7 @@ namespace RentBike
         public DateTime PAY_DATE { get; set; }
         public int PAYED_TIME { get; set; }
         public int PERIOD_ID { get; set; }
+        public string PERIOD_MESSAGE { get; set; }
         public string CSS_CLASS { get; set; }
     }
 }
