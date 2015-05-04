@@ -120,7 +120,7 @@ namespace RentBike.Common
                 DateTime extendEndDate = contract.EXTEND_END_DATE == null ? contract.END_DATE.AddDays(-10) : contract.EXTEND_END_DATE.Value.AddDays(-10);
 
                 int overDate = DateTime.Today.Subtract(extendEndDate).Days;
-                if (overDate > 0)
+                if (overDate >= 0)
                 {
                     PayPeriod pp1;
                     PayPeriod pp2;
@@ -142,7 +142,7 @@ namespace RentBike.Common
 
                     for (int i = 0; i <= percentDate; i++)
                     {
-                        if (lastPayPeriod.PAY_DATE.Subtract(contract.EXTEND_END_DATE.Value.AddDays(-10)).Days >= 0)
+                        if (lastPayPeriod.PAY_DATE.Subtract(contract.EXTEND_END_DATE.Value.AddDays(-10)).Days > 0)
                         {
                             break;
                         }

@@ -20,7 +20,7 @@
     </table>
     <asp:Repeater ID="rptWarning" runat="server" OnItemDataBound="rptWarning_ItemDataBound">
         <HeaderTemplate>
-            <div class="text-right" style="margin-bottom:5px">
+            <div class="text-right" style="margin-bottom: 5px">
                 <a class="print" href="javascript:void(0);">
                     <img src="App_Themes/Theme1/image/printer-blue.png" /></a>&nbsp;&nbsp;
             </div>
@@ -33,21 +33,22 @@
                         <th>Số ĐT khách hàng</th>
                         <th class="text-right">Giá trị HĐ/Phí</th>
                         <th class="text-right">Số lần đóng phí</th>
+                        <th class="text-center">Ghi chú</th>
                         <th class="text-center">Thông báo</th>
-                        <th class="text-center">Số ngày đã làm</th>
                         <th class="text-center">Xử lý HĐ</th>
                     </tr>
         </HeaderTemplate>
         <ItemTemplate>
             <tr id='<%# string.Format("HtmlTableRow{0}", Container.ItemIndex) %>' class="<%# Eval("CSS_CLASS") %>">
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><%# Eval("CUSTOMER_NAME") %><br />(<%# Convert.ToDateTime(Eval("BIRTH_DAY")).ToString("dd/MM/yyyy") %>)</td>
+                <td><span style="font-weight: bold;"><%# Eval("CUSTOMER_NAME") %></span><br />
+                    (<%# Convert.ToDateTime(Eval("BIRTH_DAY")).ToString("dd/MM/yyyy") %>)</td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
                 <td><%# Eval("PHONE") %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY"))) %></td>
                 <td class="text-right"><%# Eval("PAYED_TIME") %> lần</td>
                 <td class="text-right"><%# Eval("NOTE") %></td>
-                <td class="text-center"><%# Eval("DAY_DONE") %> Ngày <br /><span style="color:red">(<%# Convert.ToDateTime(Eval("RENT_DATE")).ToString("dd/MM/yyyy") %>)</span></td>
+                <td class="text-center"><%# Eval("PERIOD_MESSAGE") %></td>
                 <td>
                     <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
