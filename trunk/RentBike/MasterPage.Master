@@ -4,6 +4,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>Hệ thống quản lý cho thuê - TSolution</title>
     <link rel="stylesheet" type="text/css" href="\App_Themes\Theme1\css\jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href="\App_Themes\Theme1\css\bootstrap.min.css" />
