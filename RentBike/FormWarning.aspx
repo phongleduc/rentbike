@@ -21,8 +21,10 @@
     <asp:Repeater ID="rptWarning" runat="server" OnItemDataBound="rptWarning_ItemDataBound">
         <HeaderTemplate>
             <div class="text-right" style="margin-bottom: 5px">
-                <a class="print" href="javascript:void(0);">
-                    <img src="App_Themes/Theme1/image/printer-blue.png" /></a>&nbsp;&nbsp;
+                <asp:Image ID="ExcelIcon" runat="server" ImageUrl="~/App_Themes/Theme1/image/excel-icon.png" />
+                <asp:LinkButton ID="lnkExportExcel" runat="server" OnClick="lnkExportExcel_Click" Text="Xuất ra Excel"></asp:LinkButton>
+<%--                <a class="print" href="javascript:void(0);">
+                    <img src="App_Themes/Theme1/image/printer-blue.png" /></a>&nbsp;&nbsp;--%>
             </div>
             <div id="areaToPrint">
                 <table class="table">

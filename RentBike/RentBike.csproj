@@ -44,6 +44,10 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus, Version=4.0.4.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.0.4\lib\net20\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
@@ -83,6 +87,7 @@
     <Content Include="App_Themes\Theme1\image\cmxform-divider.gif" />
     <Content Include="App_Themes\Theme1\image\cmxform-fieldset.gif" />
     <Content Include="App_Themes\Theme1\image\cyan-dot.png" />
+    <Content Include="App_Themes\Theme1\image\excel-icon.png" />
     <Content Include="App_Themes\Theme1\image\footer.png" />
     <Content Include="App_Themes\Theme1\image\grey-dot.png" />
     <Content Include="App_Themes\Theme1\image\grey-height-100.png" />
