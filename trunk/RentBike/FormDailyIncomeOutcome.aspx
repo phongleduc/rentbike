@@ -31,14 +31,14 @@
                             <HeaderTemplate>
                                 <table class="table table-striped border_table" border="1">
                                     <tr class="success">
-                                        <th colspan="14" style="text-align:center">Chi tiết ngày:
+                                        <th colspan="15" style="text-align: center">Chi tiết ngày:
                                             <asp:Literal ID="litInoutDate" runat="server"></asp:Literal></th>
                                     </tr>
                                     <tr>
                                         <th colspan="2">&nbsp;</th>
-                                        <th colspan="4" style="text-align:center">THIẾT BỊ VĂN PHÒNG</th>
-                                        <th colspan="4" style="text-align:center">GIẤY TỜ XE & KHÁC</th>
-                                        <th colspan="4">&nbsp;</th>
+                                        <th colspan="4" style="text-align: center">THIẾT BỊ VĂN PHÒNG</th>
+                                        <th colspan="4" style="text-align: center">GIẤY TỜ XE & KHÁC</th>
+                                        <th colspan="5">&nbsp;</th>
                                     </tr>
                                     <tr>
                                         <th>STT</th>
@@ -53,8 +53,9 @@
                                         <th>Thừa Phí</th>
                                         <th>Chi Khác</th>
                                         <th>Thu Khác</th>
-                                        <th>Nhập Vốn</th>
-                                        <th>Xuất Vốn</th>
+                                        <th>Tiền Xuất</th>
+                                        <th>Tiền Nhập</th>
+                                        <th>Ghi Chú</th>
                                     </tr>
                             </HeaderTemplate>
                             <ItemTemplate>
@@ -80,42 +81,53 @@
                                     <td>
                                         <asp:Literal ID="litRedundantFeeCarAndOther" runat="server"></asp:Literal></td>
                                     <td>
-                                        <asp:Literal ID="litInOther" runat="server"></asp:Literal></td>
-                                    <td>
                                         <asp:Literal ID="litOutOther" runat="server"></asp:Literal></td>
                                     <td>
-                                        <asp:Literal ID="litInCapital" runat="server"></asp:Literal></td>
+                                        <asp:Literal ID="litInOther" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litOutCapital" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litInCapital" runat="server"></asp:Literal></td>
+                                    <td></td>
                                 </tr>
                             </ItemTemplate>
                             <FooterTemplate>
                                 <tr>
                                     <td colspan="2">&nbsp;</td>
-                                    <td><asp:Literal ID="litTotalContractFeeEquip" runat="server"></asp:Literal></td>
-                                    <td><asp:Literal ID="litTotalRentFeeEquip" runat="server"></asp:Literal></td>
-                                    <td><asp:Literal ID="litTotalCloseFeeEquip" runat="server"></asp:Literal></td>
-                                    <td><asp:Literal ID="litTotalRedundantFeeEquip" runat="server"></asp:Literal></td>
-                                    <td><asp:Literal ID="litTotalContractFeeCarAndOther" runat="server"></asp:Literal></td>
-                                    <td><asp:Literal ID="litTotalRentFeeCarAndOther" runat="server"></asp:Literal></td>
-                                    <td><asp:Literal ID="litTotalCloseFeeCarAndOther" runat="server"></asp:Literal></td>
-                                    <td><asp:Literal ID="litTotalRedundantFeeCarAndOther" runat="server"></asp:Literal></td>
-                                    <td><asp:Literal ID="litTotalInOther" runat="server"></asp:Literal></td>
-                                    <td><asp:Literal ID="litTotalOutOther" runat="server"></asp:Literal></td>
-                                    <td><asp:Literal ID="litTotalInCapital" runat="server"></asp:Literal></td>
-                                    <td><asp:Literal ID="litTotalOutCapital" runat="server"></asp:Literal></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" class="red success result">Tổng</td>
-                                    <td colspan="12" class="red success result"><asp:Literal ID="litTotal" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalContractFeeEquip" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalRentFeeEquip" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalCloseFeeEquip" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalRedundantFeeEquip" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalContractFeeCarAndOther" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalRentFeeCarAndOther" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalCloseFeeCarAndOther" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalRedundantFeeCarAndOther" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalOutOther" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalInOther" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalOutCapital" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litTotalInCapital" runat="server"></asp:Literal></td>
+                                    <td class="text-result">
+                                        <asp:Literal ID="litTotal" runat="server"></asp:Literal></td>
                                 </tr>
                                 </table>
+<%--                                <div class="text-right">
+                                    <asp:Image ID="ExcelIcon" runat="server" ImageUrl="~/App_Themes/Theme1/image/excel-icon.png" />
+                                    <asp:LinkButton ID="lnkExportExcel" runat="server" OnClick="lnkExportExcel_Click" Text="Xuất ra Excel"></asp:LinkButton>
+                                </div>--%>
                             </FooterTemplate>
                         </asp:Repeater>
-<%--                        <div class="text-right">
-                            <a class="print" href="javascript:void(0);">
-                                <img src="App_Themes/Theme1/image/printer-blue.png" /></a>
-                        </div>--%>
                     </div>
                 </td>
             </tr>
@@ -142,12 +154,11 @@
         $(function () {
             //$("#txtViewDate").datepicker();
             $('.fancybox').fancybox({
+                onStart: function () {
+                    $.fancybox.showActivity();
+                },
                 onComplete: function () {
-                    alert("Tesst");
-                    $.fancybox.showLoading();
-                    $('#fancybox-frame').load(function () {
-                        $.fancybox.hideLoading();
-                    });
+                    $.fancybox.hideActivity();
                 }
             });
 

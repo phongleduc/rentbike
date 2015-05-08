@@ -126,6 +126,10 @@ body {
     color:green !important;
 }
 
+.black {
+    color:black !important;
+}
+
 input.error { border: 1px solid #A94442; }
 label.error {
 	background: url('App_Themes/Theme1/image/unchecked.gif') no-repeat;
@@ -152,10 +156,4 @@ label.valid {
 
 .background-green {
     background-color: #96F9B9;
-}
-
-.result {
-    font-weight:bold;
-    font-size:16px;
-    text-align:center;
 }
