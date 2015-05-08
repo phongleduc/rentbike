@@ -1,8 +1,11 @@
-﻿using RentBike.Common;
+﻿using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using RentBike.Common;
 using RentBike.Model;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -479,100 +482,7 @@ namespace RentBike
                 if (rptInOutDayDetail != null)
                 {
                     SummaryInfo summaryInfo = e.Item.DataItem as SummaryInfo;
-                    List<SummaryInfo> listSI = new List<SummaryInfo>();
-
-                    List<INOUT_FULL_VW> listInOutTemp = listInOut.Where(c => c.INOUT_DATE == summaryInfo.InOutDate).ToList();
-                    List<INOUT_FULL_VW> listInOutEquipAndCarAndOther = listInOutTemp.Where(c => c.RENT_TYPE_ID == 1 || c.RENT_TYPE_ID == 2 || c.RENT_TYPE_ID == 3).ToList();
-                    List<INOUT_FULL_VW> listInOutOther = listInOutTemp.Where(c => c.INOUT_TYPE_ID == 10 || c.INOUT_TYPE_ID == 11 || c.INOUT_TYPE_ID == 12 || c.INOUT_TYPE_ID == 13).ToList();
-
-                    var inoutEquipAndCarAndOther = from d in listInOutEquipAndCarAndOther
-                                                   group d by new { d.CUSTOMER_ID, d.CUSTOMER_NAME }
-                                                       into c
-                                                       select new
-                                                       {
-                                                           CustomerId = c.Key.CUSTOMER_ID,
-                                                           CustomerName = c.Key.CUSTOMER_NAME,
-                                                           Record = from o in c
-                                                                    select new
-                                                                    {
-                                                                        ID = o.ID,
-                                                                        InOutDate = o.INOUT_DATE,
-                                                                        RentTypeName = o.RENT_TYPE_NAME,
-                                                                        InAmount = o.IN_AMOUNT,
-                                                                        OutAmount = o.OUT_AMOUNT,
-                                                                        TotalIn = c.Sum(x => x.IN_AMOUNT),
-                                                                        TotalOut = c.Sum(x => x.OUT_AMOUNT),
-                                                                        InOutTypeId = o.INOUT_TYPE_ID,
-                                                                        RentTypeId = o.RENT_TYPE_ID,
-                                                                        InCapital = 0,
-                                                                        OutCapital = 0,
-                                                                        InOther = 0,
-                                                                        OutOther = 0
-
-                                                                    }
-                                                       };
-
-                    foreach (var c in inoutEquipAndCarAndOther)
-                    {
-                        SummaryInfo si = new SummaryInfo();
-                        si.InOutDate = c.Record.ToList()[0].InOutDate.Value;
-                        si.TotalIn = c.Record.ToList()[0].TotalIn;
-                        si.TotalOut = c.Record.ToList()[0].TotalOut;
-                        si.BeginAmount = 0;
-                        si.EndAmount = c.Record.ToList()[0].TotalIn - c.Record.ToList()[0].TotalOut;
-                        si.CustomerName = c.CustomerName;
-
-                        si.ContractFeeCar = c.Record.Where(s => s.InOutTypeId == 17).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
-                        si.ContractFeeEquip = c.Record.Where(s => s.InOutTypeId == 22).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
-                        si.ContractFeeOther = c.Record.Where(s => s.InOutTypeId == 23).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
-
-                        si.RentFeeCar = c.Record.Where(s => s.InOutTypeId == 14).Select(s => s.InAmount).DefaultIfEmpty().Sum();
-                        si.RentFeeEquip = c.Record.Where(s => s.InOutTypeId == 15).Select(s => s.InAmount).DefaultIfEmpty().Sum();
-                        si.RentFeeOther = c.Record.Where(s => s.InOutTypeId == 16).Select(s => s.InAmount).DefaultIfEmpty().Sum();
-
-                        si.CloseFeeCar = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 1).Select(s => s.InAmount).DefaultIfEmpty().Sum();
-                        si.CloseFeeEquip = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 2).Select(s => s.InAmount).DefaultIfEmpty().Sum();
-                        si.CloseFeeOther = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 3).Select(s => s.InAmount).DefaultIfEmpty().Sum();
-
-                        si.RedundantFeeCar = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 1).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
-                        si.RedundantFeeEquip = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 2).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
-                        si.RedundantFeeOther = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 3).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
-
-                        listSI.Add(si);
-                    }
-
-                    foreach (var c in listInOutOther)
-                    {
-                        SummaryInfo si = new SummaryInfo();
-
-                        switch (c.INOUT_TYPE_ID)
-                        {
-                            case 10:
-                                si.InCapital = c.IN_AMOUNT;
-                                si.CustomerName = "Nhập Vốn";
-                                break;
-                            case 11:
-                                si.OutCapital = c.OUT_AMOUNT;
-                                si.CustomerName = "Xuất Vốn";
-                                break;
-                            case 12:
-                                si.InOther = c.IN_AMOUNT;
-                                si.CustomerName = "Thu Khác";
-                                break;
-                            case 13:
-                                si.OutOther = c.OUT_AMOUNT;
-                                si.CustomerName = "Chi Khác";
-                                break;
-                            default:
-                                break;
-
-                        }
-                        if (!string.IsNullOrEmpty(c.MORE_INFO))
-                            si.CustomerName = c.MORE_INFO;
-
-                        listSI.Add(si);
-                    }
-
+                    List<SummaryInfo> listSI = GetDailyData(summaryInfo.InOutDate);
                     if (listSI.Any())
                     {
                         rptInOutDayDetail.DataSource = listSI;
@@ -599,6 +509,7 @@ namespace RentBike
                         Literal litTotalOutCapital = rptInOutDayDetail.Controls[rptInOutDayDetail.Controls.Count - 1].Controls[0].FindControl("litTotalOutCapital") as Literal;
 
                         Literal litTotal = rptInOutDayDetail.Controls[rptInOutDayDetail.Controls.Count - 1].Controls[0].FindControl("litTotal") as Literal;
+                        LinkButton lnkExportExcel = rptInOutDayDetail.Controls[rptInOutDayDetail.Controls.Count - 1].Controls[0].FindControl("lnkExportExcel") as LinkButton;
 
                         decimal totalContractFeeEquip = listSI.Select(c => c.ContractFeeEquip).DefaultIfEmpty().Sum();
                         litTotalContractFeeEquip.Text = totalContractFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalContractFeeEquip);
@@ -630,10 +541,109 @@ namespace RentBike
                         decimal inTotal = (totalRentFeeEquip + totalCloseFeeEquip + totalRentFeeCarAndOther + totalCloseFeeCarAndOther + totalInOther + totalInCapital);
                         decimal outTotal = (totalContractFeeEquip + totalRedundantFeeEquip + totalContractFeeCarAndOther + totalRedundantFeeCarAndOther + totalOutOther + totalOutCapital);
                         decimal total = inTotal - outTotal;
-                        litTotal.Text = total == 0 ? "0" : string.Format("{0:0,0}", total); ;
+                        litTotal.Text = total == 0 ? "0" : string.Format("{0:0,0}", total);
+                        lnkExportExcel.CommandArgument = listSI[0].InOutDate.ToString();
                     }
                 }
             }
+        }
+
+        private List<SummaryInfo> GetDailyData(DateTime inoutDate)
+        {
+            List<SummaryInfo> listSI = new List<SummaryInfo>();
+
+            List<INOUT_FULL_VW> listInOutTemp = listInOut.Where(c => c.INOUT_DATE == inoutDate).ToList();
+            List<INOUT_FULL_VW> listInOutEquipAndCarAndOther = listInOutTemp.Where(c => c.RENT_TYPE_ID == 1 || c.RENT_TYPE_ID == 2 || c.RENT_TYPE_ID == 3).ToList();
+            List<INOUT_FULL_VW> listInOutOther = listInOutTemp.Where(c => c.INOUT_TYPE_ID == 10 || c.INOUT_TYPE_ID == 11 || c.INOUT_TYPE_ID == 12 || c.INOUT_TYPE_ID == 13).ToList();
+
+            var inoutEquipAndCarAndOther = from d in listInOutEquipAndCarAndOther
+                                           group d by new { d.CUSTOMER_ID, d.CUSTOMER_NAME }
+                                               into c
+                                               select new
+                                               {
+                                                   CustomerId = c.Key.CUSTOMER_ID,
+                                                   CustomerName = c.Key.CUSTOMER_NAME,
+                                                   Record = from o in c
+                                                            select new
+                                                            {
+                                                                ID = o.ID,
+                                                                InOutDate = o.INOUT_DATE,
+                                                                RentTypeName = o.RENT_TYPE_NAME,
+                                                                InAmount = o.IN_AMOUNT,
+                                                                OutAmount = o.OUT_AMOUNT,
+                                                                TotalIn = c.Sum(x => x.IN_AMOUNT),
+                                                                TotalOut = c.Sum(x => x.OUT_AMOUNT),
+                                                                InOutTypeId = o.INOUT_TYPE_ID,
+                                                                RentTypeId = o.RENT_TYPE_ID,
+                                                                InCapital = 0,
+                                                                OutCapital = 0,
+                                                                InOther = 0,
+                                                                OutOther = 0
+
+                                                            }
+                                               };
+
+            foreach (var c in inoutEquipAndCarAndOther)
+            {
+                SummaryInfo si = new SummaryInfo();
+                si.InOutDate = c.Record.ToList()[0].InOutDate.Value;
+                si.TotalIn = c.Record.ToList()[0].TotalIn;
+                si.TotalOut = c.Record.ToList()[0].TotalOut;
+                si.BeginAmount = 0;
+                si.EndAmount = c.Record.ToList()[0].TotalIn - c.Record.ToList()[0].TotalOut;
+                si.CustomerName = c.CustomerName;
+
+                si.ContractFeeCar = c.Record.Where(s => s.InOutTypeId == 17).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
+                si.ContractFeeEquip = c.Record.Where(s => s.InOutTypeId == 22).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
+                si.ContractFeeOther = c.Record.Where(s => s.InOutTypeId == 23).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
+
+                si.RentFeeCar = c.Record.Where(s => s.InOutTypeId == 14).Select(s => s.InAmount).DefaultIfEmpty().Sum();
+                si.RentFeeEquip = c.Record.Where(s => s.InOutTypeId == 15).Select(s => s.InAmount).DefaultIfEmpty().Sum();
+                si.RentFeeOther = c.Record.Where(s => s.InOutTypeId == 16).Select(s => s.InAmount).DefaultIfEmpty().Sum();
+
+                si.CloseFeeCar = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 1).Select(s => s.InAmount).DefaultIfEmpty().Sum();
+                si.CloseFeeEquip = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 2).Select(s => s.InAmount).DefaultIfEmpty().Sum();
+                si.CloseFeeOther = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 3).Select(s => s.InAmount).DefaultIfEmpty().Sum();
+
+                si.RedundantFeeCar = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 1).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
+                si.RedundantFeeEquip = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 2).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
+                si.RedundantFeeOther = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 3).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
+
+                listSI.Add(si);
+            }
+
+            foreach (var c in listInOutOther)
+            {
+                SummaryInfo si = new SummaryInfo();
+
+                switch (c.INOUT_TYPE_ID)
+                {
+                    case 10:
+                        si.InCapital = c.IN_AMOUNT;
+                        si.CustomerName = "Nhập Vốn";
+                        break;
+                    case 11:
+                        si.OutCapital = c.OUT_AMOUNT;
+                        si.CustomerName = "Xuất Vốn";
+                        break;
+                    case 12:
+                        si.InOther = c.IN_AMOUNT;
+                        si.CustomerName = "Thu Khác";
+                        break;
+                    case 13:
+                        si.OutOther = c.OUT_AMOUNT;
+                        si.CustomerName = "Chi Khác";
+                        break;
+                    default:
+                        break;
+
+                }
+                if (!string.IsNullOrEmpty(c.MORE_INFO))
+                    si.CustomerName = c.MORE_INFO;
+
+                listSI.Add(si);
+            }
+            return listSI;
         }
 
         protected void rptInOutDayDetail_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -677,6 +687,182 @@ namespace RentBike
                 litOutCapital.Text = inout.OutCapital == 0 ? string.Empty : string.Format("{0:0,0}", inout.OutCapital);
                 litInOther.Text = inout.InOther == 0 ? string.Empty : string.Format("{0:0,0}", inout.InOther);
                 litOutOther.Text = inout.OutOther == 0 ? string.Empty : string.Format("{0:0,0}", inout.OutOther);
+            }
+        }
+
+        protected void lnkExportExcel_Click(object sender, EventArgs e)
+        {
+            LinkButton lnkExportExcel = sender as LinkButton;
+            if (string.IsNullOrEmpty(lnkExportExcel.CommandArgument) == null) return;
+
+            DateTime date = Convert.ToDateTime(lnkExportExcel.CommandArgument);
+            List<SummaryInfo> listSI = GetDailyData(date);
+
+            using (ExcelPackage package = new ExcelPackage())
+            {
+                // add a new worksheet to the empty workbook
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("CTHN");
+                worksheet.View.ZoomScale = 90;
+                worksheet.Cells.Style.Font.Size = 12;
+                worksheet.Cells.Style.Font.Name = "Times New Roman";
+
+                worksheet.Cells[1, 1, 2, 16].Style.Font.Bold = true;
+                worksheet.Cells[1, 1, 2, 16].Style.Font.Size = 14;
+                worksheet.Cells[1, 1, 2, 16].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                worksheet.Cells[1, 1, 2, 1].Merge = true;
+                worksheet.Cells[1, 1, 2, 1].Value = "NGÀY";
+                worksheet.Column(1).Width = 15;
+
+                worksheet.Cells[1, 2, 2, 2].Merge = true;
+                worksheet.Cells[1, 2, 2, 2].Value = "STT";
+                worksheet.Column(2).Width = 8;
+
+                worksheet.Cells[1, 3, 2, 3].Merge = true;
+                worksheet.Cells[1, 3, 2, 3].Value = "KHÁCH HÀNG";
+                worksheet.Column(3).Width = 35;
+                worksheet.Column(3).Style.WrapText = true;
+
+                worksheet.Cells[1, 4, 1, 7].Merge = true;
+                worksheet.Cells[1, 4, 1, 7].Value = "THIẾT BỊ VĂN PHÒNG";
+                worksheet.Cells[2, 4, 2, 4].Value = "THUÊ";
+                worksheet.Cells[2, 5, 2, 5].Value = "THU PHÍ";
+                worksheet.Cells[2, 6, 2, 6].Value = "THANH LÝ";
+                worksheet.Cells[2, 7, 2, 7].Value = "THỪA PHÍ";
+                worksheet.Column(4).Width = 15;
+                worksheet.Column(5).Width = 15;
+                worksheet.Column(6).Width = 15;
+                worksheet.Column(7).Width = 15;
+
+                worksheet.Cells[1, 8, 1, 11].Merge = true;
+                worksheet.Cells[1, 8, 1, 11].Value = "GIẤY TỜ XE & KHÁC";
+                worksheet.Cells[2, 8, 2, 8].Value = "THUÊ";
+                worksheet.Cells[2, 9, 2, 9].Value = "THU PHÍ";
+                worksheet.Cells[2, 10, 2, 10].Value = "THANH LÝ";
+                worksheet.Cells[2, 11, 2, 11].Value = "THỪA PHÍ";
+                worksheet.Column(8).Width = 15;
+                worksheet.Column(9).Width = 15;
+                worksheet.Column(10).Width = 15;
+                worksheet.Column(11).Width = 15;
+
+                worksheet.Cells[1, 12, 2, 12].Merge = true;
+                worksheet.Cells[1, 12, 2, 12].Value = "CHI KHÁC";
+                worksheet.Column(12).Width = 15;
+
+                worksheet.Cells[1, 13, 2, 13].Merge = true;
+                worksheet.Cells[1, 13, 2, 13].Value = "THU KHÁC";
+                worksheet.Column(13).Width = 15;
+
+                worksheet.Cells[1, 14, 2, 14].Merge = true;
+                worksheet.Cells[1, 14, 2, 14].Value = "TIỀN XUẤT";
+                worksheet.Column(14).Width = 15;
+
+                worksheet.Cells[1, 15, 2, 15].Merge = true;
+                worksheet.Cells[1, 15, 2, 15].Value = "TIỀN NHẬP";
+                worksheet.Column(15).Width = 15;
+
+                worksheet.Cells[1, 16, 2, 16].Merge = true;
+                worksheet.Cells[1, 16, 2, 16].Value = "GHI CHÚ";
+                worksheet.Column(16).Width = 15;
+
+                int no = 1;
+                int index = 3;
+                foreach (var si in listSI)
+                {
+                    worksheet.Cells[index, 2].Value = no;
+                    worksheet.Cells[index, 3].Value = si.CustomerName;
+
+                    worksheet.Cells[index, 4].Value = si.ContractFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", si.ContractFeeEquip);
+                    worksheet.Cells[index, 5].Value = si.RentFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", si.RentFeeEquip);
+                    worksheet.Cells[index, 6].Value = si.CloseFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", si.CloseFeeEquip);
+                    worksheet.Cells[index, 7].Value = si.RedundantFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", si.RedundantFeeEquip);
+
+                    worksheet.Cells[index, 8].Value = (si.ContractFeeCar + si.ContractFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (si.ContractFeeCar + si.ContractFeeOther));
+                    worksheet.Cells[index, 9].Value = (si.RentFeeCar + si.RentFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (si.RentFeeCar + si.RentFeeOther));
+                    worksheet.Cells[index, 10].Value = (si.CloseFeeCar + si.CloseFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (si.CloseFeeCar + si.CloseFeeOther));
+                    worksheet.Cells[index, 11].Value = (si.RedundantFeeCar + si.RedundantFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (si.RedundantFeeCar + si.RedundantFeeOther));
+
+                    worksheet.Cells[index, 12].Value = si.OutOther == 0 ? string.Empty : string.Format("{0:0,0}", si.OutOther);
+                    worksheet.Cells[index, 13].Value = si.InOther == 0 ? string.Empty : string.Format("{0:0,0}", si.InOther);
+                    worksheet.Cells[index, 14].Value = si.OutCapital == 0 ? string.Empty : string.Format("{0:0,0}", si.OutCapital);
+                    worksheet.Cells[index, 15].Value = si.InCapital == 0 ? string.Empty : string.Format("{0:0,0}", si.InCapital);
+
+                    no += 1;
+                    index += 1;
+                }
+
+                decimal totalContractFeeEquip = listSI.Select(c => c.ContractFeeEquip).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 4].Value = totalContractFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalContractFeeEquip);
+                decimal totalRentFeeEquip = listSI.Select(c => c.RentFeeEquip).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 5].Value = totalRentFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalRentFeeEquip);
+                decimal totalCloseFeeEquip = listSI.Select(c => c.CloseFeeEquip).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 6].Value = totalCloseFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalCloseFeeEquip);
+                decimal totalRedundantFeeEquip = listSI.Select(c => c.RedundantFeeEquip).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 7].Value = totalRedundantFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalRedundantFeeEquip);
+
+                decimal totalContractFeeCarAndOther = listSI.Select(c => c.ContractFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.ContractFeeOther).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 8].Value = totalContractFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalContractFeeCarAndOther);
+                decimal totalRentFeeCarAndOther = listSI.Select(c => c.RentFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.RentFeeOther).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 9].Value = totalRentFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalRentFeeCarAndOther);
+                decimal totalCloseFeeCarAndOther = listSI.Select(c => c.CloseFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.CloseFeeOther).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 10].Value = totalCloseFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalCloseFeeCarAndOther);
+                decimal totalRedundantFeeCarAndOther = listSI.Select(c => c.RedundantFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.RedundantFeeOther).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 11].Value = totalRedundantFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalRedundantFeeCarAndOther);
+
+                decimal totalOutOther = listSI.Select(c => c.OutOther).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 12].Value = totalOutOther == 0 ? "0" : string.Format("{0:0,0}", totalOutOther);
+                decimal totalInOther = listSI.Select(c => c.InOther).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 13].Value = totalInOther == 0 ? "0" : string.Format("{0:0,0}", totalInOther);
+                decimal totalOutCapital = listSI.Select(c => c.OutCapital).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 14].Value = totalOutCapital == 0 ? "0" : string.Format("{0:0,0}", totalOutCapital);
+                decimal totalInCapital = listSI.Select(c => c.InCapital).DefaultIfEmpty().Sum();
+                worksheet.Cells[index + 1, 15].Value = totalInCapital == 0 ? "0" : string.Format("{0:0,0}", totalInCapital);
+
+                decimal inTotal = (totalRentFeeEquip + totalCloseFeeEquip + totalRentFeeCarAndOther + totalCloseFeeCarAndOther + totalInOther + totalInCapital);
+                decimal outTotal = (totalContractFeeEquip + totalRedundantFeeEquip + totalContractFeeCarAndOther + totalRedundantFeeCarAndOther + totalOutOther + totalOutCapital);
+                decimal total = inTotal - outTotal;
+                worksheet.Cells[index + 1, 16].Value = total == 0 ? "0" : string.Format("{0:0,0}", total);
+                worksheet.Row(index + 1).Style.Font.Bold = true;
+                Color colFromHex = System.Drawing.ColorTranslator.FromHtml("#92D050");
+                worksheet.Cells[index + 1, 1, index + 1, 16].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[index + 1, 1, index + 1, 16].Style.Fill.BackgroundColor.SetColor(colFromHex);
+                worksheet.Cells[index + 1, 16, index + 1, 16].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                worksheet.Cells[index + 1, 16, index + 1, 16].Style.Font.Color.SetColor(Color.Red);
+
+                worksheet.Cells[3, 1, index, 1].Merge = true;
+                worksheet.Cells[3, 1, index, 1].Value = date.ToString("dd/MM/yyyy");
+                worksheet.Cells[3, 1, index, 1].Style.Font.Bold = true;
+                worksheet.Cells[3, 1, index, 1].Style.Font.Size = 16;
+                worksheet.Cells[3, 1, index, 1].Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                worksheet.Cells[1, 1, index + 1, 16].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[1, 1, index + 1, 16].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[1, 1, index + 1, 16].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                worksheet.Cells[1, 1, index + 1, 16].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+
+                Response.Clear();
+                Response.ClearContent();
+                Response.ClearHeaders();
+
+                if ((Request.Browser.Browser.ToLower() == "ie") && (Request.Browser.MajorVersion < 9))
+                {
+                    Response.Cache.SetCacheability(System.Web.HttpCacheability.Private);
+                    Response.Cache.SetMaxAge(TimeSpan.FromMilliseconds(1));
+                }
+                else
+                {
+                    Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);//IE set to not cache
+                    Response.Cache.SetNoStore();//Firefox/Chrome not to cache
+                    Response.Cache.SetExpires(DateTime.UtcNow); //for safe measure expire it immediately
+                }
+
+                string fileName = string.Format("CTHN {0}.{1}", date.ToString("dd-MM-yyyy"), ".xlsx");
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.AddHeader("content-disposition", "attachment; filename=\"" + fileName + "\"");
+                Response.BinaryWrite(package.GetAsByteArray());
+                Response.Flush();
+                Response.Close();
+                Response.End();
             }
         }
     }
