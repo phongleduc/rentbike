@@ -225,6 +225,7 @@
     <Compile Include="Log.cs">
       <DependentUpon>RentBike.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\SummaryInfo.cs" />
     <Compile Include="PayPeriod.cs">
       <DependentUpon>RentBike.tt</DependentUpon>
     </Compile>

@@ -173,6 +173,7 @@ namespace RentBike
                         if (c.FEE_PER_DAY == 0)
                             c.CSS_CLASS = "background-green";
 
+                        c.RENT_TYPE_NAME = ReBuildRentTypeName(c);
                         if (!string.IsNullOrEmpty(searchDate))
                         {
                             if (tmpLstPeriod.Any(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate)))
@@ -194,6 +195,21 @@ namespace RentBike
                 }
             }
             return dataList.OrderBy(c => c.DAY_DONE).ToList();
+        }
+
+        private string ReBuildRentTypeName(CONTRACT_FULL_VW con)
+        {
+            switch (con.RENT_TYPE_ID)
+            { 
+                case 1:
+                    return con.RENT_TYPE_NAME = "Thuê xe";
+                case 2:
+                    return con.RENT_TYPE_NAME = "TBVP";
+                case 3:
+                    return con.RENT_TYPE_NAME = "Khác";
+                default:
+                    return string.Empty;
+            }
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)
@@ -295,19 +311,20 @@ namespace RentBike
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("DSGP");
                     worksheet.View.ZoomScale = 90;
                     worksheet.Cells.Style.Font.Size = 12;
+                    worksheet.Cells.Style.Font.Name = "Times New Roman";
 
                     worksheet.Cells[1, 1, 1, 8].Merge = true;
-                    worksheet.Cells[1, 1, 1, 8].Value = "Danh Sách Gọi Phí";
-                    worksheet.Row(1).Height = 30;
+                    worksheet.Cells[1, 1, 1, 8].Value = "Danh Sách Gọi Khách " + dataList[0].STORE_NAME;
+                    worksheet.Row(1).Height = 20;
                     worksheet.Cells[1, 1, 1, 8].Style.Font.Bold = true;
-                    worksheet.Cells[1, 1, 1, 8].Style.Font.Size = 20;
+                    worksheet.Cells[1, 1, 1, 8].Style.Font.Size = 14;
                     worksheet.Cells[1, 1, 1, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                     worksheet.Cells[2, 1, 2, 8].Merge = true;
                     worksheet.Cells[2, 1, 2, 8].Value = "(" + SearchDate + ")";
-                    worksheet.Row(2).Height = 20;
+                    worksheet.Row(2).Height = 35;
                     worksheet.Cells[2, 1, 2, 8].Style.Font.Bold = true;
-                    worksheet.Cells[2, 1, 2, 8].Style.Font.Size = 15;
+                    worksheet.Cells[2, 1, 2, 8].Style.Font.Size = 18;
                     worksheet.Cells[2, 1, 2, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                     worksheet.Cells[3, 1, 3, 8].Merge = true;
@@ -319,8 +336,8 @@ namespace RentBike
                     worksheet.Column(3).Width = 30;
                     worksheet.Column(4).Width = 30;
                     worksheet.Column(5).Width = 25;
-                    worksheet.Column(6).Width = 20;
-                    worksheet.Column(7).Width = 30;
+                    worksheet.Column(6).Width = 30;
+                    worksheet.Column(7).Width = 20;
                     worksheet.Column(8).Width = 15;
                     worksheet.Column(7).Style.WrapText = true;
 
@@ -329,8 +346,8 @@ namespace RentBike
                     worksheet.Cells[4, 3].Value = "Loại hình thuê";
                     worksheet.Cells[4, 4].Value = "Số ĐT khách hàng";
                     worksheet.Cells[4, 5].Value = "Giá trị HĐ/Phí";
-                    worksheet.Cells[4, 6].Value = "Số lần đóng phí";
-                    worksheet.Cells[4, 7].Value = "Ghi chú";
+                    worksheet.Cells[4, 6].Value = "Ghi chú";
+                    worksheet.Cells[4, 7].Value = "Số lần đóng phí";
                     worksheet.Cells[4, 8].Value = "Thông báo";
                     worksheet.Cells[4, 1, 4, 8].Style.Font.Bold = true;
                     worksheet.Cells[4, 1, 4, 8].Style.Font.Size = 13;
@@ -352,8 +369,8 @@ namespace RentBike
                         worksheet.Cells[index, 3].Value = contract.RENT_TYPE_NAME;
                         worksheet.Cells[index, 4].Value = contract.PHONE;
                         worksheet.Cells[index, 5].Value = string.Format("{0:0,0}", contract.FEE_PER_DAY);
-                        worksheet.Cells[index, 6].Value = contract.PAYED_TIME + " lần";
-                        worksheet.Cells[index, 7].Value = contract.NOTE;
+                        worksheet.Cells[index, 6].Value = contract.NOTE;
+                        worksheet.Cells[index, 7].Value = contract.PAYED_TIME + " lần";
                         worksheet.Cells[index, 8].Value = contract.PERIOD_MESSAGE;
 
                         no += 1;
@@ -381,7 +398,12 @@ namespace RentBike
                         Response.Cache.SetExpires(DateTime.UtcNow); //for safe measure expire it immediately
                     }
 
-                    string fileName = "DSGP.xlsx";
+                    DateTime date = DateTime.Now;
+                    if (!string.IsNullOrEmpty(txtDate.Text))
+                    {
+                        date = Convert.ToDateTime(txtDate.Text);
+                    }
+                    string fileName = string.Format("DSGP {0}.{1}", date.ToString("dd-MM-yyyy"), ".xlsx");
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     Response.AddHeader("content-disposition", "attachment; filename=\"" + fileName + "\"");
                     Response.BinaryWrite(package.GetAsByteArray());
