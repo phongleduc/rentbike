@@ -1,4 +1,5 @@
 ﻿using RentBike.Common;
+using RentBike.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,10 +109,20 @@ namespace RentBike
             finally
             {
                 Session.RemoveAll();
-                Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(-1);
-                Response.Cookies["Password"].Expires = DateTime.Now.AddDays(-1);
+                RemoveAllCookies();
                 Response.Redirect("FormLogin.aspx");
             }
+        }
+
+        private void RemoveAllCookies()
+        {
+            HttpCookie aCookie = new HttpCookie("UserName");
+            aCookie.Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies.Add(aCookie);
+
+            aCookie = new HttpCookie("Password");
+            aCookie.Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies.Add(aCookie);
         }
 
         private void WriteLog(string action, bool isCrashed)
@@ -126,8 +137,7 @@ namespace RentBike
                     int storeid = 0;
                     if (CheckAdminPermission())
                     {
-                        DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-                        storeid = Helper.parseInt(drpStore.SelectedValue);
+                        storeid = Helper.parseInt(ddlStore.SelectedValue);
                     }
                     else
                     {
@@ -198,7 +208,7 @@ namespace RentBike
                                             select new
                                             {
                                                 ID = o.STORE_ID,
-                                                Period = o.INOUT_DATE,
+                                                InOutDate = o.INOUT_DATE,
                                                 InAmount = o.IN_AMOUNT,
                                                 OutAmount = o.OUT_AMOUNT,
                                                 TotalIn = g.Sum(x => x.IN_AMOUNT),
@@ -229,7 +239,7 @@ namespace RentBike
                     {
                         SummaryInfo si = new SummaryInfo();
                         si.StoreId = g.Record.ToList()[0].ID;
-                        si.Period = g.Record.ToList()[0].Period.Value;
+                        si.InOutDate = g.Record.ToList()[0].InOutDate.Value;
                         si.TotalIn = g.Record.ToList()[0].TotalIn;
                         si.TotalOut = g.Record.ToList()[0].TotalOut;
                         si.BeginAmount = 0;
@@ -277,7 +287,7 @@ namespace RentBike
                                             select new
                                             {
                                                 ID = o.STORE_ID,
-                                                Period = o.INOUT_DATE,
+                                                InOutDate = o.INOUT_DATE,
                                                 InAmount = o.IN_AMOUNT,
                                                 OutAmount = o.OUT_AMOUNT,
                                                 TotalIn = g.Sum(x => x.IN_AMOUNT),
@@ -308,7 +318,7 @@ namespace RentBike
                     {
                         SummaryInfo si = new SummaryInfo();
                         si.StoreId = g.Record.ToList()[0].ID;
-                        si.Period = g.Record.ToList()[0].Period.Value;
+                        si.InOutDate = g.Record.ToList()[0].InOutDate.Value;
                         si.TotalIn = g.Record.ToList()[0].TotalIn;
                         si.TotalOut = g.Record.ToList()[0].TotalOut;
                         si.BeginAmount = 0;
