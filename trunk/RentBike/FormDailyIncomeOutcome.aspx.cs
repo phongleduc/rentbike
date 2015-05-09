@@ -49,6 +49,19 @@ namespace RentBike
             List<SummaryInfo> listSum = GetSummaryData(storeId);
             if (listSum.Any())
             {
+                if (!string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listSum = listSum.Where(c => c.InOutDate >= Convert.ToDateTime(txtStartDate.Text) && c.InOutDate <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                }
+                else if (!string.IsNullOrEmpty(txtStartDate.Text) && string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listSum = listSum.Where(c => c.InOutDate >= Convert.ToDateTime(txtStartDate.Text)).ToList();
+                }
+                else if (string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listSum = listSum.Where(c => c.InOutDate <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                }
+
                 rptInOut.DataSource = listSum.OrderByDescending(c => c.InOutDate);
                 rptInOut.DataBind();
                 decimal sumIn = 0;
@@ -56,12 +69,8 @@ namespace RentBike
                 decimal sumBegin = 0;
                 decimal sumEnd = 0;
 
-                sumBegin = listSum[0].BeginAmount;
-                foreach (SummaryInfo itm in listSum)
-                {
-                    sumIn += itm.TotalIn;
-                    sumOut += itm.TotalOut;
-                }
+                sumIn = listSum.Select(c => c.TotalIn).DefaultIfEmpty().Sum();
+                sumOut = listSum.Select(c => c.TotalOut).DefaultIfEmpty().Sum();
                 sumEnd = sumIn - sumOut;
 
                 Label lblTotalIn = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalIn");
@@ -283,6 +292,7 @@ namespace RentBike
                                                             select new
                                                             {
                                                                 ID = o.ID,
+                                                                Period = o.PERIOD_DATE,
                                                                 InOutDate = o.INOUT_DATE,
                                                                 RentTypeName = o.RENT_TYPE_NAME,
                                                                 InAmount = o.IN_AMOUNT,
@@ -295,7 +305,6 @@ namespace RentBike
                                                                 OutCapital = 0,
                                                                 InOther = 0,
                                                                 OutOther = 0
-
                                                             }
                                                };
 
@@ -324,6 +333,15 @@ namespace RentBike
                 si.RedundantFeeCar = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 1).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
                 si.RedundantFeeEquip = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 2).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
                 si.RedundantFeeOther = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 3).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
+
+                if (si.RentFeeEquip > 0)
+                {
+                    si.ListEquipPeriodDate = c.Record.Where(s => s.InOutTypeId == 15).Select(s => s.Period).ToList();
+                }
+                if (si.RentFeeCar > 0 || si.RentFeeOther > 0)
+                {
+                    si.ListCarAndOtherEquPeriodDate = c.Record.Where(s => s.InOutTypeId == 14 || s.InOutTypeId == 16).Select(s => s.Period).ToList();
+                }
 
                 listSI.Add(si);
             }
@@ -375,11 +393,13 @@ namespace RentBike
                 Literal litRentFeeEquip = e.Item.FindControl("litRentFeeEquip") as Literal;
                 Literal litClosedFeeEquip = e.Item.FindControl("litClosedFeeEquip") as Literal;
                 Literal litRedundantFeeEquip = e.Item.FindControl("litRedundantFeeEquip") as Literal;
+                Literal litPeriodEquip = e.Item.FindControl("litPeriodEquip") as Literal;
 
                 Literal litContractFeeCarAndOther = e.Item.FindControl("litContractFeeCarAndOther") as Literal;
                 Literal litRentFeeCarAndOther = e.Item.FindControl("litRentFeeCarAndOther") as Literal;
                 Literal litClosedFeeCarAndOther = e.Item.FindControl("litClosedFeeCarAndOther") as Literal;
                 Literal litRedundantFeeCarAndOther = e.Item.FindControl("litRedundantFeeCarAndOther") as Literal;
+                Literal litPeriodCarAndOther = e.Item.FindControl("litPeriodCarAndOther") as Literal;
 
                 Literal litInOther = e.Item.FindControl("litInOther") as Literal;
                 Literal litOutOther = e.Item.FindControl("litOutOther") as Literal;
@@ -389,15 +409,20 @@ namespace RentBike
                 litNo.Text = (e.Item.ItemIndex + 1).ToString();
                 litCustomerName.Text = inout.CustomerName;
 
+
                 litContractFeeEquip.Text = inout.ContractFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", inout.ContractFeeEquip);
                 litRentFeeEquip.Text = inout.RentFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", inout.RentFeeEquip);
                 litClosedFeeEquip.Text = inout.CloseFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", inout.CloseFeeEquip);
                 litRedundantFeeEquip.Text = inout.RedundantFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", inout.RedundantFeeEquip);
+                if (inout.ListEquipPeriodDate != null && inout.ListEquipPeriodDate.Any())
+                    litPeriodEquip.Text = string.Join("<br/>", inout.ListEquipPeriodDate.Select(c => c.ToString("dd/MM/yyyy")).Distinct());
 
                 litContractFeeCarAndOther.Text = (inout.ContractFeeCar + inout.ContractFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (inout.ContractFeeCar + inout.ContractFeeOther));
                 litRentFeeCarAndOther.Text = (inout.RentFeeCar + inout.RentFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (inout.RentFeeCar + inout.RentFeeOther));
                 litClosedFeeCarAndOther.Text = (inout.CloseFeeCar + inout.CloseFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (inout.CloseFeeCar + inout.CloseFeeOther));
                 litRedundantFeeCarAndOther.Text = (inout.RedundantFeeCar + inout.RedundantFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (inout.RedundantFeeCar + inout.RedundantFeeOther));
+                if (inout.ListCarAndOtherEquPeriodDate != null && inout.ListCarAndOtherEquPeriodDate.Any())
+                    litPeriodCarAndOther.Text = string.Join("<br/>", inout.ListCarAndOtherEquPeriodDate.Select(c => c.ToString("dd/MM/yyyy")).Distinct());
 
                 litInCapital.Text = inout.InCapital == 0 ? string.Empty : string.Format("{0:0,0}", inout.InCapital);
                 litOutCapital.Text = inout.OutCapital == 0 ? string.Empty : string.Format("{0:0,0}", inout.OutCapital);
@@ -580,6 +605,11 @@ namespace RentBike
                 Response.Close();
                 Response.End();
             }
+        }
+
+        protected void btnNew_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("FormDailyIncomeOutcomeUpdate.aspx");
         }
     }
 }

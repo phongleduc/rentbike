@@ -12,35 +12,14 @@ namespace RentBike
 {
     public partial class FormIncomeOutcomeSummary : System.Web.UI.Page
     {
-        private DropDownList drpStore;
-
-        //raise button click events on content page for the buttons on master page
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-            drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
-        }
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["store_id"] == null)
             {
                 Response.Redirect("FormLogin.aspx");
             }
-            if (!IsPostBack)
-            {
-
-                //CommonList.LoadStore(ddlStore);
-                int permissionid = Convert.ToInt32(Session["permission"]);
-                LoadStore(permissionid);
-            }
             LoadMiddle();
             LoadData();
-        }
-
-        protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ddlStore.SelectedValue = drpStore.SelectedValue;
         }
 
         private void LoadData()
@@ -59,6 +38,19 @@ namespace RentBike
             List<SummaryInfo> listSum = GetSummaryData(storeId);
             if (listSum.Any())
             {
+                if (!string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listSum = listSum.Where(c => c.InOutDate >= Convert.ToDateTime(txtStartDate.Text) && c.InOutDate <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                }
+                else if (!string.IsNullOrEmpty(txtStartDate.Text) && string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listSum = listSum.Where(c => c.InOutDate >= Convert.ToDateTime(txtStartDate.Text)).ToList();
+                }
+                else if (string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listSum = listSum.Where(c => c.InOutDate <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                }
+
                 rptInOut.DataSource = listSum.OrderByDescending(c => c.InOutDate);
                 rptInOut.DataBind();
                 decimal sumIn = 0;
@@ -66,12 +58,8 @@ namespace RentBike
                 decimal sumBegin = 0;
                 decimal sumEnd = 0;
 
-                sumBegin = listSum[0].BeginAmount;
-                foreach (SummaryInfo itm in listSum)
-                {
-                    sumIn += itm.TotalIn;
-                    sumOut += itm.TotalOut;
-                }
+                sumIn = listSum.Select(c => c.TotalIn).DefaultIfEmpty().Sum();
+                sumOut = listSum.Select(c => c.TotalOut).DefaultIfEmpty().Sum();
                 sumEnd = sumIn - sumOut;
 
                 Label lblTotalIn = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalIn");
@@ -276,265 +264,111 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
+                int storeId = 0;
                 if (CheckAdminPermission())
                 {
                     DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-                    int storeId = Helper.parseInt(drpStore.SelectedValue);
-                    List<CONTRACT_FULL_VW> contrList;
-
-                    if (storeId != 0)
-                    {
-                        var item1 = from itm1 in db.CONTRACT_FULL_VW
-                                    where itm1.CONTRACT_STATUS == true && itm1.STORE_ID == storeId
-                                    select itm1;
-                        contrList = item1.ToList();
-                    }
-                    else
-                    {
-                        var item1 = from itm1 in db.CONTRACT_FULL_VW
-                                    where itm1.CONTRACT_STATUS == true
-                                    select itm1;
-                        contrList = item1.ToList();
-                    }
-
-                    decimal bikeAmount = 0;
-                    decimal equipAmount = 0;
-                    decimal otherAmount = 0;
-                    foreach (CONTRACT_FULL_VW c in contrList)
-                    {
-                        if (c.RENT_TYPE_NAME == "Cho thuê xe")
-                        { bikeAmount += c.CONTRACT_AMOUNT; }
-                        if (c.RENT_TYPE_NAME == "Cho thuê thiết bị văn phòng")
-                        { equipAmount += c.CONTRACT_AMOUNT; }
-                        if (c.RENT_TYPE_NAME == "Cho thuê mặt hàng khác")
-                        { otherAmount += c.CONTRACT_AMOUNT; }
-                    }
-
-                    lblRentBikeAmount.Text = bikeAmount == 0 ? "0" : string.Format("{0:0,0}", bikeAmount);
-                    lblRentEquipAmount.Text = equipAmount == 0 ? "0" : string.Format("{0:0,0}", equipAmount);
-                    lblRentOtherAmount.Text = otherAmount == 0 ? "0" : string.Format("{0:0,0}", otherAmount);
-                    lblRentAll.Text = bikeAmount + equipAmount + otherAmount == 0 ? "0" : string.Format("{0:0,0}", (bikeAmount + equipAmount + otherAmount));
-
-
-                    //============================================================
-                    List<InOut> ioList;
-                    if (storeId != 0)
-                    {
-                        var item2 = from itm2 in db.InOuts
-                                    where itm2.STORE_ID == storeId
-                                    select itm2;
-
-                        ioList = item2.ToList();
-                    }
-                    else
-                    {
-                        var item2 = from itm2 in db.InOuts
-                                    select itm2;
-
-                        ioList = item2.ToList();
-                    }
-                    decimal totalIn = 0;
-                    decimal totalOut = 0;
-                    foreach (InOut io in ioList)
-                    {
-                        totalIn += io.IN_AMOUNT;
-                        totalOut += io.OUT_AMOUNT;
-                    }
-                    lblSumAllIn.Text = totalIn == 0 ? "0" : string.Format("{0:0,0}", totalIn);
-                    lblSumAllOut.Text = totalOut == 0 ? "0" : string.Format("{0:0,0}", totalOut);
-
-                    decimal totalCapital = 0;
-                    List<Store> storeList;
-                    if (storeId != 0)
-                    {
-                        var item3 = from itm3 in db.Stores
-                                    where itm3.ID == storeId
-                                    select itm3;
-                        storeList = item3.ToList();
-                    }
-                    else
-                    {
-                        var item3 = from itm3 in db.Stores
-                                    select itm3;
-                        storeList = item3.ToList();
-                    }
-                    foreach (Store st in storeList)
-                    {
-                        totalCapital += st.START_CAPITAL;
-                    }
-                    lblTotalInvest.Text = totalCapital == 0 ? "0" : string.Format("{0:0,0}", totalCapital);
-                }
-                else // NOT ADMIN
-                {
-                    int storeid = Convert.ToInt32(Session["store_id"]);
-                    var item1 = from itm1 in db.CONTRACT_FULL_VW
-                                where itm1.STORE_ID == storeid
-                                select itm1;
-                    List<CONTRACT_FULL_VW> contrList = item1.Where(c => c.CONTRACT_STATUS == true).ToList();
-                    decimal bikeAmount = 0;
-                    decimal equipAmount = 0;
-                    decimal otherAmount = 0;
-                    foreach (CONTRACT_FULL_VW c in contrList)
-                    {
-                        if (c.RENT_TYPE_NAME == "Cho thuê xe")
-                        { bikeAmount += c.CONTRACT_AMOUNT; }
-                        if (c.RENT_TYPE_NAME == "Cho thuê thiết bị văn phòng")
-                        { equipAmount += c.CONTRACT_AMOUNT; }
-                        if (c.RENT_TYPE_NAME == "Cho thuê mặt hàng khác")
-                        { otherAmount += c.CONTRACT_AMOUNT; }
-                    }
-
-                    lblRentBikeAmount.Text = bikeAmount == 0 ? "0" : string.Format("{0:0,0}", bikeAmount);
-                    lblRentEquipAmount.Text = equipAmount == 0 ? "0" : string.Format("{0:0,0}", equipAmount);
-                    lblRentOtherAmount.Text = otherAmount == 0 ? "0" : string.Format("{0:0,0}", otherAmount);
-                    lblRentAll.Text = bikeAmount + equipAmount + otherAmount == 0 ? "0" : string.Format("{0:0,0}", (bikeAmount + equipAmount + otherAmount));
-
-
-                    //============================================================
-                    var item2 = from itm2 in db.InOuts
-                                where itm2.STORE_ID == storeid
-                                select itm2;
-
-                    List<InOut> ioList = item2.ToList();
-                    decimal totalIn = 0;
-                    decimal totalOut = 0;
-                    foreach (InOut io in ioList)
-                    {
-                        totalIn += io.IN_AMOUNT;
-                        totalOut += io.OUT_AMOUNT;
-                    }
-                    lblSumAllIn.Text = totalIn == 0 ? "0" : string.Format("{0:0,0}", totalIn);
-                    lblSumAllOut.Text = totalOut == 0 ? "0" : string.Format("{0:0,0}", totalOut);
-
-                    decimal totalCapital = 0;
-                    var item3 = from itm3 in db.Stores
-                                where itm3.ID == storeid
-                                select itm3;
-                    List<Store> storeList = item3.ToList();
-                    foreach (Store st in storeList)
-                    {
-                        totalCapital += st.START_CAPITAL;
-                    }
-                    lblTotalInvest.Text = totalCapital == 0 ? "0" : string.Format("{0:0,0}", totalCapital);
-                }
-            }
-        }
-
-        protected void btnSearch_Click(object sender, EventArgs e)
-        {
-            //int storeid = Convert.ToInt32(ddlStore.SelectedValue);
-            //DateTime dt = Convert.ToDateTime(txtViewDate.Text);
-            ////int year = Convert.ToDateTime(txtViewDate.Text).Year;
-            ////int month = Convert.ToDateTime(txtViewDate.Text).Month;
-            //using (var db = new RentBikeEntities())
-            //{
-            //    var data = from d in db.InOuts
-            //               where d.STORE_ID == storeid && EntityFunctions.TruncateTime(d.INOUT_DATE) == EntityFunctions.TruncateTime(dt)
-            //               select d;
-
-            //    List<InOut> ioList = data.ToList();
-
-            //    decimal sumIn = 0;
-            //    decimal sumOut = 0;
-            //    foreach (InOut io in ioList)
-            //    {
-            //        sumIn += io.IN_AMOUNT;
-            //        sumOut += io.OUT_AMOUNT;
-            //    }
-            //    lblViewDate.Text = string.Format("{0:dd/MM/yyyy}", Convert.ToDateTime(txtViewDate.Text));
-            //    lblTotalIn.Text = sumIn == 0 ? "0" : string.Format("{0:0,0}", sumIn);
-            //    lblTotalOut.Text = sumOut == 0 ? "0" : string.Format("{0:0,0}", sumOut);
-            //    lblStoreName.Text = ddlStore.SelectedItem.Text;
-
-            //    var databefore = from d in db.InOuts
-            //                     where d.STORE_ID == storeid && EntityFunctions.TruncateTime(d.INOUT_DATE) > EntityFunctions.TruncateTime(dt)
-            //                     select d;
-            //    List<InOut> beforeList = databefore.ToList();
-            //    decimal sumInBefore = 0;
-            //    decimal sumOutBefore = 0;
-            //    foreach (InOut io in ioList)
-            //    {
-            //        sumInBefore += io.IN_AMOUNT;
-            //        sumOutBefore += io.OUT_AMOUNT;
-            //    }
-            //    decimal startAmount = sumInBefore - sumOutBefore;
-            //    decimal endAmount = startAmount + sumIn - sumOut;
-            //    lblStartAmount.Text = startAmount == 0 ? "0" : string.Format("{0:0,0}", startAmount);
-            //    lblEndAmount.Text = endAmount == 0 ? "0" : string.Format("{0:0,0}", endAmount);
-            //}
-
-
-            //if (CheckAdminPermission())
-            LoadDetailData(Convert.ToInt32(ddlStore.SelectedValue), txtViewDate.Text, 0);
-            //else
-            //btnSearch.Enabled = false;
-        }
-
-        int pageSize = 20;
-        private void LoadDetailData(int storeid, string searchDate, int page)
-        {
-            // LOAD PAGER
-            int totalRecord = 0;
-            using (var db = new RentBikeEntities())
-            {
-                if (!string.IsNullOrEmpty(searchDate))
-                {
-                    DateTime sDate = Convert.ToDateTime(searchDate);
-                    totalRecord = (from c in db.InOuts
-                                   where EntityFunctions.TruncateTime(c.INOUT_DATE) == EntityFunctions.TruncateTime(sDate) && c.STORE_ID == storeid
-                                   select c).Count();
+                    storeId = Helper.parseInt(drpStore.SelectedValue);
                 }
                 else
                 {
-                    totalRecord = (from c in db.InOuts
-                                   where c.STORE_ID == storeid
-                                   select c).Count();
-                }
-            }
-
-            int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-            List<int> pageList = new List<int>();
-            for (int i = 1; i <= totalPage; i++)
-            {
-                pageList.Add(i);
-            }
-
-            ddlPager.DataSource = pageList;
-            ddlPager.DataBind();
-            if (pageList.Count > 0)
-            {
-                ddlPager.SelectedIndex = page;
-            }
-
-            // LOAD DATA WITH PAGING
-            List<INOUT_FULL_VW> dataList;
-            int skip = page * pageSize;
-            using (var db = new RentBikeEntities())
-            {
-                if (!string.IsNullOrEmpty(searchDate))
-                {
-                    DateTime sDate = Convert.ToDateTime(searchDate);
-                    var st = from s in db.INOUT_FULL_VW
-                             where EntityFunctions.TruncateTime(s.INOUT_DATE) == EntityFunctions.TruncateTime(sDate) && s.STORE_ID == storeid
-                             orderby s.ID descending
-                             select s;
-                    dataList = st.Skip(skip).Take(pageSize).ToList();
-                }
-                else
-                {
-                    var st = from s in db.INOUT_FULL_VW
-                             where s.STORE_ID == storeid
-                             orderby s.ID descending
-                             select s;
-                    dataList = st.Skip(skip).Take(pageSize).ToList();
+                    storeId = Convert.ToInt32(Session["store_id"]);
                 }
 
-            }
+                List<CONTRACT_FULL_VW> listContract = GetMiddleContract(storeId);
 
-            rptInOutDetail.DataSource = dataList;
-            rptInOutDetail.DataBind();
+                decimal bikeAmount = listContract.Where(c => c.RENT_TYPE_ID == 1).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty().Sum();
+                decimal equipAmount = listContract.Where(c => c.RENT_TYPE_ID == 2).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty().Sum();
+                decimal otherAmount = listContract.Where(c => c.RENT_TYPE_ID == 3).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty().Sum();
+
+                lblRentBikeAmount.Text = bikeAmount == 0 ? "0" : string.Format("{0:0,0}", bikeAmount);
+                lblRentEquipAmount.Text = equipAmount == 0 ? "0" : string.Format("{0:0,0}", equipAmount);
+                lblRentOtherAmount.Text = otherAmount == 0 ? "0" : string.Format("{0:0,0}", otherAmount);
+                lblRentAll.Text = bikeAmount + equipAmount + otherAmount == 0 ? "0" : string.Format("{0:0,0}", (bikeAmount + equipAmount + otherAmount));
+
+
+                //============================================================
+                List<InOut> listInOut = GetMiddleInOut(storeId);
+
+                decimal totalIn = listInOut.Select(c =>c.IN_AMOUNT).DefaultIfEmpty().Sum();
+                decimal totalOut = listInOut.Select(c => c.OUT_AMOUNT).DefaultIfEmpty().Sum(); ;
+
+                lblSumAllIn.Text = totalIn == 0 ? "0" : string.Format("{0:0,0}", totalIn);
+                lblSumAllOut.Text = totalOut == 0 ? "0" : string.Format("{0:0,0}", totalOut);
+
+                List<Store> listStore = GetMiddleStore(storeId);
+                decimal totalCapital = listStore.Select(c =>c.START_CAPITAL).DefaultIfEmpty().Sum();
+                lblTotalInvest.Text = totalCapital == 0 ? "0" : string.Format("{0:0,0}", totalCapital);
+            }
         }
 
+        private List<CONTRACT_FULL_VW> GetMiddleContract(int storeId)
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var listContract = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true).ToList();
+                if (storeId != 0)
+                {
+                    listContract = listContract.Where(c => c.STORE_ID == storeId).ToList();
+                }
+                if (!string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listContract = listContract.Where(c => c.CREATED_DATE >= Convert.ToDateTime(txtStartDate.Text) && c.CREATED_DATE <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                }
+                else if (!string.IsNullOrEmpty(txtStartDate.Text) && string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listContract = listContract.Where(c => c.CREATED_DATE >= Convert.ToDateTime(txtStartDate.Text)).ToList();
+                }
+                else if (string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listContract = listContract.Where(c => c.CREATED_DATE <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                }
+
+                return listContract;
+            }
+        }
+
+        private List<InOut> GetMiddleInOut(int storeId)
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var listInOut = (from inout in db.InOuts
+                                select inout).ToList();
+                if (storeId != 0)
+                {
+                    listInOut = listInOut.Where(c => c.STORE_ID == storeId).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listInOut = listInOut.Where(c => c.INOUT_DATE >= Convert.ToDateTime(txtStartDate.Text) && c.INOUT_DATE <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                }
+                else if (!string.IsNullOrEmpty(txtStartDate.Text) && string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listInOut = listInOut.Where(c => c.INOUT_DATE >= Convert.ToDateTime(txtStartDate.Text)).ToList();
+                }
+                else if (string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                {
+                    listInOut = listInOut.Where(c => c.INOUT_DATE <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                }
+
+                return listInOut;
+            }
+        }
+
+        private List<Store> GetMiddleStore(int storeId)
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var listStore = (from c in db.Stores
+                                 select c).ToList();
+                if (storeId != 0)
+                {
+                    listStore = listStore.Where(c => c.ID == storeId).ToList();
+                }
+                return listStore.ToList();
+            } 
+        }
         public bool CheckAdminPermission()
         {
             string acc = Convert.ToString(Session["username"]);
@@ -545,22 +379,6 @@ namespace RentBike
                 if (item.PERMISSION_ID == 1)
                     return true;
                 return false;
-            }
-        }
-
-        protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            LoadDetailData(Convert.ToInt32(ddlStore.SelectedValue), txtViewDate.Text, Convert.ToInt32(ddlPager.SelectedValue) - 1);
-        }
-
-        private void LoadStore(int permissionid)
-        {
-            ddlStore.Items.Add(new ListItem("--Tất cả cửa hàng--", ""));
-            CommonList.LoadStore(ddlStore);
-            if (permissionid != 1)
-            {
-                ddlStore.SelectedValue = Session["store_id"].ToString();
-                ddlStore.Enabled = false;
             }
         }
     }
