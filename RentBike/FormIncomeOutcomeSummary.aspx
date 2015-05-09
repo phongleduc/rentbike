@@ -2,6 +2,23 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h2>TỔNG HỢP THU CHI</h2>
+    <table class="table table-striped table-hover ">
+        <tbody>
+            <tr>
+                <td style="width: 50%;">
+                    <div class="col-lg-6">
+                        <asp:TextBox ID="txtStartDate" runat="server" CssClass="form-control input-md" placeholder="Ngày bắt đầu"></asp:TextBox>
+                    </div>
+                    <div class="col-lg-6">
+                        <asp:TextBox ID="txtEndDate" runat="server" CssClass="form-control input-md" placeholder="Ngày kết thúc"></asp:TextBox>
+                    </div>
+                </td>
+
+                <td>
+                    <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClientClick="return validateSearch();" /></td>
+            </tr>
+        </tbody>
+    </table>
     <asp:Repeater ID="rptInOut" runat="server">
         <HeaderTemplate>
             <table class="table table-striped table-hover ">
@@ -107,7 +124,8 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="text-right"><a class="print" href="javascript:void(0);"><img src="App_Themes/Theme1/image/printer-blue.png" /></a></div>
+                        <div class="text-right"><a class="print" href="javascript:void(0);">
+                            <img src="App_Themes/Theme1/image/printer-blue.png" /></a></div>
                     </div>
                 </td>
             </tr>
@@ -171,107 +189,45 @@
                 <td class="text-right">
                     <asp:Label ID="lblTotalInvest" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
-            <tr>
-                <td>Kết quả kinh doanh</td>
-                <td class="text-right">
-                    <asp:Label ID="lblLastAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
-            </tr>
         </tbody>
     </table>
-
-    <table class="table table-striped table-hover">
-        <tbody>
-            <tr>
-                <td colspan="3">Tổng hợp theo ngày & cửa hàng</td>
-            </tr>
-            <tr>
-                <td>
-                    <asp:TextBox ClientIDMode="Static" ID="txtViewDate" runat="server" CssClass="form-control input-sm text-right"></asp:TextBox></td>
-                <td>
-                    <asp:DropDownList ID="ddlStore" runat="server" CssClass="form-control"></asp:DropDownList></td>
-                <td>
-                    <asp:Button ID="btnSearch" runat="server" Text="Xem" CssClass="btn btn-primary" OnClick="btnSearch_Click" /></td>
-            </tr>
-        </tbody>
-    </table>
-    <%--<table class="table table-striped table-hover">
-        <thead>
-            <tr>
-                <th class="text-center">Ngày</th>
-                <th>Cửa hàng</th>
-                <th class="text-right">Dư đầu kỳ</th>
-                <th class="text-right">Tổng thu</th>
-                <th class="text-right">Tổng chi</th>
-                <th class="text-right">Dư cuối kỳ</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td class="text-center">
-                    <asp:Label ID="lblViewDate" runat="server" Text=""></asp:Label></td>
-                <td>
-                    <asp:Label ID="lblStoreName" runat="server" Text=""></asp:Label></td>
-                <td class="text-right">
-                    <asp:Label ID="lblStartAmount" runat="server" Text=""></asp:Label></td>
-                <td class="text-right">
-                    <asp:Label ID="lblTotalIn" runat="server" Text=""></asp:Label></td>
-                <td class="text-right">
-                    <asp:Label ID="lblTotalOut" runat="server" Text=""></asp:Label></td>
-                <td class="text-right">
-                    <asp:Label ID="lblEndAmount" runat="server" Text=""></asp:Label></td>
-            </tr>
-        </tbody>
-    </table>--%>
-    <asp:Repeater ID="rptInOutDetail" runat="server">
-        <HeaderTemplate>
-            <table class="table table-striped table-hover ">
-                <thead>
-                    <tr class="success">
-                        <th class="text-center">#</th>
-                        <th class="text-center">Loại chi phí</th>
-                        <th class="text-center">Thu</th>
-                        <th class="text-center">Chi</th>
-                        <th class="text-center">Ngày</th>
-                        <th class="text-center">Thông tin thêm</th>
-                        <th class="text-center">Chức năng</th>
-                    </tr>
-                </thead>
-                <tbody>
-        </HeaderTemplate>
-        <ItemTemplate>
-            <tr>
-                <td><%# Container.ItemIndex + 1 %></td>
-                <td><%# Eval("INOUT_TYPE_NAME") %></td>
-                <td class="text-right"><%# string.Format("{0:0,0}", (Eval("IN_AMOUNT").ToString() == "0" ? string.Empty: Eval("IN_AMOUNT"))) %></td>
-                <td class="text-right"><%# string.Format("{0:0,0}", (Eval("OUT_AMOUNT").ToString() == "0" ? string.Empty: Eval("OUT_AMOUNT"))) %></td>
-                <td class="text-center"><%# string.Format("{0:dd/MM/yyyy}", Eval("INOUT_DATE")) %></td>
-                <td><%# Eval("MORE_INFO") %></td>
-                <td class="text-center">
-                    <asp:HyperLink ID="hplViewContract" runat="server" Text='<%# Eval("CONTRACT_ID").ToString() == "-1" ? "" : string.Format("HĐ Số: {0}", Eval("CONTRACT_NO")) %>' NavigateUrl='<%# Eval("CONTRACT_ID").ToString() == "-1" ? "#" : Eval("CONTRACT_ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
-            </tr>
-        </ItemTemplate>
-        <FooterTemplate>
-            </tbody>
-           </table>
-        </FooterTemplate>
-    </asp:Repeater>
-    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
     <script>
         $(function () {
             $("#txtViewDate").datepicker();
             $('.fancybox').fancybox();
+            $('#<%=txtStartDate.ClientID %>').datepicker();
+            $('#<%=txtEndDate.ClientID %>').datepicker();
 
             var options = {};
             $('a.print').click(function (e) {
                 $(this).parent().parent().printArea(options);
             });
 
-            $('#<%=txtViewDate.ClientID %>').keypress(function (e) {
+            $('#<%=txtStartDate.ClientID %>').keypress(function (e) {
                 if (e.which == 13) {
-                    $('#<%=btnSearch.ClientID %>').click();
-                            return false;
-                        }
+                    if (validateSearch()) {
+                        $('#<%=btnSearch.ClientID %>').click();
+                        return false;
+                    }
+                }
+            });
+
+            $('#<%=txtEndDate.ClientID %>').keypress(function (e) {
+                if (e.which == 13) {
+                    if (validateSearch()) {
+                        $('#<%=btnSearch.ClientID %>').click();
+                        return false;
+                    }
+                }
             });
         });
+
+        function validateSearch() {
+            if (new Date($('#<%=txtEndDate.ClientID %>').val()) < new Date($('#<%=txtStartDate.ClientID %>').val())) {
+                alert("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.");
+                return false;
+            }
+            return true;
+        }
     </script>
 </asp:Content>

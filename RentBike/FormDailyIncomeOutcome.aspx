@@ -2,6 +2,24 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h2>CHI TIẾT HÀNG NGÀY</h2>
+    <table class="table table-striped table-hover ">
+        <tbody>
+            <tr>
+                <td>
+                    <div class="col-lg-6">
+                        <asp:TextBox ID="txtStartDate" runat="server" CssClass="form-control input-md" placeholder="Ngày bắt đầu"></asp:TextBox>
+                    </div>
+                    <div class="col-lg-6">
+                        <asp:TextBox ID="txtEndDate" runat="server" CssClass="form-control input-md" placeholder="Ngày kết thúc"></asp:TextBox>
+                    </div>
+                </td>
+                <td>
+                    <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" /></td>
+                <td>
+                    <asp:Button ID="btnNew" runat="server" Text="Thêm mới" CssClass="btn btn-primary" OnClick="btnNew_Click" /></td>
+            </tr>
+        </tbody>
+    </table>
     <asp:Repeater ID="rptInOut" runat="server" OnItemDataBound="rptInOut_ItemDataBound">
         <HeaderTemplate>
             <table class="table table-striped table-hover ">
@@ -31,13 +49,13 @@
                             <HeaderTemplate>
                                 <table class="table table-striped border_table" border="1">
                                     <tr class="success">
-                                        <th colspan="15" style="text-align: center">Chi tiết ngày:
+                                        <th colspan="17" style="text-align: center">Chi tiết ngày:
                                             <asp:Literal ID="litInoutDate" runat="server"></asp:Literal></th>
                                     </tr>
                                     <tr>
                                         <th colspan="2">&nbsp;</th>
-                                        <th colspan="4" style="text-align: center">THIẾT BỊ VĂN PHÒNG</th>
-                                        <th colspan="4" style="text-align: center">GIẤY TỜ XE & KHÁC</th>
+                                        <th colspan="5" style="text-align: center">THIẾT BỊ VĂN PHÒNG</th>
+                                        <th colspan="5" style="text-align: center">GIẤY TỜ XE & KHÁC</th>
                                         <th colspan="5">&nbsp;</th>
                                     </tr>
                                     <tr>
@@ -47,10 +65,12 @@
                                         <th>Thu Phí</th>
                                         <th>Thanh Lý</th>
                                         <th>Thừa Phí</th>
+                                        <th>Kỳ Thu</th>
                                         <th>Cho Thuê</th>
                                         <th>Thu Phí</th>
                                         <th>Thanh Lý</th>
                                         <th>Thừa Phí</th>
+                                        <th>Kỳ Thu</th>
                                         <th>Chi Khác</th>
                                         <th>Thu Khác</th>
                                         <th>Tiền Xuất</th>
@@ -73,6 +93,8 @@
                                     <td>
                                         <asp:Literal ID="litRedundantFeeEquip" runat="server"></asp:Literal></td>
                                     <td>
+                                        <asp:Literal ID="litPeriodEquip" runat="server"></asp:Literal></td>
+                                    <td>
                                         <asp:Literal ID="litContractFeeCarAndOther" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litRentFeeCarAndOther" runat="server"></asp:Literal></td>
@@ -80,6 +102,8 @@
                                         <asp:Literal ID="litClosedFeeCarAndOther" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litRedundantFeeCarAndOther" runat="server"></asp:Literal></td>
+                                    <td>
+                                        <asp:Literal ID="litPeriodCarAndOther" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litOutOther" runat="server"></asp:Literal></td>
                                     <td>
@@ -102,6 +126,7 @@
                                         <asp:Literal ID="litTotalCloseFeeEquip" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litTotalRedundantFeeEquip" runat="server"></asp:Literal></td>
+                                    <td></td>
                                     <td>
                                         <asp:Literal ID="litTotalContractFeeCarAndOther" runat="server"></asp:Literal></td>
                                     <td>
@@ -110,6 +135,7 @@
                                         <asp:Literal ID="litTotalCloseFeeCarAndOther" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litTotalRedundantFeeCarAndOther" runat="server"></asp:Literal></td>
+                                    <td></td>
                                     <td>
                                         <asp:Literal ID="litTotalOutOther" runat="server"></asp:Literal></td>
                                     <td>
@@ -122,7 +148,7 @@
                                         <asp:Literal ID="litTotal" runat="server"></asp:Literal></td>
                                 </tr>
                                 </table>
-<%--                                <div class="text-right">
+                                <%--                                <div class="text-right">
                                     <asp:Image ID="ExcelIcon" runat="server" ImageUrl="~/App_Themes/Theme1/image/excel-icon.png" />
                                     <asp:LinkButton ID="lnkExportExcel" runat="server" OnClick="lnkExportExcel_Click" Text="Xuất ra Excel"></asp:LinkButton>
                                 </div>--%>
@@ -161,10 +187,30 @@
                     $.fancybox.hideActivity();
                 }
             });
+            $('#<%=txtStartDate.ClientID %>').datepicker();
+            $('#<%=txtEndDate.ClientID %>').datepicker();
 
             var options = {};
             $('a.print').click(function (e) {
                 $(this).parent().parent().printArea(options);
+            });
+
+            $('#<%=txtStartDate.ClientID %>').keypress(function (e) {
+                if (e.which == 13) {
+                    if (validateSearch()) {
+                        $('#<%=btnSearch.ClientID %>').click();
+                        return false;
+                    }
+                }
+            });
+
+            $('#<%=txtEndDate.ClientID %>').keypress(function (e) {
+                if (e.which == 13) {
+                    if (validateSearch()) {
+                        $('#<%=btnSearch.ClientID %>').click();
+                        return false;
+                    }
+                }
             });
 
             <%--            $('#<%=txtViewDate.ClientID %>').keypress(function (e) {
@@ -174,5 +220,12 @@
                         }
             });--%>
         });
+        function validateSearch() {
+            if (new Date($('#<%=txtEndDate.ClientID %>').val()) < new Date($('#<%=txtStartDate.ClientID %>').val())) {
+                alert("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.");
+                return false;
+            }
+            return true;
+        }
     </script>
 </asp:Content>
