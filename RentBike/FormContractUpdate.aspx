@@ -306,7 +306,7 @@
             });
 
             $('#<%=txtAmount.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
-            $('#<%=txtFeePerDay.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });;
+            $('#<%=txtFeePerDay.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
 
             var rentTypeId = '<%= RentTypeID%>';
             hideToRentType(rentTypeId);

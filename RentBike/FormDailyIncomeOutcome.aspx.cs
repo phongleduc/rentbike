@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 namespace RentBike
@@ -350,6 +351,7 @@ namespace RentBike
             foreach (var c in listInOutOther)
             {
                 SummaryInfo si = new SummaryInfo();
+                si.CssClass = "background-yellow";
 
                 switch (c.INOUT_TYPE_ID)
                 {
@@ -387,6 +389,8 @@ namespace RentBike
             {
                 var inout = e.Item.DataItem as SummaryInfo;
 
+                HtmlTableRow trItem = e.Item.FindControl("trItem") as HtmlTableRow;
+
                 Literal litNo = e.Item.FindControl("litNo") as Literal;
                 Literal litCustomerName = e.Item.FindControl("litCustomerName") as Literal;
 
@@ -406,6 +410,8 @@ namespace RentBike
                 Literal litOutOther = e.Item.FindControl("litOutOther") as Literal;
                 Literal litInCapital = e.Item.FindControl("litInCapital") as Literal;
                 Literal litOutCapital = e.Item.FindControl("litOutCapital") as Literal;
+
+                trItem.Attributes.Add("class", inout.CssClass);
 
                 litNo.Text = (e.Item.ItemIndex + 1).ToString();
                 litCustomerName.Text = inout.CustomerName;

@@ -102,10 +102,13 @@ namespace RentBike
             PayPeriod pp = new PayPeriod();
             using (var db = new RentBikeEntities())
             {
-                var item = db.PayPeriods.FirstOrDefault(s => s.ID == periodId);
-                item.ACTUAL_PAY = Convert.ToDecimal(txtIncome.Text);
-                pp = item;
-                db.SaveChanges();
+                if (!string.IsNullOrEmpty(txtIncome.Text))
+                {
+                    var item = db.PayPeriods.FirstOrDefault(s => s.ID == periodId);
+                    item.ACTUAL_PAY = Convert.ToDecimal(txtIncome.Text);
+                    pp = item;
+                    db.SaveChanges();
+                }
             }
 
             using (var db = new RentBikeEntities())
@@ -144,7 +147,7 @@ namespace RentBike
             decimal total = 0;
             decimal remain = 0;
             decimal amountLeft = 0;
-
+            decimal totalAmountLeft = 0;
             using (var db = new RentBikeEntities())
             {
                 var result = db.InOuts.Where(itm => itm.CONTRACT_ID == pp.CONTRACT_ID && itm.PERIOD_ID == pp.ID).ToList();
@@ -176,6 +179,10 @@ namespace RentBike
                         if (totalActualPay > totalPerAmount)
                             remain = totalActualPay - totalPerAmount;
                     }
+
+                    decimal totalAmountPeriod = lstPeriod.Where(c => c.PAY_DATE <= DateTime.Today).Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty().Sum();
+                    decimal totalAmoutPaid = lstPeriod.Where(c => c.PAY_DATE <= DateTime.Today).Select(c => c.ACTUAL_PAY).DefaultIfEmpty().Sum();
+                    totalAmountLeft = totalAmountPeriod - totalAmoutPaid <= 0 ? 0 : totalAmountPeriod - totalAmoutPaid;
                 }
 
                 if (pp.AMOUNT_PER_PERIOD - total > 0)
@@ -192,6 +199,8 @@ namespace RentBike
             lblAmountRemain.Text = string.Format("{0:0,0}", remain);
             Label lblAmountLeft = (Label)rptContractInOut.Controls[rptContractInOut.Controls.Count - 1].Controls[0].FindControl("lblAmountLeft");
             lblAmountLeft.Text = string.Format("{0:0,0}", amountLeft);
+            Label lblTotalAmoutLeft = (Label)rptContractInOut.Controls[rptContractInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalAmoutLeft");
+            lblTotalAmoutLeft.Text = string.Format("{0:0,0}", totalAmountLeft);
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
