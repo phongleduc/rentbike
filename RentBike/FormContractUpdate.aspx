@@ -352,7 +352,10 @@
         });
 
         function hideToRentType(rentTypeId) {
-            if (parseInt(rentTypeId) == 2) {
+            if (parseInt(rentTypeId) == 3) {
+                $('#trReferencePhone, #trSchool, #trClass').hide();
+                $('#trItemName, #trLicenseNo, #trSerial1, #trSerial2, #trImplementer, #trDocuments').hide();
+            } else if (parseInt(rentTypeId) == 2) {
                 $('#trItemName, #trLicenseNo, #trSerial1, #trSerial2, #trImplementer, #trDocuments').hide();
                 $('#trReferencePhone, #trSchool, #trClass').show();
                 $('#trReferencePhone td').first().text('Số điện thoại gia đình');
