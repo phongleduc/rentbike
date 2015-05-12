@@ -180,8 +180,8 @@ namespace RentBike
                             remain = totalActualPay - totalPerAmount;
                     }
 
-                    decimal totalAmountPeriod = lstPeriod.Where(c => c.PAY_DATE <= DateTime.Today).Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty().Sum();
-                    decimal totalAmoutPaid = lstPeriod.Where(c => c.PAY_DATE <= DateTime.Today).Select(c => c.ACTUAL_PAY).DefaultIfEmpty().Sum();
+                    decimal totalAmountPeriod = lstPeriod.Where(c => c.PAY_DATE <= DateTime.Today).Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
+                    decimal totalAmoutPaid = lstPeriod.Where(c => c.PAY_DATE <= DateTime.Today).Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
                     totalAmountLeft = totalAmountPeriod - totalAmoutPaid <= 0 ? 0 : totalAmountPeriod - totalAmoutPaid;
                 }
 
@@ -198,7 +198,7 @@ namespace RentBike
             Label lblAmountRemain = (Label)rptContractInOut.Controls[rptContractInOut.Controls.Count - 1].Controls[0].FindControl("lblAmountRemain");
             lblAmountRemain.Text = string.Format("{0:0,0}", remain);
             Label lblAmountLeft = (Label)rptContractInOut.Controls[rptContractInOut.Controls.Count - 1].Controls[0].FindControl("lblAmountLeft");
-            lblAmountLeft.Text = string.Format("{0:0,0}", amountLeft);
+            lblAmountLeft.Text = txtIncome.Text = string.Format("{0:0,0}", amountLeft);
             Label lblTotalAmoutLeft = (Label)rptContractInOut.Controls[rptContractInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalAmoutLeft");
             lblTotalAmoutLeft.Text = string.Format("{0:0,0}", totalAmountLeft);
         }

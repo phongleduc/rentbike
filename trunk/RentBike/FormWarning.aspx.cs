@@ -107,7 +107,7 @@ namespace RentBike
                     var tmpLstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID).ToList();
                     if (tmpLstPeriod != null)
                     {
-                        decimal paidAmount = tmpLstPeriod.Where(s => s.ACTUAL_PAY > 0).Select(s => s.ACTUAL_PAY).DefaultIfEmpty().Sum();
+                        decimal paidAmount = tmpLstPeriod.Where(s => s.ACTUAL_PAY > 0).Select(s => s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
                         int paidNumberOfFee = 0;
                         bool paidFull = false;
                         foreach (PayPeriod pp in tmpLstPeriod)

@@ -70,8 +70,8 @@ namespace RentBike
                 decimal sumBegin = 0;
                 decimal sumEnd = 0;
 
-                sumIn = listSum.Select(c => c.TotalIn).DefaultIfEmpty().Sum();
-                sumOut = listSum.Select(c => c.TotalOut).DefaultIfEmpty().Sum();
+                sumIn = listSum.Select(c => c.TotalIn).DefaultIfEmpty(0).Sum();
+                sumOut = listSum.Select(c => c.TotalOut).DefaultIfEmpty(0).Sum();
                 sumEnd = sumIn - sumOut;
 
                 Label lblTotalIn = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalIn");
@@ -237,31 +237,31 @@ namespace RentBike
                         Literal litTotal = rptInOutDayDetail.Controls[rptInOutDayDetail.Controls.Count - 1].Controls[0].FindControl("litTotal") as Literal;
                         //LinkButton lnkExportExcel = rptInOutDayDetail.Controls[rptInOutDayDetail.Controls.Count - 1].Controls[0].FindControl("lnkExportExcel") as LinkButton;
 
-                        decimal totalContractFeeEquip = listSI.Select(c => c.ContractFeeEquip).DefaultIfEmpty().Sum();
+                        decimal totalContractFeeEquip = listSI.Select(c => c.ContractFeeEquip).DefaultIfEmpty(0).Sum();
                         litTotalContractFeeEquip.Text = totalContractFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalContractFeeEquip);
-                        decimal totalRentFeeEquip = listSI.Select(c => c.RentFeeEquip).DefaultIfEmpty().Sum();
+                        decimal totalRentFeeEquip = listSI.Select(c => c.RentFeeEquip).DefaultIfEmpty(0).Sum();
                         litTotalRentFeeEquip.Text = totalRentFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalRentFeeEquip);
-                        decimal totalCloseFeeEquip = listSI.Select(c => c.CloseFeeEquip).DefaultIfEmpty().Sum();
+                        decimal totalCloseFeeEquip = listSI.Select(c => c.CloseFeeEquip).DefaultIfEmpty(0).Sum();
                         litTotalCloseFeeEquip.Text = totalCloseFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalCloseFeeEquip);
-                        decimal totalRedundantFeeEquip = listSI.Select(c => c.RedundantFeeEquip).DefaultIfEmpty().Sum();
+                        decimal totalRedundantFeeEquip = listSI.Select(c => c.RedundantFeeEquip).DefaultIfEmpty(0).Sum();
                         litTotalRedundantFeeEquip.Text = totalRedundantFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalRedundantFeeEquip);
 
-                        decimal totalContractFeeCarAndOther = listSI.Select(c => c.ContractFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.ContractFeeOther).DefaultIfEmpty().Sum();
+                        decimal totalContractFeeCarAndOther = listSI.Select(c => c.ContractFeeCar).DefaultIfEmpty(0).Sum() + listSI.Select(c => c.ContractFeeOther).DefaultIfEmpty(0).Sum();
                         litTotalContractFeeCarAndOther.Text = totalContractFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalContractFeeCarAndOther);
-                        decimal totalRentFeeCarAndOther = listSI.Select(c => c.RentFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.RentFeeOther).DefaultIfEmpty().Sum();
+                        decimal totalRentFeeCarAndOther = listSI.Select(c => c.RentFeeCar).DefaultIfEmpty(0).Sum() + listSI.Select(c => c.RentFeeOther).DefaultIfEmpty(0).Sum();
                         litTotalRentFeeCarAndOther.Text = totalRentFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalRentFeeCarAndOther);
-                        decimal totalCloseFeeCarAndOther = listSI.Select(c => c.CloseFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.CloseFeeOther).DefaultIfEmpty().Sum();
+                        decimal totalCloseFeeCarAndOther = listSI.Select(c => c.CloseFeeCar).DefaultIfEmpty(0).Sum() + listSI.Select(c => c.CloseFeeOther).DefaultIfEmpty(0).Sum();
                         litTotalCloseFeeCarAndOther.Text = totalCloseFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalCloseFeeCarAndOther);
-                        decimal totalRedundantFeeCarAndOther = listSI.Select(c => c.RedundantFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.RedundantFeeOther).DefaultIfEmpty().Sum();
+                        decimal totalRedundantFeeCarAndOther = listSI.Select(c => c.RedundantFeeCar).DefaultIfEmpty(0).Sum() + listSI.Select(c => c.RedundantFeeOther).DefaultIfEmpty(0).Sum();
                         litTotalRedundantFeeCarAndOther.Text = totalRedundantFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalRedundantFeeCarAndOther);
 
-                        decimal totalInOther = listSI.Select(c => c.InOther).DefaultIfEmpty().Sum();
+                        decimal totalInOther = listSI.Select(c => c.InOther).DefaultIfEmpty(0).Sum();
                         litTotalInOther.Text = totalInOther == 0 ? "0" : string.Format("{0:0,0}", totalInOther);
-                        decimal totalOutOther = listSI.Select(c => c.OutOther).DefaultIfEmpty().Sum();
+                        decimal totalOutOther = listSI.Select(c => c.OutOther).DefaultIfEmpty(0).Sum();
                         litTotalOutOther.Text = totalOutOther == 0 ? "0" : string.Format("{0:0,0}", totalOutOther);
-                        decimal totalInCapital = listSI.Select(c => c.InCapital).DefaultIfEmpty().Sum();
+                        decimal totalInCapital = listSI.Select(c => c.InCapital).DefaultIfEmpty(0).Sum();
                         litTotalInCapital.Text = totalInCapital == 0 ? "0" : string.Format("{0:0,0}", totalInCapital);
-                        decimal totalOutCapital = listSI.Select(c => c.OutCapital).DefaultIfEmpty().Sum();
+                        decimal totalOutCapital = listSI.Select(c => c.OutCapital).DefaultIfEmpty(0).Sum();
                         litTotalOutCapital.Text = totalOutCapital == 0 ? "0" : string.Format("{0:0,0}", totalOutCapital);
 
                         decimal inTotal = (totalRentFeeEquip + totalCloseFeeEquip + totalRentFeeCarAndOther + totalCloseFeeCarAndOther + totalInOther + totalInCapital);
@@ -320,21 +320,21 @@ namespace RentBike
                 si.EndAmount = c.Record.ToList()[0].TotalIn - c.Record.ToList()[0].TotalOut;
                 si.CustomerName = c.CustomerName;
 
-                si.ContractFeeCar = c.Record.Where(s => s.InOutTypeId == 17).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
-                si.ContractFeeEquip = c.Record.Where(s => s.InOutTypeId == 22).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
-                si.ContractFeeOther = c.Record.Where(s => s.InOutTypeId == 23).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
+                si.ContractFeeCar = c.Record.Where(s => s.InOutTypeId == 17).Select(s => s.OutAmount).DefaultIfEmpty(0).Sum();
+                si.ContractFeeEquip = c.Record.Where(s => s.InOutTypeId == 22).Select(s => s.OutAmount).DefaultIfEmpty(0).Sum();
+                si.ContractFeeOther = c.Record.Where(s => s.InOutTypeId == 23).Select(s => s.OutAmount).DefaultIfEmpty(0).Sum();
 
-                si.RentFeeCar = c.Record.Where(s => s.InOutTypeId == 14).Select(s => s.InAmount).DefaultIfEmpty().Sum();
-                si.RentFeeEquip = c.Record.Where(s => s.InOutTypeId == 15).Select(s => s.InAmount).DefaultIfEmpty().Sum();
-                si.RentFeeOther = c.Record.Where(s => s.InOutTypeId == 16).Select(s => s.InAmount).DefaultIfEmpty().Sum();
+                si.RentFeeCar = c.Record.Where(s => s.InOutTypeId == 14).Select(s => s.InAmount).DefaultIfEmpty(0).Sum();
+                si.RentFeeEquip = c.Record.Where(s => s.InOutTypeId == 15).Select(s => s.InAmount).DefaultIfEmpty(0).Sum();
+                si.RentFeeOther = c.Record.Where(s => s.InOutTypeId == 16).Select(s => s.InAmount).DefaultIfEmpty(0).Sum();
 
-                si.CloseFeeCar = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 1).Select(s => s.InAmount).DefaultIfEmpty().Sum();
-                si.CloseFeeEquip = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 2).Select(s => s.InAmount).DefaultIfEmpty().Sum();
-                si.CloseFeeOther = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 3).Select(s => s.InAmount).DefaultIfEmpty().Sum();
+                si.CloseFeeCar = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 1).Select(s => s.InAmount).DefaultIfEmpty(0).Sum();
+                si.CloseFeeEquip = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 2).Select(s => s.InAmount).DefaultIfEmpty(0).Sum();
+                si.CloseFeeOther = c.Record.Where(s => s.InOutTypeId == 18 && s.RentTypeId == 3).Select(s => s.InAmount).DefaultIfEmpty(0).Sum();
 
-                si.RedundantFeeCar = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 1).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
-                si.RedundantFeeEquip = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 2).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
-                si.RedundantFeeOther = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 3).Select(s => s.OutAmount).DefaultIfEmpty().Sum();
+                si.RedundantFeeCar = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 1).Select(s => s.OutAmount).DefaultIfEmpty(0).Sum();
+                si.RedundantFeeEquip = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 2).Select(s => s.OutAmount).DefaultIfEmpty(0).Sum();
+                si.RedundantFeeOther = c.Record.Where(s => s.InOutTypeId == 19 && s.RentTypeId == 3).Select(s => s.OutAmount).DefaultIfEmpty(0).Sum();
 
                 if (si.RentFeeEquip > 0)
                 {
@@ -539,31 +539,31 @@ namespace RentBike
                     index += 1;
                 }
 
-                decimal totalContractFeeEquip = listSI.Select(c => c.ContractFeeEquip).DefaultIfEmpty().Sum();
+                decimal totalContractFeeEquip = listSI.Select(c => c.ContractFeeEquip).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 4].Value = totalContractFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalContractFeeEquip);
-                decimal totalRentFeeEquip = listSI.Select(c => c.RentFeeEquip).DefaultIfEmpty().Sum();
+                decimal totalRentFeeEquip = listSI.Select(c => c.RentFeeEquip).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 5].Value = totalRentFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalRentFeeEquip);
-                decimal totalCloseFeeEquip = listSI.Select(c => c.CloseFeeEquip).DefaultIfEmpty().Sum();
+                decimal totalCloseFeeEquip = listSI.Select(c => c.CloseFeeEquip).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 6].Value = totalCloseFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalCloseFeeEquip);
-                decimal totalRedundantFeeEquip = listSI.Select(c => c.RedundantFeeEquip).DefaultIfEmpty().Sum();
+                decimal totalRedundantFeeEquip = listSI.Select(c => c.RedundantFeeEquip).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 7].Value = totalRedundantFeeEquip == 0 ? "0" : string.Format("{0:0,0}", totalRedundantFeeEquip);
 
-                decimal totalContractFeeCarAndOther = listSI.Select(c => c.ContractFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.ContractFeeOther).DefaultIfEmpty().Sum();
+                decimal totalContractFeeCarAndOther = listSI.Select(c => c.ContractFeeCar).DefaultIfEmpty(0).Sum() + listSI.Select(c => c.ContractFeeOther).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 8].Value = totalContractFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalContractFeeCarAndOther);
-                decimal totalRentFeeCarAndOther = listSI.Select(c => c.RentFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.RentFeeOther).DefaultIfEmpty().Sum();
+                decimal totalRentFeeCarAndOther = listSI.Select(c => c.RentFeeCar).DefaultIfEmpty(0).Sum() + listSI.Select(c => c.RentFeeOther).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 9].Value = totalRentFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalRentFeeCarAndOther);
-                decimal totalCloseFeeCarAndOther = listSI.Select(c => c.CloseFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.CloseFeeOther).DefaultIfEmpty().Sum();
+                decimal totalCloseFeeCarAndOther = listSI.Select(c => c.CloseFeeCar).DefaultIfEmpty(0).Sum() + listSI.Select(c => c.CloseFeeOther).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 10].Value = totalCloseFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalCloseFeeCarAndOther);
-                decimal totalRedundantFeeCarAndOther = listSI.Select(c => c.RedundantFeeCar).DefaultIfEmpty().Sum() + listSI.Select(c => c.RedundantFeeOther).DefaultIfEmpty().Sum();
+                decimal totalRedundantFeeCarAndOther = listSI.Select(c => c.RedundantFeeCar).DefaultIfEmpty(0).Sum() + listSI.Select(c => c.RedundantFeeOther).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 11].Value = totalRedundantFeeCarAndOther == 0 ? "0" : string.Format("{0:0,0}", totalRedundantFeeCarAndOther);
 
-                decimal totalOutOther = listSI.Select(c => c.OutOther).DefaultIfEmpty().Sum();
+                decimal totalOutOther = listSI.Select(c => c.OutOther).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 12].Value = totalOutOther == 0 ? "0" : string.Format("{0:0,0}", totalOutOther);
-                decimal totalInOther = listSI.Select(c => c.InOther).DefaultIfEmpty().Sum();
+                decimal totalInOther = listSI.Select(c => c.InOther).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 13].Value = totalInOther == 0 ? "0" : string.Format("{0:0,0}", totalInOther);
-                decimal totalOutCapital = listSI.Select(c => c.OutCapital).DefaultIfEmpty().Sum();
+                decimal totalOutCapital = listSI.Select(c => c.OutCapital).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 14].Value = totalOutCapital == 0 ? "0" : string.Format("{0:0,0}", totalOutCapital);
-                decimal totalInCapital = listSI.Select(c => c.InCapital).DefaultIfEmpty().Sum();
+                decimal totalInCapital = listSI.Select(c => c.InCapital).DefaultIfEmpty(0).Sum();
                 worksheet.Cells[index + 1, 15].Value = totalInCapital == 0 ? "0" : string.Format("{0:0,0}", totalInCapital);
 
                 decimal inTotal = (totalRentFeeEquip + totalCloseFeeEquip + totalRentFeeCarAndOther + totalCloseFeeCarAndOther + totalInOther + totalInCapital);

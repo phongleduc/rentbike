@@ -59,7 +59,7 @@ namespace RentBike
             foreach (CONTRACT_FULL_VW c in data)
             {
                 var lstTempPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID).ToList();
-                decimal totalPayed = lstTempPeriod.Select(s => s.ACTUAL_PAY).DefaultIfEmpty().Sum();
+                decimal totalPayed = lstTempPeriod.Select(s => s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
                 foreach (PayPeriod pp in lstTempPeriod)
                 {
                     if (pp.AMOUNT_PER_PERIOD > totalPayed)
