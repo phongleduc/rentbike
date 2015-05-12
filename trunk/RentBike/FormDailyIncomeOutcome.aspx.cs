@@ -292,6 +292,7 @@ namespace RentBike
                                                             select new
                                                             {
                                                                 ID = o.ID,
+                                                                ContractId = o.CONTRACT_ID,
                                                                 Period = o.PERIOD_DATE,
                                                                 InOutDate = o.INOUT_DATE,
                                                                 RentTypeName = o.RENT_TYPE_NAME,
