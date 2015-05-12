@@ -58,8 +58,8 @@ namespace RentBike
                 decimal sumBegin = 0;
                 decimal sumEnd = 0;
 
-                sumIn = listSum.Select(c => c.TotalIn).DefaultIfEmpty().Sum();
-                sumOut = listSum.Select(c => c.TotalOut).DefaultIfEmpty().Sum();
+                sumIn = listSum.Select(c => c.TotalIn).DefaultIfEmpty(0).Sum();
+                sumOut = listSum.Select(c => c.TotalOut).DefaultIfEmpty(0).Sum();
                 sumEnd = sumIn - sumOut;
 
                 Label lblTotalIn = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalIn");
@@ -277,9 +277,9 @@ namespace RentBike
 
                 List<CONTRACT_FULL_VW> listContract = GetMiddleContract(storeId);
 
-                decimal bikeAmount = listContract.Where(c => c.RENT_TYPE_ID == 1).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty().Sum();
-                decimal equipAmount = listContract.Where(c => c.RENT_TYPE_ID == 2).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty().Sum();
-                decimal otherAmount = listContract.Where(c => c.RENT_TYPE_ID == 3).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty().Sum();
+                decimal bikeAmount = listContract.Where(c => c.RENT_TYPE_ID == 1).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
+                decimal equipAmount = listContract.Where(c => c.RENT_TYPE_ID == 2).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
+                decimal otherAmount = listContract.Where(c => c.RENT_TYPE_ID == 3).Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
 
                 lblRentBikeAmount.Text = bikeAmount == 0 ? "0" : string.Format("{0:0,0}", bikeAmount);
                 lblRentEquipAmount.Text = equipAmount == 0 ? "0" : string.Format("{0:0,0}", equipAmount);
@@ -290,14 +290,14 @@ namespace RentBike
                 //============================================================
                 List<InOut> listInOut = GetMiddleInOut(storeId);
 
-                decimal totalIn = listInOut.Select(c =>c.IN_AMOUNT).DefaultIfEmpty().Sum();
-                decimal totalOut = listInOut.Select(c => c.OUT_AMOUNT).DefaultIfEmpty().Sum(); ;
+                decimal totalIn = listInOut.Select(c =>c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
+                decimal totalOut = listInOut.Select(c => c.OUT_AMOUNT).DefaultIfEmpty(0).Sum(); ;
 
                 lblSumAllIn.Text = totalIn == 0 ? "0" : string.Format("{0:0,0}", totalIn);
                 lblSumAllOut.Text = totalOut == 0 ? "0" : string.Format("{0:0,0}", totalOut);
 
                 List<Store> listStore = GetMiddleStore(storeId);
-                decimal totalCapital = listStore.Select(c =>c.START_CAPITAL).DefaultIfEmpty().Sum();
+                decimal totalCapital = listStore.Select(c =>c.START_CAPITAL).DefaultIfEmpty(0).Sum();
                 lblTotalInvest.Text = totalCapital == 0 ? "0" : string.Format("{0:0,0}", totalCapital);
             }
         }

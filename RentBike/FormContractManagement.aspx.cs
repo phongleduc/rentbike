@@ -54,7 +54,15 @@ namespace RentBike
 
         private void LoadData(string strSearch, int rentType)
         {
-            int storeid = Helper.parseInt(Session["store_id"].ToString());
+            int storeid = 0;
+            if (CheckAdminPermission())
+            {
+                storeid = Helper.parseInt(drpStore.SelectedValue);
+            }
+            else
+            { 
+               storeid = Helper.parseInt(Session["store_id"].ToString()); 
+            }
             List<CONTRACT_FULL_VW> dataList;
             using (var db = new RentBikeEntities())
             {
@@ -68,24 +76,6 @@ namespace RentBike
                     {
                         dataList = dataList.Where(c => c.RENT_TYPE_ID == rentType).ToList();
                     }
-                    //int totalRecord = st.Count();
-                    //int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-                    //List<int> pageList = new List<int>();
-                    //for (int i = 1; i <= totalPage; i++)
-                    //{
-                    //    pageList.Add(i);
-                    //}
-
-                    //ddlPager.DataSource = pageList;
-                    //ddlPager.DataBind();
-                    //if (pageList.Count > 0)
-                    //{
-                    //    ddlPager.SelectedIndex = page;
-                    //}
-
-                    //int skip = page * pageSize;
-                    //dataList = st.Skip(skip).Take(pageSize).ToList();
-
                     rptContract.DataSource = dataList;
                     rptContract.DataBind();
                 }
