@@ -42,6 +42,7 @@ namespace RentBike.Model
         public decimal RedundantFeeCar { get; set; }
         public decimal RedundantFeeEquip { get; set; }
         public decimal RedundantFeeOther { get; set; }
+        public string CssClass { get; set; }
 
 
     }

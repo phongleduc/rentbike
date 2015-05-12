@@ -46,6 +46,11 @@
                 <td>
                     <asp:Label ID="lblAmountLeft" runat="server" CssClass="text-right"></asp:Label></td>
             </tr>
+            <tr class="info">
+                <td>Tổng số phí còn thiếu:</td>
+                <td>
+                    <asp:Label ID="lblTotalAmoutLeft" runat="server" CssClass="text-right"></asp:Label></td>
+            </tr>
             </tbody>
             </table>
         </FooterTemplate>
@@ -54,7 +59,7 @@
     <table class="table table-striped table-hover" style="width: 50%; margin-left: 25%;">
         <tbody>
             <tr>
-                <td colspan="2" class="text-center">Chi tiết khoản trả phí</td>
+                <td colspan="2" class="text-center"><strong>Chi tiết khoản trả phí</strong></td>
             </tr>
             <tr>
                 <td class="text-right">Loại chi phí</td>
@@ -90,6 +95,8 @@
     </table>
     <script>
         $(document).ready(function () {
+            $('#<%=txtIncome.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
+
             $('input, textarea').keypress(function (e) {
                 if (e.which == 13) {
                     $('#<%=btnSave.ClientID %>').click();

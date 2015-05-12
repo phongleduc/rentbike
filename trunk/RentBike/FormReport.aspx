@@ -38,7 +38,7 @@
         <ItemTemplate>
             <tr id='<%# string.Format("HtmlTableRow{0}", Container.ItemIndex) %>' class="<%# Eval("CSS_CLASS") %>">
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><%# Eval("CUSTOMER_NAME") %><br />(<%# Convert.ToDateTime(Eval("BIRTH_DAY")).ToString("dd/MM/yyyy") %>)</td>
+                <td><strong><%# Eval("CUSTOMER_NAME") %></strong></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
                 <td><%# Eval("PHONE") %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY"))) %></td>

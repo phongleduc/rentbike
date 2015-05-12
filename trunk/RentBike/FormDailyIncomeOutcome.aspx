@@ -47,7 +47,7 @@
                     <div id='<%# String.Format("detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' style="display: none;">
                         <asp:Repeater ID="rptInOutDayDetail" runat="server" OnItemDataBound="rptInOutDayDetail_ItemDataBound">
                             <HeaderTemplate>
-                                <table class="table table-striped border_table" border="1">
+                                <table class="table border_table" border="1">
                                     <tr class="success">
                                         <th colspan="17" style="text-align: center">Chi tiết ngày:
                                             <asp:Literal ID="litInoutDate" runat="server"></asp:Literal></th>
@@ -79,7 +79,7 @@
                                     </tr>
                             </HeaderTemplate>
                             <ItemTemplate>
-                                <tr>
+                                <tr id="trItem" runat="server">
                                     <td>
                                         <asp:Literal ID="litNo" runat="server"></asp:Literal></td>
                                     <td>
@@ -116,7 +116,7 @@
                                 </tr>
                             </ItemTemplate>
                             <FooterTemplate>
-                                <tr>
+                                <tr class="background-green">
                                     <td colspan="2">&nbsp;</td>
                                     <td>
                                         <asp:Literal ID="litTotalContractFeeEquip" runat="server"></asp:Literal></td>
