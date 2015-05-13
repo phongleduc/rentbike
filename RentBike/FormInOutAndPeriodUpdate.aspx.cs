@@ -53,10 +53,10 @@ namespace RentBike
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            int inOutId = Helper.parseInt(Request.QueryString["id"]);
-            if (inOutId != 0)
+            using (var db = new RentBikeEntities())
             {
-                using (var db = new RentBikeEntities())
+                int inOutId = Helper.parseInt(Request.QueryString["id"]);
+                if (inOutId != 0)
                 {
                     var io = db.InOuts.FirstOrDefault(c => c.ID == inOutId);
                     // SAVE INOUT
@@ -65,14 +65,20 @@ namespace RentBike
                     io.UPDATED_BY = Session["username"].ToString();
                     io.UPDATED_DATE = DateTime.Now;
                     db.SaveChanges();
+                }
 
+                int periodId = Helper.parseInt(Request.QueryString["pid"]);
+                if (periodId != 0)
+                {
                     // SAVE PERIOD
-                    var pp = db.PayPeriods.FirstOrDefault(s => s.ID == io.PERIOD_ID);
+                    var pp = db.PayPeriods.FirstOrDefault(s => s.ID == periodId);
                     pp.ACTUAL_PAY = Convert.ToDecimal(txtIncome.Text);
                     db.SaveChanges();
+
+                    Response.Redirect(string.Format("FormInOutUpdate.aspx?ID={0}", periodId), false);
                 }
+                Response.Redirect("FormDailyIncomeOutcome.aspx", false);
             }
-            Response.Redirect(string.Format("FormInOutUpdate.aspx?ID={0}", Request.QueryString["pid"]), false);
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)

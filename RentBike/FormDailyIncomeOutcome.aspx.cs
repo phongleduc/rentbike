@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -351,6 +352,7 @@ namespace RentBike
             foreach (var c in listInOutOther)
             {
                 SummaryInfo si = new SummaryInfo();
+                si.InOutId = c.ID;
                 si.CssClass = "background-yellow";
 
                 switch (c.INOUT_TYPE_ID)
@@ -414,7 +416,23 @@ namespace RentBike
                 trItem.Attributes.Add("class", inout.CssClass);
 
                 litNo.Text = (e.Item.ItemIndex + 1).ToString();
-                litCustomerName.Text = inout.CustomerName;
+                if (inout.InOutId > 0)
+                {
+                    using (StringWriter stringWriter = new StringWriter())
+                    {
+                        // Put HtmlTextWriter in using block because it needs to call Dispose.
+                        using (HtmlTextWriter writer = new HtmlTextWriter(stringWriter))
+                        {
+                            writer.AddAttribute(HtmlTextWriterAttribute.Href, "FormDailyIncomeOutcomeUpdate.aspx?id=" + inout.InOutId);
+                            writer.RenderBeginTag(HtmlTextWriterTag.A);
+                            writer.Write(inout.CustomerName);
+                            writer.RenderEndTag();
+                            litCustomerName.Text = stringWriter.ToString();
+                        }
+                    }
+                }
+                else
+                    litCustomerName.Text = inout.CustomerName;
 
 
                 litContractFeeEquip.Text = inout.ContractFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", inout.ContractFeeEquip);
@@ -441,7 +459,7 @@ namespace RentBike
         protected void lnkExportExcel_Click(object sender, EventArgs e)
         {
             LinkButton lnkExportExcel = sender as LinkButton;
-            if (string.IsNullOrEmpty(lnkExportExcel.CommandArgument) == null) return;
+            if (string.IsNullOrEmpty(lnkExportExcel.CommandArgument)) return;
 
             DateTime date = Convert.ToDateTime(lnkExportExcel.CommandArgument);
             List<SummaryInfo> listSI = GetDailyData(date);
