@@ -11,16 +11,20 @@ namespace RentBike
 {
     public partial class FormDailyIncomeOutcomeUpdate : Page
     {
+        private int inOutId = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["store_id"] == null)
             {
                 Response.Redirect("FormLogin.aspx");
             }
+
+            inOutId = Helper.parseInt(Request.QueryString["id"]);
             if (!IsPostBack)
             {
                 LoadStore();
                 LoadInOutType();
+                LoadInfor();
             }
         }
 
@@ -40,9 +44,7 @@ namespace RentBike
                     }
                     ddlStore.SelectedValue = Convert.ToString(Session["store_id"]);
                     if (!CheckAdminPermission())
-                    {
                         ddlStore.Enabled = false;
-                    }
                 }
             }
         }
@@ -57,62 +59,121 @@ namespace RentBike
                            select itm;
 
                 lst = item.ToList();
-            }
 
-            ddlInOutFee.DataSource = lst;
-            if (lst.Count > 0)
-            {
-                ddlInOutFee.DataValueField = "ID";
-                ddlInOutFee.DataTextField = "NAME";
+                if (lst.Count > 0)
+                {
+                    ddlInOutFee.DataValueField = "ID";
+                    ddlInOutFee.DataTextField = "NAME";
+
+                    ddlInOutFee.DataSource = lst;
+                    ddlInOutFee.DataBind();
+
+                    if (inOutId != 0)
+                    {
+                        var io = db.InOuts.FirstOrDefault(c => c.ID == inOutId);
+                        ddlInOutFee.SelectedValue = io.INOUT_TYPE_ID.ToString();
+                    }
+                }
             }
-            ddlInOutFee.DataBind();
+        }
+
+        private void LoadInfor()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                if (inOutId == 0) return;
+
+                var io = db.InOuts.FirstOrDefault(c => c.ID == inOutId);
+                if (io != null)
+                {
+                    var ioType = db.InOutTypes.FirstOrDefault(c => c.ID == io.INOUT_TYPE_ID);
+                    if (ioType != null)
+                    {
+                        if (ioType.IS_INCOME)
+                            txtFeeAmount.Text = io.IN_AMOUNT.ToString();
+                        else
+                            txtFeeAmount.Text = io.OUT_AMOUNT.ToString();
+                    }
+                    txtMoreInfo.Text = io.MORE_INFO;
+                }
+            }
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
             using (TransactionScope ts = new TransactionScope())
             {
-                InOut io = new InOut();
-                io.INOUT_TYPE_ID = Convert.ToInt32(ddlInOutFee.SelectedValue);
-                io.MORE_INFO = txtMoreInfo.Text.Trim();
-                io.SEARCH_TEXT = string.Format("");
-                io.CONTRACT_ID = -1;
-                io.PERIOD_ID = -1;
-                io.RENT_TYPE_ID = -1;
-                io.PERIOD_DATE = new DateTime(1, 1, 1);
-                if (ddlStore.Enabled == false)
-                {
-                    io.STORE_ID = Convert.ToInt32(Session["store_id"]);
-                }
-                else
-                {
-                    io.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
-                }
-
-
                 using (var db = new RentBikeEntities())
                 {
-                    var item = db.InOutTypes.FirstOrDefault(s => s.ID == io.INOUT_TYPE_ID);
-
-                    if (item.IS_INCOME)
+                    InOut io = db.InOuts.FirstOrDefault(c => c.ID == inOutId);
+                    if (io == null)
                     {
-                        io.IN_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
-                        io.OUT_AMOUNT = 0;
+                        io = new InOut();
+                        io.INOUT_TYPE_ID = Convert.ToInt32(ddlInOutFee.SelectedValue);
+                        io.MORE_INFO = txtMoreInfo.Text.Trim();
+                        io.CONTRACT_ID = -1;
+                        io.PERIOD_ID = -1;
+                        io.RENT_TYPE_ID = -1;
+                        io.PERIOD_DATE = new DateTime(1, 1, 1);
+                        if (ddlStore.Enabled == false)
+                        {
+                            io.STORE_ID = Convert.ToInt32(Session["store_id"]);
+                        }
+                        else
+                        {
+                            io.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
+                        }
+
+                        var item = db.InOutTypes.FirstOrDefault(s => s.ID == io.INOUT_TYPE_ID);
+
+                        if (item.IS_INCOME)
+                        {
+                            io.IN_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
+                            io.OUT_AMOUNT = 0;
+                        }
+                        else
+                        {
+                            io.IN_AMOUNT = 0;
+                            io.OUT_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
+                        }
+
+                        io.INOUT_DATE = DateTime.Now;
+                        io.SEARCH_TEXT = string.Format("{0} {1} {2}", io.INOUT_DATE, io.MORE_INFO, item.NAME);
+                        io.CREATED_BY = Session["username"].ToString();
+                        io.CREATED_DATE = DateTime.Now;
+                        io.UPDATED_BY = Session["username"].ToString();
+                        io.UPDATED_DATE = DateTime.Now;
+
+                        db.InOuts.Add(io);
                     }
                     else
                     {
-                        io.IN_AMOUNT = 0;
-                        io.OUT_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
+                        io.INOUT_TYPE_ID = Convert.ToInt32(ddlInOutFee.SelectedValue);
+                        io.MORE_INFO = txtMoreInfo.Text.Trim();
+                        if (ddlStore.Enabled == false)
+                        {
+                            io.STORE_ID = Convert.ToInt32(Session["store_id"]);
+                        }
+                        else
+                        {
+                            io.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
+                        }
+
+                        var item = db.InOutTypes.FirstOrDefault(s => s.ID == io.INOUT_TYPE_ID);
+                        if (item.IS_INCOME)
+                        {
+                            io.IN_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
+                            io.OUT_AMOUNT = 0;
+                        }
+                        else
+                        {
+                            io.IN_AMOUNT = 0;
+                            io.OUT_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
+                        }
+                        io.SEARCH_TEXT = string.Format("{0} {1} {2}", io.INOUT_DATE, io.MORE_INFO, item.NAME);
+                        io.UPDATED_BY = Session["username"].ToString();
+                        io.UPDATED_DATE = DateTime.Now;
                     }
-
-                    io.INOUT_DATE = DateTime.Now;
-                    io.SEARCH_TEXT = string.Format("{0} {1} {2}", io.INOUT_DATE, io.MORE_INFO, item.NAME);
-                    io.CREATED_BY = Session["username"].ToString();
-                    io.CREATED_DATE = DateTime.Now;
-                    io.UPDATED_BY = Session["username"].ToString();
-                    io.UPDATED_DATE = DateTime.Now;
-
-                    db.InOuts.Add(io);
                     db.SaveChanges();
                 }
 

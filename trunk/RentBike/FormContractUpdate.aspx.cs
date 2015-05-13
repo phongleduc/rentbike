@@ -680,7 +680,12 @@ namespace RentBike
 
                                 //Update for others in out record of the contract
                                 var listInOut = db.InOuts.Where(c => c.CONTRACT_ID == contractId && c.RENT_TYPE_ID == item.RENT_TYPE_ID).ToList();
-                                listInOut.ForEach(c => c.RENT_TYPE_ID = rentTypeId);
+                                foreach (var io in listInOut)
+                                {
+                                    io.RENT_TYPE_ID = rentTypeId;
+                                    io.UPDATED_BY = Session["username"].ToString();
+                                    io.UPDATED_DATE = DateTime.Now;
+                                }
 
                                 //Update for 3 first PayPeriod records
                                 List<PayPeriod> listPayPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId).ToList();

@@ -13,6 +13,7 @@ namespace RentBike.Model
         public int StoreId { get; set; }
         public List<DateTime> ListEquipPeriodDate { get; set; }
         public List<DateTime> ListCarAndOtherEquPeriodDate { get; set; }
+        public int InOutId { get; set; }
         public DateTime InOutDate { get; set; }
         public string RentTypeName { get; set; }
         public int CustomerId { get; set; }
