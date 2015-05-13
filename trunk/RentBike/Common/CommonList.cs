@@ -112,6 +112,26 @@ namespace RentBike.Common
             }
             return string.Empty;
         }
+
+        public static int GetInoutTypeFromRentType(int rentTypeId)
+        {
+            int inOutType = 0;
+            switch (rentTypeId)
+            {
+                case 1:
+                    inOutType = 17;
+                    break;
+                case 2:
+                    inOutType = 22;
+                    break;
+                case 3:
+                    inOutType = 23;
+                    break;
+                default:
+                    break;
+            }
+            return inOutType;
+        }
         public static void AutoExtendContract(RentBikeEntities db, Contract contract)
         {
             if (contract != null)

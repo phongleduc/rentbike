@@ -104,7 +104,7 @@ namespace RentBike
 
                             BuildPhotoLibrary(cntrct);
 
-                            ddlStore.Enabled = txtContractNo.Enabled = ddlRentType.Enabled = txtAmount.Enabled = txtFeePerDay.Enabled = txtRentDate.Enabled = txtEndDate.Enabled = false;
+                            ddlStore.Enabled = txtContractNo.Enabled = txtRentDate.Enabled = txtEndDate.Enabled = false;
 
                             LoadPayFeeSchedule();
                         }
@@ -279,29 +279,25 @@ namespace RentBike
                 litPhoto.Text = stringWriter.ToString();
             }
         }
-        private StringWriter BuildPhotoData(string photo, string thumbnailPhoto)
+        private void BuildPhotoData(HtmlTextWriter writer, string photo, string thumbnailPhoto)
         {
             // Initialize StringWriter instance.
             StringWriter stringWriter = new StringWriter();
 
             // Put HtmlTextWriter in using block because it needs to call Dispose.
-            using (HtmlTextWriter writer = new HtmlTextWriter(stringWriter))
+            if (!string.IsNullOrEmpty(photo) && !string.IsNullOrEmpty(thumbnailPhoto))
             {
-                if (!string.IsNullOrEmpty(photo) && !string.IsNullOrEmpty(thumbnailPhoto))
-                {
-                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
-                    writer.AddAttribute("data-fancybox-group", "button");
-                    writer.AddAttribute(HtmlTextWriterAttribute.Href, photo);
-                    writer.RenderBeginTag(HtmlTextWriterTag.A);
+                writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
+                writer.AddAttribute("data-fancybox-group", "button");
+                writer.AddAttribute(HtmlTextWriterAttribute.Href, photo);
+                writer.RenderBeginTag(HtmlTextWriterTag.A);
 
-                    writer.AddAttribute("src", thumbnailPhoto);
-                    writer.AddAttribute("alt", "");
-                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
-                    writer.RenderEndTag(); //End of Img
+                writer.AddAttribute("src", thumbnailPhoto);
+                writer.AddAttribute("alt", "");
+                writer.RenderBeginTag(HtmlTextWriterTag.Img);
+                writer.RenderEndTag(); //End of Img
 
-                    writer.RenderEndTag(); //End of A
-                }
-                return stringWriter;
+                writer.RenderEndTag(); //End of A
             }
         }
 
@@ -653,16 +649,83 @@ namespace RentBike
                     }
                     else // EDIT
                     {
-                        int contractId = Convert.ToInt32(id);
+                        int contractId = Helper.parseInt(id);
+                        bool bUpdateInOutAndPeriod = false;
                         using (var db = new RentBikeEntities())
                         {
                             var item = db.Contracts.FirstOrDefault(itm => itm.ID == contractId);
+                            int rentTypeId = Helper.parseInt(ddlRentType.SelectedValue);
+                            decimal contractAmount = Convert.ToDecimal(txtAmount.Text);
+                            decimal feePerDay = Convert.ToDecimal(txtFeePerDay.Text);
 
+                            if (contractAmount != item.CONTRACT_AMOUNT || rentTypeId != item.RENT_TYPE_ID || feePerDay != item.FEE_PER_DAY)
+                                bUpdateInOutAndPeriod = true;
+
+
+                            if (bUpdateInOutAndPeriod)
+                            {
+                                //Update for contract record only.
+                                int inOutTypeId = CommonList.GetInoutTypeFromRentType(item.RENT_TYPE_ID);
+                                var inOut = db.InOuts.FirstOrDefault(c =>c.CONTRACT_ID == contractId && c.INOUT_TYPE_ID == inOutTypeId);
+                                if (inOut != null)
+                                {
+                                    // SAVE INOUT
+                                    inOut.OUT_AMOUNT = contractAmount;
+                                    inOut.RENT_TYPE_ID = rentTypeId;
+                                    inOut.INOUT_TYPE_ID = CommonList.GetInoutTypeFromRentType(rentTypeId);
+                                    inOut.MORE_INFO = inOut.SEARCH_TEXT = string.Format("Cho khách {0} thuê: {1} ngày {2} trị giá {3}", txtCustomerName.Text.Trim(), txtItemName.Text.Trim(), DateTime.Now.ToString("dd/MM/yyyy"), txtAmount.Text.Trim());
+                                    inOut.UPDATED_BY = Session["username"].ToString();
+                                    inOut.UPDATED_DATE = DateTime.Now;
+                                }
+
+                                //Update for others in out record of the contract
+                                var listInOut = db.InOuts.Where(c => c.CONTRACT_ID == contractId && c.RENT_TYPE_ID == item.RENT_TYPE_ID).ToList();
+                                listInOut.ForEach(c => c.RENT_TYPE_ID = rentTypeId);
+
+                                //Update for 3 first PayPeriod records
+                                List<PayPeriod> listPayPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId).ToList();
+                                foreach (var pp in listPayPeriod.Take(3))
+                                {
+                                    pp.AMOUNT_PER_PERIOD = feePerDay * 10;
+                                }
+
+                                //Update for remain PayPeriod records
+                                int multipleFee = Convert.ToInt32(Decimal.Floor(contractAmount / 100000));
+                                decimal increateFeeCar = (feePerDay * 10) + (multipleFee * 50 * 10);
+                                decimal increateFeeEquip = (feePerDay * 10) + (multipleFee * 100 * 10);
+                                decimal increateFeeOther = (feePerDay * 10);
+                                foreach (var pp in listPayPeriod.Skip(3))
+                                {
+                                    switch (rentTypeId)
+                                    {
+                                        case 1:
+                                            if (((feePerDay / multipleFee) * 10) < 4000)
+                                                pp.AMOUNT_PER_PERIOD = increateFeeCar;
+                                            else
+                                                pp.AMOUNT_PER_PERIOD = feePerDay * 10;
+                                            break;
+                                        case 2:
+                                            if (((feePerDay / multipleFee) * 10) < 6000)
+                                                pp.AMOUNT_PER_PERIOD = increateFeeEquip;
+                                            else
+                                                pp.AMOUNT_PER_PERIOD = feePerDay * 10;
+                                            break;
+                                        default:
+                                            pp.AMOUNT_PER_PERIOD = increateFeeOther;
+                                            break;
+                                    }
+                                }
+                            }
+
+                            //Update contract infor
                             item.NOTE = txtNote.Text;
                             item.REFERENCE_ID = -1;
                             item.REFERENCE_NAME = txtReferencePerson.Text.Trim();
                             item.ITEM_TYPE = txtItemName.Text.Trim();
                             item.ITEM_LICENSE_NO = txtItemLicenseNo.Text.Trim();
+                            item.RENT_TYPE_ID = Helper.parseInt(ddlRentType.SelectedValue);
+                            item.CONTRACT_AMOUNT = Convert.ToDecimal(txtAmount.Text);
+                            item.FEE_PER_DAY = Convert.ToDecimal(txtFeePerDay.Text);
                             item.SERIAL_1 = txtSerial1.Text.Trim();
                             item.SERIAL_2 = txtSerial2.Text.Trim();
                             item.REFERENCE_PHONE = txtReferencePhone.Text.Trim();
@@ -671,10 +734,22 @@ namespace RentBike
                             item.IMPLEMENTER = txtImplementer.Text.Trim();
                             item.BACK_TO_DOCUMENTS = txtBackDocument.Text.Trim();
                             item.DETAIL = txtItemDetail.Text.Trim();
+                            item.SEARCH_TEXT = string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}",
+                                                        txtCustomerName.Text.Trim(),
+                                                        txtBirthDay.Text.Trim(),
+                                                        txtLicenseNumber.Text.Trim(),
+                                                        txtRangeDate.Text.Trim(),
+                                                        txtPermanentResidence.Text.Trim(),
+                                                        txtCurrentResidence.Text.Trim(),
+                                                        txtPhone.Text.Trim(),
+                                                        item.CONTRACT_NO,
+                                                        item.RENT_DATE.ToString("dd/MM/yyyy"));
 
                             item.UPDATED_BY = Session["username"].ToString();
                             item.UPDATED_DATE = DateTime.Now;
+                            //Contract photo
                             SavePhoto(item);
+                            //Update customer infor
                             var cusItem = db.Customers.FirstOrDefault(c => c.ID == item.CUSTOMER_ID);
                             if (cusItem != null)
                             {
@@ -956,7 +1031,7 @@ namespace RentBike
             }
         }
 
-        
+
         private void LoadStore(List<Store> lst)
         {
             ddlStore.DataSource = lst;
