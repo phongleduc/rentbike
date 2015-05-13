@@ -102,7 +102,7 @@ namespace RentBike
                     else
                     {
                         io.IN_AMOUNT = 0;
-                        io.OUT_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim().Replace(",",string.Empty));
+                        io.OUT_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
                     }
 
                     io.INOUT_DATE = DateTime.Now;

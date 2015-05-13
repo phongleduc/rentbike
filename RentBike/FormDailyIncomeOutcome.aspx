@@ -116,7 +116,7 @@
                                 </tr>
                             </ItemTemplate>
                             <FooterTemplate>
-                                <tr class="background-green">
+                                <tr class="background-green-yellow">
                                     <td colspan="2">&nbsp;</td>
                                     <td>
                                         <asp:Literal ID="litTotalContractFeeEquip" runat="server"></asp:Literal></td>

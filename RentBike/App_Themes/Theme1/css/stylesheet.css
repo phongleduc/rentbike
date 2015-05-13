@@ -130,14 +130,6 @@ body {
     color:black !important;
 }
 
-.background-yellow {
-    background-color: yellow !important;
-}
-
-.background-green {
-    background-color: #92D050 !important;
-}
-
 input.error { border: 1px solid #A94442; }
 label.error {
 	background: url('App_Themes/Theme1/image/unchecked.gif') no-repeat;
@@ -164,4 +156,12 @@ label.valid {
 
 .background-green {
     background-color: #96F9B9;
+}
+
+.background-yellow {
+    background-color: yellow;
+}
+
+.background-green-yellow {
+    background-color: #92D050;
 }

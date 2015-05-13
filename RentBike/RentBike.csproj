@@ -102,6 +102,7 @@
     <Content Include="App_Themes\Theme1\image\tick-blue.png" />
     <Content Include="App_Themes\Theme1\image\tick-orange.png" />
     <Content Include="App_Themes\Theme1\image\unchecked.gif" />
+    <Content Include="FormInOutAndPeriodUpdate.aspx" />
     <Content Include="FormReport.aspx" />
     <Content Include="script\date.js" />
     <Content Include="script\fancybox\blank.gif" />
@@ -205,6 +206,13 @@
     </Compile>
     <Compile Include="FormAction.aspx.designer.cs">
       <DependentUpon>FormAction.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FormInOutAndPeriodUpdate.aspx.cs">
+      <DependentUpon>FormInOutAndPeriodUpdate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FormInOutAndPeriodUpdate.aspx.designer.cs">
+      <DependentUpon>FormInOutAndPeriodUpdate.aspx</DependentUpon>
     </Compile>
     <Compile Include="FormReport.aspx.cs">
       <DependentUpon>FormReport.aspx</DependentUpon>

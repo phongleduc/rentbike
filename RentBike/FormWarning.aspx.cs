@@ -363,8 +363,8 @@ namespace RentBike
                         worksheet.Cells[index, 2].IsRichText = true;
                         ExcelRichText ert = worksheet.Cells[index, 2].RichText.Add(contract.CUSTOMER_NAME);
                         ert.Bold = true;
-                        ert = worksheet.Cells[index, 2].RichText.Add("\n(" + (contract.BIRTH_DAY == null ? "" : contract.BIRTH_DAY.Value.ToString("dd/MM/yyyy")) + ")");
-                        ert.Bold = false;
+                        //ert = worksheet.Cells[index, 2].RichText.Add("\n(" + (contract.BIRTH_DAY == null ? "" : contract.BIRTH_DAY.Value.ToString("dd/MM/yyyy")) + ")");
+                        //ert.Bold = false;
 
                         worksheet.Cells[index, 3].Value = contract.RENT_TYPE_NAME;
                         worksheet.Cells[index, 4].Value = contract.PHONE;
@@ -403,7 +403,7 @@ namespace RentBike
                     {
                         date = Convert.ToDateTime(txtDate.Text);
                     }
-                    string fileName = string.Format("DSGP {0}.{1}", date.ToString("dd-MM-yyyy"), ".xlsx");
+                    string fileName = string.Format("DSGP {0}.{1}", date.ToString("dd-MM-yyyy"), "xlsx");
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     Response.AddHeader("content-disposition", "attachment; filename=\"" + fileName + "\"");
                     Response.BinaryWrite(package.GetAsByteArray());
