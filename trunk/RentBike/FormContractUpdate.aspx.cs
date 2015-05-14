@@ -42,7 +42,7 @@ namespace RentBike
                         {
                             int contractId = Helper.parseInt(id);
                             var contract = db.Contracts.FirstOrDefault(c => c.CONTRACT_STATUS == true && c.ID == contractId);
-                            CommonList.AutoExtendPeriod(db, contract);
+                            CommonList.AutoExtendPeriod(db, contractId);
 
                             IsNewContract = false;
                             ContractID = id;
@@ -521,7 +521,7 @@ namespace RentBike
                             rbdb.InOuts.Add(io);
                             rbdb.SaveChanges();
 
-                            CommonList.AutoExtendPeriod(rbdb, item);
+                            CommonList.AutoExtendPeriod(rbdb, item.ID);
                         }
 
                         WriteLog(Constants.ACTION_CREATE_CONTRACT, false);

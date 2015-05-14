@@ -93,8 +93,9 @@ namespace RentBike.Common
             }
         }
 
-        public static void AutoExtendPeriod(RentBikeEntities db, Contract contract)
+        public static void AutoExtendPeriod(RentBikeEntities db, int contractId)
         {
+            Contract contract = db.Contracts.FirstOrDefault(c =>c.ID == contractId && c.CONTRACT_STATUS == true);
             if (contract != null)
             {
                 DateTime endDate = contract.END_DATE;
@@ -106,7 +107,6 @@ namespace RentBike.Common
                     int percentDate = overDate / 30;
                     DateTime endDateUpdated = extendEndDate.AddDays(30 * (percentDate + 1));
                     contract.EXTEND_END_DATE = endDateUpdated;
-                    db.SaveChanges();
 
                     var listPayPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
                     PayPeriod lastPayPeriod = listPayPeriod.LastOrDefault();
@@ -125,6 +125,9 @@ namespace RentBike.Common
                         }
                         lastPayPeriod = CreateOneMorePayPeriod(db, contract, lastPayPeriod.PAY_DATE, multipleFee, increateFeeCar, increateFeeEquip, increateFeeOther, false);
                     }
+
+                    contract.EXTEND_END_DATE = lastPayPeriod.PAY_DATE;
+                    db.SaveChanges();
                 }
             }
         }
@@ -233,7 +236,7 @@ namespace RentBike.Common
                 var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
                 foreach (var contract in contracts)
                 {
-                    CommonList.AutoExtendPeriod(db, contract);
+                    CommonList.AutoExtendPeriod(db, contract.ID);
                 }
             }
         }
