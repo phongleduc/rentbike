@@ -92,7 +92,7 @@ namespace RentBike
                 }
                 if (txtOldPassword.Text.Trim().Length > 0)
                 {
-                    if (CommonList.EncryptPassword(txtOldPassword.Text.Trim()) != item.PASSWORD)
+                    if (Helper.EncryptPassword(txtOldPassword.Text.Trim()) != item.PASSWORD)
                     {
                         return "Mật khẩu cũ không đúng.";
                     }
@@ -155,7 +155,7 @@ namespace RentBike
                 // New account
                 Account item = new Account();
                 item.ACC = txtAccount.Text.Trim();
-                item.PASSWORD = CommonList.EncryptPassword(txtNewPassword.Text.Trim());
+                item.PASSWORD = Helper.EncryptPassword(txtNewPassword.Text.Trim());
                 txtOldPassword.Enabled = false;
                 txtConfirmPassword.Enabled = false;
                 item.PERMISSION_ID = Convert.ToInt32(ddlPermission.SelectedValue);
@@ -175,7 +175,7 @@ namespace RentBike
                     rb.Accounts.Add(item);
                     rb.SaveChanges();
                 }
-                WriteLog(CommonList.ACTION_CREATE_ACCOUNT, false);
+                WriteLog(Constants.ACTION_CREATE_ACCOUNT, false);
             }
             else
             {
@@ -190,7 +190,7 @@ namespace RentBike
                     item.ACC = txtAccount.Text.Trim();
                     if (txtOldPassword.Text.Trim().Length > 0)
                     {
-                        item.PASSWORD = CommonList.EncryptPassword(txtNewPassword.Text.Trim());
+                        item.PASSWORD = Helper.EncryptPassword(txtNewPassword.Text.Trim());
                     }
                     item.PERMISSION_ID = Convert.ToInt32(ddlPermission.SelectedValue);
                     item.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
@@ -202,7 +202,7 @@ namespace RentBike
                     item.NOTE = txtNote.Text.Trim();
 
                     db.SaveChanges();
-                    WriteLog(CommonList.ACTION_UPDATE_ACCOUNT, false);
+                    WriteLog(Constants.ACTION_UPDATE_ACCOUNT, false);
                 }
             }
             Response.Redirect("FormAccountManagement.aspx");

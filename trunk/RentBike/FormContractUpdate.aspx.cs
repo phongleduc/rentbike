@@ -203,76 +203,10 @@ namespace RentBike
             // Put HtmlTextWriter in using block because it needs to call Dispose.
             using (HtmlTextWriter writer = new HtmlTextWriter(stringWriter))
             {
-                writer.RenderBeginTag(HtmlTextWriterTag.P);
-                if (!string.IsNullOrEmpty(cntrct.PHOTO_1) && !string.IsNullOrEmpty(cntrct.THUMBNAIL_PHOTO_1))
+                writer.RenderBeginTag(HtmlTextWriterTag.P); // Start of P
+                for (int i = 1; i <= 5; i++)
                 {
-                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
-                    writer.AddAttribute("data-fancybox-group", "button");
-                    writer.AddAttribute(HtmlTextWriterAttribute.Href, cntrct.PHOTO_1);
-                    writer.RenderBeginTag(HtmlTextWriterTag.A);
-
-                    writer.AddAttribute("src", cntrct.THUMBNAIL_PHOTO_1);
-                    writer.AddAttribute("alt", "");
-                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
-                    writer.RenderEndTag(); //End of Img
-
-                    writer.RenderEndTag(); //End of A
-                }
-                if (!string.IsNullOrEmpty(cntrct.PHOTO_2) && !string.IsNullOrEmpty(cntrct.THUMBNAIL_PHOTO_2))
-                {
-                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
-                    writer.AddAttribute("data-fancybox-group", "button");
-                    writer.AddAttribute(HtmlTextWriterAttribute.Href, cntrct.PHOTO_2);
-                    writer.RenderBeginTag(HtmlTextWriterTag.A);
-
-                    writer.AddAttribute("src", cntrct.THUMBNAIL_PHOTO_2);
-                    writer.AddAttribute("alt", "");
-                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
-                    writer.RenderEndTag(); //End of Img
-
-                    writer.RenderEndTag(); //End of A
-                }
-                if (!string.IsNullOrEmpty(cntrct.PHOTO_3) && !string.IsNullOrEmpty(cntrct.THUMBNAIL_PHOTO_3))
-                {
-                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
-                    writer.AddAttribute("data-fancybox-group", "button");
-                    writer.AddAttribute(HtmlTextWriterAttribute.Href, cntrct.PHOTO_3);
-                    writer.RenderBeginTag(HtmlTextWriterTag.A);
-
-                    writer.AddAttribute("src", cntrct.THUMBNAIL_PHOTO_3);
-                    writer.AddAttribute("alt", "");
-                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
-                    writer.RenderEndTag(); //End of Img
-
-                    writer.RenderEndTag(); //End of A
-                }
-                if (!string.IsNullOrEmpty(cntrct.PHOTO_4) && !string.IsNullOrEmpty(cntrct.THUMBNAIL_PHOTO_4))
-                {
-                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
-                    writer.AddAttribute("data-fancybox-group", "button");
-                    writer.AddAttribute(HtmlTextWriterAttribute.Href, cntrct.PHOTO_4);
-                    writer.RenderBeginTag(HtmlTextWriterTag.A);
-
-                    writer.AddAttribute("src", cntrct.THUMBNAIL_PHOTO_4);
-                    writer.AddAttribute("alt", "");
-                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
-                    writer.RenderEndTag(); //End of Img
-
-                    writer.RenderEndTag(); //End of A
-                }
-                if (!string.IsNullOrEmpty(cntrct.PHOTO_5) && !string.IsNullOrEmpty(cntrct.THUMBNAIL_PHOTO_5))
-                {
-                    writer.AddAttribute(HtmlTextWriterAttribute.Class, "fancybox-buttons");
-                    writer.AddAttribute("data-fancybox-group", "button");
-                    writer.AddAttribute(HtmlTextWriterAttribute.Href, cntrct.PHOTO_5);
-                    writer.RenderBeginTag(HtmlTextWriterTag.A);
-
-                    writer.AddAttribute("src", cntrct.THUMBNAIL_PHOTO_5);
-                    writer.AddAttribute("alt", "");
-                    writer.RenderBeginTag(HtmlTextWriterTag.Img);
-                    writer.RenderEndTag(); //End of Img
-
-                    writer.RenderEndTag(); //End of A
+                    BuildPhotoData(writer, Convert.ToString(Helper.ReflectPropertyValue(cntrct, "PHOTO_" + i)), Convert.ToString(Helper.ReflectPropertyValue(cntrct, "THUMBNAIL_PHOTO_" + i)));
                 }
                 writer.RenderEndTag();  //End of P
 
@@ -281,9 +215,6 @@ namespace RentBike
         }
         private void BuildPhotoData(HtmlTextWriter writer, string photo, string thumbnailPhoto)
         {
-            // Initialize StringWriter instance.
-            StringWriter stringWriter = new StringWriter();
-
             // Put HtmlTextWriter in using block because it needs to call Dispose.
             if (!string.IsNullOrEmpty(photo) && !string.IsNullOrEmpty(thumbnailPhoto))
             {
@@ -644,7 +575,7 @@ namespace RentBike
                             CommonList.AutoExtendContract(rbdb, item);
                         }
 
-                        WriteLog(CommonList.ACTION_CREATE_CONTRACT, false);
+                        WriteLog(Constants.ACTION_CREATE_CONTRACT, false);
                         ts.Complete();
                     }
                     else // EDIT
@@ -771,7 +702,7 @@ namespace RentBike
                             db.SaveChanges();
                         }
 
-                        WriteLog(CommonList.ACTION_UPDATE_CONTRACT, false);
+                        WriteLog(Constants.ACTION_UPDATE_CONTRACT, false);
                         ts.Complete();
                     }
                     Response.Redirect("FormContractManagement.aspx", false);

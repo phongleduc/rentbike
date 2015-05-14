@@ -172,7 +172,7 @@ namespace RentBike
                     db.SaveChanges();
                 }
                 // Writelog
-                WriteLog(CommonList.ACTION_CLOSE_CONTRACT, false);
+                WriteLog(Constants.ACTION_CLOSE_CONTRACT, false);
 
                 using (var db = new RentBikeEntities())
                 {
