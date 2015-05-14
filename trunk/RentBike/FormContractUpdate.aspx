@@ -175,7 +175,7 @@
                                     </asp:Label>
                                     <asp:Label ID="lblOrange" runat="server" Visible='<%# ShowOrangeImage(Convert.ToDecimal(Eval("AMOUNT_PER_PERIOD")), Convert.ToDecimal(Eval("ACTUAL_PAY"))) %>'>
                                         &nbsp;&nbsp;&nbsp;<img src="App_Themes/Theme1/image/tick-orange.png" />&nbsp;
-                                    Còn thiếu&nbsp;<%# Convert.ToDecimal(Eval("AMOUNT_PER_PERIOD")) -  Convert.ToDecimal(Eval("ACTUAL_PAY"))%> VNĐ
+                                    Còn thiếu&nbsp;<%# RentBike.Common.Helper.FormatedAsCurrency(Convert.ToDecimal(Eval("AMOUNT_PER_PERIOD")) -  Convert.ToDecimal(Eval("ACTUAL_PAY")))%> VNĐ
                                     </asp:Label>
                                 </div>
                                 <br />

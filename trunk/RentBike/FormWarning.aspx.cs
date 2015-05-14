@@ -72,16 +72,16 @@ namespace RentBike
             List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
             using (var db = new RentBikeEntities())
             {
-                var st = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true);
+                var st = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true);
                 if (storeId != 0)
                 {
-                    st = st.Where(c => c.STORE_ID == storeId);
+                    st = st.Where(c =>c.STORE_ID == storeId);
                 }
                 if (!string.IsNullOrEmpty(strSearch))
                 {
-                    st = st.Where(c => c.SEARCH_TEXT.Contains(strSearch));
+                    st = st.Where(c =>c.SEARCH_TEXT.Contains(strSearch));
                 }
-                st = st.OrderByDescending(c => c.ID);
+                st = st.OrderByDescending(c =>c.ID);
 
                 string searchDate = string.Empty;
                 if (!string.IsNullOrEmpty(date))
@@ -89,10 +89,10 @@ namespace RentBike
                     searchDate = Convert.ToDateTime(date).ToString("yyyyMMdd");
                 }
 
-                var lstPeriod = db.PayPeriods.Where(s => s.STATUS == true).ToList();
+                var lstPeriod = db.PayPeriods.Where(s =>s.STATUS == true).ToList();
                 foreach (CONTRACT_FULL_VW c in st)
                 {
-                    var inOutList = db.InOuts.Where(s => s.CONTRACT_ID == c.ID).ToList();
+                    var inOutList = db.InOuts.Where(s =>s.CONTRACT_ID == c.ID).ToList();
 
                     c.PAYED_TIME = 0;
                     c.PAY_DATE = c.RENT_DATE;
@@ -104,10 +104,10 @@ namespace RentBike
                         nowDate = Convert.ToDateTime(date);
                     }
                     string contactId = c.ID.ToString();
-                    var tmpLstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID).ToList();
+                    var tmpLstPeriod = lstPeriod.Where(s =>s.CONTRACT_ID == c.ID).ToList();
                     if (tmpLstPeriod != null)
                     {
-                        decimal paidAmount = tmpLstPeriod.Where(s => s.ACTUAL_PAY > 0).Select(s => s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                        decimal paidAmount = tmpLstPeriod.Where(s =>s.ACTUAL_PAY > 0).Select(s =>s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
                         int paidNumberOfFee = 0;
                         bool paidFull = false;
                         foreach (PayPeriod pp in tmpLstPeriod)
@@ -125,7 +125,7 @@ namespace RentBike
                             if (paidAmount <= 0)
                             {
                                 c.OVER_DATE = nowDate.Subtract(pp.PAY_DATE).Days;
-                                if (paidAmount < 0 && tmpLstPeriod.Any(s => s.PAY_DATE == pp.PAY_DATE.AddDays(9)))
+                                if (paidAmount < 0 && tmpLstPeriod.Any(s =>s.PAY_DATE == pp.PAY_DATE.AddDays(9)))
                                 {
                                     c.OVER_DATE = nowDate.Subtract(pp.PAY_DATE).Days + 2;
                                 }
@@ -154,7 +154,7 @@ namespace RentBike
                         {
                             if (c.OVER_DATE <= 0)
                             {
-                                var inout = inOutList.Where(s => s.PERIOD_DATE.ToString("yyyyMMdd").Equals(nowDate.ToString("yyyyMMdd"))).OrderByDescending(s => s.INOUT_DATE).FirstOrDefault();
+                                var inout = inOutList.Where(s =>s.PERIOD_DATE.ToString("yyyyMMdd").Equals(nowDate.ToString("yyyyMMdd"))).OrderByDescending(s =>s.INOUT_DATE).FirstOrDefault();
                                 if (inout != null && inout.INOUT_DATE.HasValue && inout.INOUT_DATE.Value.Subtract(nowDate).Days > 0)
                                 {
                                     c.CSS_CLASS = "background-amber";
@@ -176,25 +176,25 @@ namespace RentBike
                         c.RENT_TYPE_NAME = ReBuildRentTypeName(c);
                         if (!string.IsNullOrEmpty(searchDate))
                         {
-                            if (tmpLstPeriod.Any(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate)))
+                            if (tmpLstPeriod.Any(s =>s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate)))
                             {
-                                c.FEE_PER_DAY = tmpLstPeriod.FirstOrDefault(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate)).AMOUNT_PER_PERIOD;
+                                c.FEE_PER_DAY = tmpLstPeriod.FirstOrDefault(s =>s.PAY_DATE.ToString("yyyyMMdd").Equals(searchDate)).AMOUNT_PER_PERIOD;
                                 dataList.Add(c);
                             }
                         }
-                        else if (tmpLstPeriod.Any(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(DateTime.Now.ToString("yyyyMMdd"))))
+                        else if (tmpLstPeriod.Any(s =>s.PAY_DATE.ToString("yyyyMMdd").Equals(DateTime.Now.ToString("yyyyMMdd"))))
                         {
-                            c.FEE_PER_DAY = tmpLstPeriod.FirstOrDefault(s => s.PAY_DATE.ToString("yyyyMMdd").Equals(DateTime.Now.ToString("yyyyMMdd"))).AMOUNT_PER_PERIOD;
+                            c.FEE_PER_DAY = tmpLstPeriod.FirstOrDefault(s =>s.PAY_DATE.ToString("yyyyMMdd").Equals(DateTime.Now.ToString("yyyyMMdd"))).AMOUNT_PER_PERIOD;
                             dataList.Add(c);
                         }
                     }
                 }
                 if (!string.IsNullOrEmpty(txtSearch.Text))
                 {
-                    dataList = dataList.Where(s => s.SEARCH_TEXT.Contains(txtSearch.Text)).ToList();
+                    dataList = dataList.Where(s =>s.SEARCH_TEXT.Contains(txtSearch.Text)).ToList();
                 }
             }
-            return dataList.OrderBy(c => c.DAY_DONE).ToList();
+            return dataList.OrderBy(c =>c.DAY_DONE).ToList();
         }
 
         private string ReBuildRentTypeName(CONTRACT_FULL_VW con)
@@ -244,7 +244,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.First(s => s.ACC == acc);
+                var item = db.Accounts.First(s =>s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;
@@ -270,7 +270,7 @@ namespace RentBike
         }
         private string GetPeriodMessage(List<PayPeriod> listPay, DateTime searchDate)
         {
-            var index = listPay.FindIndex(c => c.PAY_DATE == searchDate) + 1;
+            var index = listPay.FindIndex(c =>c.PAY_DATE == searchDate) + 1;
             var periodNum = index;
             var monthNum = 1;
 

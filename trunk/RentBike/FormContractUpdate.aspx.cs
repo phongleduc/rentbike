@@ -41,8 +41,8 @@ namespace RentBike
                         using (var db = new RentBikeEntities())
                         {
                             int contractId = Helper.parseInt(id);
-                            var contract = db.Contracts.Where(c => c.CONTRACT_STATUS == true && c.ID == contractId).FirstOrDefault();
-                            CommonList.AutoExtendContract(db, contract);
+                            var contract = db.Contracts.FirstOrDefault(c => c.CONTRACT_STATUS == true && c.ID == contractId);
+                            CommonList.AutoExtendPeriod(db, contract);
 
                             IsNewContract = false;
                             ContractID = id;
@@ -206,7 +206,7 @@ namespace RentBike
                 writer.RenderBeginTag(HtmlTextWriterTag.P); // Start of P
                 for (int i = 1; i <= 5; i++)
                 {
-                    BuildPhotoData(writer, Convert.ToString(Helper.ReflectPropertyValue(cntrct, "PHOTO_" + i)), Convert.ToString(Helper.ReflectPropertyValue(cntrct, "THUMBNAIL_PHOTO_" + i)));
+                    BuildPhotoData(writer, Convert.ToString(Helper.GetPropValue(cntrct, "PHOTO_" + i)), Convert.ToString(Helper.GetPropValue(cntrct, "THUMBNAIL_PHOTO_" + i)));
                 }
                 writer.RenderEndTag();  //End of P
 
@@ -487,40 +487,14 @@ namespace RentBike
                         {
                             db.Contracts.Add(item);
                             db.SaveChanges();
-                        }
 
-                        DateTime periodTime = DateTime.Now;
-                        if (!string.IsNullOrEmpty(txtRentDate.Text))
-                        {
-                            periodTime = DateTime.ParseExact(txtRentDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                        }
-                        PayPeriod pp1 = new PayPeriod();
-                        pp1.CONTRACT_ID = item.ID;
-                        pp1.PAY_DATE = periodTime;
-                        pp1.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
-                        pp1.STATUS = true;
-                        pp1.ACTUAL_PAY = 0;
 
-                        PayPeriod pp2 = new PayPeriod();
-                        pp2.CONTRACT_ID = item.ID;
-                        pp2.PAY_DATE = periodTime.AddDays(9);
-                        pp2.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
-                        pp2.STATUS = true;
-                        pp2.ACTUAL_PAY = 0;
-
-                        PayPeriod pp3 = new PayPeriod();
-                        pp3.CONTRACT_ID = item.ID;
-                        pp3.PAY_DATE = periodTime.AddDays(19);
-                        pp3.AMOUNT_PER_PERIOD = item.FEE_PER_DAY * 10;
-                        pp3.STATUS = true;
-                        pp3.ACTUAL_PAY = 0;
-
-                        using (var rbdb = new RentBikeEntities())
-                        {
-                            rbdb.PayPeriods.Add(pp1);
-                            rbdb.PayPeriods.Add(pp2);
-                            rbdb.PayPeriods.Add(pp3);
-                            rbdb.SaveChanges();
+                            DateTime periodTime = DateTime.Now;
+                            if (!string.IsNullOrEmpty(txtRentDate.Text))
+                            {
+                                periodTime = DateTime.ParseExact(txtRentDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                            }
+                            CommonList.CreatePayPeriod(db, item.ID, periodTime, true);
                         }
 
                         InOut io = new InOut();
@@ -540,39 +514,14 @@ namespace RentBike
                         io.CREATED_DATE = DateTime.Now;
                         io.UPDATED_BY = Session["username"].ToString();
                         io.UPDATED_DATE = DateTime.Now;
-                        switch (ddlRentType.SelectedValue)
-                        {
-                            case "1":
-                                io.INOUT_TYPE_ID = 17;
-                                break;
-                            case "2":
-                                io.INOUT_TYPE_ID = 22;
-                                break;
-                            case "3":
-                                io.INOUT_TYPE_ID = 23;
-                                break;
-                            default:
-                                List<InOutType> lstiot = new List<InOutType>();
-                                using (var db = new RentBikeEntities())
-                                {
-                                    var iot = from itm in db.InOutTypes
-                                              where itm.IS_CONTRACT == true && itm.ACTIVE == false && itm.IS_INCOME == false
-                                              select itm;
+                        io.INOUT_TYPE_ID = CommonList.GetInoutTypeFromRentType(Helper.parseInt(ddlRentType.SelectedValue));
 
-                                    lstiot = iot.ToList();
-                                    if (lstiot.Count > 0)
-                                    {
-                                        io.INOUT_TYPE_ID = lstiot[0].ID;
-                                    }
-                                }
-                                break;
-                        }
                         using (var rbdb = new RentBikeEntities())
                         {
                             rbdb.InOuts.Add(io);
                             rbdb.SaveChanges();
 
-                            CommonList.AutoExtendContract(rbdb, item);
+                            CommonList.AutoExtendPeriod(rbdb, item);
                         }
 
                         WriteLog(Constants.ACTION_CREATE_CONTRACT, false);
@@ -597,7 +546,7 @@ namespace RentBike
                             {
                                 //Update for contract record only.
                                 int inOutTypeId = CommonList.GetInoutTypeFromRentType(item.RENT_TYPE_ID);
-                                var inOut = db.InOuts.FirstOrDefault(c =>c.CONTRACT_ID == contractId && c.INOUT_TYPE_ID == inOutTypeId);
+                                var inOut = db.InOuts.FirstOrDefault(c => c.CONTRACT_ID == contractId && c.INOUT_TYPE_ID == inOutTypeId);
                                 if (inOut != null)
                                 {
                                     // SAVE INOUT
@@ -749,41 +698,10 @@ namespace RentBike
                             fs.Write(thumbnailPhoto);
                         }
 
-                        switch (i)
-                        {
-                            case 0:
-                                DeletePhoto(item.PHOTO_1);
-                                DeletePhoto(item.THUMBNAIL_PHOTO_1);
-                                item.PHOTO_1 = photoPath.Replace(Server.MapPath("~"), string.Empty);
-                                item.THUMBNAIL_PHOTO_1 = thumbnailPhotoPath.Replace(Server.MapPath("~"), string.Empty);
-                                break;
-                            case 1:
-                                DeletePhoto(item.PHOTO_2);
-                                DeletePhoto(item.THUMBNAIL_PHOTO_2);
-                                item.PHOTO_2 = photoPath.Replace(Server.MapPath("~"), string.Empty);
-                                item.THUMBNAIL_PHOTO_2 = thumbnailPhotoPath.Replace(Server.MapPath("~"), string.Empty);
-                                break;
-                            case 2:
-                                DeletePhoto(item.PHOTO_3);
-                                DeletePhoto(item.THUMBNAIL_PHOTO_3);
-                                item.PHOTO_3 = photoPath.Replace(Server.MapPath("~"), string.Empty);
-                                item.THUMBNAIL_PHOTO_3 = thumbnailPhotoPath.Replace(Server.MapPath("~"), string.Empty);
-                                break;
-                            case 3:
-                                DeletePhoto(item.PHOTO_4);
-                                DeletePhoto(item.THUMBNAIL_PHOTO_4);
-                                item.PHOTO_4 = photoPath.Replace(Server.MapPath("~"), string.Empty);
-                                item.THUMBNAIL_PHOTO_4 = thumbnailPhotoPath.Replace(Server.MapPath("~"), string.Empty);
-                                break;
-                            case 4:
-                                DeletePhoto(item.PHOTO_5);
-                                DeletePhoto(item.THUMBNAIL_PHOTO_5);
-                                item.PHOTO_5 = photoPath.Replace(Server.MapPath("~"), string.Empty);
-                                item.THUMBNAIL_PHOTO_5 = thumbnailPhotoPath.Replace(Server.MapPath("~"), string.Empty);
-                                break;
-                            default:
-                                break;
-                        }
+                        DeletePhoto(Convert.ToString(Helper.GetPropValue(item, "PHOTO_" + (i + 1))));
+                        DeletePhoto(Convert.ToString(Helper.GetPropValue(item, "THUMBNAIL_PHOTO_" + (i + 1))));
+                        Helper.SetPropValue(item, "PHOTO_" + (i + 1), photoPath.Replace(Server.MapPath("~"), string.Empty));
+                        Helper.SetPropValue(item, "THUMBNAIL_PHOTO_" + (i + 1), thumbnailPhotoPath.Replace(Server.MapPath("~"), string.Empty));
                     }
                 }
                 catch (Exception ex)
@@ -803,34 +721,6 @@ namespace RentBike
             catch { ; }
         }
 
-        private int ExistingContract(string licenseNo)
-        {
-            using (var db = new RentBikeEntities())
-            {
-                int storeId = Convert.ToInt32(Session["store_id"]);
-                CONTRACT_FULL_VW cntrct = db.CONTRACT_FULL_VW.Where(s => s.LICENSE_NO == licenseNo).FirstOrDefault();
-                if (cntrct != null && cntrct.CONTRACT_STATUS == true)
-                {
-                    //LoadData(licenseNo, 0);
-                    //if (storeId != 0 && storeId != cntrct.STORE_ID)
-                    //{
-                    //    foreach (RepeaterItem rptItem in rptCustomer.Items)
-                    //    {
-                    //        if (rptItem.FindControl("hplContractInfo") != null)
-                    //            ((HyperLink)rptItem.FindControl("hplContractInfo")).Enabled = false;
-
-                    //        if (rptItem.FindControl("btnChoose") != null)
-                    //            ((Button)rptItem.FindControl("btnChoose")).Enabled = false;
-                    //    }
-
-                    //}
-                    return 1;
-                }
-                else
-                    return 0;
-            }
-        }
-
         protected void btnCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect("FormContractManagement.aspx");
@@ -841,64 +731,27 @@ namespace RentBike
             string id = Request.QueryString["ID"];
             if (!string.IsNullOrEmpty(id))
             {
-                int contractID = Convert.ToInt32(id);
-                List<PayPeriod> lst;
                 using (var db = new RentBikeEntities())
                 {
-                    var st = from s in db.PayPeriods
-                             where s.CONTRACT_ID == contractID
-                             select s;
-
-                    lst = st.ToList<PayPeriod>();
-
-                    foreach (PayPeriod pp in lst)
+                    int contractID = Convert.ToInt32(id);
+                    List<PayPeriod> payList = db.PayPeriods.Where(c => c.CONTRACT_ID == contractID).ToList();
+                    decimal totalPaid = payList.Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                    for (int i = 0; i < payList.Count; i++)
                     {
-                        var payList = db.InOuts.Where(s => s.PERIOD_ID == pp.ID);
-                        if (pp != null)
-                        {
-                            var sumPay = payList.Select(c => c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
-                            if (sumPay > 0)
-                            {
-                                pp.ACTUAL_PAY = sumPay;
-                                db.SaveChanges();
-                            }
-                        }
+                        if (totalPaid < payList[i].AMOUNT_PER_PERIOD)
+                            payList[i].ACTUAL_PAY = totalPaid;
+                        else
+                            payList[i].ACTUAL_PAY = payList[i].AMOUNT_PER_PERIOD;
+
+                        totalPaid -= payList[i].AMOUNT_PER_PERIOD;
+
+                        if (totalPaid <= 0)
+                            break;
                     }
 
-                    lst = (from s in db.PayPeriods
-                           where s.CONTRACT_ID == contractID
-                           select s).ToList();
-
-
-                    for (int i = 0; i < lst.Count; i++)
-                    {
-                        if (lst[i].ACTUAL_PAY > lst[i].AMOUNT_PER_PERIOD)
-                        {
-                            lst[i + 1].ACTUAL_PAY += lst[i].ACTUAL_PAY - lst[i].AMOUNT_PER_PERIOD;
-                        }
-                    }
+                    rptPayFeeSchedule.DataSource = payList;
+                    rptPayFeeSchedule.DataBind();
                 }
-
-                rptPayFeeSchedule.DataSource = lst;
-                rptPayFeeSchedule.DataBind();
-
-            }
-            else
-            {
-                List<PayPeriod> lst = new List<PayPeriod>();
-                PayPeriod p1 = new PayPeriod();
-                p1.PAY_DATE = DateTime.Now;
-                PayPeriod p2 = new PayPeriod();
-                p2.PAY_DATE = DateTime.Now.AddDays(9);
-                PayPeriod p3 = new PayPeriod();
-                p3.PAY_DATE = DateTime.Now.AddDays(19);
-
-                lst.Add(p1);
-                lst.Add(p2);
-                lst.Add(p3);
-
-                rptPayFeeSchedule.DataSource = lst;
-                rptPayFeeSchedule.DataBind();
             }
         }
 

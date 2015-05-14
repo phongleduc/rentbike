@@ -70,7 +70,7 @@ namespace RentBike
 
                     if (inOutId != 0)
                     {
-                        var io = db.InOuts.FirstOrDefault(c => c.ID == inOutId);
+                        var io = db.InOuts.FirstOrDefault(c =>c.ID == inOutId);
                         ddlInOutFee.SelectedValue = io.INOUT_TYPE_ID.ToString();
                     }
                 }
@@ -83,10 +83,10 @@ namespace RentBike
             {
                 if (inOutId == 0) return;
 
-                var io = db.InOuts.FirstOrDefault(c => c.ID == inOutId);
+                var io = db.InOuts.FirstOrDefault(c =>c.ID == inOutId);
                 if (io != null)
                 {
-                    var ioType = db.InOutTypes.FirstOrDefault(c => c.ID == io.INOUT_TYPE_ID);
+                    var ioType = db.InOutTypes.FirstOrDefault(c =>c.ID == io.INOUT_TYPE_ID);
                     if (ioType != null)
                     {
                         if (ioType.IS_INCOME)
@@ -105,7 +105,7 @@ namespace RentBike
             {
                 using (var db = new RentBikeEntities())
                 {
-                    InOut io = db.InOuts.FirstOrDefault(c => c.ID == inOutId);
+                    InOut io = db.InOuts.FirstOrDefault(c =>c.ID == inOutId);
                     if (io == null)
                     {
                         io = new InOut();
@@ -124,7 +124,7 @@ namespace RentBike
                             io.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
                         }
 
-                        var item = db.InOutTypes.FirstOrDefault(s => s.ID == io.INOUT_TYPE_ID);
+                        var item = db.InOutTypes.FirstOrDefault(s =>s.ID == io.INOUT_TYPE_ID);
 
                         if (item.IS_INCOME)
                         {
@@ -159,7 +159,7 @@ namespace RentBike
                             io.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
                         }
 
-                        var item = db.InOutTypes.FirstOrDefault(s => s.ID == io.INOUT_TYPE_ID);
+                        var item = db.InOutTypes.FirstOrDefault(s =>s.ID == io.INOUT_TYPE_ID);
                         if (item.IS_INCOME)
                         {
                             io.IN_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
@@ -222,7 +222,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
+                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;

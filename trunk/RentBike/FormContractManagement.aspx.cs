@@ -74,7 +74,7 @@ namespace RentBike
                 {
                     if (rentType != 0)
                     {
-                        dataList = dataList.Where(c => c.RENT_TYPE_ID == rentType).ToList();
+                        dataList = dataList.Where(c =>c.RENT_TYPE_ID == rentType).ToList();
                     }
                     rptContract.DataSource = dataList;
                     rptContract.DataBind();
@@ -91,17 +91,17 @@ namespace RentBike
             {
                 dataList = (from s in db.CONTRACT_FULL_VW
                             where s.SEARCH_TEXT.Contains(strSearch) && s.CONTRACT_STATUS == true
-                            select s).OrderByDescending(c => c.RENT_DATE).ToList();
+                            select s).OrderByDescending(c =>c.RENT_DATE).ToList();
                 if (dataList.Any())
                 {
                     if (storeId != 0)
                     {
-                        dataList = dataList.Where(c => c.STORE_ID == storeId).ToList();
+                        dataList = dataList.Where(c =>c.STORE_ID == storeId).ToList();
                     }
 
                     if (rentType != 0)
                     {
-                        dataList = dataList.Where(c => c.RENT_TYPE_ID == rentType).ToList();
+                        dataList = dataList.Where(c =>c.RENT_TYPE_ID == rentType).ToList();
                     }
                     //int totalRecord = st.Count();
                     //int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
@@ -196,7 +196,7 @@ namespace RentBike
                 if (item != null && item.Any())
                 {
                     no = Convert.ToInt32(item.Count());
-                    TotalFeeBike = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                    TotalFeeBike = item.Select(c =>c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                 }
             }
 
@@ -218,7 +218,7 @@ namespace RentBike
                     if (item != null && item.Any())
                     {
                         no = Convert.ToInt32(item.Count());
-                        TotalFeeBike = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                        TotalFeeBike = item.Select(c =>c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
                 else
@@ -230,7 +230,7 @@ namespace RentBike
                     if (item != null && item.Any())
                     {
                         no = Convert.ToInt32(item.Count());
-                        TotalFeeBike = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                        TotalFeeBike = item.Select(c =>c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
             }
@@ -252,7 +252,7 @@ namespace RentBike
                 if (item != null && item.Any())
                 {
                     no = Convert.ToInt32(item.Count());
-                    TotalFeeEquip = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                    TotalFeeEquip = item.Select(c =>c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                 }
             }
 
@@ -274,7 +274,7 @@ namespace RentBike
                     if (item != null && item.Any())
                     {
                         no = Convert.ToInt32(item.Count());
-                        TotalFeeEquip = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                        TotalFeeEquip = item.Select(c =>c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
                 else
@@ -286,7 +286,7 @@ namespace RentBike
                     if (item != null && item.Any())
                     {
                         no = Convert.ToInt32(item.Count());
-                        TotalFeeEquip = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                        TotalFeeEquip = item.Select(c =>c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
             }
@@ -308,7 +308,7 @@ namespace RentBike
                 if (item != null && item.Any())
                 {
                     no = Convert.ToInt32(item.Count());
-                    TotalFeeOther = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                    TotalFeeOther = item.Select(c =>c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                 }
             }
 
@@ -330,7 +330,7 @@ namespace RentBike
                     if (item != null && item.Any())
                     {
                         no = Convert.ToInt32(item.Count());
-                        TotalFeeOther = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                        TotalFeeOther = item.Select(c =>c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
                 else
@@ -342,7 +342,7 @@ namespace RentBike
                     if (item != null && item.Any())
                     {
                         no = Convert.ToInt32(item.Count());
-                        TotalFeeOther = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                        TotalFeeOther = item.Select(c =>c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
                     }
                 }
             }
@@ -455,7 +455,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
+                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;

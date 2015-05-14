@@ -21,14 +21,19 @@ namespace RentBike.Common
             }
         }
 
-        public static string FormatedAsCurrency(int input)
+        public static string FormatedAsCurrency(decimal input)
         {
-            return String.Format("{0:#,0.#} VNÐ", input);
+            return String.Format("{0:#,0.#}", input);
         }
 
-        public static object ReflectPropertyValue(object source, string property)
+        public static object GetPropValue(object source, string property)
         {
             return source.GetType().GetProperty(property).GetValue(source, null);
+        }
+
+        public static void SetPropValue(object source, string property, object value)
+        {
+            source.GetType().GetProperty(property).SetValue(source, value);
         }
 
         public static string ConvertByteImageToBase64String(byte[] data)

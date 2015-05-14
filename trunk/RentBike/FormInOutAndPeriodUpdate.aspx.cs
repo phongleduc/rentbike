@@ -25,7 +25,7 @@ namespace RentBike
                 {
                     using (var db = new RentBikeEntities())
                     {
-                        var io = db.InOuts.FirstOrDefault(c => c.ID == inOutId);
+                        var io = db.InOuts.FirstOrDefault(c =>c.ID == inOutId);
                         InOutDate = io.INOUT_DATE.Value;
                         // DISPLAY SREEN
                         txtIncome.Text = Convert.ToString(io.IN_AMOUNT.ToString());
@@ -33,14 +33,14 @@ namespace RentBike
                         hplContract.NavigateUrl = string.Format("FormContractUpdate.aspx?ID={0}", io.CONTRACT_ID);
                         hplContract.Text = "Xem chi tiết hợp đồng";
 
-                        var store = db.Stores.FirstOrDefault(s => s.ID == io.STORE_ID && s.ACTIVE == true);
+                        var store = db.Stores.FirstOrDefault(s =>s.ID == io.STORE_ID && s.ACTIVE == true);
                         if (store != null)
                         {
                             txtStore.Text = store.NAME;
                             txtStore.Enabled = false;
                         }
 
-                        var inouttypelist = db.InOutTypes.Where(s => s.IS_CONTRACT == true && s.ACTIVE == true).ToList();
+                        var inouttypelist = db.InOutTypes.Where(s =>s.IS_CONTRACT == true && s.ACTIVE == true).ToList();
                         ddInOutType.DataSource = inouttypelist;
                         ddInOutType.DataTextField = "NAME";
                         ddInOutType.DataValueField = "ID";
@@ -58,7 +58,7 @@ namespace RentBike
                 int inOutId = Helper.parseInt(Request.QueryString["id"]);
                 if (inOutId != 0)
                 {
-                    var io = db.InOuts.FirstOrDefault(c => c.ID == inOutId);
+                    var io = db.InOuts.FirstOrDefault(c =>c.ID == inOutId);
                     // SAVE INOUT
                     io.IN_AMOUNT = Convert.ToDecimal(txtIncome.Text);
                     io.MORE_INFO = txtMoreInfo.Text.Trim();
@@ -71,7 +71,7 @@ namespace RentBike
                 if (periodId != 0)
                 {
                     // SAVE PERIOD
-                    var pp = db.PayPeriods.FirstOrDefault(s => s.ID == periodId);
+                    var pp = db.PayPeriods.FirstOrDefault(s =>s.ID == periodId);
                     pp.ACTUAL_PAY = Convert.ToDecimal(txtIncome.Text);
                     db.SaveChanges();
 

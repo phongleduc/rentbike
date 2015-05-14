@@ -22,14 +22,14 @@ namespace RentBike
                 int id = Convert.ToInt32(Request.QueryString["ID"]);
                 using (var db = new RentBikeEntities())
                 {
-                    Contract con = db.Contracts.FirstOrDefault(c => c.ID == id);
+                    Contract con = db.Contracts.FirstOrDefault(c =>c.ID == id);
 
                     txtEndDate.Text = string.Format("{0:dd/MM/yyyy}", con.END_DATE);
                     txtAmount.Text = string.Format("{0:0,0}", con.CONTRACT_AMOUNT);
                     txtOverDate.Text = DateTime.Now.Date.Subtract(con.END_DATE).TotalDays <= 0 ? "0" : DateTime.Now.Date.Subtract(con.END_DATE).TotalDays.ToString();
 
-                    List<PayPeriod> lstPayperiod = db.PayPeriods.Where(c => c.CONTRACT_ID == id).ToList();
-                    decimal paidAmount = lstPayperiod.Where(c => c.ACTUAL_PAY > 0).Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                    List<PayPeriod> lstPayperiod = db.PayPeriods.Where(c =>c.CONTRACT_ID == id).ToList();
+                    decimal paidAmount = lstPayperiod.Where(c =>c.ACTUAL_PAY > 0).Select(c =>c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
                     decimal total = 0;
 
                     for (DateTime date = con.RENT_DATE; date <= DateTime.Now; date = date.AddDays(1))
@@ -64,7 +64,7 @@ namespace RentBike
                 int contractId = Convert.ToInt32(Request.QueryString["ID"]);
                 using (var db = new RentBikeEntities())
                 {
-                    var con = db.CONTRACT_FULL_VW.FirstOrDefault(c => c.ID == contractId);
+                    var con = db.CONTRACT_FULL_VW.FirstOrDefault(c =>c.ID == contractId);
                     string closedContractName = string.Empty;
                     switch (con.RENT_TYPE_ID)
                     {
@@ -87,7 +87,7 @@ namespace RentBike
                     io1.PERIOD_DATE = new DateTime(1, 1, 1);
                     io1.RENT_TYPE_ID = con.RENT_TYPE_ID;
 
-                    var item = db.InOutTypes.FirstOrDefault(s => s.NAME == "Thanh lý");
+                    var item = db.InOutTypes.FirstOrDefault(s =>s.NAME == "Thanh lý");
                     io1.INOUT_TYPE_ID = item.ID;
                     io1.MORE_INFO = txtMoreInfo.Text.Trim();
                     io1.STORE_ID = con.STORE_ID;
@@ -120,7 +120,7 @@ namespace RentBike
                                     feeName = "Phí khác";
                                     break;
                             }
-                            item = db.InOutTypes.First(s => s.NAME == feeName);
+                            item = db.InOutTypes.First(s =>s.NAME == feeName);
 
                             io2.INOUT_TYPE_ID = item.ID;
                             io2.RENT_TYPE_ID = con.RENT_TYPE_ID;
@@ -148,7 +148,7 @@ namespace RentBike
                         if (reduceAmount > 0)
                         {
                             InOut io3 = new InOut();
-                            item = db.InOutTypes.FirstOrDefault(s => s.NAME == "Trả lại phí thừa");
+                            item = db.InOutTypes.FirstOrDefault(s =>s.NAME == "Trả lại phí thừa");
 
                             io3.INOUT_TYPE_ID = item.ID;
                             io3.RENT_TYPE_ID = con.RENT_TYPE_ID;
@@ -177,7 +177,7 @@ namespace RentBike
                 using (var db = new RentBikeEntities())
                 {
                     // Update status contract
-                    var con = db.Contracts.FirstOrDefault(c => c.ID == contractId);
+                    var con = db.Contracts.FirstOrDefault(c =>c.ID == contractId);
                     con.CONTRACT_STATUS = false;
                     con.CLOSE_CONTRACT_DATE = DateTime.Now;
 
@@ -269,7 +269,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
+                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;

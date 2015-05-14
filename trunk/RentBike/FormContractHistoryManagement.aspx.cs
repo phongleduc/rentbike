@@ -98,7 +98,7 @@ namespace RentBike
                              where s.STORE_ID == storeId && s.SEARCH_TEXT.Contains(strSearch)
                              select s;
 
-                    dataList = st.OrderByDescending(c => c.CREATED_DATE).ToList();
+                    dataList = st.OrderByDescending(c =>c.CREATED_DATE).ToList();
                     totalRecord = dataList.Count();
 
                     dataList = dataList.Skip(skip).Take(pageSize).ToList();
@@ -110,7 +110,7 @@ namespace RentBike
                              select s;
 
                     dataList = st.ToList();
-                    totalRecord = dataList.OrderByDescending(c => c.CREATED_DATE).Count();
+                    totalRecord = dataList.OrderByDescending(c =>c.CREATED_DATE).Count();
 
                     dataList = dataList.Skip(skip).Take(pageSize).ToList();
                 }
@@ -152,7 +152,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
+                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;

@@ -47,30 +47,30 @@ namespace RentBike
             List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
             using (var db = new RentBikeEntities())
             {
-                var st = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true);
+                var st = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true);
                 if (storeId != 0)
                 {
-                    st = st.Where(c => c.STORE_ID == storeId);
+                    st = st.Where(c =>c.STORE_ID == storeId);
                 }
                 if (!string.IsNullOrEmpty(strSearch))
                 {
-                    st = st.Where(c => c.SEARCH_TEXT.Contains(strSearch));
+                    st = st.Where(c =>c.SEARCH_TEXT.Contains(strSearch));
                 }
-                st = st.OrderByDescending(c => c.ID);
+                st = st.OrderByDescending(c =>c.ID);
 
-                var lstPeriod = db.PayPeriods.Where(s => s.STATUS == true).ToList();
+                var lstPeriod = db.PayPeriods.Where(s =>s.STATUS == true).ToList();
                 foreach (CONTRACT_FULL_VW c in st)
                 {
-                    var inOutList = db.InOuts.Where(s => s.CONTRACT_ID == c.ID).ToList();
+                    var inOutList = db.InOuts.Where(s =>s.CONTRACT_ID == c.ID).ToList();
 
                     c.PAYED_TIME = 0;
                     c.PAY_DATE = c.RENT_DATE;
                     c.DAY_DONE = DateTime.Now.Subtract(c.PAY_DATE).Days;
 
-                    var tmpLstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID);
+                    var tmpLstPeriod = lstPeriod.Where(s =>s.CONTRACT_ID == c.ID);
                     if (tmpLstPeriod != null)
                     {
-                        decimal paidAmount = tmpLstPeriod.Where(s => s.ACTUAL_PAY > 0).Select(s => s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                        decimal paidAmount = tmpLstPeriod.Where(s =>s.ACTUAL_PAY > 0).Select(s =>s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
                         int paidNumberOfFee = 0;
                         bool bAdd = false;
                         foreach (PayPeriod pp in tmpLstPeriod)
@@ -93,7 +93,7 @@ namespace RentBike
                                 }
                                 else
                                 {
-                                    if (tmpLstPeriod.Any(s => s.PAY_DATE == pp.PAY_DATE.AddDays(9)))
+                                    if (tmpLstPeriod.Any(s =>s.PAY_DATE == pp.PAY_DATE.AddDays(9)))
                                     {
                                         c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE.AddDays(9)).Days;
                                         c.PAY_DATE = pp.PAY_DATE.AddDays(9);
@@ -115,18 +115,18 @@ namespace RentBike
                         {
                             c.PAYED_TIME = paidNumberOfFee;
                             c.DAY_DONE = DateTime.Now.Subtract(c.RENT_DATE).Days + 1;
-                            c.FEE_PER_DAY = tmpLstPeriod.Where(s => DateTime.Today.Subtract(s.PAY_DATE).Days >= 0).OrderByDescending(s => s.PAY_DATE).FirstOrDefault().AMOUNT_PER_PERIOD;
+                            c.FEE_PER_DAY = tmpLstPeriod.Where(s => DateTime.Today.Subtract(s.PAY_DATE).Days >= 0).OrderByDescending(s =>s.PAY_DATE).FirstOrDefault().AMOUNT_PER_PERIOD;
                             dataList.Add(c);
                         }
                     }
                 }
                 if (!string.IsNullOrEmpty(txtSearch.Text))
                 {
-                    dataList = dataList.Where(s => s.SEARCH_TEXT.Contains(txtSearch.Text)).ToList();
+                    dataList = dataList.Where(s =>s.SEARCH_TEXT.Contains(txtSearch.Text)).ToList();
                 }
             }
 
-            rptWarning.DataSource = dataList.OrderByDescending(c => c.OVER_DATE);
+            rptWarning.DataSource = dataList.OrderByDescending(c =>c.OVER_DATE);
             rptWarning.DataBind();
         }
 
@@ -162,7 +162,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.First(s => s.ACC == acc);
+                var item = db.Accounts.First(s =>s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;

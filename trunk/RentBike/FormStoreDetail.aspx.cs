@@ -137,7 +137,7 @@ namespace RentBike
 
                 using (var rb1 = new RentBikeEntities())
                 {
-                    var item = rb1.InOutTypes.FirstOrDefault(s => s.NAME == "Nhập vốn");
+                    var item = rb1.InOutTypes.FirstOrDefault(s =>s.NAME == "Nhập vốn");
 
                     InOut io = new InOut();
                     io.IN_AMOUNT = Convert.ToDecimal(txtStartCapital.Text.Replace(",", string.Empty));
@@ -196,7 +196,7 @@ namespace RentBike
                 db.SaveChanges();
 
 
-                var storefee = db.StoreFees.FirstOrDefault(s => s.STORE_ID == storeid);
+                var storefee = db.StoreFees.FirstOrDefault(s =>s.STORE_ID == storeid);
                 storefee.FEE_PERCENT = 0;
                 db.SaveChanges();
             }
@@ -242,7 +242,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
+                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;

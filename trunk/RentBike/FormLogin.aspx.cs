@@ -66,103 +66,6 @@ namespace RentBike
             }
         }
 
-        private void AutoUpdateContract()
-        {
-            using (var db = new RentBikeEntities())
-            {
-                db.Configuration.AutoDetectChangesEnabled = false;
-                db.Configuration.ValidateOnSaveEnabled = false;
-
-                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
-                if (Session["store_id"] != null)
-                {
-                    contracts = contracts.Where(c => c.STORE_ID == Helper.parseInt(Convert.ToString(Session["store_id"]))).ToList();
-                }
-                foreach (var contract in contracts)
-                {
-                    CommonList.AutoExtendContract(db, contract);
-                }
-            }
-        }
-
-        private void AutoUpdateContract1()
-        {
-            using (var db = new RentBikeEntities())
-            {
-                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
-                //if (Session["store_id"] != null)
-                //{
-                //    contracts = contracts.Where(c => c.STORE_ID == Helper.parseInt(Convert.ToString(Session["store_id"]))).ToList();
-                //}
-                foreach (var contract in contracts)
-                {
-                    if (contract.FEE_PER_DAY == 0)
-                    {
-                        List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
-                        foreach (PayPeriod pp in lstPay)
-                        {
-                            pp.AMOUNT_PER_PERIOD = 0;
-                        }
-                    }
-                }
-                db.SaveChanges();
-            }
-        }
-        private void AutoUpdatePeriod()
-        {
-            using (var db = new RentBikeEntities())
-            {
-                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
-                //if (Session["store_id"] != null)
-                //{
-                //    contracts = contracts.Where(c => c.STORE_ID == Helper.parseInt(Convert.ToString(Session["store_id"]))).ToList();
-                //}
-                foreach (var contract in contracts)
-                {
-                    List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList(); 
-                    if (!contract.EXTEND_END_DATE.HasValue)
-                    {
-                        contract.EXTEND_END_DATE = contract.END_DATE;
-                        db.SaveChanges();
-                    }
-
-                    DateTime extendDate = contract.EXTEND_END_DATE.Value.AddDays(-10);
-                    db.PayPeriods.RemoveRange(lstPay.Where(c =>c.PAY_DATE > extendDate));
-                    db.SaveChanges();
-                }
-            }
-        }
-
-        private void AutoUpdatePeriod1()
-        {
-            using (var db = new RentBikeEntities())
-            {
-                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
-                foreach (var contract in contracts)
-                {
-                    List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
-                    int div = lstPay.Count % 3;
-                    if (div > 0)
-                    {
-                        div = 3 - div;
-                        PayPeriod lastPay =  lstPay.LastOrDefault();
-                        for (int i = 1; i <= div; i++)
-                        {
-                            PayPeriod pp = new PayPeriod();
-                            pp.CONTRACT_ID = contract.ID;
-                            pp.PAY_DATE = lastPay.PAY_DATE.AddDays(i * 10);
-                            pp.AMOUNT_PER_PERIOD = lastPay.AMOUNT_PER_PERIOD;
-                            pp.STATUS = true;
-                            pp.ACTUAL_PAY = 0;
-
-                            db.PayPeriods.Add(pp);
-                        }
-                    }
-                    db.SaveChanges();
-                }
-            }
-        }
-
         private bool LoadUser(string user, string password)
         {
             List<Account> lst = new List<Account>();
@@ -182,7 +85,7 @@ namespace RentBike
                 {
                     if (storeid != 0)
                     {
-                        var item = db.Stores.FirstOrDefault(s => s.ID == storeid);
+                        var item = db.Stores.FirstOrDefault(s =>s.ID == storeid);
 
                         if (!item.ACTIVE)
                             return false;
@@ -213,9 +116,7 @@ namespace RentBike
                     }
                 }
             }
-            //AutoUpdatePeriod1();
-            AutoUpdateContract();
-            //AutoUpdatePeriod();
+            CommonList.AutoExtendContract();
             return lst.Count > 0;
         }
 
