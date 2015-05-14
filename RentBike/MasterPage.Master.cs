@@ -46,7 +46,7 @@ namespace RentBike
                     //int storeid = Convert.ToInt32(Session["store_id"]);
                     //using (var db = new RentBikeEntities())
                     //{
-                    //    var item = db.Stores.FirstOrDefault(s => s.ID == storeid);
+                    //    var item = db.Stores.FirstOrDefault(s =>s.ID == storeid);
                     //    lblStoreName.Text = item.NAME;
                     //    lblTotalValue.Text = item.START_CAPITAL == 0 ? "0" : string.Format("{0:0,0}", item.START_CAPITAL);
                     //}
@@ -180,7 +180,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
+                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;
@@ -211,8 +211,8 @@ namespace RentBike
                                                 InOutDate = o.INOUT_DATE,
                                                 InAmount = o.IN_AMOUNT,
                                                 OutAmount = o.OUT_AMOUNT,
-                                                TotalIn = g.Sum(x => x.IN_AMOUNT),
-                                                TotalOut = g.Sum(x => x.OUT_AMOUNT),
+                                                TotalIn = g.Sum(x =>x.IN_AMOUNT),
+                                                TotalOut = g.Sum(x =>x.OUT_AMOUNT),
                                                 BeginAmount = 0,
                                                 EndAmount = 0,
                                                 ContractFeeCar = 0,
@@ -290,8 +290,8 @@ namespace RentBike
                                                 InOutDate = o.INOUT_DATE,
                                                 InAmount = o.IN_AMOUNT,
                                                 OutAmount = o.OUT_AMOUNT,
-                                                TotalIn = g.Sum(x => x.IN_AMOUNT),
-                                                TotalOut = g.Sum(x => x.OUT_AMOUNT),
+                                                TotalIn = g.Sum(x =>x.IN_AMOUNT),
+                                                TotalOut = g.Sum(x =>x.OUT_AMOUNT),
                                                 BeginAmount = 0,
                                                 EndAmount = 0,
                                                 ContractFeeCar = 0,

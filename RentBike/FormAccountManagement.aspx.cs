@@ -97,7 +97,7 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
-                Store st = db.Stores.FirstOrDefault(c => c.ID == storeId);
+                Store st = db.Stores.FirstOrDefault(c =>c.ID == storeId);
                 if (st != null)
                 {
                     return st.NAME;
