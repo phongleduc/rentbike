@@ -100,11 +100,11 @@ namespace RentBike
         {
             try
             {
-                WriteLog(CommonList.ACTION_LOGOUT, false);
+                WriteLog(Constants.ACTION_LOGOUT, false);
             }
             catch (Exception ex)
             {
-                WriteLog(CommonList.ACTION_LOGOUT, true);
+                WriteLog(Constants.ACTION_LOGOUT, true);
             }
             finally
             {
@@ -171,7 +171,7 @@ namespace RentBike
             }
             catch (Exception ex)
             {
-                WriteLog(CommonList.ACTION_LOGOUT, true);
+                WriteLog(Constants.ACTION_LOGOUT, true);
             }
         }
 

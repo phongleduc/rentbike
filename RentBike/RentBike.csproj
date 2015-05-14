@@ -184,6 +184,7 @@
     <Compile Include="City.cs">
       <DependentUpon>RentBike.tt</DependentUpon>
     </Compile>
+    <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\ImageHelper.cs" />
     <Compile Include="Contract.cs">
       <DependentUpon>RentBike.tt</DependentUpon>

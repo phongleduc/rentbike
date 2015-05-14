@@ -35,7 +35,7 @@ namespace RentBike
         {
             try
             {
-                if (LoadUser(txtUsername.Text.Trim(), CommonList.EncryptPassword(txtPassword.Text.Trim())))
+                if (LoadUser(txtUsername.Text.Trim(), Helper.EncryptPassword(txtPassword.Text.Trim())))
                 {
                     if (chkRememberMe.Checked)
                     {
@@ -49,9 +49,9 @@ namespace RentBike
 
                     }
                     Response.Cookies["UserName"].Value = txtUsername.Text.Trim();
-                    Response.Cookies["Password"].Value = CommonList.EncryptPassword(txtPassword.Text.Trim());
+                    Response.Cookies["Password"].Value = Helper.EncryptPassword(txtPassword.Text.Trim());
 
-                    WriteLog(CommonList.ACTION_LOGIN, false);
+                    WriteLog(Constants.ACTION_LOGIN, false);
                     Response.Redirect("FormReport.aspx", false);
                 }
                 else

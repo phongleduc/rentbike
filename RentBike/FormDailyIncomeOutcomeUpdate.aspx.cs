@@ -177,7 +177,7 @@ namespace RentBike
                     db.SaveChanges();
                 }
 
-                WriteLog(CommonList.ACTION_CREATE_INOUT, false);
+                WriteLog(Constants.ACTION_CREATE_INOUT, false);
 
                 ts.Complete();
             }

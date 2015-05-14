@@ -162,7 +162,7 @@ namespace RentBike
                     rb1.SaveChanges();
                 }
 
-                WriteLog(CommonList.ACTION_CREATE_STORE, false);
+                WriteLog(Constants.ACTION_CREATE_STORE, false);
 
                 scope.Complete();
             }
@@ -201,7 +201,7 @@ namespace RentBike
                 db.SaveChanges();
             }
 
-            WriteLog(CommonList.ACTION_UPDATE_STORE, false);
+            WriteLog(Constants.ACTION_UPDATE_STORE, false);
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
