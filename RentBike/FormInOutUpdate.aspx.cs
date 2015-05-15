@@ -189,7 +189,7 @@ namespace RentBike
 
                 if (pp.AMOUNT_PER_PERIOD - total > 0)
                 {
-                    amountLeft = pp.AMOUNT_PER_PERIOD - total - remain;
+                    amountLeft = pp.AMOUNT_PER_PERIOD - total - remain <= 0 ? 0 : pp.AMOUNT_PER_PERIOD - total - remain;
                 }
             }
 

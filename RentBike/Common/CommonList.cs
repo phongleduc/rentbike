@@ -98,8 +98,7 @@ namespace RentBike.Common
             Contract contract = db.Contracts.FirstOrDefault(c =>c.ID == contractId && c.CONTRACT_STATUS == true);
             if (contract != null)
             {
-                DateTime endDate = contract.END_DATE;
-                DateTime extendEndDate = contract.EXTEND_END_DATE == null ? contract.END_DATE.AddDays(-10) : contract.EXTEND_END_DATE.Value;
+                DateTime extendEndDate = (contract.EXTEND_END_DATE == null || contract.EXTEND_END_DATE == contract.END_DATE) ? contract.END_DATE.AddDays(-10) : contract.EXTEND_END_DATE.Value;
 
                 int overDate = DateTime.Today.Subtract(extendEndDate).Days;
                 if (overDate >= 0)
@@ -221,17 +220,17 @@ namespace RentBike.Common
                         var sumPay = inoutList.Select(s => s.IN_AMOUNT).DefaultIfEmpty(0).Sum();
 
                         pp.ACTUAL_PAY = sumPay;
-                        db.SaveChanges();
                     }
                 }
+                db.SaveChanges();
             }
         }
         public static void AutoExtendContract()
         {
             using (var db = new RentBikeEntities())
             {
-                db.Configuration.AutoDetectChangesEnabled = false;
-                db.Configuration.ValidateOnSaveEnabled = false;
+                //db.Configuration.AutoDetectChangesEnabled = false;
+                //db.Configuration.ValidateOnSaveEnabled = false;
 
                 var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
                 foreach (var contract in contracts)
@@ -249,16 +248,20 @@ namespace RentBike.Common
                 foreach (var contract in contracts)
                 {
                     List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
-                    if (!contract.EXTEND_END_DATE.HasValue)
+                    DateTime extendDate = contract.END_DATE.AddDays(-10);
+
+                    if (!contract.EXTEND_END_DATE.HasValue || contract.EXTEND_END_DATE == contract.END_DATE)
                     {
                         contract.EXTEND_END_DATE = contract.END_DATE;
-                        db.SaveChanges();
+                        extendDate = contract.EXTEND_END_DATE.Value.AddDays(-10);
                     }
-
-                    DateTime extendDate = contract.EXTEND_END_DATE.Value.AddDays(-10);
+                    else
+                    {
+                        extendDate = contract.EXTEND_END_DATE.Value; 
+                    }
                     db.PayPeriods.RemoveRange(lstPay.Where(c => c.PAY_DATE > extendDate));
-                    db.SaveChanges();
                 }
+                db.SaveChanges();
             }
         }
 
@@ -287,8 +290,8 @@ namespace RentBike.Common
                             db.PayPeriods.Add(pp);
                         }
                     }
-                    db.SaveChanges();
                 }
+                db.SaveChanges();
             }
         }
         #endregion
