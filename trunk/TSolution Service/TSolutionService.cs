@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
@@ -14,9 +15,9 @@ namespace TSolution_Service
 {
     public partial class TSolutionService : ServiceBase
     {
-                private System.Timers.Timer timer;
+        private System.Timers.Timer timer;
 
-                public TSolutionService()
+        public TSolutionService()
         {
             InitializeComponent();
         }
@@ -39,10 +40,23 @@ namespace TSolution_Service
         {
             try
             {
-                if (DateTime.Now.Hour == 0 && DateTime.Now.Minute == 1)
+                bool enableService = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableService"]);
+                if (!enableService)
+                    return;
+
+                int hour = 0;
+                int minute = 1;
+                string executeTime = ConfigurationManager.AppSettings["ExecuteTime"];
+                if (!string.IsNullOrEmpty(executeTime))
+                {
+                    hour = Convert.ToInt16(executeTime.Split(':')[0]);
+                    minute = Convert.ToInt16(executeTime.Split(':')[1]);
+                }
+
+                if (DateTime.Now.Hour == hour && DateTime.Now.Minute == minute)
                 {
                     // Create a request using a URL that can receive a post. 
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://rentbike.com/FormAction.aspx");
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(ConfigurationManager.AppSettings["UrlToPing"] + "DailyBatchProcessing.aspx");
 
                     // Set the Method property of the request to POST.
                     request.Method = WebRequestMethods.Http.Get;
@@ -66,11 +80,11 @@ namespace TSolution_Service
             }
         }
 
-        private void TraceService(string content)
+        public static void TraceService(string content)
         {
 
             //set up a filestream
-            using (FileStream fs = new FileStream(string.Format(@"C:\inetpub\websites\RentBike\log\log_{0}.txt", DateTime.Now.ToString("yyyyMMddHHmmss")), FileMode.OpenOrCreate, FileAccess.Write))
+            using (FileStream fs = new FileStream(ConfigurationManager.AppSettings["LogFolder"] + string.Format("ServiceLog_{0}.txt", DateTime.Now.ToString("yyyyMMdd")), FileMode.OpenOrCreate, FileAccess.Write))
             {
                 //set up a streamwriter for adding text
                 using (StreamWriter sw = new StreamWriter(fs))
@@ -79,7 +93,7 @@ namespace TSolution_Service
                     sw.BaseStream.Seek(0, SeekOrigin.End);
 
                     //add the text
-                    sw.WriteLine(content);
+                    sw.WriteLine(DateTime.Now + ": " + content);
                 }
             }
         }
