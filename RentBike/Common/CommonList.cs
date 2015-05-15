@@ -294,6 +294,23 @@ namespace RentBike.Common
                 db.SaveChanges();
             }
         }
+
+        public static void BackUp()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                string dataTime = db.Database.Connection.Database + "_" + DateTime.Now.ToString("yyyyMMddHHmm");
+                string directory = HttpContext.Current.Server.MapPath("~/") + "/backups/";
+                string fileName = directory + dataTime + ".bak";
+
+                if (!System.IO.Directory.Exists(directory))
+                    System.IO.Directory.CreateDirectory(directory);
+
+                // Here the procedure is called and executes successfully
+                db.Database.ExecuteSqlCommand(System.Data.Entity.TransactionalBehavior.DoNotEnsureTransaction, "EXEC [dbo].[BackUp] @path = N'" + fileName + "'");
+            }
+
+        }
         #endregion
     }
 }

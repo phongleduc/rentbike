@@ -116,8 +116,7 @@ namespace RentBike
                     }
                 }
             }
-            //CommonList.AutoUpdateAndRemovePeriod();
-            CommonList.AutoExtendContract();
+            //CommonList.BackUp();
             return lst.Count > 0;
         }
 

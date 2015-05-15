@@ -13,7 +13,7 @@ namespace RentBike.Common
         {
 
             //set up a filestream
-            using (FileStream fs = new FileStream(WebConfigurationManager.AppSettings["RentBike.LogFolder"] + string.Format("log_{0}.txt", DateTime.Now.ToString("yyyyMMddHHmmss")), FileMode.OpenOrCreate, FileAccess.Write))
+            using (FileStream fs = new FileStream(WebConfigurationManager.AppSettings["RentBike.LogFolder"] + string.Format("log_{0}.txt", DateTime.Now.ToString("yyyyMMdd")), FileMode.OpenOrCreate, FileAccess.Write))
             {
                 //set up a streamwriter for adding text
                 using (StreamWriter sw = new StreamWriter(fs))
@@ -22,7 +22,7 @@ namespace RentBike.Common
                     sw.BaseStream.Seek(0, SeekOrigin.End);
 
                     //add the text
-                    sw.WriteLine(content);
+                    sw.WriteLine(DateTime.Now + ": " + content);
                 }
             }
         }
