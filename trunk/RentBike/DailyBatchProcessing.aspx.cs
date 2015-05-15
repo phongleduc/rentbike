@@ -15,13 +15,13 @@ namespace RentBike
         {
             try
             {
-                Logger.TraceService("Auto Extend Contact start at " + DateTime.Now);
-                CommonList.AutoExtendContract();
-                Logger.TraceService("Auto Extend Contact end at " + DateTime.Now);
+                Logger.TraceService("Backup database start");
+                CommonList.BackUp();
+                Logger.TraceService("Backup database end");
 
-                Logger.TraceService("Saving Daily Data start at " + DateTime.Now);
+                Logger.TraceService("Auto extend contract start");
                 CommonList.AutoExtendContract();
-                Logger.TraceService("Saving Daily Data end at " + DateTime.Now);
+                Logger.TraceService("Auto extend contract end");
 
             }
             catch (Exception ex)
