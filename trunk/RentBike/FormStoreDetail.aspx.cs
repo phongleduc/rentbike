@@ -73,7 +73,7 @@ namespace RentBike
             {
                 return "Bạn cần phải nhập số điện thoại.";
             }
-            if (string.IsNullOrEmpty(txtStartCapital.Text.Trim()) || Helper.parseInt(txtStartCapital.Text) == 0)
+            if (string.IsNullOrEmpty(txtStartCapital.Text.Trim()) || Convert.ToDecimal(txtStartCapital.Text) == 0)
             {
                 return "Bạn cần phải nhập số vốn ban đầu.";
             }

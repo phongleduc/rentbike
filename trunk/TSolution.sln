@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentBike", "RentBike\RentBike.csproj", "{F33F758E-3045-44C4-8E59-F8D58A88AF5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSolution Service", "TSolution Service\TSolution Service.csproj", "{A475675D-6605-440E-B926-054258342D22}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -19,6 +21,10 @@ Global
 		{F33F758E-3045-44C4-8E59-F8D58A88AF5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F33F758E-3045-44C4-8E59-F8D58A88AF5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F33F758E-3045-44C4-8E59-F8D58A88AF5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A475675D-6605-440E-B926-054258342D22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A475675D-6605-440E-B926-054258342D22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A475675D-6605-440E-B926-054258342D22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A475675D-6605-440E-B926-054258342D22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
