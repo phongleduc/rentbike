@@ -78,6 +78,23 @@ namespace RentBike.Common
             return inOutType;
         }
 
+        public static Contract GetContractByLicenseNo(string licenseNo)
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var customer = db.Customers.FirstOrDefault(c =>c.LICENSE_NO == licenseNo);
+                if (customer != null)
+                {
+                    Contract contract = db.Contracts.FirstOrDefault(c =>c.CUSTOMER_ID == customer.ID && c.CONTRACT_STATUS == true);
+                    if(contract != null)
+                    {
+                        return contract;
+                    }
+                }
+            }
+            return null;
+        }
+
         private static void CalculatePeriodFee(Contract contract, out int multipleFee, out decimal increateFeeCar, out decimal increateFeeEquip, out decimal increateFeeOther, bool bFirstCreate)
         {
             multipleFee = Convert.ToInt32(Decimal.Floor(contract.CONTRACT_AMOUNT / 100000));

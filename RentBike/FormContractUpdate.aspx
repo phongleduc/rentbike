@@ -4,56 +4,6 @@
     <h4 class="text-center">Chi tiết hợp đồng</h4>
     <%--<asp:Panel ID="pnlCustomerCheck" runat="server">--%>
     <asp:Panel ID="pnlTable" runat="server">
-        <table class="table table-striped table-hover ">
-            <tbody>
-                <tr>
-                    <td>
-                        <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
-                    <td>
-                        <asp:Button ID="btnSearch" runat="server" Text="Kiểm tra hợp đồng khách hàng" CssClass="btn btn-primary" OnClick="btnSearch_Click" /></td>
-                </tr>
-            </tbody>
-        </table>
-        <asp:Repeater ID="rptCustomer" runat="server">
-            <HeaderTemplate>
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr class="success">
-                            <th>#</th>
-                            <th>Tên khách hàng</th>
-                            <th>Số CMT/GPLX</th>
-                            <th>Điện thoại</th>
-                            <th>Địa chỉ</th>
-                            <th>Số hợp đồng</th>
-                            <th>Trạng thái</th>
-<%--                            <th>Chọn</th>--%>
-                        </tr>
-                    </thead>
-                    <tbody>
-            </HeaderTemplate>
-            <ItemTemplate>
-                <tr>
-                    <td><%# Container.ItemIndex + 1 %><asp:HiddenField ID="hdfCustomerID" Value='<%# Eval("CUSTOMER_ID") %>' runat="server" />
-                    </td>
-                    <td><%# Eval("CUSTOMER_NAME") %></td>
-                    <td><%# Eval("LICENSE_NO") %></td>
-                    <td><%# Eval("PHONE") %></td>
-                    <td><%# Eval("ADDRESS") %></td>
-                    <td>
-                        <asp:HyperLink ID="hplContractInfo" runat="server" Text='<%# Eval("CONTRACT_NO") %>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink>
-                    </td>
-                    <td><%# Convert.ToBoolean(Eval("CONTRACT_STATUS")) ? "Chưa thanh lý" : "Đã thanh lý" %></td>
-<%--                    <td>
-                        <asp:Button ID="btnChoose" runat="server" Text="Chọn" CssClass="btn btn-primary" CommandName="btnChoose" /></td>--%>
-            </ItemTemplate>
-            <FooterTemplate>
-                </tbody>
-                    </table>
-            </FooterTemplate>
-        </asp:Repeater>
-        <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-        <%--</asp:Panel>--%>
-
         <table class="table table-striped table-hover" style="width: 70%; margin-left: 10%;">
             <tbody>
                 <tr>
@@ -63,11 +13,6 @@
                 <tr class="info">
                     <td colspan="2" class="text-center"><strong>Thông tin khách hàng</strong></td>
                 </tr>
-                <%--            <tr>
-                <td class="text-right">Chọn khách hàng có sẵn</td>
-                <td>
-                    <asp:DropDownList ID="ddlCustomer" runat="server" CssClass="form-control" OnSelectedIndexChanged="ddlCustomer_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList></td>
-            </tr>--%>
                 <tr>
                     <td class="text-right">Tên khách hàng</td>
                     <td>
@@ -157,11 +102,6 @@
                         <asp:TextBox ClientIDMode="Static" ID="txtEndDate" runat="server" CssClass="form-control input-sm text-right"></asp:TextBox>
                     </td>
                 </tr>
-                <%--<tr>
-                <td class="text-right">Thông báo trả phí</td>
-                <td>
-                    <asp:TextBox ID="txtPayFeeMessage" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
-            </tr>--%>
                 <tr>
                     <td class="text-right">Lịch trả phí</td>
                     <td>
@@ -183,10 +123,6 @@
                         </asp:Repeater>
                     </td>
                 </tr>
-                <%--            <tr>
-                <td class="text-right">Nợ phí</td>
-                <td></td>
-            </tr>--%>
                 <tr>
                     <td class="text-right">Ghi chú</td>
                     <td>
@@ -266,9 +202,9 @@
             </tbody>
         </table>
     </asp:Panel>
-    	<!-- Add Button helper (this is optional) -->
-	<link rel="stylesheet" type="text/css" href="script/fancybox/helpers/jquery.fancybox-buttons.css?v=1.0.5" />
-	<script type="text/javascript" src="script/fancybox/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+    <!-- Add Button helper (this is optional) -->
+    <link rel="stylesheet" type="text/css" href="script/fancybox/helpers/jquery.fancybox-buttons.css?v=1.0.5" />
+    <script type="text/javascript" src="script/fancybox/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
     <script>
         $(document).ready(function () {
             $('#<%=txtRentDate.ClientID %>').datepicker({
@@ -311,14 +247,7 @@
             var rentTypeId = '<%= RentTypeID%>';
             hideToRentType(rentTypeId);
 
-            $('#<%=txtSearch.ClientID %>').keypress(function (e) {
-                if (e.which == 13) {
-                    $('#<%=btnSearch.ClientID %>').click();
-                    return false;
-                }
-            });
-
-            $('input, textarea').not('#<%=txtSearch.ClientID %>').keypress(function (e) {
+            $('input, textarea').keypress(function (e) {
                 if (e.which == 13) {
                     $('#<%=btnSave.ClientID %>').click();
                     return false;

@@ -102,6 +102,7 @@
     <Content Include="App_Themes\Theme1\image\tick-blue.png" />
     <Content Include="App_Themes\Theme1\image\tick-orange.png" />
     <Content Include="App_Themes\Theme1\image\unchecked.gif" />
+    <Content Include="FormSearch.aspx" />
     <Content Include="FormInOutAndPeriodUpdate.aspx" />
     <Content Include="FormReport.aspx" />
     <Content Include="script\date.js" />
@@ -208,6 +209,13 @@
     </Compile>
     <Compile Include="DailyBatchProcessing.aspx.designer.cs">
       <DependentUpon>DailyBatchProcessing.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FormSearch.aspx.cs">
+      <DependentUpon>FormSearch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FormSearch.aspx.designer.cs">
+      <DependentUpon>FormSearch.aspx</DependentUpon>
     </Compile>
     <Compile Include="FormInOutAndPeriodUpdate.aspx.cs">
       <DependentUpon>FormInOutAndPeriodUpdate.aspx</DependentUpon>
