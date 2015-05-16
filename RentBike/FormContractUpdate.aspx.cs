@@ -379,7 +379,7 @@ namespace RentBike
                             using (HtmlTextWriter writer = new HtmlTextWriter(stringWriter))
                             {
                                 writer.Write("Số CMTND/GPLX này hiện tại đã đăng ký hợp đồng ");
-                                writer.AddAttribute(HtmlTextWriterAttribute.Href, "FormContractUpdate.aspx?ID=" + contract.ID);
+                                writer.AddAttribute(HtmlTextWriterAttribute.Href, string.Format("FormContractUpdate.aspx?ID={0}&sID={1}",contract.ID,contract.STORE_ID));
                                 writer.RenderBeginTag(HtmlTextWriterTag.A); // Start of A
                                 writer.Write(contract.CONTRACT_NO);
                                 writer.RenderEndTag();  //End of A
