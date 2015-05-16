@@ -33,6 +33,7 @@ namespace RentBike
                     CommonList.LoadStore(ddlStore);
                     hdfFeeRate.Value = (GetFeeRate(Convert.ToInt32(Session["store_id"])) / 10000).ToString();
                     string id = Request.QueryString["ID"];
+                    string sId = Request.QueryString["sID"];
                     string copy = Request.QueryString["copy"];
                     int storeId = Convert.ToInt32(Session["store_id"]);
 
@@ -42,7 +43,6 @@ namespace RentBike
                         {
                             int contractId = Helper.parseInt(id);
                             var contract = db.Contracts.FirstOrDefault(c => c.CONTRACT_STATUS == true && c.ID == contractId);
-                            CommonList.AutoExtendPeriod(db, contractId);
 
                             IsNewContract = false;
                             ContractID = id;
@@ -63,13 +63,26 @@ namespace RentBike
                                 storeId = lst[0].STORE_ID;
                             }
                             ddlStore.SelectedValue = storeId.ToString();
+
+                            bool bDifferentStoreID = false;
+                            if (Helper.parseInt(sId) != storeId)
+                            {
+                                if(!bAdmin)
+                                    bDifferentStoreID = true;
+                                storeId = Helper.parseInt(sId);
+                            }
+
+                            ddlStore.SelectedValue = storeId.ToString();
                             if (!bAdmin)
                             {
-                                ddlStore.SelectedValue = storeId.ToString();
                                 ddlStore.Enabled = false;
                             }
-                            pnlTable.Enabled = lst[0].CONTRACT_STATUS;
-                            rptPayFeeSchedule.Visible = lst[0].CONTRACT_STATUS;
+
+                            if (!lst[0].CONTRACT_STATUS || (bDifferentStoreID && !string.IsNullOrEmpty(Request.QueryString["sID"])))
+                            {
+                                pnlTable.Enabled = false;
+                                rptPayFeeSchedule.Visible = false; 
+                            }
 
                             CONTRACT_FULL_VW cntrct = lst[0];
                             txtLicenseNumber.Text = cntrct.LICENSE_NO;
@@ -232,50 +245,6 @@ namespace RentBike
             }
         }
 
-        private List<CONTRACT_FULL_VW> LoadData(string strSearch, int page)
-        {
-            // LOAD PAGER
-            int totalRecord = 0;
-            using (var db = new RentBikeEntities())
-            {
-                var count = (from c in db.Contracts
-                             where c.SEARCH_TEXT.Contains(strSearch)
-                             select c).Count();
-                totalRecord = Convert.ToInt32(count);
-            }
-
-            int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-            List<int> pageList = new List<int>();
-            for (int i = 1; i <= totalPage; i++)
-            {
-                pageList.Add(i);
-            }
-
-            ddlPager.DataSource = pageList;
-            ddlPager.DataBind();
-            if (pageList.Count > 0)
-            {
-                ddlPager.SelectedIndex = page;
-            }
-
-            // LOAD DATA WITH PAGING
-            List<CONTRACT_FULL_VW> dataList;
-            int skip = page * pageSize;
-            using (var db = new RentBikeEntities())
-            {
-                var st = from s in db.CONTRACT_FULL_VW
-                         where s.SEARCH_TEXT.Contains(strSearch)
-                         orderby s.ID
-                         select s;
-
-                dataList = st.Skip(skip).Take(pageSize).ToList();
-            }
-
-            rptCustomer.DataSource = dataList;
-            rptCustomer.DataBind();
-            return dataList;
-        }
-
         protected string ValidateFields()
         {
             if (string.IsNullOrEmpty(txtCustomerName.Text.Trim()))
@@ -399,6 +368,26 @@ namespace RentBike
                         {
                             lblMessage.Text = result;
                             return;
+                        }
+
+                        Contract contract = CommonList.GetContractByLicenseNo(txtLicenseNumber.Text.Trim());
+                        if (contract != null)
+                        {
+                            // Initialize StringWriter instance.
+                            StringWriter stringWriter = new StringWriter();
+                            // Put HtmlTextWriter in using block because it needs to call Dispose.
+                            using (HtmlTextWriter writer = new HtmlTextWriter(stringWriter))
+                            {
+                                writer.Write("Số CMTND/GPLX này hiện tại đã đăng ký hợp đồng ");
+                                writer.AddAttribute(HtmlTextWriterAttribute.Href, "FormContractUpdate.aspx?ID=" + contract.ID);
+                                writer.RenderBeginTag(HtmlTextWriterTag.A); // Start of A
+                                writer.Write(contract.CONTRACT_NO);
+                                writer.RenderEndTag();  //End of A
+
+                                lblMessage.Text = stringWriter.ToString();
+                                return; 
+                            }
+                                                             
                         }
                         using (var db = new RentBikeEntities())
                         {
@@ -759,16 +748,6 @@ namespace RentBike
         {
             string id = Request.QueryString["ID"];
             Response.Redirect(string.Format("FormCloseContract.aspx?ID={0}", id));
-        }
-
-        protected void btnSearch_Click(object sender, EventArgs e)
-        {
-            LoadData(txtSearch.Text.Trim(), 0);
-        }
-
-        protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         private decimal GetFeeRate(int storeId)

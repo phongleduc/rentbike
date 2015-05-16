@@ -13,7 +13,6 @@ namespace RentBike
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //Check session timeout or not existing
             if (Session["store_id"] == null)
             {
                 Response.Redirect("FormLogin.aspx");
@@ -42,13 +41,12 @@ namespace RentBike
                         hplAccountManagement.Visible = false;
                     }
 
-                    txtUserFullName.Text = Session["name"].ToString();
-                    //int storeid = Convert.ToInt32(Session["store_id"]);
+                    txtUserFullName.Text = "Chào " + Session["name"] + ",";
                     //using (var db = new RentBikeEntities())
                     //{
-                    //    var item = db.Stores.FirstOrDefault(s =>s.ID == storeid);
+                    //    int storeid = Convert.ToInt32(Session["store_id"]);
+                    //    var item = db.Stores.FirstOrDefault(s => s.ID == storeid);
                     //    lblStoreName.Text = item.NAME;
-                    //    lblTotalValue.Text = item.START_CAPITAL == 0 ? "0" : string.Format("{0:0,0}", item.START_CAPITAL);
                     //}
 
                 }
@@ -112,6 +110,11 @@ namespace RentBike
                 RemoveAllCookies();
                 Response.Redirect("FormLogin.aspx");
             }
+        }
+
+        protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         private void RemoveAllCookies()

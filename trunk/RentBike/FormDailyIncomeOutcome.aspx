@@ -179,14 +179,30 @@
     <script>
         $(function () {
             //$("#txtViewDate").datepicker();
-            $('.fancybox').fancybox({
-                onStart: function () {
-                    $.fancybox.showActivity();
-                },
-                onComplete: function () {
-                    $.fancybox.hideActivity();
-                }
+            $(".fancybox").fancybox({
+                openEffect: 'elastic',
+                closeEffect: 'elastic'
             });
+            //$(".fancybox").fancybox({
+            //    openEffect: 'elastic',
+            //    closeEffect: 'elastic',
+            //    type: 'ajax',
+            //    ajax: {
+            //        dataFilter: function (data) {
+            //            alert($(data).html());
+            //            return $(data).find($(this).attr('href'))[0];
+            //        }
+            //    }
+            //});
+            //$(".fancybox").click(function (event) {
+            //    $.fancybox.open(this.href, { type: "outside" });
+            //    $.fancybox.showLoading();
+            //    $("iframe.fancybox-iframe").load(function () {
+            //        $.fancybox.hideLoading();
+            //    });
+            //    event.preventDefault();
+            //});
+
             $('#<%=txtStartDate.ClientID %>').datepicker();
             $('#<%=txtEndDate.ClientID %>').datepicker();
 

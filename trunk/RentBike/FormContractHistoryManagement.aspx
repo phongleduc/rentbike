@@ -6,7 +6,7 @@
         <tbody>
             <tr>
                 <td>
-                    <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
+                    <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control input-md"></asp:TextBox></td>
                 <td>
                     <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClick="btnSearch_Click" /></td>
             </tr>
