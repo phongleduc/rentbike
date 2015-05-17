@@ -3,7 +3,7 @@
     <table class="table table-striped table-hover" style="width: 50%; margin-left: 25%;">
         <tbody>
             <tr>
-                <td colspan="2" class="text-center">Chi tiết khoản thu/chi</td>
+                <td colspan="2" class="text-center"><strong>Chi tiết khoản thu/chi</strong></td>
             </tr>
             <tr>
                 <td>Loại chi phí</td>
@@ -36,7 +36,7 @@
     </table>
     <script>
         $(document).ready(function () {
-            $("#txtFeeAmount").priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
+            $('#<%=txtFeeAmount.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
         });
     </script>
 </asp:Content>

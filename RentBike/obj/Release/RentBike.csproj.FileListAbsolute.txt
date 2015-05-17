@@ -26,3 +26,5 @@ D:\Projects\Others\TSolution\trunk\RentBike\bin\EntityFramework.SqlServer.xml
 D:\Projects\Others\TSolution\trunk\RentBike\obj\Release\RentBike.csprojResolveAssemblyReference.cache
 D:\Projects\Others\TSolution\trunk\RentBike\obj\Release\RentBike.dll
 D:\Projects\Others\TSolution\trunk\RentBike\obj\Release\RentBike.pdb
+D:\Projects\Others\TSolution\trunk\RentBike\bin\EPPlus.dll
+D:\Projects\Others\TSolution\trunk\RentBike\bin\EPPlus.xml

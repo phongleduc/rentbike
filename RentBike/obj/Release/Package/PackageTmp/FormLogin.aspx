@@ -30,12 +30,14 @@
                     <td class="text-right text-info">
                         <strong>Mật khẩu</strong></td>
                     <td>
-                        <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control input-sm"></asp:TextBox></td>
+                        <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control input-sm"></asp:TextBox>
+                        <asp:CheckBox ID="chkRememberMe" runat="server" Text="&nbsp;&nbsp;Lưu đăng nhập" />
+                    </td>
                 </tr>
                 <tr>
                     <td>&nbsp;</td>
                     <td>
-                        <asp:Button ID="btnLogin" runat="server" Text="Đăng nhập" OnClick="btnLogin_Click" CssClass="btn btn-primary" /> <asp:Button ID="btnClear" runat="server" Text="Xóa" OnClick="btnClear_Click" CssClass="btn btn-primary" /></td>
+                        <asp:Button ID="btnLogin" runat="server" Text="Đăng nhập" OnClick="btnLogin_Click" CssClass="btn btn-primary" /></td>
                 </tr>
             </tbody>
         </table>

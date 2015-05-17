@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormWarning.aspx.cs" Inherits="RentBike.FormWarning" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h2>THÔNG BÁO</h2>
+    <h2>DANH SÁCH GỌI PHÍ</h2>
     <table class="table table-striped table-hover ">
         <tbody>
             <tr>
@@ -20,52 +20,55 @@
     </table>
     <asp:Repeater ID="rptWarning" runat="server" OnItemDataBound="rptWarning_ItemDataBound">
         <HeaderTemplate>
-            <table class="table table-striped table-hover">
-                <thead>
+            <div class="text-right" style="margin-bottom: 5px">
+                <asp:Image ID="ExcelIcon" runat="server" ImageUrl="~/App_Themes/Theme1/image/excel-icon.png" />
+                <asp:LinkButton ID="lnkExportExcel" runat="server" OnClick="lnkExportExcel_Click" Text="Xuất ra Excel"></asp:LinkButton>
+                <%--                <a class="print" href="javascript:void(0);">
+                    <img src="App_Themes/Theme1/image/printer-blue.png" /></a>&nbsp;&nbsp;--%>
+            </div>
+            <div id="areaToPrint">
+                <table class="table">
                     <tr class="success">
                         <th>#</th>
                         <th>Tên khách hàng</th>
                         <th>Loại hình thuê</th>
                         <th>Số ĐT khách hàng</th>
                         <th class="text-right">Giá trị HĐ/Phí</th>
+                        <th class="text-center">Ghi chú</th>
                         <th class="text-right">Số lần đóng phí</th>
                         <th class="text-center">Thông báo</th>
-                        <th class="text-center">Số ngày quá hạn</th>
                         <th class="text-center">Xử lý HĐ</th>
                     </tr>
-                </thead>
-                <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr id='<%# string.Format("HtmlTableRow{0}", Container.ItemIndex) %>'>
+            <tr id='<%# string.Format("HtmlTableRow{0}", Container.ItemIndex) %>' class="<%# Eval("CSS_CLASS") %>">
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><%# Eval("CUSTOMER_NAME") %></td>
+                <td><strong><%# Eval("CUSTOMER_NAME") %></strong></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
                 <td><%# Eval("PHONE") %></td>
-                <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY")) * 10) %></td>
-                <td class="text-right"><%# Eval("PAYED_TIME") %> lần</td>
+                <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY"))) %></td>
                 <td class="text-right"><%# Eval("NOTE") %></td>
-                <td class="text-center <%# ShowClass(Convert.ToDateTime(Eval("PAY_DATE"))) %>"><%# Convert.ToDateTime(Eval("PAY_DATE")).ToString("dd/MM/yyyy") %> <br />(<%# Eval("OVER_DATE") %>Ngày)
-                    <asp:HiddenField ID ="hdfOverDay" Value='<%# Eval("OVER_DATE") %>' runat="server" />
-                </td>
+                <td class="text-right"><%# Eval("PAYED_TIME") %> lần</td>
+                <td class="text-center"><%# Eval("PERIOD_MESSAGE") %></td>
                 <td>
-                    <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("AUTO_CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
+                    <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>
-            </tbody>
-           </table>
+            </table>
+                </div>
         </FooterTemplate>
     </asp:Repeater>
-    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-    <asp:HiddenField ID="hfPager" runat="server" />
+
+    <%--    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+    <asp:HiddenField ID="hfPager" runat="server" />--%>
     <script>
         $(function () {
             $('#<%=txtDate.ClientID %>').datepicker();
 
-            $('#<%=ddlPager.ClientID %>').change(function () {
+<%--            $('#<%=ddlPager.ClientID %>').change(function () {
                 $('#<%=hfPager.ClientID %>').val($(this).val());
-            });
+            });--%>
 
             $('#<%=txtSearch.ClientID %>').keypress(function (e) {
                 if (e.which == 13) {
@@ -73,6 +76,28 @@
                     return false;
                 }
             });
+
+            var options = {};
+            $('a.print').click(function (e) {
+                //$(this).parent().next().printArea(options);
+                printDiv();
+            });
+
+            function printDiv() {
+                var divToPrint = $('#areaToPrint').clone();
+                divToPrint.find('table').find("tr").find("th:last, td:last").remove();
+                divToPrint.prepend($("<h3 style='text-align:center;'>" + "Ngày <%= SearchDate%>" + "</h3>"));
+                divToPrint.prepend($("<h1 style='text-align:center;'>Danh Sách Gọi Phí</h1>"));
+                divToPrint.find('table').css('width', '100%');
+                divToPrint.find('table').css('border-collapse', 'collapse');
+                divToPrint.find('table').find("tr").css('border', '1px solid black');
+                divToPrint.find('table').find("td").css('border', '1px solid black');
+                divToPrint.find('table').find("th").css('border', '1px solid black');
+                newWin = window.open("");
+                newWin.document.write(divToPrint.html());
+                newWin.print();
+                newWin.close();
+            }
         });
     </script>
 </asp:Content>

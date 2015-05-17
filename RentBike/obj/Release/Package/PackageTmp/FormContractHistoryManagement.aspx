@@ -6,7 +6,7 @@
         <tbody>
             <tr>
                 <td>
-                    <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
+                    <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control input-md"></asp:TextBox></td>
                 <td>
                     <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClick="btnSearch_Click" /></td>
             </tr>
@@ -51,6 +51,7 @@
         </FooterTemplate>
     </asp:Repeater>
     <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+<%--    <b>Loại hợp đồng:</b>  <asp:DropDownList ID="drpRentType" runat="server" CssClass="form-control drp-renttype" OnSelectedIndexChanged="drpRentType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>--%>
     <script>
         $(function () {
             $('#<%=txtSearch.ClientID %>').keypress(function (e) {
