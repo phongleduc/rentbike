@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Schema Namespace="RentBikeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+<Schema Namespace="RentBikeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
   <EntityType Name="Account">
     <Key>
       <PropertyRef Name="ID" />
@@ -42,6 +42,7 @@
     <Property Name="FEE_PER_DAY" Type="decimal" Precision="18" Scale="0" Nullable="false" />
     <Property Name="RENT_DATE" Type="date" Nullable="false" />
     <Property Name="END_DATE" Type="date" Nullable="false" />
+    <Property Name="EXTEND_END_DATE" Type="date" />
     <Property Name="CLOSE_CONTRACT_DATE" Type="date" Nullable="false" />
     <Property Name="PAY_FEE_MESSAGE" Type="nvarchar" MaxLength="250" Nullable="false" />
     <Property Name="NOTE" Type="nvarchar" MaxLength="500" Nullable="false" />
@@ -59,11 +60,23 @@
     <Property Name="REFERENCE_PHONE" Type="nvarchar" MaxLength="30" />
     <Property Name="SCHOOL_NAME" Type="nvarchar" MaxLength="100" />
     <Property Name="CLASS_NAME" Type="nvarchar" MaxLength="50" />
-    <Property Name="AUTO_CONTRACT_NO" Type="varchar" MaxLength="13" StoreGeneratedPattern="Computed" />
+    <Property Name="IMPLEMENTER" Type="nvarchar" MaxLength="50" />
+    <Property Name="BACK_TO_DOCUMENTS" Type="nvarchar" MaxLength="300" />
+    <Property Name="CONTRACT_NO" Type="varchar" MaxLength="13" StoreGeneratedPattern="Computed" />
     <Property Name="CREATED_BY" Type="nvarchar" MaxLength="50" />
     <Property Name="CREATED_DATE" Type="datetime" />
     <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
     <Property Name="UPDATED_DATE" Type="datetime" />
+    <Property Name="PHOTO_1" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_1" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_2" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_2" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_3" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_3" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_4" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_4" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_5" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_5" Type="varchar" MaxLength="300" />
   </EntityType>
   <EntityType Name="ContractHistory">
     <Key>
@@ -77,6 +90,7 @@
     <Property Name="CONTRACT_AMOUNT" Type="decimal" Precision="18" Scale="0" Nullable="false" />
     <Property Name="RENT_DATE" Type="date" Nullable="false" />
     <Property Name="END_DATE" Type="date" Nullable="false" />
+    <Property Name="EXTEND_END_DATE" Type="date" />
     <Property Name="PAY_FEE_MESSAGE" Type="nvarchar" MaxLength="250" Nullable="false" />
     <Property Name="NOTE" Type="nvarchar" MaxLength="500" Nullable="false" />
     <Property Name="REFERENCE_ID" Type="int" Nullable="false" />
@@ -93,11 +107,23 @@
     <Property Name="REFERENCE_PHONE" Type="nvarchar" MaxLength="30" />
     <Property Name="SCHOOL_NAME" Type="nvarchar" MaxLength="100" />
     <Property Name="CLASS_NAME" Type="nvarchar" MaxLength="50" />
-    <Property Name="AUTO_CONTRACT_NO" Type="nvarchar" MaxLength="20" />
+    <Property Name="IMPLEMENTER" Type="nvarchar" MaxLength="50" />
+    <Property Name="BACK_TO_DOCUMENTS" Type="nvarchar" MaxLength="300" />
+    <Property Name="CONTRACT_NO" Type="nvarchar" MaxLength="20" />
     <Property Name="CREATED_BY" Type="nvarchar" MaxLength="50" />
     <Property Name="CREATED_DATE" Type="datetime" />
     <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
     <Property Name="UPDATED_DATE" Type="datetime" />
+    <Property Name="PHOTO_1" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_1" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_2" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_2" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_3" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_3" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_4" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_4" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_5" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_5" Type="varchar" MaxLength="300" />
   </EntityType>
   <EntityType Name="Customer">
     <Key>
@@ -106,8 +132,15 @@
     <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="NAME" Type="nvarchar" MaxLength="80" Nullable="false" />
     <Property Name="LICENSE_NO" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LICENSE_RANGE_DATE" Type="datetime" />
+    <Property Name="LICENSE_RANGE_PLACE" Type="nvarchar" MaxLength="300" />
+    <Property Name="PERMANENT_RESIDENCE" Type="nvarchar" MaxLength="300" />
+    <Property Name="CURRENT_RESIDENCE" Type="nvarchar" MaxLength="300" />
+    <Property Name="BIRTH_DAY" Type="datetime" />
+    <Property Name="EMAIL" Type="varchar" MaxLength="50" />
     <Property Name="PHONE" Type="nvarchar" MaxLength="30" Nullable="false" />
-    <Property Name="ADDRESS" Type="nvarchar" MaxLength="300" Nullable="false" />
+    <Property Name="ADDRESS" Type="nvarchar" MaxLength="300" />
+    <Property Name="PHOTO" Type="image" />
     <Property Name="CITY_ID" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="InOut">
@@ -239,7 +272,6 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_FULL_VW' does not have a p
       <PropertyRef Name="CUSTOMER_NAME" />
       <PropertyRef Name="LICENSE_NO" />
       <PropertyRef Name="PHONE" />
-      <PropertyRef Name="ADDRESS" />
       <PropertyRef Name="CUS_CITY_ID" />
       <PropertyRef Name="STORE_NAME" />
       <PropertyRef Name="CLOSE_CONTRACT_DATE" />
@@ -261,11 +293,28 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_FULL_VW' does not have a p
     <Property Name="SERIAL_1" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="SERIAL_2" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="DETAIL" Type="nvarchar" MaxLength="250" Nullable="false" />
+    <Property Name="PHOTO_1" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_1" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_2" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_2" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_3" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_3" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_4" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_4" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_5" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_5" Type="varchar" MaxLength="300" />
     <Property Name="SEARCH_TEXT" Type="nvarchar" MaxLength="500" Nullable="false" />
     <Property Name="CONTRACT_STATUS" Type="bit" Nullable="false" />
     <Property Name="CUSTOMER_NAME" Type="nvarchar" MaxLength="80" Nullable="false" />
     <Property Name="LICENSE_NO" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="PHONE" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="LICENSE_RANGE_DATE" Type="datetime" />
+    <Property Name="LICENSE_RANGE_PLACE" Type="nvarchar" MaxLength="300" />
+    <Property Name="PERMANENT_RESIDENCE" Type="nvarchar" MaxLength="300" />
+    <Property Name="CURRENT_RESIDENCE" Type="nvarchar" MaxLength="300" />
+    <Property Name="BIRTH_DAY" Type="datetime" />
+    <Property Name="EMAIL" Type="varchar" MaxLength="50" />
+    <Property Name="PHOTO" Type="image" />
     <Property Name="REFERENCE_PHONE" Type="nvarchar" MaxLength="30" />
     <Property Name="SCHOOL_NAME" Type="nvarchar" MaxLength="100" />
     <Property Name="CLASS_NAME" Type="nvarchar" MaxLength="50" />
@@ -274,7 +323,9 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_FULL_VW' does not have a p
     <Property Name="STORE_NAME" Type="nvarchar" MaxLength="150" Nullable="false" />
     <Property Name="RENT_TYPE_NAME" Type="nvarchar" MaxLength="100" />
     <Property Name="CLOSE_CONTRACT_DATE" Type="date" Nullable="false" />
-    <Property Name="AUTO_CONTRACT_NO" Type="varchar" MaxLength="13" />
+    <Property Name="CONTRACT_NO" Type="varchar" MaxLength="13" />
+    <Property Name="IMPLEMENTER" Type="nvarchar" MaxLength="50" />
+    <Property Name="BACK_TO_DOCUMENTS" Type="nvarchar" MaxLength="300" />
     <Property Name="CREATED_BY" Type="nvarchar" MaxLength="50" />
     <Property Name="CREATED_DATE" Type="datetime" />
     <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
@@ -334,7 +385,19 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_HISTORY_FULL_VW' does not 
     <Property Name="REFERENCE_PHONE" Type="nvarchar" MaxLength="30" />
     <Property Name="SCHOOL_NAME" Type="nvarchar" MaxLength="100" />
     <Property Name="CLASS_NAME" Type="nvarchar" MaxLength="50" />
-    <Property Name="AUTO_CONTRACT_NO" Type="nvarchar" MaxLength="20" />
+    <Property Name="CONTRACT_NO" Type="nvarchar" MaxLength="20" />
+    <Property Name="IMPLEMENTER" Type="nvarchar" MaxLength="50" />
+    <Property Name="BACK_TO_DOCUMENTS" Type="nvarchar" MaxLength="300" />
+    <Property Name="PHOTO_1" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_1" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_2" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_2" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_3" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_3" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_4" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_4" Type="varchar" MaxLength="300" />
+    <Property Name="PHOTO_5" Type="varchar" MaxLength="300" />
+    <Property Name="THUMBNAIL_PHOTO_5" Type="varchar" MaxLength="300" />
     <Property Name="CREATED_BY" Type="nvarchar" MaxLength="50" />
     <Property Name="CREATED_DATE" Type="datetime" />
     <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
@@ -344,6 +407,13 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_HISTORY_FULL_VW' does not 
     <Property Name="PHONE" Type="nvarchar" MaxLength="30" Nullable="false" />
     <Property Name="ADDRESS" Type="nvarchar" MaxLength="300" Nullable="false" />
     <Property Name="CUSTOMER_CITY_ID" Type="int" Nullable="false" />
+    <Property Name="LICENSE_RANGE_DATE" Type="datetime" />
+    <Property Name="LICENSE_RANGE_PLACE" Type="nvarchar" MaxLength="300" />
+    <Property Name="PERMANENT_RESIDENCE" Type="nvarchar" MaxLength="300" />
+    <Property Name="CURRENT_RESIDENCE" Type="nvarchar" MaxLength="300" />
+    <Property Name="BIRTH_DAY" Type="datetime" />
+    <Property Name="EMAIL" Type="varchar" MaxLength="50" />
+    <Property Name="PHOTO" Type="image" />
     <Property Name="RENT_TYPE_NAME" Type="nvarchar" MaxLength="100" />
     <Property Name="CLOSE_CONTRACT_DATE" Type="date" Nullable="false" />
   </EntityType>
@@ -362,6 +432,8 @@ warning 6002: The table/view 'prohaihung.dbo.INOUT_FULL_VW' does not have a prim
       <PropertyRef Name="STORE_ID" />
       <PropertyRef Name="SEARCH_TEXT" />
       <PropertyRef Name="STORE_NAME" />
+      <PropertyRef Name="CUSTOMER_ID" />
+      <PropertyRef Name="CUSTOMER_NAME" />
       <PropertyRef Name="INOUT_TYPE_ID" />
     </Key>
     <Property Name="ID" Type="int" Nullable="false" />
@@ -380,13 +452,15 @@ warning 6002: The table/view 'prohaihung.dbo.INOUT_FULL_VW' does not have a prim
     <Property Name="CREATED_DATE" Type="datetime" />
     <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
     <Property Name="UPDATED_DATE" Type="datetime" />
+    <Property Name="CUSTOMER_ID" Type="int" Nullable="false" />
+    <Property Name="CUSTOMER_NAME" Type="nvarchar" MaxLength="80" Nullable="false" />
     <Property Name="ISINCOME" Type="bit" />
     <Property Name="IS_CONTRACT" Type="bit" />
     <Property Name="RENT_TYPE_ACTIVE" Type="bit" />
     <Property Name="INOUT_TYPE_NAME" Type="nvarchar" MaxLength="100" />
     <Property Name="INOUT_TYPE_ID" Type="int" Nullable="false" />
     <Property Name="INOUT_DATE" Type="date" />
-    <Property Name="AUTO_CONTRACT_NO" Type="varchar" MaxLength="13" />
+    <Property Name="CONTRACT_NO" Type="varchar" MaxLength="13" />
   </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -445,129 +519,169 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
     <EntitySet Name="StoreFee" EntityType="Self.StoreFee" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="CONTRACT_FULL_VW" EntityType="Self.CONTRACT_FULL_VW" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
-[CONTRACT_FULL_VW].[ID] AS [ID], 
-[CONTRACT_FULL_VW].[RENT_TYPE_ID] AS [RENT_TYPE_ID], 
-[CONTRACT_FULL_VW].[STORE_ID] AS [STORE_ID], 
-[CONTRACT_FULL_VW].[FEE_PER_DAY] AS [FEE_PER_DAY], 
-[CONTRACT_FULL_VW].[CONTRACT_AMOUNT] AS [CONTRACT_AMOUNT], 
-[CONTRACT_FULL_VW].[RENT_DATE] AS [RENT_DATE], 
-[CONTRACT_FULL_VW].[END_DATE] AS [END_DATE], 
-[CONTRACT_FULL_VW].[PAY_FEE_MESSAGE] AS [PAY_FEE_MESSAGE], 
-[CONTRACT_FULL_VW].[NOTE] AS [NOTE], 
-[CONTRACT_FULL_VW].[REFERENCE_ID] AS [REFERENCE_ID], 
-[CONTRACT_FULL_VW].[REFERENCE_NAME] AS [REFERENCE_NAME], 
-[CONTRACT_FULL_VW].[CUSTOMER_ID] AS [CUSTOMER_ID], 
-[CONTRACT_FULL_VW].[ITEM_TYPE] AS [ITEM_TYPE], 
-[CONTRACT_FULL_VW].[ITEM_LICENSE_NO] AS [ITEM_LICENSE_NO], 
-[CONTRACT_FULL_VW].[SERIAL_1] AS [SERIAL_1], 
-[CONTRACT_FULL_VW].[SERIAL_2] AS [SERIAL_2], 
-[CONTRACT_FULL_VW].[DETAIL] AS [DETAIL], 
-[CONTRACT_FULL_VW].[SEARCH_TEXT] AS [SEARCH_TEXT], 
-[CONTRACT_FULL_VW].[CONTRACT_STATUS] AS [CONTRACT_STATUS], 
-[CONTRACT_FULL_VW].[CUSTOMER_NAME] AS [CUSTOMER_NAME], 
-[CONTRACT_FULL_VW].[LICENSE_NO] AS [LICENSE_NO], 
-[CONTRACT_FULL_VW].[PHONE] AS [PHONE], 
-[CONTRACT_FULL_VW].[REFERENCE_PHONE] AS [REFERENCE_PHONE], 
-[CONTRACT_FULL_VW].[SCHOOL_NAME] AS [SCHOOL_NAME], 
-[CONTRACT_FULL_VW].[CLASS_NAME] AS [CLASS_NAME], 
-[CONTRACT_FULL_VW].[ADDRESS] AS [ADDRESS], 
-[CONTRACT_FULL_VW].[CUS_CITY_ID] AS [CUS_CITY_ID], 
-[CONTRACT_FULL_VW].[STORE_NAME] AS [STORE_NAME], 
-[CONTRACT_FULL_VW].[RENT_TYPE_NAME] AS [RENT_TYPE_NAME], 
-[CONTRACT_FULL_VW].[CLOSE_CONTRACT_DATE] AS [CLOSE_CONTRACT_DATE], 
-[CONTRACT_FULL_VW].[AUTO_CONTRACT_NO] AS [AUTO_CONTRACT_NO], 
-[CONTRACT_FULL_VW].[CREATED_BY] AS [CREATED_BY], 
-[CONTRACT_FULL_VW].[CREATED_DATE] AS [CREATED_DATE], 
-[CONTRACT_FULL_VW].[UPDATED_BY] AS [UPDATED_BY], 
-[CONTRACT_FULL_VW].[UPDATED_DATE] AS [UPDATED_DATE]
-FROM [dbo].[CONTRACT_FULL_VW] AS [CONTRACT_FULL_VW]</DefiningQuery>
+    [CONTRACT_FULL_VW].[ID] AS [ID], 
+    [CONTRACT_FULL_VW].[RENT_TYPE_ID] AS [RENT_TYPE_ID], 
+    [CONTRACT_FULL_VW].[STORE_ID] AS [STORE_ID], 
+    [CONTRACT_FULL_VW].[FEE_PER_DAY] AS [FEE_PER_DAY], 
+    [CONTRACT_FULL_VW].[CONTRACT_AMOUNT] AS [CONTRACT_AMOUNT], 
+    [CONTRACT_FULL_VW].[RENT_DATE] AS [RENT_DATE], 
+    [CONTRACT_FULL_VW].[END_DATE] AS [END_DATE], 
+    [CONTRACT_FULL_VW].[PAY_FEE_MESSAGE] AS [PAY_FEE_MESSAGE], 
+    [CONTRACT_FULL_VW].[NOTE] AS [NOTE], 
+    [CONTRACT_FULL_VW].[REFERENCE_ID] AS [REFERENCE_ID], 
+    [CONTRACT_FULL_VW].[REFERENCE_NAME] AS [REFERENCE_NAME], 
+    [CONTRACT_FULL_VW].[CUSTOMER_ID] AS [CUSTOMER_ID], 
+    [CONTRACT_FULL_VW].[ITEM_TYPE] AS [ITEM_TYPE], 
+    [CONTRACT_FULL_VW].[ITEM_LICENSE_NO] AS [ITEM_LICENSE_NO], 
+    [CONTRACT_FULL_VW].[SERIAL_1] AS [SERIAL_1], 
+    [CONTRACT_FULL_VW].[SERIAL_2] AS [SERIAL_2], 
+    [CONTRACT_FULL_VW].[DETAIL] AS [DETAIL], 
+    [CONTRACT_FULL_VW].[PHOTO_1] AS [PHOTO_1], 
+    [CONTRACT_FULL_VW].[THUMBNAIL_PHOTO_1] AS [THUMBNAIL_PHOTO_1], 
+    [CONTRACT_FULL_VW].[PHOTO_2] AS [PHOTO_2], 
+    [CONTRACT_FULL_VW].[THUMBNAIL_PHOTO_2] AS [THUMBNAIL_PHOTO_2], 
+    [CONTRACT_FULL_VW].[PHOTO_3] AS [PHOTO_3], 
+    [CONTRACT_FULL_VW].[THUMBNAIL_PHOTO_3] AS [THUMBNAIL_PHOTO_3], 
+    [CONTRACT_FULL_VW].[PHOTO_4] AS [PHOTO_4], 
+    [CONTRACT_FULL_VW].[THUMBNAIL_PHOTO_4] AS [THUMBNAIL_PHOTO_4], 
+    [CONTRACT_FULL_VW].[PHOTO_5] AS [PHOTO_5], 
+    [CONTRACT_FULL_VW].[THUMBNAIL_PHOTO_5] AS [THUMBNAIL_PHOTO_5], 
+    [CONTRACT_FULL_VW].[SEARCH_TEXT] AS [SEARCH_TEXT], 
+    [CONTRACT_FULL_VW].[CONTRACT_STATUS] AS [CONTRACT_STATUS], 
+    [CONTRACT_FULL_VW].[CUSTOMER_NAME] AS [CUSTOMER_NAME], 
+    [CONTRACT_FULL_VW].[LICENSE_NO] AS [LICENSE_NO], 
+    [CONTRACT_FULL_VW].[PHONE] AS [PHONE], 
+    [CONTRACT_FULL_VW].[LICENSE_RANGE_DATE] AS [LICENSE_RANGE_DATE], 
+    [CONTRACT_FULL_VW].[LICENSE_RANGE_PLACE] AS [LICENSE_RANGE_PLACE], 
+    [CONTRACT_FULL_VW].[PERMANENT_RESIDENCE] AS [PERMANENT_RESIDENCE], 
+    [CONTRACT_FULL_VW].[CURRENT_RESIDENCE] AS [CURRENT_RESIDENCE], 
+    [CONTRACT_FULL_VW].[BIRTH_DAY] AS [BIRTH_DAY], 
+    [CONTRACT_FULL_VW].[EMAIL] AS [EMAIL], 
+    [CONTRACT_FULL_VW].[PHOTO] AS [PHOTO], 
+    [CONTRACT_FULL_VW].[REFERENCE_PHONE] AS [REFERENCE_PHONE], 
+    [CONTRACT_FULL_VW].[SCHOOL_NAME] AS [SCHOOL_NAME], 
+    [CONTRACT_FULL_VW].[CLASS_NAME] AS [CLASS_NAME], 
+    [CONTRACT_FULL_VW].[ADDRESS] AS [ADDRESS], 
+    [CONTRACT_FULL_VW].[CUS_CITY_ID] AS [CUS_CITY_ID], 
+    [CONTRACT_FULL_VW].[STORE_NAME] AS [STORE_NAME], 
+    [CONTRACT_FULL_VW].[RENT_TYPE_NAME] AS [RENT_TYPE_NAME], 
+    [CONTRACT_FULL_VW].[CLOSE_CONTRACT_DATE] AS [CLOSE_CONTRACT_DATE], 
+    [CONTRACT_FULL_VW].[CONTRACT_NO] AS [CONTRACT_NO], 
+    [CONTRACT_FULL_VW].[IMPLEMENTER] AS [IMPLEMENTER], 
+    [CONTRACT_FULL_VW].[BACK_TO_DOCUMENTS] AS [BACK_TO_DOCUMENTS], 
+    [CONTRACT_FULL_VW].[CREATED_BY] AS [CREATED_BY], 
+    [CONTRACT_FULL_VW].[CREATED_DATE] AS [CREATED_DATE], 
+    [CONTRACT_FULL_VW].[UPDATED_BY] AS [UPDATED_BY], 
+    [CONTRACT_FULL_VW].[UPDATED_DATE] AS [UPDATED_DATE]
+    FROM [dbo].[CONTRACT_FULL_VW] AS [CONTRACT_FULL_VW]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="CONTRACT_HISTORY_FULL_VW" EntityType="Self.CONTRACT_HISTORY_FULL_VW" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
-[CONTRACT_HISTORY_FULL_VW].[ID] AS [ID], 
-[CONTRACT_HISTORY_FULL_VW].[CONTRACT_ID] AS [CONTRACT_ID], 
-[CONTRACT_HISTORY_FULL_VW].[RENT_TYPE_ID] AS [RENT_TYPE_ID], 
-[CONTRACT_HISTORY_FULL_VW].[STORE_ID] AS [STORE_ID], 
-[CONTRACT_HISTORY_FULL_VW].[FEE_PER_DAY] AS [FEE_PER_DAY], 
-[CONTRACT_HISTORY_FULL_VW].[CONTRACT_AMOUNT] AS [CONTRACT_AMOUNT], 
-[CONTRACT_HISTORY_FULL_VW].[RENT_DATE] AS [RENT_DATE], 
-[CONTRACT_HISTORY_FULL_VW].[END_DATE] AS [END_DATE], 
-[CONTRACT_HISTORY_FULL_VW].[PAY_FEE_MESSAGE] AS [PAY_FEE_MESSAGE], 
-[CONTRACT_HISTORY_FULL_VW].[NOTE] AS [NOTE], 
-[CONTRACT_HISTORY_FULL_VW].[REFERENCE_ID] AS [REFERENCE_ID], 
-[CONTRACT_HISTORY_FULL_VW].[REFERENCE_NAME] AS [REFERENCE_NAME], 
-[CONTRACT_HISTORY_FULL_VW].[ITEM_TYPE] AS [ITEM_TYPE], 
-[CONTRACT_HISTORY_FULL_VW].[ITEM_LICENSE_NO] AS [ITEM_LICENSE_NO], 
-[CONTRACT_HISTORY_FULL_VW].[SERIAL_1] AS [SERIAL_1], 
-[CONTRACT_HISTORY_FULL_VW].[SERIAL_2] AS [SERIAL_2], 
-[CONTRACT_HISTORY_FULL_VW].[DETAIL] AS [DETAIL], 
-[CONTRACT_HISTORY_FULL_VW].[CUSTOMER_ID] AS [CUSTOMER_ID], 
-[CONTRACT_HISTORY_FULL_VW].[SEARCH_TEXT] AS [SEARCH_TEXT], 
-[CONTRACT_HISTORY_FULL_VW].[CONTRACT_STATUS] AS [CONTRACT_STATUS], 
-[CONTRACT_HISTORY_FULL_VW].[REFERENCE_PHONE] AS [REFERENCE_PHONE], 
-[CONTRACT_HISTORY_FULL_VW].[SCHOOL_NAME] AS [SCHOOL_NAME], 
-[CONTRACT_HISTORY_FULL_VW].[CLASS_NAME] AS [CLASS_NAME], 
-[CONTRACT_HISTORY_FULL_VW].[AUTO_CONTRACT_NO] AS [AUTO_CONTRACT_NO], 
-[CONTRACT_HISTORY_FULL_VW].[CREATED_BY] AS [CREATED_BY], 
-[CONTRACT_HISTORY_FULL_VW].[CREATED_DATE] AS [CREATED_DATE], 
-[CONTRACT_HISTORY_FULL_VW].[UPDATED_BY] AS [UPDATED_BY], 
-[CONTRACT_HISTORY_FULL_VW].[UPDATED_DATE] AS [UPDATED_DATE], 
-[CONTRACT_HISTORY_FULL_VW].[CUSTOMER_NAME] AS [CUSTOMER_NAME], 
-[CONTRACT_HISTORY_FULL_VW].[LICENSE_NO] AS [LICENSE_NO], 
-[CONTRACT_HISTORY_FULL_VW].[PHONE] AS [PHONE], 
-[CONTRACT_HISTORY_FULL_VW].[ADDRESS] AS [ADDRESS], 
-[CONTRACT_HISTORY_FULL_VW].[CUSTOMER_CITY_ID] AS [CUSTOMER_CITY_ID], 
-[CONTRACT_HISTORY_FULL_VW].[RENT_TYPE_NAME] AS [RENT_TYPE_NAME], 
-[CONTRACT_HISTORY_FULL_VW].[CLOSE_CONTRACT_DATE] AS [CLOSE_CONTRACT_DATE]
-FROM [dbo].[CONTRACT_HISTORY_FULL_VW] AS [CONTRACT_HISTORY_FULL_VW]</DefiningQuery>
+    [CONTRACT_HISTORY_FULL_VW].[ID] AS [ID], 
+    [CONTRACT_HISTORY_FULL_VW].[CONTRACT_ID] AS [CONTRACT_ID], 
+    [CONTRACT_HISTORY_FULL_VW].[RENT_TYPE_ID] AS [RENT_TYPE_ID], 
+    [CONTRACT_HISTORY_FULL_VW].[STORE_ID] AS [STORE_ID], 
+    [CONTRACT_HISTORY_FULL_VW].[FEE_PER_DAY] AS [FEE_PER_DAY], 
+    [CONTRACT_HISTORY_FULL_VW].[CONTRACT_AMOUNT] AS [CONTRACT_AMOUNT], 
+    [CONTRACT_HISTORY_FULL_VW].[RENT_DATE] AS [RENT_DATE], 
+    [CONTRACT_HISTORY_FULL_VW].[END_DATE] AS [END_DATE], 
+    [CONTRACT_HISTORY_FULL_VW].[PAY_FEE_MESSAGE] AS [PAY_FEE_MESSAGE], 
+    [CONTRACT_HISTORY_FULL_VW].[NOTE] AS [NOTE], 
+    [CONTRACT_HISTORY_FULL_VW].[REFERENCE_ID] AS [REFERENCE_ID], 
+    [CONTRACT_HISTORY_FULL_VW].[REFERENCE_NAME] AS [REFERENCE_NAME], 
+    [CONTRACT_HISTORY_FULL_VW].[ITEM_TYPE] AS [ITEM_TYPE], 
+    [CONTRACT_HISTORY_FULL_VW].[ITEM_LICENSE_NO] AS [ITEM_LICENSE_NO], 
+    [CONTRACT_HISTORY_FULL_VW].[SERIAL_1] AS [SERIAL_1], 
+    [CONTRACT_HISTORY_FULL_VW].[SERIAL_2] AS [SERIAL_2], 
+    [CONTRACT_HISTORY_FULL_VW].[DETAIL] AS [DETAIL], 
+    [CONTRACT_HISTORY_FULL_VW].[CUSTOMER_ID] AS [CUSTOMER_ID], 
+    [CONTRACT_HISTORY_FULL_VW].[SEARCH_TEXT] AS [SEARCH_TEXT], 
+    [CONTRACT_HISTORY_FULL_VW].[CONTRACT_STATUS] AS [CONTRACT_STATUS], 
+    [CONTRACT_HISTORY_FULL_VW].[REFERENCE_PHONE] AS [REFERENCE_PHONE], 
+    [CONTRACT_HISTORY_FULL_VW].[SCHOOL_NAME] AS [SCHOOL_NAME], 
+    [CONTRACT_HISTORY_FULL_VW].[CLASS_NAME] AS [CLASS_NAME], 
+    [CONTRACT_HISTORY_FULL_VW].[CONTRACT_NO] AS [CONTRACT_NO], 
+    [CONTRACT_HISTORY_FULL_VW].[IMPLEMENTER] AS [IMPLEMENTER], 
+    [CONTRACT_HISTORY_FULL_VW].[BACK_TO_DOCUMENTS] AS [BACK_TO_DOCUMENTS], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO_1] AS [PHOTO_1], 
+    [CONTRACT_HISTORY_FULL_VW].[THUMBNAIL_PHOTO_1] AS [THUMBNAIL_PHOTO_1], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO_2] AS [PHOTO_2], 
+    [CONTRACT_HISTORY_FULL_VW].[THUMBNAIL_PHOTO_2] AS [THUMBNAIL_PHOTO_2], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO_3] AS [PHOTO_3], 
+    [CONTRACT_HISTORY_FULL_VW].[THUMBNAIL_PHOTO_3] AS [THUMBNAIL_PHOTO_3], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO_4] AS [PHOTO_4], 
+    [CONTRACT_HISTORY_FULL_VW].[THUMBNAIL_PHOTO_4] AS [THUMBNAIL_PHOTO_4], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO_5] AS [PHOTO_5], 
+    [CONTRACT_HISTORY_FULL_VW].[THUMBNAIL_PHOTO_5] AS [THUMBNAIL_PHOTO_5], 
+    [CONTRACT_HISTORY_FULL_VW].[CREATED_BY] AS [CREATED_BY], 
+    [CONTRACT_HISTORY_FULL_VW].[CREATED_DATE] AS [CREATED_DATE], 
+    [CONTRACT_HISTORY_FULL_VW].[UPDATED_BY] AS [UPDATED_BY], 
+    [CONTRACT_HISTORY_FULL_VW].[UPDATED_DATE] AS [UPDATED_DATE], 
+    [CONTRACT_HISTORY_FULL_VW].[CUSTOMER_NAME] AS [CUSTOMER_NAME], 
+    [CONTRACT_HISTORY_FULL_VW].[LICENSE_NO] AS [LICENSE_NO], 
+    [CONTRACT_HISTORY_FULL_VW].[PHONE] AS [PHONE], 
+    [CONTRACT_HISTORY_FULL_VW].[ADDRESS] AS [ADDRESS], 
+    [CONTRACT_HISTORY_FULL_VW].[CUSTOMER_CITY_ID] AS [CUSTOMER_CITY_ID], 
+    [CONTRACT_HISTORY_FULL_VW].[LICENSE_RANGE_DATE] AS [LICENSE_RANGE_DATE], 
+    [CONTRACT_HISTORY_FULL_VW].[LICENSE_RANGE_PLACE] AS [LICENSE_RANGE_PLACE], 
+    [CONTRACT_HISTORY_FULL_VW].[PERMANENT_RESIDENCE] AS [PERMANENT_RESIDENCE], 
+    [CONTRACT_HISTORY_FULL_VW].[CURRENT_RESIDENCE] AS [CURRENT_RESIDENCE], 
+    [CONTRACT_HISTORY_FULL_VW].[BIRTH_DAY] AS [BIRTH_DAY], 
+    [CONTRACT_HISTORY_FULL_VW].[EMAIL] AS [EMAIL], 
+    [CONTRACT_HISTORY_FULL_VW].[PHOTO] AS [PHOTO], 
+    [CONTRACT_HISTORY_FULL_VW].[RENT_TYPE_NAME] AS [RENT_TYPE_NAME], 
+    [CONTRACT_HISTORY_FULL_VW].[CLOSE_CONTRACT_DATE] AS [CLOSE_CONTRACT_DATE]
+    FROM [dbo].[CONTRACT_HISTORY_FULL_VW] AS [CONTRACT_HISTORY_FULL_VW]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="INOUT_FULL_VW" EntityType="Self.INOUT_FULL_VW" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
-[INOUT_FULL_VW].[ID] AS [ID], 
-[INOUT_FULL_VW].[IN_AMOUNT] AS [IN_AMOUNT], 
-[INOUT_FULL_VW].[OUT_AMOUNT] AS [OUT_AMOUNT], 
-[INOUT_FULL_VW].[CONTRACT_ID] AS [CONTRACT_ID], 
-[INOUT_FULL_VW].[PERIOD_ID] AS [PERIOD_ID], 
-[INOUT_FULL_VW].[RENT_TYPE_ID] AS [RENT_TYPE_ID], 
-[INOUT_FULL_VW].[PERIOD_DATE] AS [PERIOD_DATE], 
-[INOUT_FULL_VW].[MORE_INFO] AS [MORE_INFO], 
-[INOUT_FULL_VW].[STORE_ID] AS [STORE_ID], 
-[INOUT_FULL_VW].[SEARCH_TEXT] AS [SEARCH_TEXT], 
-[INOUT_FULL_VW].[STORE_NAME] AS [STORE_NAME], 
-[INOUT_FULL_VW].[RENT_TYPE_NAME] AS [RENT_TYPE_NAME], 
-[INOUT_FULL_VW].[CREATED_BY] AS [CREATED_BY], 
-[INOUT_FULL_VW].[CREATED_DATE] AS [CREATED_DATE], 
-[INOUT_FULL_VW].[UPDATED_BY] AS [UPDATED_BY], 
-[INOUT_FULL_VW].[UPDATED_DATE] AS [UPDATED_DATE], 
-[INOUT_FULL_VW].[ISINCOME] AS [ISINCOME], 
-[INOUT_FULL_VW].[IS_CONTRACT] AS [IS_CONTRACT], 
-[INOUT_FULL_VW].[RENT_TYPE_ACTIVE] AS [RENT_TYPE_ACTIVE], 
-[INOUT_FULL_VW].[INOUT_TYPE_NAME] AS [INOUT_TYPE_NAME], 
-[INOUT_FULL_VW].[INOUT_TYPE_ID] AS [INOUT_TYPE_ID], 
-[INOUT_FULL_VW].[INOUT_DATE] AS [INOUT_DATE], 
-[INOUT_FULL_VW].[AUTO_CONTRACT_NO] AS [AUTO_CONTRACT_NO]
-FROM [dbo].[INOUT_FULL_VW] AS [INOUT_FULL_VW]</DefiningQuery>
+    [INOUT_FULL_VW].[ID] AS [ID], 
+    [INOUT_FULL_VW].[IN_AMOUNT] AS [IN_AMOUNT], 
+    [INOUT_FULL_VW].[OUT_AMOUNT] AS [OUT_AMOUNT], 
+    [INOUT_FULL_VW].[CONTRACT_ID] AS [CONTRACT_ID], 
+    [INOUT_FULL_VW].[PERIOD_ID] AS [PERIOD_ID], 
+    [INOUT_FULL_VW].[RENT_TYPE_ID] AS [RENT_TYPE_ID], 
+    [INOUT_FULL_VW].[PERIOD_DATE] AS [PERIOD_DATE], 
+    [INOUT_FULL_VW].[MORE_INFO] AS [MORE_INFO], 
+    [INOUT_FULL_VW].[STORE_ID] AS [STORE_ID], 
+    [INOUT_FULL_VW].[SEARCH_TEXT] AS [SEARCH_TEXT], 
+    [INOUT_FULL_VW].[STORE_NAME] AS [STORE_NAME], 
+    [INOUT_FULL_VW].[RENT_TYPE_NAME] AS [RENT_TYPE_NAME], 
+    [INOUT_FULL_VW].[CREATED_BY] AS [CREATED_BY], 
+    [INOUT_FULL_VW].[CREATED_DATE] AS [CREATED_DATE], 
+    [INOUT_FULL_VW].[UPDATED_BY] AS [UPDATED_BY], 
+    [INOUT_FULL_VW].[UPDATED_DATE] AS [UPDATED_DATE], 
+    [INOUT_FULL_VW].[CUSTOMER_ID] AS [CUSTOMER_ID], 
+    [INOUT_FULL_VW].[CUSTOMER_NAME] AS [CUSTOMER_NAME], 
+    [INOUT_FULL_VW].[ISINCOME] AS [ISINCOME], 
+    [INOUT_FULL_VW].[IS_CONTRACT] AS [IS_CONTRACT], 
+    [INOUT_FULL_VW].[RENT_TYPE_ACTIVE] AS [RENT_TYPE_ACTIVE], 
+    [INOUT_FULL_VW].[INOUT_TYPE_NAME] AS [INOUT_TYPE_NAME], 
+    [INOUT_FULL_VW].[INOUT_TYPE_ID] AS [INOUT_TYPE_ID], 
+    [INOUT_FULL_VW].[INOUT_DATE] AS [INOUT_DATE], 
+    [INOUT_FULL_VW].[CONTRACT_NO] AS [CONTRACT_NO]
+    FROM [dbo].[INOUT_FULL_VW] AS [INOUT_FULL_VW]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="STORE_FULL_VW" EntityType="Self.STORE_FULL_VW" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
-[STORE_FULL_VW].[ID] AS [ID], 
-[STORE_FULL_VW].[NAME] AS [NAME], 
-[STORE_FULL_VW].[ADDRESS] AS [ADDRESS], 
-[STORE_FULL_VW].[CITY_ID] AS [CITY_ID], 
-[STORE_FULL_VW].[PHONE] AS [PHONE], 
-[STORE_FULL_VW].[FAX] AS [FAX], 
-[STORE_FULL_VW].[START_CAPITAL] AS [START_CAPITAL], 
-[STORE_FULL_VW].[CURRENT_CAPITAL] AS [CURRENT_CAPITAL], 
-[STORE_FULL_VW].[APPLY_DATE] AS [APPLY_DATE], 
-[STORE_FULL_VW].[REVENUE_BEFORE_APPLY] AS [REVENUE_BEFORE_APPLY], 
-[STORE_FULL_VW].[TOTAL_COST_BEFORE] AS [TOTAL_COST_BEFORE], 
-[STORE_FULL_VW].[TOTAL_INVESMENT_BEFORE] AS [TOTAL_INVESMENT_BEFORE], 
-[STORE_FULL_VW].[REGISTER_DATE] AS [REGISTER_DATE], 
-[STORE_FULL_VW].[ACTIVE] AS [ACTIVE], 
-[STORE_FULL_VW].[NOTE] AS [NOTE], 
-[STORE_FULL_VW].[SEARCH_TEXT] AS [SEARCH_TEXT], 
-[STORE_FULL_VW].[CITY] AS [CITY]
-FROM [dbo].[STORE_FULL_VW] AS [STORE_FULL_VW]</DefiningQuery>
+    [STORE_FULL_VW].[ID] AS [ID], 
+    [STORE_FULL_VW].[NAME] AS [NAME], 
+    [STORE_FULL_VW].[ADDRESS] AS [ADDRESS], 
+    [STORE_FULL_VW].[CITY_ID] AS [CITY_ID], 
+    [STORE_FULL_VW].[PHONE] AS [PHONE], 
+    [STORE_FULL_VW].[FAX] AS [FAX], 
+    [STORE_FULL_VW].[START_CAPITAL] AS [START_CAPITAL], 
+    [STORE_FULL_VW].[CURRENT_CAPITAL] AS [CURRENT_CAPITAL], 
+    [STORE_FULL_VW].[APPLY_DATE] AS [APPLY_DATE], 
+    [STORE_FULL_VW].[REVENUE_BEFORE_APPLY] AS [REVENUE_BEFORE_APPLY], 
+    [STORE_FULL_VW].[TOTAL_COST_BEFORE] AS [TOTAL_COST_BEFORE], 
+    [STORE_FULL_VW].[TOTAL_INVESMENT_BEFORE] AS [TOTAL_INVESMENT_BEFORE], 
+    [STORE_FULL_VW].[REGISTER_DATE] AS [REGISTER_DATE], 
+    [STORE_FULL_VW].[ACTIVE] AS [ACTIVE], 
+    [STORE_FULL_VW].[NOTE] AS [NOTE], 
+    [STORE_FULL_VW].[SEARCH_TEXT] AS [SEARCH_TEXT], 
+    [STORE_FULL_VW].[CITY] AS [CITY]
+    FROM [dbo].[STORE_FULL_VW] AS [STORE_FULL_VW]</DefiningQuery>
     </EntitySet>
   </EntityContainer>
 </Schema>

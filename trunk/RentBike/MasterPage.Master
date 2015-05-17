@@ -6,7 +6,7 @@
 <head runat="server">
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>Hệ thống quản lý cho thuê - TSolution</title>
-    <link rel="stylesheet" type="text/css" href="App_Themes/Theme1/css/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="App_Themes/Theme1/css/jquery-ui.css?d=20150516" />
     <link rel="stylesheet" type="text/css" href="App_Themes/Theme1/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="script/fancybox/jquery.fancybox.css" />
     <link rel="stylesheet" type="text/css" href="App_Themes/Theme1/css/PrintArea.css" />

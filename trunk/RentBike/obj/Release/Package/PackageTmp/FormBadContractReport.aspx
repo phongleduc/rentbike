@@ -5,6 +5,19 @@
     <table class="table table-striped table-hover ">
         <tbody>
             <tr>
+                <td style="width:50%;">
+                    <div class="col-lg-15">
+                        <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control input-md" placeholder="Tìm kiếm"></asp:TextBox>
+                    </div>
+                </td>
+                <td>
+                    <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClick="btnSearch_Click" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-striped table-hover ">
+        <tbody>
+            <tr>
                 <td class="text-right"><strong>Hợp đồng cho thuê xe:</strong></td>
                 <td class="text-right">Số lượng:&nbsp;<asp:Label ID="lblRentBikeCount" runat="server" CssClass="text-right"></asp:Label></td>
                 <td class="text-right"><strong>Tổng giá trị:&nbsp;</strong></td>
@@ -47,6 +60,7 @@
                         <th class="text-center">Đã trả phí hết ngày</th>
                         <th class="text-center">Số ngày chậm</th>
                         <th class="text-center">Tổng tiền phí</th>
+                        <th class="text-center">Xử lý HĐ</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,6 +75,8 @@
                 <td class="text-center"><%# String.Format("{0:dd/MM/yyyy}", Eval("PAY_DATE"))%></td>
                 <td class="text-center red"><%# Eval("OVER_DATE")%> Ngày</td>
                 <td class="text-center"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY")) * Convert.ToDecimal(Eval("OVER_DATE"))) %> VNĐ</td>
+                <td>
+                    <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>
@@ -68,5 +84,4 @@
            </table>
         </FooterTemplate>
     </asp:Repeater>
-    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
 </asp:Content>

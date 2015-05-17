@@ -39,11 +39,17 @@
     <EntitySetMapping Name="Contracts">
       <EntityTypeMapping TypeName="RentBikeModel.Contract">
         <MappingFragment StoreEntitySet="Contract">
-          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
-          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
-          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
-          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
-          <ScalarProperty Name="AUTO_CONTRACT_NO" ColumnName="AUTO_CONTRACT_NO" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+          <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
           <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
@@ -67,20 +73,30 @@
           <ScalarProperty Name="REFERENCE_PHONE" ColumnName="REFERENCE_PHONE" />
           <ScalarProperty Name="SCHOOL_NAME" ColumnName="SCHOOL_NAME" />
           <ScalarProperty Name="CLASS_NAME" ColumnName="CLASS_NAME" />
+          <ScalarProperty Name="IMPLEMENTER" ColumnName="IMPLEMENTER" />
+          <ScalarProperty Name="BACK_TO_DOCUMENTS" ColumnName="BACK_TO_DOCUMENTS" />
+          <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
+          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
+          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
+          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
+          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="ContractHistories">
       <EntityTypeMapping TypeName="RentBikeModel.ContractHistory">
         <MappingFragment StoreEntitySet="ContractHistory">
-          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
-          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
-          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
-          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
-          <ScalarProperty Name="AUTO_CONTRACT_NO" ColumnName="AUTO_CONTRACT_NO" />
-          <ScalarProperty Name="CLASS_NAME" ColumnName="CLASS_NAME" />
-          <ScalarProperty Name="SCHOOL_NAME" ColumnName="SCHOOL_NAME" />
-          <ScalarProperty Name="REFERENCE_PHONE" ColumnName="REFERENCE_PHONE" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+          <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
           <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
@@ -102,15 +118,32 @@
           <ScalarProperty Name="SEARCH_TEXT" ColumnName="SEARCH_TEXT" />
           <ScalarProperty Name="CONTRACT_STATUS" ColumnName="CONTRACT_STATUS" />
           <ScalarProperty Name="CLOSE_CONTRACT_DATE" ColumnName="CLOSE_CONTRACT_DATE" />
+          <ScalarProperty Name="REFERENCE_PHONE" ColumnName="REFERENCE_PHONE" />
+          <ScalarProperty Name="SCHOOL_NAME" ColumnName="SCHOOL_NAME" />
+          <ScalarProperty Name="CLASS_NAME" ColumnName="CLASS_NAME" />
+          <ScalarProperty Name="IMPLEMENTER" ColumnName="IMPLEMENTER" />
+          <ScalarProperty Name="BACK_TO_DOCUMENTS" ColumnName="BACK_TO_DOCUMENTS" />
+          <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
+          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
+          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
+          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
+          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Customers">
       <EntityTypeMapping TypeName="RentBikeModel.Customer">
         <MappingFragment StoreEntitySet="Customer">
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="NAME" ColumnName="NAME" />
           <ScalarProperty Name="LICENSE_NO" ColumnName="LICENSE_NO" />
+          <ScalarProperty Name="LICENSE_RANGE_DATE" ColumnName="LICENSE_RANGE_DATE" />
+          <ScalarProperty Name="LICENSE_RANGE_PLACE" ColumnName="LICENSE_RANGE_PLACE" />
+          <ScalarProperty Name="PERMANENT_RESIDENCE" ColumnName="PERMANENT_RESIDENCE" />
+          <ScalarProperty Name="CURRENT_RESIDENCE" ColumnName="CURRENT_RESIDENCE" />
+          <ScalarProperty Name="BIRTH_DAY" ColumnName="BIRTH_DAY" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
           <ScalarProperty Name="PHONE" ColumnName="PHONE" />
           <ScalarProperty Name="ADDRESS" ColumnName="ADDRESS" />
           <ScalarProperty Name="CITY_ID" ColumnName="CITY_ID" />
@@ -120,10 +153,6 @@
     <EntitySetMapping Name="InOuts">
       <EntityTypeMapping TypeName="RentBikeModel.InOut">
         <MappingFragment StoreEntitySet="InOut">
-          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
-          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
-          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
-          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="IN_AMOUNT" ColumnName="IN_AMOUNT" />
           <ScalarProperty Name="OUT_AMOUNT" ColumnName="OUT_AMOUNT" />
@@ -136,6 +165,10 @@
           <ScalarProperty Name="SEARCH_TEXT" ColumnName="SEARCH_TEXT" />
           <ScalarProperty Name="INOUT_TYPE_ID" ColumnName="INOUT_TYPE_ID" />
           <ScalarProperty Name="INOUT_DATE" ColumnName="INOUT_DATE" />
+          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
+          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
+          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
+          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -231,14 +264,17 @@
     <EntitySetMapping Name="CONTRACT_FULL_VW">
       <EntityTypeMapping TypeName="RentBikeModel.CONTRACT_FULL_VW">
         <MappingFragment StoreEntitySet="CONTRACT_FULL_VW">
-          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
-          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
-          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
-          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
-          <ScalarProperty Name="AUTO_CONTRACT_NO" ColumnName="AUTO_CONTRACT_NO" />
-          <ScalarProperty Name="CLASS_NAME" ColumnName="CLASS_NAME" />
-          <ScalarProperty Name="SCHOOL_NAME" ColumnName="SCHOOL_NAME" />
-          <ScalarProperty Name="REFERENCE_PHONE" ColumnName="REFERENCE_PHONE" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
           <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
@@ -261,25 +297,44 @@
           <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
           <ScalarProperty Name="LICENSE_NO" ColumnName="LICENSE_NO" />
           <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+          <ScalarProperty Name="LICENSE_RANGE_DATE" ColumnName="LICENSE_RANGE_DATE" />
+          <ScalarProperty Name="LICENSE_RANGE_PLACE" ColumnName="LICENSE_RANGE_PLACE" />
+          <ScalarProperty Name="PERMANENT_RESIDENCE" ColumnName="PERMANENT_RESIDENCE" />
+          <ScalarProperty Name="CURRENT_RESIDENCE" ColumnName="CURRENT_RESIDENCE" />
+          <ScalarProperty Name="BIRTH_DAY" ColumnName="BIRTH_DAY" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="REFERENCE_PHONE" ColumnName="REFERENCE_PHONE" />
+          <ScalarProperty Name="SCHOOL_NAME" ColumnName="SCHOOL_NAME" />
+          <ScalarProperty Name="CLASS_NAME" ColumnName="CLASS_NAME" />
           <ScalarProperty Name="ADDRESS" ColumnName="ADDRESS" />
           <ScalarProperty Name="CUS_CITY_ID" ColumnName="CUS_CITY_ID" />
           <ScalarProperty Name="STORE_NAME" ColumnName="STORE_NAME" />
           <ScalarProperty Name="RENT_TYPE_NAME" ColumnName="RENT_TYPE_NAME" />
           <ScalarProperty Name="CLOSE_CONTRACT_DATE" ColumnName="CLOSE_CONTRACT_DATE" />
+          <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
+          <ScalarProperty Name="IMPLEMENTER" ColumnName="IMPLEMENTER" />
+          <ScalarProperty Name="BACK_TO_DOCUMENTS" ColumnName="BACK_TO_DOCUMENTS" />
+          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
+          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
+          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
+          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="CONTRACT_HISTORY_FULL_VW">
       <EntityTypeMapping TypeName="RentBikeModel.CONTRACT_HISTORY_FULL_VW">
         <MappingFragment StoreEntitySet="CONTRACT_HISTORY_FULL_VW">
-          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
-          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
-          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
-          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
-          <ScalarProperty Name="AUTO_CONTRACT_NO" ColumnName="AUTO_CONTRACT_NO" />
-          <ScalarProperty Name="CLASS_NAME" ColumnName="CLASS_NAME" />
-          <ScalarProperty Name="SCHOOL_NAME" ColumnName="SCHOOL_NAME" />
-          <ScalarProperty Name="REFERENCE_PHONE" ColumnName="REFERENCE_PHONE" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
           <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
@@ -300,11 +355,27 @@
           <ScalarProperty Name="CUSTOMER_ID" ColumnName="CUSTOMER_ID" />
           <ScalarProperty Name="SEARCH_TEXT" ColumnName="SEARCH_TEXT" />
           <ScalarProperty Name="CONTRACT_STATUS" ColumnName="CONTRACT_STATUS" />
+          <ScalarProperty Name="REFERENCE_PHONE" ColumnName="REFERENCE_PHONE" />
+          <ScalarProperty Name="SCHOOL_NAME" ColumnName="SCHOOL_NAME" />
+          <ScalarProperty Name="CLASS_NAME" ColumnName="CLASS_NAME" />
+          <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
+          <ScalarProperty Name="IMPLEMENTER" ColumnName="IMPLEMENTER" />
+          <ScalarProperty Name="BACK_TO_DOCUMENTS" ColumnName="BACK_TO_DOCUMENTS" />
+          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
+          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
+          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
+          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
           <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
           <ScalarProperty Name="LICENSE_NO" ColumnName="LICENSE_NO" />
           <ScalarProperty Name="PHONE" ColumnName="PHONE" />
           <ScalarProperty Name="ADDRESS" ColumnName="ADDRESS" />
           <ScalarProperty Name="CUSTOMER_CITY_ID" ColumnName="CUSTOMER_CITY_ID" />
+          <ScalarProperty Name="LICENSE_RANGE_DATE" ColumnName="LICENSE_RANGE_DATE" />
+          <ScalarProperty Name="LICENSE_RANGE_PLACE" ColumnName="LICENSE_RANGE_PLACE" />
+          <ScalarProperty Name="PERMANENT_RESIDENCE" ColumnName="PERMANENT_RESIDENCE" />
+          <ScalarProperty Name="CURRENT_RESIDENCE" ColumnName="CURRENT_RESIDENCE" />
+          <ScalarProperty Name="BIRTH_DAY" ColumnName="BIRTH_DAY" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
           <ScalarProperty Name="RENT_TYPE_NAME" ColumnName="RENT_TYPE_NAME" />
           <ScalarProperty Name="CLOSE_CONTRACT_DATE" ColumnName="CLOSE_CONTRACT_DATE" />
         </MappingFragment>
@@ -313,11 +384,8 @@
     <EntitySetMapping Name="INOUT_FULL_VW">
       <EntityTypeMapping TypeName="RentBikeModel.INOUT_FULL_VW">
         <MappingFragment StoreEntitySet="INOUT_FULL_VW">
-          <ScalarProperty Name="AUTO_CONTRACT_NO" ColumnName="AUTO_CONTRACT_NO" />
-          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
-          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
-          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
-          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
+          <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
+          <ScalarProperty Name="CUSTOMER_ID" ColumnName="CUSTOMER_ID" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="IN_AMOUNT" ColumnName="IN_AMOUNT" />
           <ScalarProperty Name="OUT_AMOUNT" ColumnName="OUT_AMOUNT" />
@@ -330,12 +398,17 @@
           <ScalarProperty Name="SEARCH_TEXT" ColumnName="SEARCH_TEXT" />
           <ScalarProperty Name="STORE_NAME" ColumnName="STORE_NAME" />
           <ScalarProperty Name="RENT_TYPE_NAME" ColumnName="RENT_TYPE_NAME" />
+          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
+          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
+          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
+          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
           <ScalarProperty Name="ISINCOME" ColumnName="ISINCOME" />
           <ScalarProperty Name="IS_CONTRACT" ColumnName="IS_CONTRACT" />
           <ScalarProperty Name="RENT_TYPE_ACTIVE" ColumnName="RENT_TYPE_ACTIVE" />
           <ScalarProperty Name="INOUT_TYPE_NAME" ColumnName="INOUT_TYPE_NAME" />
           <ScalarProperty Name="INOUT_TYPE_ID" ColumnName="INOUT_TYPE_ID" />
           <ScalarProperty Name="INOUT_DATE" ColumnName="INOUT_DATE" />
+          <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
