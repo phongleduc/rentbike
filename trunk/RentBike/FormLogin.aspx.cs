@@ -17,6 +17,7 @@ namespace RentBike
         {
             if (!IsPostBack)
             {
+                Session.Timeout = 1440;
                 if (Request.Cookies["UserName"] != null && Request.Cookies["Password"] != null)
                 {
                     if (LoadUser(Request.Cookies["UserName"].Value, Request.Cookies["Password"].Value))
