@@ -31,24 +31,13 @@ namespace RentBike
             if (!IsPostBack)
             {
                 txtSearch.Text = searchText;
+                LoadData(searchText, 0);
             }
-
-            if (!string.IsNullOrEmpty(txtSearch.Text))
-                searchText = txtSearch.Text;
-
-            int page = Helper.parseInt(ddlPager.SelectedValue);
-            if (page > 0) page -= 1;
-            LoadData(searchText, page);
-            ddlPager.Visible = true;
         }
 
         protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //DropDownList drpStore = sender as DropDownList;
-            //if (CheckAdminPermission())
-            //    LoadDataAdmin(Helper.parseInt(drpStore.SelectedValue), string.Empty, 0);
-            //else
-            //    LoadData(string.Empty, 0);
+            LoadData(txtSearch.Text.Trim(), 0);
 
         }
 
