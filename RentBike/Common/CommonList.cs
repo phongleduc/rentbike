@@ -115,7 +115,10 @@ namespace RentBike.Common
             Contract contract = db.Contracts.FirstOrDefault(c =>c.ID == contractId && c.CONTRACT_STATUS == true);
             if (contract != null)
             {
-                DateTime extendEndDate = (contract.EXTEND_END_DATE == null || contract.EXTEND_END_DATE == contract.END_DATE) ? contract.END_DATE.AddDays(-10) : contract.EXTEND_END_DATE.Value;
+                var listPayPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
+                PayPeriod lastPayPeriod = listPayPeriod.LastOrDefault();
+
+                DateTime extendEndDate = (contract.EXTEND_END_DATE == null || contract.EXTEND_END_DATE == contract.END_DATE) ? contract.END_DATE.AddDays(-10) : lastPayPeriod.PAY_DATE;
 
                 int overDate = DateTime.Today.Subtract(extendEndDate).Days;
                 if (overDate >= 0)
@@ -123,9 +126,6 @@ namespace RentBike.Common
                     int percentDate = overDate / 30;
                     DateTime endDateUpdated = extendEndDate.AddDays(30 * (percentDate + 1));
                     contract.EXTEND_END_DATE = endDateUpdated;
-
-                    var listPayPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
-                    PayPeriod lastPayPeriod = listPayPeriod.LastOrDefault();
 
                     int multipleFee;
                     decimal increateFeeCar;
