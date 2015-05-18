@@ -47,7 +47,7 @@
                     </table>
         </FooterTemplate>
     </asp:Repeater>
-    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true" Visible="false"></asp:DropDownList>
+    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
     <script>
         $(function () {
             $('#<%=txtSearch.ClientID %>').keypress(function (e) {
