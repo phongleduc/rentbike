@@ -31,99 +31,51 @@ namespace RentBike
             }
             if (!IsPostBack)
             {
+                string searchText = Request.QueryString["q"];
+                txtSearch.Text = searchText; 
                 LoadGeneralInfo();
-
-                if (CheckAdminPermission())
-                    LoadDataAdmin(string.Empty, Helper.parseInt(drpStore.SelectedValue), Helper.parseInt(drpRentType.SelectedValue));
-                else
-                    LoadData(string.Empty, Helper.parseInt(drpRentType.SelectedValue));
+                LoadData(txtSearch.Text, 0);
             }
         }
 
         protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DropDownList drpStore = sender as DropDownList;
-            if (CheckAdminPermission())
-                LoadDataAdmin(string.Empty, Helper.parseInt(drpStore.SelectedValue), Helper.parseInt(drpRentType.SelectedValue));
-            else
-                LoadData(string.Empty, Helper.parseInt(drpRentType.SelectedValue));
-
+            LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpRentType.SelectedValue));
             LoadGeneralInfo();
-            //LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpStore.SelectedValue), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         private void LoadData(string strSearch, int rentType)
         {
             int storeid = 0;
-            if (CheckAdminPermission())
-            {
-                storeid = Helper.parseInt(drpStore.SelectedValue);
-            }
-            else
-            { 
-               storeid = Helper.parseInt(Session["store_id"].ToString()); 
-            }
-            List<CONTRACT_FULL_VW> dataList;
             using (var db = new RentBikeEntities())
             {
-                dataList = (from s in db.CONTRACT_FULL_VW
-                            where s.SEARCH_TEXT.Contains(strSearch) && s.CONTRACT_STATUS == true && s.STORE_ID == storeid
+                var dataList = (from s in db.CONTRACT_FULL_VW
+                            where s.CONTRACT_STATUS == true
                             select s).OrderByDescending(c =>c.RENT_DATE).ToList();
 
-                if (dataList.Any())
+                if (!string.IsNullOrEmpty(strSearch))
                 {
-                    if (rentType != 0)
-                    {
-                        dataList = dataList.Where(c =>c.RENT_TYPE_ID == rentType).ToList();
-                    }
-                    rptContract.DataSource = dataList;
-                    rptContract.DataBind();
+                    dataList = dataList.Where(c => c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower())).ToList();
                 }
-            }
-
-
-        }
-
-        private void LoadDataAdmin(string strSearch, int storeId, int rentType)
-        {
-            List<CONTRACT_FULL_VW> dataList;
-            using (var db = new RentBikeEntities())
-            {
-                dataList = (from s in db.CONTRACT_FULL_VW
-                            where s.SEARCH_TEXT.Contains(strSearch) && s.CONTRACT_STATUS == true
-                            select s).OrderByDescending(c =>c.RENT_DATE).ToList();
-                if (dataList.Any())
+                if (CheckAdminPermission())
                 {
-                    if (storeId != 0)
-                    {
-                        dataList = dataList.Where(c =>c.STORE_ID == storeId).ToList();
-                    }
-
-                    if (rentType != 0)
-                    {
-                        dataList = dataList.Where(c =>c.RENT_TYPE_ID == rentType).ToList();
-                    }
-                    //int totalRecord = st.Count();
-                    //int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-                    //List<int> pageList = new List<int>();
-                    //for (int i = 1; i <= totalPage; i++)
-                    //{
-                    //    pageList.Add(i);
-                    //}
-
-                    //ddlPager.DataSource = pageList;
-                    //ddlPager.DataBind();
-                    //if (pageList.Count > 0)
-                    //{
-                    //    ddlPager.SelectedIndex = page;
-                    //}
-
-                    //int skip = page * pageSize;
-                    //dataList = st.Skip(skip).Take(pageSize).ToList();
-
-                    rptContract.DataSource = dataList;
-                    rptContract.DataBind();
+                    storeid = Helper.parseInt(drpStore.SelectedValue);
                 }
+                else
+                {
+                    storeid = Helper.parseInt(Session["store_id"].ToString());
+                }
+
+                if (storeid != 0)
+                {
+                    dataList = dataList.Where(c => c.STORE_ID == storeid).ToList();
+                }
+                if (rentType != 0)
+                {
+                    dataList = dataList.Where(c => c.RENT_TYPE_ID == rentType).ToList();
+                }
+                rptContract.DataSource = dataList;
+                rptContract.DataBind();
             }
         }
 
@@ -134,26 +86,13 @@ namespace RentBike
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            if (CheckAdminPermission())
-                LoadDataAdmin(txtSearch.Text.Trim(), Helper.parseInt(drpStore.SelectedValue), Helper.parseInt(drpRentType.SelectedValue));
-            else
-                LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpRentType.SelectedValue));
+            LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpRentType.SelectedValue));
         }
 
-        //protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    if (CheckAdminPermission())
-        //        LoadDataAdmin(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
-        //    else
-        //        LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
-        //}
 
         protected void drpRentType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (CheckAdminPermission())
-                LoadDataAdmin(txtSearch.Text.Trim(), Helper.parseInt(drpStore.SelectedValue), Helper.parseInt(drpRentType.SelectedValue));
-            else
-                LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpRentType.SelectedValue));
+            LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpRentType.SelectedValue));
         }
 
         private void LoadGeneralInfo()

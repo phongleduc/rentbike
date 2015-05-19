@@ -31,14 +31,13 @@ namespace RentBike
             if (!IsPostBack)
             {
                 txtSearch.Text = searchText;
-                LoadData(searchText, 0);
+                LoadData(txtSearch.Text, 0);
             }
         }
 
         protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(txtSearch.Text.Trim(), 0);
-
         }
 
         private void LoadData(string strSearch, int page)
@@ -46,7 +45,7 @@ namespace RentBike
             // LOAD PAGER
             using (var db = new RentBikeEntities())
             {
-                List<CONTRACT_FULL_VW> dataList = db.CONTRACT_FULL_VW.Where(c => c.SEARCH_TEXT.Contains(strSearch)).OrderBy(c => c.ID).ToList();
+                List<CONTRACT_FULL_VW> dataList = db.CONTRACT_FULL_VW.Where(c => c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower())).OrderBy(c => c.ID).OrderByDescending(c => c.CONTRACT_STATUS).ToList();
 
                 if (drpStore.Enabled == true && Helper.parseInt(drpStore.SelectedValue) != 0)
                 {

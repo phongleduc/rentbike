@@ -14,47 +14,48 @@ namespace RentBike
     {
         int storeId = 0;
         public string SearchDate { get; set; }
+
+        private DropDownList drpStore;
+
+        //raise button click events on content page for the buttons on master page
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            drpStore = this.Master.FindControl("ddlStore") as DropDownList;
+            drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
+        }
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["store_id"] == null)
             {
                 Response.Redirect("FormLogin.aspx");
             }
-            if (CheckAdminPermission())
-            {
-                DropDownList ddlStore = Master.FindControl("ddlStore") as DropDownList;
-                if (ddlStore != null && !string.IsNullOrEmpty(ddlStore.SelectedValue))
-                {
-                    storeId = Helper.parseInt(ddlStore.SelectedValue);
-                }
-            }
-            else
-                storeId = Helper.parseInt(Session["store_id"].ToString());
 
             if (!IsPostBack)
             {
-                LoadData(string.Empty, 0, storeId);
-            }
-            else
-            {
-                LoadData(txtSearch.Text, 0, storeId);
+                LoadData(string.Empty);
             }
         }
 
-        private void LoadData(string strSearch, int page, int storeId)
+        private void LoadData(string searchText)
         {
             //int totalRecord = 0;
             List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
             using (var db = new RentBikeEntities())
             {
+                int storeId = 0;
                 var st = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true);
+
+                if (CheckAdminPermission())
+                {
+                    storeId = Helper.parseInt(drpStore.SelectedValue);
+                }
+                else
+                {
+                    storeId = Helper.parseInt(Session["store_id"].ToString());
+                }
                 if (storeId != 0)
                 {
                     st = st.Where(c =>c.STORE_ID == storeId);
-                }
-                if (!string.IsNullOrEmpty(strSearch))
-                {
-                    st = st.Where(c =>c.SEARCH_TEXT.Contains(strSearch));
                 }
                 st = st.OrderByDescending(c =>c.ID);
 
@@ -120,9 +121,9 @@ namespace RentBike
                         }
                     }
                 }
-                if (!string.IsNullOrEmpty(txtSearch.Text))
+                if (!string.IsNullOrEmpty(searchText))
                 {
-                    dataList = dataList.Where(s =>s.SEARCH_TEXT.Contains(txtSearch.Text)).ToList();
+                    dataList = dataList.Where(s => s.SEARCH_TEXT.ToLower().Contains(searchText.ToLower())).ToList();
                 }
             }
 
@@ -132,29 +133,12 @@ namespace RentBike
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            //LoadData(txtSearch.Text.Trim(), 0);
+            LoadData(txtSearch.Text.Trim());
         }
 
-        protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
+        protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
-        }
-
-        protected void rptWarning_ItemDataBound(object sender, RepeaterItemEventArgs e)
-        {
-            //if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
-            //{
-
-            //    if (DateTime.Now.Subtract(((CONTRACT_FULL_VW)e.Item.DataItem).END_DATE).Days < 10)
-            //    {
-            //        HtmlTableRow tr = (HtmlTableRow)e.Item.FindControl(string.Format("HtmlTableRow{0}", e.Item.ItemIndex));
-            //        int overDays = Convert.ToInt32(((HiddenField)e.Item.FindControl("hdfOverDay")).Value);
-            //        if (overDays < 10)
-            //        {
-            //            tr.Style.Add(HtmlTextWriterStyle.BackgroundColor, "Yellow");
-            //        }
-            //    }
-            //}
+            LoadData(txtSearch.Text.Trim());
         }
 
         public bool CheckAdminPermission()

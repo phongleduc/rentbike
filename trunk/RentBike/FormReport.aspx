@@ -15,7 +15,7 @@
             </tr>
         </tbody>
     </table>
-    <asp:Repeater ID="rptWarning" runat="server" OnItemDataBound="rptWarning_ItemDataBound">
+    <asp:Repeater ID="rptWarning" runat="server">
         <HeaderTemplate>
             <div class="text-right" style="margin-bottom:5px">
                 <a class="print" href="javascript:void(0);">

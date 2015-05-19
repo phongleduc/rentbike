@@ -4,6 +4,18 @@
     <h4 class="text-center">Chi tiết hợp đồng</h4>
     <%--<asp:Panel ID="pnlCustomerCheck" runat="server">--%>
     <asp:Panel ID="pnlTable" runat="server">
+        <table class="table table-striped table-hover ">
+            <tbody>
+                <tr>
+                    <td>
+                        <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
+                    <td>
+                        <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClick="btnSearch_Click" /></td>
+                    <td>
+                        <asp:Button ID="btnNew" runat="server" Text="Làm hợp đồng" CssClass="btn btn-primary" OnClick="btnNew_Click" /></td>
+                </tr>
+            </tbody>
+        </table>
         <table class="table table-striped table-hover" style="width: 70%; margin-left: 10%;">
             <tbody>
                 <tr>
@@ -244,10 +256,17 @@
             $('#<%=txtAmount.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
             $('#<%=txtFeePerDay.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
 
+            $('#<%=txtSearch.ClientID %>').keypress(function (e) {
+                if (e.which == 13) {
+                    $('#<%=btnSearch.ClientID %>').click();
+                    return false;
+                }
+            });
+
             var rentTypeId = '<%= RentTypeID%>';
             hideToRentType(rentTypeId);
 
-            $('input, textarea').keypress(function (e) {
+            $('input, textarea').not('#<%=txtSearch.ClientID %>').keypress(function (e) {
                 if (e.which == 13) {
                     $('#<%=btnSave.ClientID %>').click();
                     return false;
