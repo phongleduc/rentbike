@@ -28,29 +28,20 @@ namespace RentBike
             }
             if (!IsPostBack)
             {
-                //LoadData(string.Empty, 0);
-                if (CheckAdminPermission())
-                    LoadDataAdmin(0, string.Empty, 0);
-                else
-                    LoadData(string.Empty, 0);
+                LoadData(string.Empty, 0);
             }
         }
 
         protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DropDownList drpStore = sender as DropDownList;
-            if (CheckAdminPermission())
-                LoadDataAdmin(Helper.parseInt(drpStore.SelectedValue), string.Empty, 0);
-            else
-                LoadData(string.Empty, 0);
-
+            LoadData(txtSearch.Text, 0);
         }
 
         private void LoadData(string strSearch, int page)
         {
             // LOAD PAGER
             int totalRecord = 0;
-            int storeid = Convert.ToInt32(Session["store_id"]); 
+            int storeid = 0;  
 
             // LOAD DATA WITH PAGING
             List<CONTRACT_HISTORY_FULL_VW> dataList;
@@ -58,63 +49,27 @@ namespace RentBike
             using (var db = new RentBikeEntities())
             {
                 var st = from s in db.CONTRACT_HISTORY_FULL_VW
-                         where s.SEARCH_TEXT.Contains(strSearch) && s.STORE_ID == storeid
                          select s;
+
+                if (!string.IsNullOrEmpty(strSearch))
+                {
+                    st = st.Where(c => c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower()));
+                }
+                if (CheckAdminPermission())
+                {
+                    storeid = Helper.parseInt(drpStore.SelectedValue);
+                }
+                else
+                {
+                    storeid = Convert.ToInt32(Session["store_id"]);
+                }
+                if(storeid != 0)
+                    st = st.Where(c => c.STORE_ID == storeid);
 
                 dataList = st.OrderByDescending(c =>c.CREATED_DATE).ToList();
                 totalRecord = dataList.Count();
 
                 dataList = dataList.Skip(skip).Take(pageSize).ToList();
-                int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-                List<int> pageList = new List<int>();
-                for (int i = 1; i <= totalPage; i++)
-                {
-                    pageList.Add(i);
-                }
-
-                ddlPager.DataSource = pageList;
-                ddlPager.DataBind();
-                if (pageList.Count > 0)
-                {
-                    ddlPager.SelectedIndex = page;
-                }
-            }
-
-            rptContractHistory.DataSource = dataList;
-            rptContractHistory.DataBind();
-        }
-
-        private void LoadDataAdmin(int storeId, string strSearch, int page)
-        {
-            // LOAD DATA WITH PAGING
-            int totalRecord = 0;
-            List<CONTRACT_HISTORY_FULL_VW> dataList;
-            int skip = page * pageSize;
-            using (var db = new RentBikeEntities())
-            {
-                if (storeId != 0)
-                {
-                    var st = from s in db.CONTRACT_HISTORY_FULL_VW
-                             where s.STORE_ID == storeId && s.SEARCH_TEXT.Contains(strSearch)
-                             select s;
-
-                    dataList = st.OrderByDescending(c =>c.CREATED_DATE).ToList();
-                    totalRecord = dataList.Count();
-
-                    dataList = dataList.Skip(skip).Take(pageSize).ToList();
-                }
-                else
-                {
-                    var st = from s in db.CONTRACT_HISTORY_FULL_VW
-                             where s.SEARCH_TEXT.Contains(strSearch)
-                             select s;
-
-                    dataList = st.ToList();
-                    totalRecord = dataList.OrderByDescending(c =>c.CREATED_DATE).Count();
-
-                    dataList = dataList.Skip(skip).Take(pageSize).ToList();
-                }
-
                 int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
                 List<int> pageList = new List<int>();
                 for (int i = 1; i <= totalPage; i++)
@@ -141,10 +96,7 @@ namespace RentBike
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (CheckAdminPermission())
-                LoadDataAdmin(Helper.parseInt(drpStore.SelectedValue), txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
-            else
-                LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
+            LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         public bool CheckAdminPermission()

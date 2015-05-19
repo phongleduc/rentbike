@@ -750,6 +750,16 @@ namespace RentBike
             Response.Redirect(string.Format("FormCloseContract.aspx?ID={0}", id));
         }
 
+        protected void btnNew_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("FormContractUpdate.aspx");
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("FormContractManagement.aspx?q=" + txtSearch.Text.Trim());
+        }
+
         private decimal GetFeeRate(int storeId)
         {
             decimal fee = 0;

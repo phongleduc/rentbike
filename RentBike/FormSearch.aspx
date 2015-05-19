@@ -21,8 +21,8 @@
                         <th>#</th>
                         <th>Tên khách hàng</th>
                         <th>Số CMT/GPLX</th>
-                        <th>Điện thoại</th>
-                        <th>Địa chỉ</th>
+                        <th>Cửa hàng</th>
+                        <th>Địa chỉ (HKTT)</th>
                         <th>Số hợp đồng</th>
                         <th>Trạng thái</th>
                     </tr>
@@ -35,8 +35,8 @@
                 </td>
                 <td><%# Eval("CUSTOMER_NAME") %></td>
                 <td><%# Eval("LICENSE_NO") %></td>
-                <td><%# Eval("PHONE") %></td>
-                <td><%# Eval("ADDRESS") %></td>
+                <td><%# Eval("STORE_NAME") %></td>
+                <td><%# Eval("PERMANENT_RESIDENCE") %></td>
                 <td>
                     <asp:HyperLink ID="hplContractInfo" runat="server" Text='<%# Eval("CONTRACT_NO") %>' NavigateUrl='<%# GetURL(Convert.ToString(Eval("ID")), Convert.ToString(Eval("STORE_ID"))) %>'></asp:HyperLink>
                 </td>

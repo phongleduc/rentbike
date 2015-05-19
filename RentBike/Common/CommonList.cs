@@ -312,6 +312,25 @@ namespace RentBike.Common
             }
         }
 
+        public static void UpdateAllPeriodHavingOverFee()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                foreach (var contract in contracts)
+                {
+                    List<PayPeriod> payList = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
+                    decimal totalActualPay = payList.Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                    decimal totalPlanPay = payList.Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
+
+                    if (totalActualPay > totalPlanPay)
+                    {
+                        CommonList.CreatePayPeriod(db, contract.ID, payList.LastOrDefault().PAY_DATE, false);
+                    }
+                }
+            }
+        }
+
         public static void BackUp()
         {
             using (var db = new RentBikeEntities())

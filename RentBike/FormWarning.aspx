@@ -18,7 +18,7 @@
             </tr>
         </tbody>
     </table>
-    <asp:Repeater ID="rptWarning" runat="server" OnItemDataBound="rptWarning_ItemDataBound">
+    <asp:Repeater ID="rptWarning" runat="server">
         <HeaderTemplate>
             <div class="text-right" style="margin-bottom: 5px">
                 <asp:Image ID="ExcelIcon" runat="server" ImageUrl="~/App_Themes/Theme1/image/excel-icon.png" />

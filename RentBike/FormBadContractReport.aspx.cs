@@ -51,7 +51,7 @@ namespace RentBike
 
             if (!string.IsNullOrEmpty(txtSearch.Text))
             {
-                data = data.Where(s =>s.SEARCH_TEXT.Contains(txtSearch.Text)).ToList();
+                data = data.Where(s => s.SEARCH_TEXT.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
             }
 
             var result = new List<CONTRACT_FULL_VW>();
