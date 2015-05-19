@@ -15,7 +15,7 @@
                 </td>
 
                 <td>
-                    <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClientClick="return validateSearch();" /></td>
+                    <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClick="btnSearch_Click" OnClientClick="return validateSearch();" /></td>
             </tr>
         </tbody>
     </table>

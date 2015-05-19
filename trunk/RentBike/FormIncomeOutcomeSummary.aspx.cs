@@ -12,43 +12,55 @@ namespace RentBike
 {
     public partial class FormIncomeOutcomeSummary : System.Web.UI.Page
     {
+        private DropDownList drpStore;
+
+        //raise button click events on content page for the buttons on master page
+        protected void Page_Init(object sender, EventArgs e)
+        {
+            drpStore = this.Master.FindControl("ddlStore") as DropDownList;
+            drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["store_id"] == null)
             {
                 Response.Redirect("FormLogin.aspx");
             }
-            LoadMiddle();
-            LoadData();
+
+            if(!IsPostBack)
+            {
+                LoadMiddle(txtStartDate.Text, txtEndDate.Text);
+                LoadData(txtStartDate.Text, txtEndDate.Text);
+            }
         }
 
-        private void LoadData()
+        private void LoadData(string startDate, string endDate)
         {
             int storeId = 0;
             if (CheckAdminPermission())
             {
-                DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
                 storeId = Helper.parseInt(drpStore.SelectedValue);
             }
             else
             {
-                storeId = Convert.ToInt32(Session["store_id"]);
+                storeId = Helper.parseInt(Session["store_id"].ToString());
             }
 
             List<SummaryInfo> listSum = GetSummaryData(storeId);
             if (listSum.Any())
             {
-                if (!string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listSum = listSum.Where(c =>c.InOutDate >= Convert.ToDateTime(txtStartDate.Text) && c.InOutDate <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                    listSum = listSum.Where(c =>c.InOutDate >= Convert.ToDateTime(startDate) && c.InOutDate <= Convert.ToDateTime(endDate)).ToList();
                 }
-                else if (!string.IsNullOrEmpty(txtStartDate.Text) && string.IsNullOrEmpty(txtEndDate.Text))
+                else if (!string.IsNullOrEmpty(startDate) && string.IsNullOrEmpty(endDate))
                 {
-                    listSum = listSum.Where(c =>c.InOutDate >= Convert.ToDateTime(txtStartDate.Text)).ToList();
+                    listSum = listSum.Where(c =>c.InOutDate >= Convert.ToDateTime(startDate)).ToList();
                 }
-                else if (string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                else if (string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listSum = listSum.Where(c =>c.InOutDate <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                    listSum = listSum.Where(c =>c.InOutDate <= Convert.ToDateTime(endDate)).ToList();
                 }
 
                 rptInOut.DataSource = listSum.OrderByDescending(c =>c.InOutDate);
@@ -238,6 +250,16 @@ namespace RentBike
             }
         }
 
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            LoadData(txtStartDate.Text, txtEndDate.Text);
+        }
+
+        protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadData(txtStartDate.Text, txtEndDate.Text);
+        }
+
         private List<Contract> GetContractFeeByDay(DateTime date, RentBikeEntities db)
         {
             var data = from d in db.Contracts
@@ -260,7 +282,7 @@ namespace RentBike
         }
 
 
-        private void LoadMiddle()
+        private void LoadMiddle(string startDate, string endDate)
         {
             using (var db = new RentBikeEntities())
             {
@@ -275,7 +297,7 @@ namespace RentBike
                     storeId = Convert.ToInt32(Session["store_id"]);
                 }
 
-                List<CONTRACT_FULL_VW> listContract = GetMiddleContract(storeId);
+                List<CONTRACT_FULL_VW> listContract = GetMiddleContract(storeId, startDate, endDate);
 
                 decimal bikeAmount = listContract.Where(c =>c.RENT_TYPE_ID == 1).Select(c =>c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
                 decimal equipAmount = listContract.Where(c =>c.RENT_TYPE_ID == 2).Select(c =>c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
@@ -288,7 +310,7 @@ namespace RentBike
 
 
                 //============================================================
-                List<InOut> listInOut = GetMiddleInOut(storeId);
+                List<InOut> listInOut = GetMiddleInOut(storeId, startDate, endDate);
 
                 decimal totalIn = listInOut.Select(c =>c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
                 decimal totalOut = listInOut.Select(c =>c.OUT_AMOUNT).DefaultIfEmpty(0).Sum(); ;
@@ -302,7 +324,7 @@ namespace RentBike
             }
         }
 
-        private List<CONTRACT_FULL_VW> GetMiddleContract(int storeId)
+        private List<CONTRACT_FULL_VW> GetMiddleContract(int storeId, string startDate, string endDate)
         {
             using (var db = new RentBikeEntities())
             {
@@ -311,24 +333,24 @@ namespace RentBike
                 {
                     listContract = listContract.Where(c =>c.STORE_ID == storeId).ToList();
                 }
-                if (!string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listContract = listContract.Where(c =>c.CREATED_DATE >= Convert.ToDateTime(txtStartDate.Text) && c.CREATED_DATE <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                    listContract = listContract.Where(c =>c.CREATED_DATE >= Convert.ToDateTime(startDate) && c.CREATED_DATE <= Convert.ToDateTime(endDate)).ToList();
                 }
-                else if (!string.IsNullOrEmpty(txtStartDate.Text) && string.IsNullOrEmpty(txtEndDate.Text))
+                else if (!string.IsNullOrEmpty(startDate) && string.IsNullOrEmpty(endDate))
                 {
-                    listContract = listContract.Where(c =>c.CREATED_DATE >= Convert.ToDateTime(txtStartDate.Text)).ToList();
+                    listContract = listContract.Where(c =>c.CREATED_DATE >= Convert.ToDateTime(startDate)).ToList();
                 }
-                else if (string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                else if (string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listContract = listContract.Where(c =>c.CREATED_DATE <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                    listContract = listContract.Where(c =>c.CREATED_DATE <= Convert.ToDateTime(endDate)).ToList();
                 }
 
                 return listContract;
             }
         }
 
-        private List<InOut> GetMiddleInOut(int storeId)
+        private List<InOut> GetMiddleInOut(int storeId, string startDate, string endDate)
         {
             using (var db = new RentBikeEntities())
             {
@@ -339,17 +361,17 @@ namespace RentBike
                     listInOut = listInOut.Where(c =>c.STORE_ID == storeId).ToList();
                 }
 
-                if (!string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listInOut = listInOut.Where(c =>c.INOUT_DATE >= Convert.ToDateTime(txtStartDate.Text) && c.INOUT_DATE <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                    listInOut = listInOut.Where(c =>c.INOUT_DATE >= Convert.ToDateTime(startDate) && c.INOUT_DATE <= Convert.ToDateTime(endDate)).ToList();
                 }
-                else if (!string.IsNullOrEmpty(txtStartDate.Text) && string.IsNullOrEmpty(txtEndDate.Text))
+                else if (!string.IsNullOrEmpty(startDate) && string.IsNullOrEmpty(endDate))
                 {
-                    listInOut = listInOut.Where(c =>c.INOUT_DATE >= Convert.ToDateTime(txtStartDate.Text)).ToList();
+                    listInOut = listInOut.Where(c =>c.INOUT_DATE >= Convert.ToDateTime(startDate)).ToList();
                 }
-                else if (string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                else if (string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listInOut = listInOut.Where(c =>c.INOUT_DATE <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                    listInOut = listInOut.Where(c =>c.INOUT_DATE <= Convert.ToDateTime(endDate)).ToList();
                 }
 
                 return listInOut;

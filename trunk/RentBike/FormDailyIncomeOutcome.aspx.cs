@@ -17,13 +17,16 @@ namespace RentBike
 {
     public partial class FormDailyIncomeOutcome : System.Web.UI.Page
     {
-        private DropDownList drpStore;
+        int pageSize = 10;
         private List<INOUT_FULL_VW> listInOut;
+
+        private DropDownList drpStore;
 
         //raise button click events on content page for the buttons on master page
         protected void Page_Init(object sender, EventArgs e)
         {
             drpStore = this.Master.FindControl("ddlStore") as DropDownList;
+            drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -32,39 +35,63 @@ namespace RentBike
             {
                 Response.Redirect("FormLogin.aspx");
             }
-            LoadData();
+
+            if(!IsPostBack)
+            {
+                LoadData(string.Empty, string.Empty, 0);
+            }
         }
 
-        private void LoadData()
+        private void LoadData(string startDate, string endDate, int page)
         {
+            int totalRecord = 0;
             int storeId = 0;
+
             if (CheckAdminPermission())
             {
-                DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
                 storeId = Helper.parseInt(drpStore.SelectedValue);
             }
             else
             {
-                storeId = Convert.ToInt32(Session["store_id"]);
+                storeId = Helper.parseInt(Session["store_id"].ToString());
             }
 
             List<SummaryInfo> listSum = GetSummaryData(storeId);
             if (listSum.Any())
             {
-                if (!string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listSum = listSum.Where(c =>c.InOutDate >= Convert.ToDateTime(txtStartDate.Text) && c.InOutDate <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                    listSum = listSum.Where(c => c.InOutDate >= Convert.ToDateTime(startDate) && c.InOutDate <= Convert.ToDateTime(endDate)).ToList();
                 }
-                else if (!string.IsNullOrEmpty(txtStartDate.Text) && string.IsNullOrEmpty(txtEndDate.Text))
+                else if (!string.IsNullOrEmpty(startDate) && string.IsNullOrEmpty(endDate))
                 {
-                    listSum = listSum.Where(c =>c.InOutDate >= Convert.ToDateTime(txtStartDate.Text)).ToList();
+                    listSum = listSum.Where(c =>c.InOutDate >= Convert.ToDateTime(startDate)).ToList();
                 }
-                else if (string.IsNullOrEmpty(txtStartDate.Text) && !string.IsNullOrEmpty(txtEndDate.Text))
+                else if (string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listSum = listSum.Where(c =>c.InOutDate <= Convert.ToDateTime(txtEndDate.Text)).ToList();
+                    listSum = listSum.Where(c =>c.InOutDate <= Convert.ToDateTime(endDate)).ToList();
                 }
 
-                rptInOut.DataSource = listSum.OrderByDescending(c =>c.InOutDate);
+                listSum = listSum.OrderByDescending(c => c.InOutDate).ToList();
+                totalRecord = listSum.Count();
+
+                int skip = page * pageSize;
+                listSum = listSum.Skip(skip).Take(pageSize).ToList();
+                int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+                List<int> pageList = new List<int>();
+                for (int i = 1; i <= totalPage; i++)
+                {
+                    pageList.Add(i);
+                }
+
+                ddlPager.DataSource = pageList;
+                ddlPager.DataBind();
+                if (pageList.Count > 0)
+                {
+                    ddlPager.SelectedIndex = page;
+                }
+
+                rptInOut.DataSource = listSum;
                 rptInOut.DataBind();
                 decimal sumIn = 0;
                 decimal sumOut = 0;
@@ -185,7 +212,7 @@ namespace RentBike
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-
+            LoadData(txtStartDate.Text, txtEndDate.Text, 0);
         }
 
         public bool CheckAdminPermission()
@@ -454,6 +481,16 @@ namespace RentBike
                 litInOther.Text = inout.InOther == 0 ? string.Empty : string.Format("{0:0,0}", inout.InOther);
                 litOutOther.Text = inout.OutOther == 0 ? string.Empty : string.Format("{0:0,0}", inout.OutOther);
             }
+        }
+
+        protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadData(txtStartDate.Text, txtEndDate.Text, 0);
+        }
+
+        protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadData(txtStartDate.Text, txtEndDate.Text, Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         protected void lnkExportExcel_Click(object sender, EventArgs e)
