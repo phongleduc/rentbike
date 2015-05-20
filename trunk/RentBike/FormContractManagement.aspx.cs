@@ -55,7 +55,8 @@ namespace RentBike
 
                 if (!string.IsNullOrEmpty(strSearch))
                 {
-                    dataList = dataList.Where(c => c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower())).ToList();
+                    dataList = dataList.Where(c => c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower())
+                        || c.CUSTOMER_NAME.ToLower().Contains(strSearch.ToLower())).ToList();
                 }
                 if (CheckAdminPermission())
                 {

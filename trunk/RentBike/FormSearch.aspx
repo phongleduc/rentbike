@@ -15,7 +15,7 @@
     </table>
     <asp:Repeater ID="rptCustomer" runat="server">
         <HeaderTemplate>
-            <table class="table table-striped table-hover">
+            <table class="table">
                 <thead>
                     <tr class="success">
                         <th>#</th>
@@ -30,7 +30,7 @@
                 <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr>
+            <tr class="<%# (Convert.ToBoolean(Eval("IS_BAD_CONTRACT")) == true || IsBadContract(Convert.ToInt32(Eval("ID"))) == true) ? "background-red" : "" %>">
                 <td><%# Container.ItemIndex + 1 %><asp:HiddenField ID="hdfCustomerID" Value='<%# Eval("CUSTOMER_ID") %>' runat="server" />
                 </td>
                 <td><%# Eval("CUSTOMER_NAME") %></td>
