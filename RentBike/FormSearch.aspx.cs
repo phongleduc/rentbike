@@ -45,7 +45,11 @@ namespace RentBike
             // LOAD PAGER
             using (var db = new RentBikeEntities())
             {
-                List<CONTRACT_FULL_VW> dataList = db.CONTRACT_FULL_VW.Where(c => c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower())).OrderBy(c => c.ID).OrderByDescending(c => c.CONTRACT_STATUS).ToList();
+                List<CONTRACT_FULL_VW> dataList = db.CONTRACT_FULL_VW.Where(c => c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower()) 
+                    || c.CUSTOMER_NAME.ToLower().Contains(strSearch.ToLower()))
+                    .OrderByDescending(c => c.ID)
+                    .OrderByDescending(c => c.CONTRACT_STATUS)
+                    .ToList();
 
                 if (drpStore.Enabled == true && Helper.parseInt(drpStore.SelectedValue) != 0)
                 {
@@ -74,6 +78,14 @@ namespace RentBike
 
                 rptCustomer.DataSource = dataList;
                 rptCustomer.DataBind();
+            }
+        }
+
+        public bool IsBadContract(int contractId)
+        {
+            using (var db = new RentBikeEntities())
+            {
+                return CommonList.IsBadContract(db, contractId);
             }
         }
         public string GetURL(string id, string storeId)

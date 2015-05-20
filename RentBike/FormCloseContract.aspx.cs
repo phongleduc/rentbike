@@ -222,6 +222,11 @@ namespace RentBike
                     ch.UPDATED_BY = Session["username"].ToString();
                     ch.UPDATED_DATE = DateTime.Now;
 
+                    if (CommonList.IsBadContract(db, contractId))
+                    {
+                        con.IS_BAD_CONTRACT = ch.IS_BAD_CONTRACT = true;
+                    }
+
                     db.ContractHistories.Add(ch);
                     db.SaveChanges();
                     trans.Complete();

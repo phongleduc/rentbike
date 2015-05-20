@@ -185,7 +185,8 @@ namespace RentBike
                 }
                 if (!string.IsNullOrEmpty(searchText))
                 {
-                    dataList = dataList.Where(s => s.SEARCH_TEXT.ToLower().Contains(searchText.ToLower())).ToList();
+                    dataList = dataList.Where(s => s.SEARCH_TEXT.ToLower().Contains(searchText.ToLower()) 
+                        || s.CUSTOMER_NAME.ToLower().Contains(searchText.ToLower())).ToList();
                 }
             }
             return dataList.OrderBy(c =>c.DAY_DONE).ToList();

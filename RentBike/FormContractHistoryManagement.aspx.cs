@@ -53,7 +53,8 @@ namespace RentBike
 
                 if (!string.IsNullOrEmpty(strSearch))
                 {
-                    st = st.Where(c => c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower()));
+                    st = st.Where(c => c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower()) 
+                        || c.CUSTOMER_NAME.ToLower().Contains(strSearch.ToLower()));
                 }
                 if (CheckAdminPermission())
                 {

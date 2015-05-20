@@ -331,6 +331,26 @@ namespace RentBike.Common
             }
         }
 
+        public static bool IsBadContract(RentBikeEntities db, int contractId)
+        {
+            var contract = db.Contracts.FirstOrDefault(c => c.ID == contractId && c.CONTRACT_STATUS == true);
+            if (contract != null)
+            {
+                var lstPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contractId);
+                decimal totalPayed = lstPeriod.Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                foreach (PayPeriod pp in lstPeriod)
+                {
+                    if (pp.AMOUNT_PER_PERIOD > totalPayed)
+                    {
+                        if (DateTime.Today.Subtract(pp.PAY_DATE).Days > 50)
+                            return true;
+                    }
+                    totalPayed -= pp.AMOUNT_PER_PERIOD;
+                }
+            }
+            return false;
+        }
+
         public static void BackUp()
         {
             using (var db = new RentBikeEntities())

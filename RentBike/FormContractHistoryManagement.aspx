@@ -14,7 +14,7 @@
     </table>
     <asp:Repeater ID="rptContractHistory" runat="server">
         <HeaderTemplate>
-            <table class="table table-striped table-hover ">
+            <table class="table">
                 <thead>
                     <tr class="success">
                         <th>#</th>
@@ -31,7 +31,7 @@
                 <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr>
+            <tr class="<%# Convert.ToBoolean(Eval("IS_BAD_CONTRACT")) == true ? "background-red" : "" %>">
                 <td><%# Container.ItemIndex + 1 %></td>
                 <%--<td><a href="FormContractHistoryUpdate.aspx"><%# Eval("CUSTOMER_NAME") %></a></td>--%>
                 <td><%# Eval("CUSTOMER_NAME") %></td>

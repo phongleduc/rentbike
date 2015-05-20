@@ -56,5 +56,6 @@ namespace RentBike
         public string THUMBNAIL_PHOTO_4 { get; set; }
         public string PHOTO_5 { get; set; }
         public string THUMBNAIL_PHOTO_5 { get; set; }
+        public bool IS_BAD_CONTRACT { get; set; }
     }
 }

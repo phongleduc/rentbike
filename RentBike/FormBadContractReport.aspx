@@ -49,7 +49,7 @@
     </table>
     <asp:Repeater ID="rptContract" runat="server">
         <HeaderTemplate>
-            <table class="table table-striped table-hover ">
+            <table class="table table-hover ">
                 <thead>
                     <tr class="success">
                         <th>#</th>
@@ -66,7 +66,7 @@
                 <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr>
+            <tr class="background-red">
                 <td><%# Container.ItemIndex + 1 %></td>
                 <td><%# Eval("CUSTOMER_NAME") %></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
