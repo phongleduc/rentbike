@@ -12,6 +12,8 @@ namespace RentBike
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class RentBikeEntities : DbContext
     {
@@ -39,9 +41,19 @@ namespace RentBike
         public virtual DbSet<RentType> RentTypes { get; set; }
         public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<StoreFee> StoreFees { get; set; }
+        public virtual DbSet<SummaryPayFeeDaily> SummaryPayFeeDailies { get; set; }
         public virtual DbSet<CONTRACT_FULL_VW> CONTRACT_FULL_VW { get; set; }
         public virtual DbSet<CONTRACT_HISTORY_FULL_VW> CONTRACT_HISTORY_FULL_VW { get; set; }
         public virtual DbSet<INOUT_FULL_VW> INOUT_FULL_VW { get; set; }
         public virtual DbSet<STORE_FULL_VW> STORE_FULL_VW { get; set; }
+    
+        public virtual int BackUp(string path)
+        {
+            var pathParameter = path != null ?
+                new ObjectParameter("path", path) :
+                new ObjectParameter("path", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("BackUp", pathParameter);
+        }
     }
 }

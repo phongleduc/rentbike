@@ -364,13 +364,9 @@ namespace RentBike
                 si.RedundantFeeEquip = c.Record.Where(s =>s.InOutTypeId == 19 && s.RentTypeId == 2).Select(s =>s.OutAmount).DefaultIfEmpty(0).Sum();
                 si.RedundantFeeOther = c.Record.Where(s =>s.InOutTypeId == 19 && s.RentTypeId == 3).Select(s =>s.OutAmount).DefaultIfEmpty(0).Sum();
 
-                if (si.RentFeeEquip > 0)
+                if (si.RentFeeEquip > 0 || si.RentFeeCar > 0 || si.RentFeeOther > 0)
                 {
-                    si.ListEquipPeriodDate = c.Record.Where(s =>s.InOutTypeId == 15).Select(s =>s.Period).ToList();
-                }
-                if (si.RentFeeCar > 0 || si.RentFeeOther > 0)
-                {
-                    si.ListCarAndOtherEquPeriodDate = c.Record.Where(s =>s.InOutTypeId == 14 || s.InOutTypeId == 16).Select(s =>s.Period).ToList();
+                    si.ListPeriodDate = c.Record.Where(s => s.InOutTypeId == 14 || s.InOutTypeId == 15 || s.InOutTypeId == 16).Select(s => s.Period).ToList();
                 }
 
                 listSI.Add(si);
@@ -422,18 +418,17 @@ namespace RentBike
 
                 Literal litNo = e.Item.FindControl("litNo") as Literal;
                 Literal litCustomerName = e.Item.FindControl("litCustomerName") as Literal;
+                Literal litPeriod = e.Item.FindControl("litPeriod") as Literal;
 
                 Literal litContractFeeEquip = e.Item.FindControl("litContractFeeEquip") as Literal;
                 Literal litRentFeeEquip = e.Item.FindControl("litRentFeeEquip") as Literal;
                 Literal litClosedFeeEquip = e.Item.FindControl("litClosedFeeEquip") as Literal;
                 Literal litRedundantFeeEquip = e.Item.FindControl("litRedundantFeeEquip") as Literal;
-                Literal litPeriodEquip = e.Item.FindControl("litPeriodEquip") as Literal;
 
                 Literal litContractFeeCarAndOther = e.Item.FindControl("litContractFeeCarAndOther") as Literal;
                 Literal litRentFeeCarAndOther = e.Item.FindControl("litRentFeeCarAndOther") as Literal;
                 Literal litClosedFeeCarAndOther = e.Item.FindControl("litClosedFeeCarAndOther") as Literal;
                 Literal litRedundantFeeCarAndOther = e.Item.FindControl("litRedundantFeeCarAndOther") as Literal;
-                Literal litPeriodCarAndOther = e.Item.FindControl("litPeriodCarAndOther") as Literal;
 
                 Literal litInOther = e.Item.FindControl("litInOther") as Literal;
                 Literal litOutOther = e.Item.FindControl("litOutOther") as Literal;
@@ -460,21 +455,18 @@ namespace RentBike
                 }
                 else
                     litCustomerName.Text = inout.CustomerName;
-
+                if (inout.ListPeriodDate != null && inout.ListPeriodDate.Any())
+                    litPeriod.Text = string.Join("<br/>", inout.ListPeriodDate.Select(c => c.ToString("dd/MM/yyyy")).Distinct());
 
                 litContractFeeEquip.Text = inout.ContractFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", inout.ContractFeeEquip);
                 litRentFeeEquip.Text = inout.RentFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", inout.RentFeeEquip);
                 litClosedFeeEquip.Text = inout.CloseFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", inout.CloseFeeEquip);
                 litRedundantFeeEquip.Text = inout.RedundantFeeEquip == 0 ? string.Empty : string.Format("{0:0,0}", inout.RedundantFeeEquip);
-                if (inout.ListEquipPeriodDate != null && inout.ListEquipPeriodDate.Any())
-                    litPeriodEquip.Text = string.Join("<br/>", inout.ListEquipPeriodDate.Select(c =>c.ToString("dd/MM/yyyy")).Distinct());
 
                 litContractFeeCarAndOther.Text = (inout.ContractFeeCar + inout.ContractFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (inout.ContractFeeCar + inout.ContractFeeOther));
                 litRentFeeCarAndOther.Text = (inout.RentFeeCar + inout.RentFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (inout.RentFeeCar + inout.RentFeeOther));
                 litClosedFeeCarAndOther.Text = (inout.CloseFeeCar + inout.CloseFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (inout.CloseFeeCar + inout.CloseFeeOther));
                 litRedundantFeeCarAndOther.Text = (inout.RedundantFeeCar + inout.RedundantFeeOther) == 0 ? string.Empty : string.Format("{0:0,0}", (inout.RedundantFeeCar + inout.RedundantFeeOther));
-                if (inout.ListCarAndOtherEquPeriodDate != null && inout.ListCarAndOtherEquPeriodDate.Any())
-                    litPeriodCarAndOther.Text = string.Join("<br/>", inout.ListCarAndOtherEquPeriodDate.Select(c =>c.ToString("dd/MM/yyyy")).Distinct());
 
                 litInCapital.Text = inout.InCapital == 0 ? string.Empty : string.Format("{0:0,0}", inout.InCapital);
                 litOutCapital.Text = inout.OutCapital == 0 ? string.Empty : string.Format("{0:0,0}", inout.OutCapital);
