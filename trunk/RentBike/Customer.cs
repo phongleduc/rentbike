@@ -25,7 +25,7 @@ namespace RentBike
         public string EMAIL { get; set; }
         public string PHONE { get; set; }
         public string ADDRESS { get; set; }
-        public int CITY_ID { get; set; }
         public byte[] PHOTO { get; set; }
+        public int CITY_ID { get; set; }
     }
 }

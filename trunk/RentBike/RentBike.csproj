@@ -147,7 +147,7 @@
     <Content Include="FormCloseContract.aspx" />
     <Content Include="FormCommonListSetting.aspx" />
     <Content Include="FormContractHistoryManagement.aspx" />
-    <Content Include="FormContractHistoryUpdate.aspx" />
+    <Content Include="FormSummaryPayFeeDaily.aspx" />
     <Content Include="FormContractManagement.aspx" />
     <Content Include="FormContractUpdate.aspx" />
     <Content Include="FormDailyIncomeOutcome.aspx" />
@@ -295,6 +295,9 @@
     <Compile Include="STORE_FULL_VW.cs">
       <DependentUpon>RentBike.tt</DependentUpon>
     </Compile>
+    <Compile Include="SummaryPayFeeDaily.cs">
+      <DependentUpon>RentBike.tt</DependentUpon>
+    </Compile>
     <Content Include="App_Code\CommonClass.cs" />
     <Compile Include="Common\CommonList.cs" />
     <Compile Include="Common\Helper.cs" />
@@ -347,12 +350,12 @@
     <Compile Include="FormContractHistoryManagement.aspx.designer.cs">
       <DependentUpon>FormContractHistoryManagement.aspx</DependentUpon>
     </Compile>
-    <Compile Include="FormContractHistoryUpdate.aspx.cs">
-      <DependentUpon>FormContractHistoryUpdate.aspx</DependentUpon>
+    <Compile Include="FormSummaryPayFeeDaily.aspx.cs">
+      <DependentUpon>FormSummaryPayFeeDaily.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="FormContractHistoryUpdate.aspx.designer.cs">
-      <DependentUpon>FormContractHistoryUpdate.aspx</DependentUpon>
+    <Compile Include="FormSummaryPayFeeDaily.aspx.designer.cs">
+      <DependentUpon>FormSummaryPayFeeDaily.aspx</DependentUpon>
     </Compile>
     <Compile Include="FormContractManagement.aspx.cs">
       <DependentUpon>FormContractManagement.aspx</DependentUpon>
@@ -447,6 +450,9 @@
     <Content Include="App_Themes\Theme1\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\RentBike.pubxml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <EntityDeploy Include="RentBike.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>RentBike.Designer.cs</LastGenOutput>
@@ -463,9 +469,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>RentBike.edmx</DependentUpon>
       <LastGenOutput>RentBike.cs</LastGenOutput>
-    </Content>
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

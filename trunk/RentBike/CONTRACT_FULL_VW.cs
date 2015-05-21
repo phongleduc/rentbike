@@ -31,6 +31,17 @@ namespace RentBike
         public string SERIAL_1 { get; set; }
         public string SERIAL_2 { get; set; }
         public string DETAIL { get; set; }
+        public string PHOTO_1 { get; set; }
+        public string THUMBNAIL_PHOTO_1 { get; set; }
+        public string PHOTO_2 { get; set; }
+        public string THUMBNAIL_PHOTO_2 { get; set; }
+        public string PHOTO_3 { get; set; }
+        public string THUMBNAIL_PHOTO_3 { get; set; }
+        public string PHOTO_4 { get; set; }
+        public string THUMBNAIL_PHOTO_4 { get; set; }
+        public string PHOTO_5 { get; set; }
+        public string THUMBNAIL_PHOTO_5 { get; set; }
+        public bool IS_BAD_CONTRACT { get; set; }
         public string SEARCH_TEXT { get; set; }
         public bool CONTRACT_STATUS { get; set; }
         public string CUSTOMER_NAME { get; set; }
@@ -42,6 +53,7 @@ namespace RentBike
         public string CURRENT_RESIDENCE { get; set; }
         public Nullable<System.DateTime> BIRTH_DAY { get; set; }
         public string EMAIL { get; set; }
+        public byte[] PHOTO { get; set; }
         public string REFERENCE_PHONE { get; set; }
         public string SCHOOL_NAME { get; set; }
         public string CLASS_NAME { get; set; }
@@ -57,17 +69,5 @@ namespace RentBike
         public Nullable<System.DateTime> CREATED_DATE { get; set; }
         public string UPDATED_BY { get; set; }
         public Nullable<System.DateTime> UPDATED_DATE { get; set; }
-        public byte[] PHOTO { get; set; }
-        public string PHOTO_1 { get; set; }
-        public string THUMBNAIL_PHOTO_1 { get; set; }
-        public string PHOTO_2 { get; set; }
-        public string THUMBNAIL_PHOTO_2 { get; set; }
-        public string PHOTO_3 { get; set; }
-        public string THUMBNAIL_PHOTO_3 { get; set; }
-        public string PHOTO_4 { get; set; }
-        public string THUMBNAIL_PHOTO_4 { get; set; }
-        public string PHOTO_5 { get; set; }
-        public string THUMBNAIL_PHOTO_5 { get; set; }
-        public bool IS_BAD_CONTRACT { get; set; }
     }
 }

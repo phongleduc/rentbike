@@ -30,6 +30,7 @@ namespace RentBike
                     }
                 }
             }
+            CommonList.SaveSummaryPayFeeDaily();
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)

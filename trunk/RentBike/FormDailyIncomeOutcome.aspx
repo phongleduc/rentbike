@@ -14,7 +14,7 @@
                     </div>
                 </td>
                 <td>
-                    <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClick="btnSearch_Click" OnClientClick="return validateSearch();"/></td>
+                    <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClick="btnSearch_Click" OnClientClick="return validateSearch();" /></td>
                 <td>
                     <asp:Button ID="btnNew" runat="server" Text="Thêm mới" CssClass="btn btn-primary" OnClick="btnNew_Click" /></td>
             </tr>
@@ -49,28 +49,28 @@
                             <HeaderTemplate>
                                 <table class="table border_table" border="1">
                                     <tr class="success">
-                                        <th colspan="17" style="text-align: center">Chi tiết ngày:
+                                        <th colspan="16" style="text-align: center">Chi tiết ngày:
                                             <asp:Literal ID="litInoutDate" runat="server"></asp:Literal></th>
                                     </tr>
                                     <tr>
                                         <th colspan="2">&nbsp;</th>
-                                        <th colspan="5" style="text-align: center">THIẾT BỊ VĂN PHÒNG</th>
-                                        <th colspan="5" style="text-align: center">GIẤY TỜ XE & KHÁC</th>
+                                        <th>&nbsp;</th>
+                                        <th colspan="4" style="text-align: center">THIẾT BỊ VĂN PHÒNG</th>
+                                        <th colspan="4" style="text-align: center">GIẤY TỜ XE & KHÁC</th>
                                         <th colspan="5">&nbsp;</th>
                                     </tr>
                                     <tr>
                                         <th>STT</th>
                                         <th>Nội Dung</th>
-                                        <th>Cho Thuê</th>
-                                        <th>Thu Phí</th>
-                                        <th>Thanh Lý</th>
-                                        <th>Thừa Phí</th>
                                         <th>Kỳ Thu</th>
                                         <th>Cho Thuê</th>
                                         <th>Thu Phí</th>
                                         <th>Thanh Lý</th>
                                         <th>Thừa Phí</th>
-                                        <th>Kỳ Thu</th>
+                                        <th>Cho Thuê</th>
+                                        <th>Thu Phí</th>
+                                        <th>Thanh Lý</th>
+                                        <th>Thừa Phí</th>
                                         <th>Chi Khác</th>
                                         <th>Thu Khác</th>
                                         <th>Tiền Xuất</th>
@@ -85,6 +85,8 @@
                                     <td>
                                         <asp:Literal ID="litCustomerName" runat="server"></asp:Literal></td>
                                     <td>
+                                        <asp:Literal ID="litPeriod" runat="server"></asp:Literal></td>
+                                    <td>
                                         <asp:Literal ID="litContractFeeEquip" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litRentFeeEquip" runat="server"></asp:Literal></td>
@@ -93,8 +95,6 @@
                                     <td>
                                         <asp:Literal ID="litRedundantFeeEquip" runat="server"></asp:Literal></td>
                                     <td>
-                                        <asp:Literal ID="litPeriodEquip" runat="server"></asp:Literal></td>
-                                    <td>
                                         <asp:Literal ID="litContractFeeCarAndOther" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litRentFeeCarAndOther" runat="server"></asp:Literal></td>
@@ -102,8 +102,6 @@
                                         <asp:Literal ID="litClosedFeeCarAndOther" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litRedundantFeeCarAndOther" runat="server"></asp:Literal></td>
-                                    <td>
-                                        <asp:Literal ID="litPeriodCarAndOther" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litOutOther" runat="server"></asp:Literal></td>
                                     <td>
@@ -118,6 +116,7 @@
                             <FooterTemplate>
                                 <tr class="background-green-yellow">
                                     <td colspan="2">&nbsp;</td>
+                                    <td>&nbsp;</td>
                                     <td>
                                         <asp:Literal ID="litTotalContractFeeEquip" runat="server"></asp:Literal></td>
                                     <td>
@@ -126,7 +125,6 @@
                                         <asp:Literal ID="litTotalCloseFeeEquip" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litTotalRedundantFeeEquip" runat="server"></asp:Literal></td>
-                                    <td></td>
                                     <td>
                                         <asp:Literal ID="litTotalContractFeeCarAndOther" runat="server"></asp:Literal></td>
                                     <td>
@@ -135,7 +133,6 @@
                                         <asp:Literal ID="litTotalCloseFeeCarAndOther" runat="server"></asp:Literal></td>
                                     <td>
                                         <asp:Literal ID="litTotalRedundantFeeCarAndOther" runat="server"></asp:Literal></td>
-                                    <td></td>
                                     <td>
                                         <asp:Literal ID="litTotalOutOther" runat="server"></asp:Literal></td>
                                     <td>

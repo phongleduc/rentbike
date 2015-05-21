@@ -12,9 +12,9 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormWarning : System.Web.UI.Page
+    public partial class FormSummaryPayFeeDaily : System.Web.UI.Page
     {
-        int pageSize = 20;
+       int pageSize = 20;
         int storeId = 0;
         public string SearchDate { get; set; }
 
@@ -58,7 +58,7 @@ namespace RentBike
 
         private void LoadData(string date, string strSearch)
         {
-            List<CONTRACT_FULL_VW> dataList = CommonList.GetWarningData(date, strSearch, storeId);
+            List<SummaryPayFeeDaily> dataList = CommonList.GetSummaryPayFeeDailyData(date, strSearch, storeId);
             rptWarning.DataSource = dataList;
             rptWarning.DataBind();
         }
@@ -86,26 +86,9 @@ namespace RentBike
             }
         }
 
-        public string ShowClass(int overDate)
-        {
-            if (overDate <= 5)
-            {
-                return "green";
-            }
-            else if (overDate <= 10)
-            {
-                return "orange";
-            }
-            else if (overDate > 10)
-            {
-                return "red";
-            }
-            return string.Empty;
-        }
-
         protected void lnkExportExcel_Click(object sender, EventArgs e)
         {
-            List<CONTRACT_FULL_VW> dataList = CommonList.GetWarningData(txtDate.Text, txtSearch.Text, storeId);
+            List<SummaryPayFeeDaily> dataList = CommonList.GetSummaryPayFeeDailyData(txtDate.Text, txtSearch.Text, storeId);
             if (dataList.Any())
             {
                 using (ExcelPackage package = new ExcelPackage())
@@ -171,10 +154,10 @@ namespace RentBike
 
                         worksheet.Cells[index, 3].Value = contract.RENT_TYPE_NAME;
                         worksheet.Cells[index, 4].Value = contract.PHONE;
-                        worksheet.Cells[index, 5].Value = string.Format("{0:0,0}", contract.FEE_PER_DAY);
+                        worksheet.Cells[index, 5].Value = string.Format("{0:0,0}", contract.PAY_FEE);
                         worksheet.Cells[index, 6].Value = contract.NOTE;
-                        worksheet.Cells[index, 7].Value = contract.PAYED_TIME + " lần";
-                        worksheet.Cells[index, 8].Value = contract.PERIOD_MESSAGE;
+                        worksheet.Cells[index, 7].Value = contract.PAY_TIME + " lần";
+                        worksheet.Cells[index, 8].Value = contract.PAY_MESSAGE;
 
                         no += 1;
                         index += 1;
@@ -216,16 +199,5 @@ namespace RentBike
                 }
             }
         }
-    }
-
-    public partial class CONTRACT_FULL_VW
-    {
-        public int OVER_DATE { get; set; }
-        public int DAY_DONE { get; set; }
-        public DateTime PAY_DATE { get; set; }
-        public int PAYED_TIME { get; set; }
-        public int PERIOD_ID { get; set; }
-        public string PERIOD_MESSAGE { get; set; }
-        public string CSS_CLASS { get; set; }
     }
 }

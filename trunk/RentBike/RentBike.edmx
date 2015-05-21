@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="RentBikeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="RentBikeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="ID" />
@@ -253,6 +253,30 @@
           <Property Name="FEE_PERCENT" Type="int" Nullable="false" />
           <Property Name="STORE_ID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="SummaryPayFeeDaily">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CONTRACT_ID" Type="int" Nullable="false" />
+          <Property Name="CONTRACT_NO" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CUSTOMER_NAME" Type="nvarchar" MaxLength="80" Nullable="false" />
+          <Property Name="PHONE" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="RENT_TYPE_ID" Type="int" Nullable="false" />
+          <Property Name="RENT_TYPE_NAME" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="PERIOD_DATE" Type="date" Nullable="false" />
+          <Property Name="PAY_FEE" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="PAY_TIME" Type="int" Nullable="false" />
+          <Property Name="PAY_MESSAGE" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="STORE_ID" Type="int" Nullable="false" />
+          <Property Name="STORE_NAME" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="NOTE" Type="nvarchar" MaxLength="500" />
+          <Property Name="SEARCH_TEXT" Type="nvarchar" MaxLength="500" />
+          <Property Name="CREATED_BY" Type="nvarchar" MaxLength="50" />
+          <Property Name="CREATED_DATE" Type="datetime" />
+          <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
+          <Property Name="UPDATED_DATE" Type="datetime" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'prohaihung.dbo.CONTRACT_FULL_VW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CONTRACT_FULL_VW">
@@ -280,7 +304,7 @@ warning 6002: The table/view 'prohaihung.dbo.CONTRACT_FULL_VW' does not have a p
             <PropertyRef Name="CUSTOMER_NAME" />
             <PropertyRef Name="LICENSE_NO" />
             <PropertyRef Name="PHONE" />
-            
+            <PropertyRef Name="ADDRESS" />
             <PropertyRef Name="CUS_CITY_ID" />
             <PropertyRef Name="STORE_NAME" />
             <PropertyRef Name="CLOSE_CONTRACT_DATE" />
@@ -514,6 +538,9 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="SEARCH_TEXT" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="CITY" Type="nvarchar" MaxLength="200" Nullable="false" />
         </EntityType>
+        <Function Name="BackUp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="path" Type="nvarchar(max)" Mode="In" />
+        </Function>
         <EntityContainer Name="RentBikeModelStoreContainer">
           <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AccountPermission" EntityType="Self.AccountPermission" Schema="dbo" store:Type="Tables" />
@@ -529,6 +556,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySet Name="RentType" EntityType="Self.RentType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Store" EntityType="Self.Store" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StoreFee" EntityType="Self.StoreFee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SummaryPayFeeDaily" EntityType="Self.SummaryPayFeeDaily" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONTRACT_FULL_VW" EntityType="Self.CONTRACT_FULL_VW" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [CONTRACT_FULL_VW].[ID] AS [ID], 
@@ -698,7 +726,8 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
     FROM [dbo].[STORE_FULL_VW] AS [STORE_FULL_VW]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="RentBikeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -744,6 +773,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="FEE_PER_DAY" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="RENT_DATE" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="END_DATE" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EXTEND_END_DATE" Type="DateTime" Precision="0" />
           <Property Name="CLOSE_CONTRACT_DATE" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="PAY_FEE_MESSAGE" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="NOTE" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
@@ -764,11 +794,6 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="IMPLEMENTER" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BACK_TO_DOCUMENTS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="CONTRACT_NO" Type="String" MaxLength="13" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
-          <Property Name="CREATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
-          <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
-          <Property Name="EXTEND_END_DATE" Type="DateTime" Precision="0" />
           <Property Name="PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="THUMBNAIL_PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
@@ -780,6 +805,10 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="THUMBNAIL_PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="IS_BAD_CONTRACT" Type="Boolean" Nullable="false" />
+          <Property Name="CREATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
+          <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="ContractHistory">
           <Key>
@@ -793,6 +822,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CONTRACT_AMOUNT" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="RENT_DATE" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="END_DATE" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EXTEND_END_DATE" Type="DateTime" Precision="0" />
           <Property Name="PAY_FEE_MESSAGE" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="NOTE" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="REFERENCE_ID" Type="Int32" Nullable="false" />
@@ -812,11 +842,6 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="IMPLEMENTER" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BACK_TO_DOCUMENTS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="CONTRACT_NO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-          <Property Name="CREATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
-          <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
-          <Property Name="EXTEND_END_DATE" Type="DateTime" Precision="0" />
           <Property Name="PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="THUMBNAIL_PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
@@ -828,6 +853,10 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="THUMBNAIL_PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="IS_BAD_CONTRACT" Type="Boolean" Nullable="false" />
+          <Property Name="CREATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
+          <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Customer">
           <Key>
@@ -844,8 +873,8 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="EMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="PHONE" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ADDRESS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
-          <Property Name="CITY_ID" Type="Int32" Nullable="false" />
           <Property Name="PHOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="CITY_ID" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="InOut">
           <Key>
@@ -950,6 +979,30 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="FEE_PERCENT" Type="Int32" Nullable="false" />
           <Property Name="STORE_ID" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="SummaryPayFeeDaily">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CONTRACT_ID" Type="Int32" Nullable="false" />
+          <Property Name="CONTRACT_NO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CUSTOMER_NAME" Type="String" MaxLength="80" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PHONE" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="RENT_TYPE_ID" Type="Int32" Nullable="false" />
+          <Property Name="RENT_TYPE_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PERIOD_DATE" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="PAY_FEE" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="PAY_TIME" Type="Int32" Nullable="false" />
+          <Property Name="PAY_MESSAGE" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="STORE_ID" Type="Int32" Nullable="false" />
+          <Property Name="STORE_NAME" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NOTE" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SEARCH_TEXT" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CREATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
+          <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
+        </EntityType>
         <EntityType Name="CONTRACT_FULL_VW">
           <Key>
             <PropertyRef Name="ID" />
@@ -969,15 +1022,16 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
             <PropertyRef Name="SERIAL_1" />
             <PropertyRef Name="SERIAL_2" />
             <PropertyRef Name="DETAIL" />
+            <PropertyRef Name="IS_BAD_CONTRACT" />
             <PropertyRef Name="SEARCH_TEXT" />
             <PropertyRef Name="CONTRACT_STATUS" />
             <PropertyRef Name="CUSTOMER_NAME" />
             <PropertyRef Name="LICENSE_NO" />
             <PropertyRef Name="PHONE" />
+            <PropertyRef Name="ADDRESS" />
             <PropertyRef Name="CUS_CITY_ID" />
             <PropertyRef Name="STORE_NAME" />
             <PropertyRef Name="CLOSE_CONTRACT_DATE" />
-            <PropertyRef Name="IS_BAD_CONTRACT" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="RENT_TYPE_ID" Type="Int32" Nullable="false" />
@@ -996,6 +1050,17 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="SERIAL_1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SERIAL_2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DETAIL" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="IS_BAD_CONTRACT" Type="Boolean" Nullable="false" />
           <Property Name="SEARCH_TEXT" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CONTRACT_STATUS" Type="Boolean" Nullable="false" />
           <Property Name="CUSTOMER_NAME" Type="String" MaxLength="80" FixedLength="false" Unicode="true" Nullable="false" />
@@ -1007,6 +1072,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CURRENT_RESIDENCE" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="BIRTH_DAY" Type="DateTime" Precision="3" />
           <Property Name="EMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="REFERENCE_PHONE" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="SCHOOL_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="CLASS_NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -1022,18 +1088,6 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
           <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
-          <Property Name="PHOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="THUMBNAIL_PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="THUMBNAIL_PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="THUMBNAIL_PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="THUMBNAIL_PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="THUMBNAIL_PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="IS_BAD_CONTRACT" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="CONTRACT_HISTORY_FULL_VW">
           <Key>
@@ -1057,13 +1111,13 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
             <PropertyRef Name="CUSTOMER_ID" />
             <PropertyRef Name="SEARCH_TEXT" />
             <PropertyRef Name="CONTRACT_STATUS" />
+            <PropertyRef Name="IS_BAD_CONTRACT" />
             <PropertyRef Name="CUSTOMER_NAME" />
             <PropertyRef Name="LICENSE_NO" />
             <PropertyRef Name="PHONE" />
             <PropertyRef Name="ADDRESS" />
             <PropertyRef Name="CUSTOMER_CITY_ID" />
             <PropertyRef Name="CLOSE_CONTRACT_DATE" />
-            <PropertyRef Name="IS_BAD_CONTRACT" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="CONTRACT_ID" Type="Int32" Nullable="false" />
@@ -1091,6 +1145,17 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CONTRACT_NO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="IMPLEMENTER" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BACK_TO_DOCUMENTS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="THUMBNAIL_PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="IS_BAD_CONTRACT" Type="Boolean" Nullable="false" />
           <Property Name="CREATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
           <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
@@ -1106,20 +1171,9 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CURRENT_RESIDENCE" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="BIRTH_DAY" Type="DateTime" Precision="3" />
           <Property Name="EMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PHOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="RENT_TYPE_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="CLOSE_CONTRACT_DATE" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="PHOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="THUMBNAIL_PHOTO_1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="THUMBNAIL_PHOTO_2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="THUMBNAIL_PHOTO_3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="THUMBNAIL_PHOTO_4" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="THUMBNAIL_PHOTO_5" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="IS_BAD_CONTRACT" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="INOUT_FULL_VW">
           <Key>
@@ -1134,9 +1188,9 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
             <PropertyRef Name="STORE_ID" />
             <PropertyRef Name="SEARCH_TEXT" />
             <PropertyRef Name="STORE_NAME" />
-            <PropertyRef Name="INOUT_TYPE_ID" />
             <PropertyRef Name="CUSTOMER_ID" />
             <PropertyRef Name="CUSTOMER_NAME" />
+            <PropertyRef Name="INOUT_TYPE_ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="IN_AMOUNT" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
@@ -1154,6 +1208,8 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
           <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
+          <Property Name="CUSTOMER_ID" Type="Int32" Nullable="false" />
+          <Property Name="CUSTOMER_NAME" Type="String" MaxLength="80" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ISINCOME" Type="Boolean" />
           <Property Name="IS_CONTRACT" Type="Boolean" />
           <Property Name="RENT_TYPE_ACTIVE" Type="Boolean" />
@@ -1161,8 +1217,6 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="INOUT_TYPE_ID" Type="Int32" Nullable="false" />
           <Property Name="INOUT_DATE" Type="DateTime" Precision="0" />
           <Property Name="CONTRACT_NO" Type="String" MaxLength="13" FixedLength="false" Unicode="false" />
-          <Property Name="CUSTOMER_ID" Type="Int32" Nullable="false" />
-          <Property Name="CUSTOMER_NAME" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="STORE_FULL_VW">
           <Key>
@@ -1217,10 +1271,14 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySet Name="RentTypes" EntityType="Self.RentType" />
           <EntitySet Name="Stores" EntityType="Self.Store" />
           <EntitySet Name="StoreFees" EntityType="Self.StoreFee" />
+          <EntitySet Name="SummaryPayFeeDailies" EntityType="Self.SummaryPayFeeDaily" />
           <EntitySet Name="CONTRACT_FULL_VW" EntityType="Self.CONTRACT_FULL_VW" />
           <EntitySet Name="CONTRACT_HISTORY_FULL_VW" EntityType="Self.CONTRACT_HISTORY_FULL_VW" />
           <EntitySet Name="INOUT_FULL_VW" EntityType="Self.INOUT_FULL_VW" />
           <EntitySet Name="STORE_FULL_VW" EntityType="Self.STORE_FULL_VW" />
+          <FunctionImport Name="BackUp">
+            <Parameter Name="path" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -1266,24 +1324,13 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="Contracts">
             <EntityTypeMapping TypeName="RentBikeModel.Contract">
               <MappingFragment StoreEntitySet="Contract">
-                <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
-                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
-                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
-                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
-                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
-                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
-                <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
                 <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
                 <ScalarProperty Name="FEE_PER_DAY" ColumnName="FEE_PER_DAY" />
                 <ScalarProperty Name="RENT_DATE" ColumnName="RENT_DATE" />
                 <ScalarProperty Name="END_DATE" ColumnName="END_DATE" />
+                <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
                 <ScalarProperty Name="CLOSE_CONTRACT_DATE" ColumnName="CLOSE_CONTRACT_DATE" />
                 <ScalarProperty Name="PAY_FEE_MESSAGE" ColumnName="PAY_FEE_MESSAGE" />
                 <ScalarProperty Name="NOTE" ColumnName="NOTE" />
@@ -1304,6 +1351,17 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
                 <ScalarProperty Name="IMPLEMENTER" ColumnName="IMPLEMENTER" />
                 <ScalarProperty Name="BACK_TO_DOCUMENTS" ColumnName="BACK_TO_DOCUMENTS" />
                 <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
+                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+                <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
                 <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
                 <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
                 <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
@@ -1314,18 +1372,6 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="ContractHistories">
             <EntityTypeMapping TypeName="RentBikeModel.ContractHistory">
               <MappingFragment StoreEntitySet="ContractHistory">
-                <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
-                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
-                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
-                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
-                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
-                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
-                <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
                 <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
@@ -1334,6 +1380,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
                 <ScalarProperty Name="CONTRACT_AMOUNT" ColumnName="CONTRACT_AMOUNT" />
                 <ScalarProperty Name="RENT_DATE" ColumnName="RENT_DATE" />
                 <ScalarProperty Name="END_DATE" ColumnName="END_DATE" />
+                <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
                 <ScalarProperty Name="PAY_FEE_MESSAGE" ColumnName="PAY_FEE_MESSAGE" />
                 <ScalarProperty Name="NOTE" ColumnName="NOTE" />
                 <ScalarProperty Name="REFERENCE_ID" ColumnName="REFERENCE_ID" />
@@ -1353,6 +1400,17 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
                 <ScalarProperty Name="IMPLEMENTER" ColumnName="IMPLEMENTER" />
                 <ScalarProperty Name="BACK_TO_DOCUMENTS" ColumnName="BACK_TO_DOCUMENTS" />
                 <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
+                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+                <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
                 <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
                 <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
                 <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
@@ -1363,7 +1421,6 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="Customers">
             <EntityTypeMapping TypeName="RentBikeModel.Customer">
               <MappingFragment StoreEntitySet="Customer">
-                <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="NAME" ColumnName="NAME" />
                 <ScalarProperty Name="LICENSE_NO" ColumnName="LICENSE_NO" />
@@ -1375,6 +1432,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
                 <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
                 <ScalarProperty Name="PHONE" ColumnName="PHONE" />
                 <ScalarProperty Name="ADDRESS" ColumnName="ADDRESS" />
+                <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
                 <ScalarProperty Name="CITY_ID" ColumnName="CITY_ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1490,21 +1548,34 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="SummaryPayFeeDailies">
+            <EntityTypeMapping TypeName="RentBikeModel.SummaryPayFeeDaily">
+              <MappingFragment StoreEntitySet="SummaryPayFeeDaily">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
+                <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
+                <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
+                <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+                <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
+                <ScalarProperty Name="RENT_TYPE_NAME" ColumnName="RENT_TYPE_NAME" />
+                <ScalarProperty Name="PERIOD_DATE" ColumnName="PERIOD_DATE" />
+                <ScalarProperty Name="PAY_FEE" ColumnName="PAY_FEE" />
+                <ScalarProperty Name="PAY_TIME" ColumnName="PAY_TIME" />
+                <ScalarProperty Name="PAY_MESSAGE" ColumnName="PAY_MESSAGE" />
+                <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
+                <ScalarProperty Name="STORE_NAME" ColumnName="STORE_NAME" />
+                <ScalarProperty Name="NOTE" ColumnName="NOTE" />
+                <ScalarProperty Name="SEARCH_TEXT" ColumnName="SEARCH_TEXT" />
+                <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
+                <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
+                <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
+                <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="CONTRACT_FULL_VW">
             <EntityTypeMapping TypeName="RentBikeModel.CONTRACT_FULL_VW">
               <MappingFragment StoreEntitySet="CONTRACT_FULL_VW">
-                <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
-                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
-                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
-                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
-                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
-                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
-                <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
                 <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
@@ -1522,6 +1593,17 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
                 <ScalarProperty Name="SERIAL_1" ColumnName="SERIAL_1" />
                 <ScalarProperty Name="SERIAL_2" ColumnName="SERIAL_2" />
                 <ScalarProperty Name="DETAIL" ColumnName="DETAIL" />
+                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+                <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
                 <ScalarProperty Name="SEARCH_TEXT" ColumnName="SEARCH_TEXT" />
                 <ScalarProperty Name="CONTRACT_STATUS" ColumnName="CONTRACT_STATUS" />
                 <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
@@ -1533,6 +1615,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
                 <ScalarProperty Name="CURRENT_RESIDENCE" ColumnName="CURRENT_RESIDENCE" />
                 <ScalarProperty Name="BIRTH_DAY" ColumnName="BIRTH_DAY" />
                 <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
                 <ScalarProperty Name="REFERENCE_PHONE" ColumnName="REFERENCE_PHONE" />
                 <ScalarProperty Name="SCHOOL_NAME" ColumnName="SCHOOL_NAME" />
                 <ScalarProperty Name="CLASS_NAME" ColumnName="CLASS_NAME" />
@@ -1554,18 +1637,6 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="CONTRACT_HISTORY_FULL_VW">
             <EntityTypeMapping TypeName="RentBikeModel.CONTRACT_HISTORY_FULL_VW">
               <MappingFragment StoreEntitySet="CONTRACT_HISTORY_FULL_VW">
-                <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
-                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
-                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
-                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
-                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
-                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
-                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
-                <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
                 <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
@@ -1592,6 +1663,17 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
                 <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
                 <ScalarProperty Name="IMPLEMENTER" ColumnName="IMPLEMENTER" />
                 <ScalarProperty Name="BACK_TO_DOCUMENTS" ColumnName="BACK_TO_DOCUMENTS" />
+                <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+                <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+                <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+                <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+                <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+                <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+                <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
                 <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
                 <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
                 <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
@@ -1607,6 +1689,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
                 <ScalarProperty Name="CURRENT_RESIDENCE" ColumnName="CURRENT_RESIDENCE" />
                 <ScalarProperty Name="BIRTH_DAY" ColumnName="BIRTH_DAY" />
                 <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+                <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
                 <ScalarProperty Name="RENT_TYPE_NAME" ColumnName="RENT_TYPE_NAME" />
                 <ScalarProperty Name="CLOSE_CONTRACT_DATE" ColumnName="CLOSE_CONTRACT_DATE" />
               </MappingFragment>
@@ -1615,8 +1698,6 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="INOUT_FULL_VW">
             <EntityTypeMapping TypeName="RentBikeModel.INOUT_FULL_VW">
               <MappingFragment StoreEntitySet="INOUT_FULL_VW">
-                <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
-                <ScalarProperty Name="CUSTOMER_ID" ColumnName="CUSTOMER_ID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="IN_AMOUNT" ColumnName="IN_AMOUNT" />
                 <ScalarProperty Name="OUT_AMOUNT" ColumnName="OUT_AMOUNT" />
@@ -1633,6 +1714,8 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
                 <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
                 <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
                 <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
+                <ScalarProperty Name="CUSTOMER_ID" ColumnName="CUSTOMER_ID" />
+                <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
                 <ScalarProperty Name="ISINCOME" ColumnName="ISINCOME" />
                 <ScalarProperty Name="IS_CONTRACT" ColumnName="IS_CONTRACT" />
                 <ScalarProperty Name="RENT_TYPE_ACTIVE" ColumnName="RENT_TYPE_ACTIVE" />
@@ -1666,6 +1749,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="BackUp" FunctionName="RentBikeModel.Store.BackUp" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

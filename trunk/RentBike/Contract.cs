@@ -20,6 +20,7 @@ namespace RentBike
         public decimal FEE_PER_DAY { get; set; }
         public System.DateTime RENT_DATE { get; set; }
         public System.DateTime END_DATE { get; set; }
+        public Nullable<System.DateTime> EXTEND_END_DATE { get; set; }
         public System.DateTime CLOSE_CONTRACT_DATE { get; set; }
         public string PAY_FEE_MESSAGE { get; set; }
         public string NOTE { get; set; }
@@ -40,11 +41,6 @@ namespace RentBike
         public string IMPLEMENTER { get; set; }
         public string BACK_TO_DOCUMENTS { get; set; }
         public string CONTRACT_NO { get; set; }
-        public string CREATED_BY { get; set; }
-        public Nullable<System.DateTime> CREATED_DATE { get; set; }
-        public string UPDATED_BY { get; set; }
-        public Nullable<System.DateTime> UPDATED_DATE { get; set; }
-        public Nullable<System.DateTime> EXTEND_END_DATE { get; set; }
         public string PHOTO_1 { get; set; }
         public string THUMBNAIL_PHOTO_1 { get; set; }
         public string PHOTO_2 { get; set; }
@@ -56,5 +52,9 @@ namespace RentBike
         public string PHOTO_5 { get; set; }
         public string THUMBNAIL_PHOTO_5 { get; set; }
         public bool IS_BAD_CONTRACT { get; set; }
+        public string CREATED_BY { get; set; }
+        public Nullable<System.DateTime> CREATED_DATE { get; set; }
+        public string UPDATED_BY { get; set; }
+        public Nullable<System.DateTime> UPDATED_DATE { get; set; }
     }
 }
