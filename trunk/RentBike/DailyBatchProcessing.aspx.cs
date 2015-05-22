@@ -19,6 +19,10 @@ namespace RentBike
                 CommonList.BackUp();
                 Logger.TraceService("Backup database end");
 
+                Logger.TraceService("Save summary fee daily start");
+                CommonList.SaveSummaryPayFeeDaily();
+                Logger.TraceService("Save summary fee daily end");
+
                 Logger.TraceService("Auto extend contract start");
                 CommonList.AutoExtendContract();
                 Logger.TraceService("Auto extend contract end");

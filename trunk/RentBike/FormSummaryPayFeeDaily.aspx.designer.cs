@@ -40,6 +40,42 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.Button btnSearch;
         
         /// <summary>
+        /// lblTotalDailyFee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalDailyFee;
+        
+        /// <summary>
+        /// lblActualTotalDailyFee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblActualTotalDailyFee;
+        
+        /// <summary>
+        /// lblTotalMonthlyFee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalMonthlyFee;
+        
+        /// <summary>
+        /// lblTActualTotalMonthlyFee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTActualTotalMonthlyFee;
+        
+        /// <summary>
         /// rptWarning control.
         /// </summary>
         /// <remarks>
