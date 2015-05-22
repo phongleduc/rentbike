@@ -1,6 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormSummaryPayFeeDaily.aspx.cs" Inherits="RentBike.FormSummaryPayFeeDaily" %>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h2>DANH SÁCH GỌI PHÍ</h2>
+    <h2>BẢNG THU PHÍ</h2>
     <table class="table table-striped table-hover ">
         <tbody>
             <tr>
@@ -17,9 +17,29 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-striped table-hover ">
+        <tbody>
+            <tr>
+                <td class="text-left"><strong>Phí thu ngày:</strong></td>
+                <td class="text-left">
+                    <asp:Label ID="lblTotalDailyFee" runat="server"  CssClass="text-left"></asp:Label></td>
+                <td class="text-left"><strong>Thực thu:</strong></td>
+                <td class="text-left">
+                    <asp:Label ID="lblActualTotalDailyFee" runat="server" CssClass="text-left"></asp:Label></td>
+            </tr>
+            <tr>
+                <td class="text-left"><strong>Tổng thu:</strong></td>
+                <td class="text-left">
+                    <asp:Label ID="lblTotalMonthlyFee" runat="server" CssClass="text-left"></asp:Label></td>
+                <td class="text-left"><strong>Tổng thực thu:</strong></td>
+                <td class="text-left">
+                    <asp:Label ID="lblTActualTotalMonthlyFee" runat="server" CssClass="text-left"></asp:Label></td>
+            </tr>
+        </tbody>
+    </table>
     <asp:Repeater ID="rptWarning" runat="server">
         <HeaderTemplate>
-            <div class="text-right" style="margin-bottom: 5px">
+            <div class="text-right" style="margin-bottom: 5px;display:none;">
                 <asp:Image ID="ExcelIcon" runat="server" ImageUrl="~/App_Themes/Theme1/image/excel-icon.png" />
                 <asp:LinkButton ID="lnkExportExcel" runat="server" OnClick="lnkExportExcel_Click" Text="Xuất ra Excel"></asp:LinkButton>
             </div>
@@ -48,7 +68,7 @@
                 <td class="text-right"><%# Eval("PAY_TIME") %> lần</td>
                 <td class="text-center"><%# Eval("PAY_MESSAGE") %></td>
                 <td>
-                    <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
+                    <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("CONTRACT_ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>

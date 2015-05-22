@@ -14,7 +14,7 @@ namespace RentBike
 {
     public partial class FormSummaryPayFeeDaily : System.Web.UI.Page
     {
-       int pageSize = 20;
+        int pageSize = 20;
         int storeId = 0;
         public string SearchDate { get; set; }
 
@@ -58,9 +58,50 @@ namespace RentBike
 
         private void LoadData(string date, string strSearch)
         {
-            List<SummaryPayFeeDaily> dataList = CommonList.GetSummaryPayFeeDailyData(date, strSearch, storeId);
-            rptWarning.DataSource = dataList;
+            DateTime searchDate = DateTime.Today;
+            if (!string.IsNullOrEmpty(date))
+            {
+                searchDate = Convert.ToDateTime(date);
+            }
+
+            List<SummaryPayFeeDaily> dataListDaily = CommonList.GetSummaryPayFeeDailyData(searchDate, DateTime.MinValue, strSearch, storeId);
+            rptWarning.DataSource = dataListDaily;
             rptWarning.DataBind();
+
+            using (var db = new RentBikeEntities())
+            {
+                DateTime startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 6);
+
+                int endYear = DateTime.Today.Year;
+                int endMonth = DateTime.Today.Month + 1;
+                if (endMonth > 12)
+                {
+                    endMonth = 1;
+                    endYear = endYear + 1;
+                }
+                DateTime endDate = new DateTime(endYear, endMonth, 5);
+
+                if (DateTime.Today < startDate)
+                {
+                    startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month - 1, 6);
+                    endDate = new DateTime(endYear, endMonth - 1, 5);
+                }
+
+                List<SummaryPayFeeDaily> dataListMonthly = CommonList.GetSummaryPayFeeDailyData(startDate, endDate, strSearch, storeId);
+                IQueryable<InOut> inOutList = db.InOuts.Where(c =>c.RENT_TYPE_ID == 1 || c.RENT_TYPE_ID == 2 || c.RENT_TYPE_ID == 3);
+                IQueryable<InOut> inOutDaily = inOutList.Where(c =>c.INOUT_DATE == searchDate);
+                IQueryable<InOut> inOutMonthly = inOutList.Where(c =>c.INOUT_DATE >= startDate && c.INOUT_DATE <= endDate);
+
+                decimal totalDailyFee = dataListDaily.Select(c =>c.PAY_FEE).DefaultIfEmpty(0).Sum();
+                decimal totalActualInAmountDaily = inOutDaily.Select(c =>c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
+                decimal totalMonthlyFee = dataListMonthly.Select(c =>c.PAY_FEE).DefaultIfEmpty(0).Sum();
+                decimal totalActualInAmountMonthly = inOutMonthly.Select(c =>c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
+
+                lblTotalDailyFee.Text = string.Format("{0:0,0}", totalDailyFee);
+                lblActualTotalDailyFee.Text = string.Format("{0:0,0}", totalActualInAmountDaily);
+                lblTotalMonthlyFee.Text = string.Format("{0:0,0}", totalMonthlyFee);
+                lblTActualTotalMonthlyFee.Text = string.Format("{0:0,0}", totalActualInAmountMonthly);
+            }
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)
@@ -88,19 +129,25 @@ namespace RentBike
 
         protected void lnkExportExcel_Click(object sender, EventArgs e)
         {
-            List<SummaryPayFeeDaily> dataList = CommonList.GetSummaryPayFeeDailyData(txtDate.Text, txtSearch.Text, storeId);
+            DateTime searchDate = DateTime.Today;
+            if (!string.IsNullOrEmpty(txtDate.Text))
+            {
+                searchDate = Convert.ToDateTime(txtDate.Text);
+            }
+
+            List<SummaryPayFeeDaily> dataList = CommonList.GetSummaryPayFeeDailyData(searchDate, DateTime.MinValue, txtSearch.Text, storeId);
             if (dataList.Any())
             {
                 using (ExcelPackage package = new ExcelPackage())
                 {
                     // add a new worksheet to the empty workbook
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("DSGP");
+                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("BTP");
                     worksheet.View.ZoomScale = 90;
                     worksheet.Cells.Style.Font.Size = 12;
                     worksheet.Cells.Style.Font.Name = "Times New Roman";
 
                     worksheet.Cells[1, 1, 1, 8].Merge = true;
-                    worksheet.Cells[1, 1, 1, 8].Value = "Danh Sách Gọi Khách " + dataList[0].STORE_NAME;
+                    worksheet.Cells[1, 1, 1, 8].Value = "Bảng Thu Phí " + dataList[0].STORE_NAME;
                     worksheet.Row(1).Height = 20;
                     worksheet.Cells[1, 1, 1, 8].Style.Font.Bold = true;
                     worksheet.Cells[1, 1, 1, 8].Style.Font.Size = 14;
@@ -189,7 +236,7 @@ namespace RentBike
                     {
                         date = Convert.ToDateTime(txtDate.Text);
                     }
-                    string fileName = string.Format("DSGP {0}.{1}", date.ToString("dd-MM-yyyy"), "xlsx");
+                    string fileName = string.Format("BTP {0}.{1}", date.ToString("dd-MM-yyyy"), "xlsx");
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     Response.AddHeader("content-disposition", "attachment; filename=\"" + fileName + "\"");
                     Response.BinaryWrite(package.GetAsByteArray());

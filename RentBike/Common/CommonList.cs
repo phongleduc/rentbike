@@ -535,7 +535,7 @@ namespace RentBike.Common
                 var stores = db.Stores.Where(c => c.ACTIVE == true).ToList();
                 foreach (var store in stores)
                 {
-                    List<CONTRACT_FULL_VW> listContract = GetWarningData(DateTime.Today.ToString(), string.Empty, store.ID);
+                    List<CONTRACT_FULL_VW> listContract = GetWarningData(DateTime.Today.ToString(), string.Empty, store.ID).Where(c =>c.OVER_DATE <= 50).ToList();
                     foreach (var contract in listContract)
                     {
                         if (db.SummaryPayFeeDailies.Any(c => c.PERIOD_DATE == DateTime.Today
@@ -569,7 +569,7 @@ namespace RentBike.Common
             }
         }
 
-        public static List<SummaryPayFeeDaily> GetSummaryPayFeeDailyData(string date, string searchText, int storeId)
+        public static List<SummaryPayFeeDaily> GetSummaryPayFeeDailyData(DateTime startDate, DateTime endDate, string searchText, int storeId)
         {
             using (var db = new RentBikeEntities())
             {
@@ -579,12 +579,14 @@ namespace RentBike.Common
                     sumList = sumList.Where(c => c.STORE_ID == storeId);
                 }
 
-                DateTime searchDate = DateTime.Today;
-                if (!string.IsNullOrEmpty(date))
+                if (startDate != null && endDate > startDate)
                 {
-                    searchDate = Convert.ToDateTime(date);
+                    sumList = sumList.Where(c => c.PERIOD_DATE >= startDate && c.PERIOD_DATE <= endDate);
                 }
-                sumList = sumList.Where(c => c.PERIOD_DATE == searchDate);
+                else
+                {
+                    sumList = sumList.Where(c => c.PERIOD_DATE == startDate);
+                }
 
                 if (!string.IsNullOrEmpty(searchText))
                 {
