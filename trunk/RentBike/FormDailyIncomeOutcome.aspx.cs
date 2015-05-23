@@ -15,27 +15,13 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormDailyIncomeOutcome : System.Web.UI.Page
+    public partial class FormDailyIncomeOutcome : FormBase
     {
         int pageSize = 10;
         private List<INOUT_FULL_VW> listInOut;
 
-        private DropDownList drpStore;
-
-        //raise button click events on content page for the buttons on master page
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-            drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
-        }
-
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
-
             if(!IsPostBack)
             {
                 LoadData(string.Empty, string.Empty, 0);
@@ -45,18 +31,7 @@ namespace RentBike
         private void LoadData(string startDate, string endDate, int page)
         {
             int totalRecord = 0;
-            int storeId = 0;
-
-            if (CheckAdminPermission())
-            {
-                storeId = Helper.parseInt(drpStore.SelectedValue);
-            }
-            else
-            {
-                storeId = Helper.parseInt(Session["store_id"].ToString());
-            }
-
-            List<SummaryInfo> listSum = GetSummaryData(storeId);
+            List<SummaryInfo> listSum = GetSummaryData(STORE_ID);
             if (listSum.Any())
             {
                 if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
@@ -113,14 +88,14 @@ namespace RentBike
             }
         }
 
-        private List<SummaryInfo> GetSummaryData(int storeId)
+        private List<SummaryInfo> GetSummaryData(int STORE_ID)
         {
             using (var db = new RentBikeEntities())
             {
                 listInOut = db.INOUT_FULL_VW.ToList();
-                if (storeId != 0)
+                if (STORE_ID != 0)
                 {
-                    listInOut = listInOut.Where(c =>c.STORE_ID == storeId).ToList();
+                    listInOut = listInOut.Where(c =>c.STORE_ID == STORE_ID).ToList();
                 }
                 var data = from d in listInOut
                            group d by d.INOUT_DATE into g
@@ -213,19 +188,6 @@ namespace RentBike
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             LoadData(txtStartDate.Text, txtEndDate.Text, 0);
-        }
-
-        public bool CheckAdminPermission()
-        {
-            string acc = Convert.ToString(Session["username"]);
-            using (var db = new RentBikeEntities())
-            {
-                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
-
-                if (item.PERMISSION_ID == 1)
-                    return true;
-                return false;
-            }
         }
 
         protected void rptInOut_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -475,7 +437,7 @@ namespace RentBike
             }
         }
 
-        protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(txtStartDate.Text, txtEndDate.Text, 0);
         }

@@ -7,20 +7,14 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormCommonListSetting : System.Web.UI.Page
+    public partial class FormCommonListSetting : FormBase
     {
-        int pageSize =20;
+        int pageSize = 20;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
             if (!IsPostBack)
             {
-                //CheckPermission();
-
                 LoadData(string.Empty, 0);
             }
         }
@@ -28,44 +22,27 @@ namespace RentBike
         private void LoadData(string strSearch, int page)
         {
             // LOAD PAGER
-            int totalRecord = 0;
             using (var db = new RentBikeEntities())
             {
-                var count = (from c in db.RentTypes
-                             //where c.SEARCH_TEXT.Contains(strSearch)
-                             select c).Count();
-                totalRecord = Convert.ToInt32(count);
+                var dataList = (from c in db.RentTypes
+                                select c);
+
+                int totalRecord = dataList.Count();
+                int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+
+                IEnumerable<int> pageList = Enumerable.Range(1, totalPage);
+                ddlPager.DataSource = pageList;
+                ddlPager.DataBind();
+
+                if (pageList.Count() > 0)
+                    ddlPager.SelectedIndex = page;
+
+                // LOAD DATA WITH PAGING
+                int skip = page * pageSize;
+                dataList = dataList.Skip(skip).Take(pageSize);
+                rptRentType.DataSource = dataList.ToList();
+                rptRentType.DataBind();
             }
-
-            int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-            List<int> pageList = new List<int>();
-            for (int i = 1; i <= totalPage; i++)
-            {
-                pageList.Add(i);
-            }
-
-            ddlPager.DataSource = pageList;
-            ddlPager.DataBind();
-            if(pageList.Count > 0)
-            {
-                ddlPager.SelectedIndex = page;
-            }
-
-            // LOAD DATA WITH PAGING
-            List<RentType> dataList;
-            int skip = page * pageSize;
-            using (var db = new RentBikeEntities())
-            {
-                var st = from s in db.RentTypes
-                         //where s.SEARCH_TEXT.Contains(strSearch)
-                         orderby s.ID
-                         select s;
-
-                dataList = st.Skip(skip).Take(pageSize).ToList();
-            }
-
-            rptRentType.DataSource = dataList;
-            rptRentType.DataBind();
         }
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)

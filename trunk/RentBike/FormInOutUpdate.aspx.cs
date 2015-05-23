@@ -8,14 +8,10 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormInOutUpdate : System.Web.UI.Page
+    public partial class FormInOutUpdate : FormBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
             if (!IsPostBack)
             {
                 // LOAD PAYPERIOD
@@ -39,7 +35,7 @@ namespace RentBike
                     var contract = db.Contracts.Where(c =>c.ID == pp.CONTRACT_ID).FirstOrDefault();
                     if (contract != null)
                     {
-                        Session["store_id"] = contract.STORE_ID;
+                        STORE_ID = contract.STORE_ID;
                         var item = db.Stores.Where(s =>s.ID == contract.STORE_ID).FirstOrDefault();
                         if (item != null)
                         {

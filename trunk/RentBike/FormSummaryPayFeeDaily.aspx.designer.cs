@@ -67,13 +67,13 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.Label lblTotalMonthlyFee;
         
         /// <summary>
-        /// lblTActualTotalMonthlyFee control.
+        /// lblActualTotalMonthlyFee control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTActualTotalMonthlyFee;
+        protected global::System.Web.UI.WebControls.Label lblActualTotalMonthlyFee;
         
         /// <summary>
         /// rptWarning control.

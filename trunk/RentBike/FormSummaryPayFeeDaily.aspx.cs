@@ -12,36 +12,12 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormSummaryPayFeeDaily : System.Web.UI.Page
+    public partial class FormSummaryPayFeeDaily : FormBase
     {
-        int pageSize = 20;
-        int storeId = 0;
         public string SearchDate { get; set; }
-
-        private DropDownList drpStore;
-
-        //raise button click events on content page for the buttons on master page
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-            drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
-        }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
-            if (CheckAdminPermission())
-            {
-                storeId = Helper.parseInt(drpStore.SelectedValue);
-            }
-            else
-            {
-                storeId = Helper.parseInt(Session["store_id"].ToString());
-            }
-
             if (!IsPostBack)
             {
                 LoadData(string.Empty, string.Empty);
@@ -64,43 +40,51 @@ namespace RentBike
                 searchDate = Convert.ToDateTime(date);
             }
 
-            List<SummaryPayFeeDaily> dataListDaily = CommonList.GetSummaryPayFeeDailyData(searchDate, DateTime.MinValue, strSearch, storeId);
+            List<SummaryPayFeeDaily> dataListDaily = CommonList.GetSummaryPayFeeDailyData(searchDate, DateTime.MinValue, strSearch, STORE_ID);
             rptWarning.DataSource = dataListDaily;
             rptWarning.DataBind();
 
             using (var db = new RentBikeEntities())
             {
-                DateTime startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 6);
+                DateTime startDate = new DateTime(searchDate.Year, searchDate.Month, 6);
+                startDate = searchDate < startDate == true ? new DateTime(searchDate.Year, searchDate.Month - 1, 6) : startDate;
 
-                int endYear = DateTime.Today.Year;
-                int endMonth = DateTime.Today.Month + 1;
-                if (endMonth > 12)
+                int endYear = searchDate.Year;
+                int endMonth = searchDate.Month;
+                if (endMonth + 1 > 12)
                 {
                     endMonth = 1;
                     endYear = endYear + 1;
-                }
-                DateTime endDate = new DateTime(endYear, endMonth, 5);
+                }    
+                DateTime endDate = new DateTime(endYear, endMonth + 1, 5);
+                endDate = searchDate < endDate == true ? searchDate : endDate;
 
-                if (DateTime.Today < startDate)
+                List<SummaryPayFeeDaily> dataListMonthly = CommonList.GetSummaryPayFeeDailyData(startDate, endDate, strSearch, STORE_ID);
+
+                int[] dailyContractIds = dataListDaily.Select(c => c.CONTRACT_ID).ToArray();
+                int[] monthlycontractIds = dataListMonthly.Select(c => c.CONTRACT_ID).ToArray();
+
+                IQueryable<INOUT_FULL_VW> inOutList = db.INOUT_FULL_VW.Where(c =>c.INOUT_TYPE_ID == 14 || c.RENT_TYPE_ID == 15 || c.RENT_TYPE_ID == 16);
+                if (STORE_ID != 0)
                 {
-                    startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month - 1, 6);
-                    endDate = new DateTime(endYear, endMonth - 1, 5);
+                    inOutList = inOutList.Where(c => c.STORE_ID == STORE_ID);
                 }
+                if (!string.IsNullOrEmpty(strSearch))
+                {
+                    inOutList = inOutList.Where(c =>c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower()));
+                }
+                IQueryable<INOUT_FULL_VW> inOutDaily = inOutList.Where(c => c.INOUT_DATE == searchDate);
+                IQueryable<INOUT_FULL_VW> inOutMonthly = inOutList.Where(c => c.INOUT_DATE >= startDate && c.INOUT_DATE <= endDate);
 
-                List<SummaryPayFeeDaily> dataListMonthly = CommonList.GetSummaryPayFeeDailyData(startDate, endDate, strSearch, storeId);
-                IQueryable<InOut> inOutList = db.InOuts.Where(c =>c.RENT_TYPE_ID == 1 || c.RENT_TYPE_ID == 2 || c.RENT_TYPE_ID == 3);
-                IQueryable<InOut> inOutDaily = inOutList.Where(c =>c.INOUT_DATE == searchDate);
-                IQueryable<InOut> inOutMonthly = inOutList.Where(c =>c.INOUT_DATE >= startDate && c.INOUT_DATE <= endDate);
-
-                decimal totalDailyFee = dataListDaily.Select(c =>c.PAY_FEE).DefaultIfEmpty(0).Sum();
+                decimal totalDailyFee = dataListDaily.Where(c => dailyContractIds.Contains(c.CONTRACT_ID)).Select(c => c.PAY_FEE).DefaultIfEmpty(0).Sum();
                 decimal totalActualInAmountDaily = inOutDaily.Select(c =>c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
-                decimal totalMonthlyFee = dataListMonthly.Select(c =>c.PAY_FEE).DefaultIfEmpty(0).Sum();
+                decimal totalMonthlyFee = dataListMonthly.Where(c => monthlycontractIds.Contains(c.CONTRACT_ID)).Select(c => c.PAY_FEE).DefaultIfEmpty(0).Sum();
                 decimal totalActualInAmountMonthly = inOutMonthly.Select(c =>c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
 
                 lblTotalDailyFee.Text = string.Format("{0:0,0}", totalDailyFee);
                 lblActualTotalDailyFee.Text = string.Format("{0:0,0}", totalActualInAmountDaily);
                 lblTotalMonthlyFee.Text = string.Format("{0:0,0}", totalMonthlyFee);
-                lblTActualTotalMonthlyFee.Text = string.Format("{0:0,0}", totalActualInAmountMonthly);
+                lblActualTotalMonthlyFee.Text = string.Format("{0:0,0}", totalActualInAmountMonthly);
             }
         }
 
@@ -109,22 +93,9 @@ namespace RentBike
             LoadData(txtDate.Text, txtSearch.Text.Trim());
         }
 
-        protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(txtDate.Text, txtSearch.Text.Trim());
-        }
-
-        public bool CheckAdminPermission()
-        {
-            string acc = Convert.ToString(Session["username"]);
-            using (var db = new RentBikeEntities())
-            {
-                var item = db.Accounts.First(s => s.ACC == acc);
-
-                if (item.PERMISSION_ID == 1)
-                    return true;
-                return false;
-            }
         }
 
         protected void lnkExportExcel_Click(object sender, EventArgs e)
@@ -135,7 +106,7 @@ namespace RentBike
                 searchDate = Convert.ToDateTime(txtDate.Text);
             }
 
-            List<SummaryPayFeeDaily> dataList = CommonList.GetSummaryPayFeeDailyData(searchDate, DateTime.MinValue, txtSearch.Text, storeId);
+            List<SummaryPayFeeDaily> dataList = CommonList.GetSummaryPayFeeDailyData(searchDate, DateTime.MinValue, txtSearch.Text, STORE_ID);
             if (dataList.Any())
             {
                 using (ExcelPackage package = new ExcelPackage())
@@ -231,12 +202,7 @@ namespace RentBike
                         Response.Cache.SetExpires(DateTime.UtcNow); //for safe measure expire it immediately
                     }
 
-                    DateTime date = DateTime.Now;
-                    if (!string.IsNullOrEmpty(txtDate.Text))
-                    {
-                        date = Convert.ToDateTime(txtDate.Text);
-                    }
-                    string fileName = string.Format("BTP {0}.{1}", date.ToString("dd-MM-yyyy"), "xlsx");
+                    string fileName = string.Format("BTP {0}.{1}", searchDate.ToString("dd-MM-yyyy"), "xlsx");
                     Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
                     Response.AddHeader("content-disposition", "attachment; filename=\"" + fileName + "\"");
                     Response.BinaryWrite(package.GetAsByteArray());

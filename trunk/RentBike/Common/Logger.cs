@@ -9,7 +9,7 @@ namespace RentBike.Common
 {
     public class Logger
     {
-        public static void TraceService(string content)
+        public static void Log(string content)
         {
 
             //set up a filestream

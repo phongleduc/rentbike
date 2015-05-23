@@ -33,7 +33,7 @@
                     <asp:Label ID="lblTotalMonthlyFee" runat="server" CssClass="text-left"></asp:Label></td>
                 <td class="text-left"><strong>Tổng thực thu:</strong></td>
                 <td class="text-left">
-                    <asp:Label ID="lblTActualTotalMonthlyFee" runat="server" CssClass="text-left"></asp:Label></td>
+                    <asp:Label ID="lblActualTotalMonthlyFee" runat="server" CssClass="text-left"></asp:Label></td>
             </tr>
         </tbody>
     </table>

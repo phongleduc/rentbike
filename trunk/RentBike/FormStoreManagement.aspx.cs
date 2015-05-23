@@ -8,57 +8,31 @@ using RentBike.Common;
 
 namespace RentBike
 {
-    public partial class FormShopManagement : Page
+    public partial class FormShopManagement : FormBase
     {
         int pageSize = 20;
-
-        //raise button click events on content page for the buttons on master page
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-            drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
-        }
-
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
             if (!IsPostBack)
             {
                 LoadData(string.Empty, 0, 0);
-                //CheckPermission();
             }
         }
 
-        protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DropDownList drpStore = sender as DropDownList;
-            LoadData(txtSearch.Text.Trim(), Helper.parseInt(drpStore.SelectedValue), Convert.ToInt32(ddlPager.SelectedValue) - 1);
+            LoadData(txtSearch.Text.Trim(), STORE_ID, Convert.ToInt32(ddlPager.SelectedValue) - 1);
         }
 
         private void CheckPermission()
         {
-            string username = Convert.ToString(Session["username"]);
-            string name = Convert.ToString(Session["name"]);
-            int permission = Convert.ToInt32(Session["permission"]);
-
-            if (string.IsNullOrEmpty(username))
+            if (IS_ADMIN)
             {
-                Response.Redirect("FormLogin.aspx");
-            }
-
-            if (permission == 1)
-            {
-                // permission_id = 1 --> ADMIN
-                // permission_id = 0 --> NORMAL
-
                 foreach (RepeaterItem itm in rptStore.Items)
                 {
                     HiddenField hdf = (HiddenField)(itm.FindControl("hdfStore_id"));
                     HyperLink hpl = (HyperLink)(itm.FindControl("hplStoreDetail"));
-                    if (hdf.Value.ToString() == Convert.ToString(Session["store_id"]))
+                    if (hdf.Value.ToString() == STORE_ID.ToString())
                     {
                         hpl.Visible = true;
                     }
@@ -75,66 +49,34 @@ namespace RentBike
         private void LoadData(string strSearch, int storeId, int page)
         {
             // LOAD PAGER
-            int totalRecord = 0;
             using (var db = new RentBikeEntities())
             {
+                IQueryable<Store> dataList = db.Stores;
+
                 if (storeId != 0)
-                {
-                    var count = (from c in db.Stores
-                                 where c.SEARCH_TEXT.Contains(strSearch) && c.ID == storeId
-                                 select c).Count();
-                    totalRecord = Convert.ToInt32(count);
-                }
-                else
-                {
-                    var count = (from c in db.Stores
-                                 where c.SEARCH_TEXT.Contains(strSearch)
-                                 select c).Count();
-                    totalRecord = Convert.ToInt32(count);
-                }
+                    dataList = dataList.Where(c => c.ID == storeId);
+
+                if (!string.IsNullOrEmpty(strSearch))
+                    dataList = dataList.Where(c => c.ID == storeId);
+
+
+                int totalRecord = dataList.Count();
+                int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
+                IEnumerable<int> pageList = Enumerable.Range(1, totalPage);
+
+                ddlPager.DataSource = pageList;
+                ddlPager.DataBind();
+
+                if (pageList.Count() > 0)
+                    ddlPager.SelectedIndex = page;
+
+                // LOAD DATA WITH PAGING
+                int skip = page * pageSize;
+                dataList = dataList.Skip(skip).Take(pageSize);
+
+                rptStore.DataSource = dataList.ToList();
+                rptStore.DataBind();
             }
-
-            int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
-            List<int> pageList = new List<int>();
-            for (int i = 1; i <= totalPage; i++)
-            {
-                pageList.Add(i);
-            }
-
-            ddlPager.DataSource = pageList;
-            ddlPager.DataBind();
-            if (pageList.Count > 0)
-            {
-                ddlPager.SelectedIndex = page;
-            }
-
-            // LOAD DATA WITH PAGING
-            List<STORE_FULL_VW> dataList;
-            int skip = page * pageSize;
-            using (var db = new RentBikeEntities())
-            {
-                if (storeId != 0)
-                {
-                    var st = from s in db.STORE_FULL_VW
-                             where s.SEARCH_TEXT.Contains(strSearch) && s.ID == storeId
-                             orderby s.ID
-                             select s;
-
-                    dataList = st.Skip(skip).Take(pageSize).ToList();
-                }
-                else
-                {
-                    var st = from s in db.STORE_FULL_VW
-                             where s.SEARCH_TEXT.Contains(strSearch)
-                             orderby s.ID
-                             select s;
-
-                    dataList = st.Skip(skip).Take(pageSize).ToList();
-                }
-            }
-
-            rptStore.DataSource = dataList; 
-            rptStore.DataBind();
         }
 
         protected void btnNew_Click(object sender, EventArgs e)

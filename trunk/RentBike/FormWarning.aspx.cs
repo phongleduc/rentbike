@@ -12,36 +12,11 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormWarning : System.Web.UI.Page
+    public partial class FormWarning : FormBase
     {
-        int pageSize = 20;
-        int storeId = 0;
-        public string SearchDate { get; set; }
-
-        private DropDownList drpStore;
-
-        //raise button click events on content page for the buttons on master page
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-            drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
-        }
-
+        public string SearchDate;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
-            if (CheckAdminPermission())
-            {
-                storeId = Helper.parseInt(drpStore.SelectedValue);
-            }
-            else
-            {
-                storeId = Helper.parseInt(Session["store_id"].ToString());
-            }
-
             if (!IsPostBack)
             {
                 LoadData(string.Empty, string.Empty);
@@ -58,7 +33,7 @@ namespace RentBike
 
         private void LoadData(string date, string strSearch)
         {
-            List<CONTRACT_FULL_VW> dataList = CommonList.GetWarningData(date, strSearch, storeId);
+            List<CONTRACT_FULL_VW> dataList = CommonList.GetWarningData(date, strSearch, STORE_ID);
             rptWarning.DataSource = dataList;
             rptWarning.DataBind();
         }
@@ -68,22 +43,9 @@ namespace RentBike
             LoadData(txtDate.Text, txtSearch.Text.Trim());
         }
 
-        protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(txtDate.Text, txtSearch.Text.Trim());
-        }
-
-        public bool CheckAdminPermission()
-        {
-            string acc = Convert.ToString(Session["username"]);
-            using (var db = new RentBikeEntities())
-            {
-                var item = db.Accounts.First(s => s.ACC == acc);
-
-                if (item.PERMISSION_ID == 1)
-                    return true;
-                return false;
-            }
         }
 
         public string ShowClass(int overDate)
@@ -105,7 +67,7 @@ namespace RentBike
 
         protected void lnkExportExcel_Click(object sender, EventArgs e)
         {
-            List<CONTRACT_FULL_VW> dataList = CommonList.GetWarningData(txtDate.Text, txtSearch.Text, storeId);
+            List<CONTRACT_FULL_VW> dataList = CommonList.GetWarningData(txtDate.Text, txtSearch.Text, STORE_ID);
             if (dataList.Any())
             {
                 using (ExcelPackage package = new ExcelPackage())

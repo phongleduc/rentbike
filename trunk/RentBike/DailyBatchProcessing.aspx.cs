@@ -15,22 +15,22 @@ namespace RentBike
         {
             try
             {
-                Logger.TraceService("Backup database start");
+                Logger.Log("Backup database start");
                 CommonList.BackUp();
-                Logger.TraceService("Backup database end");
+                Logger.Log("Backup database end");
 
-                Logger.TraceService("Save summary fee daily start");
+                Logger.Log("Save summary fee daily start");
                 CommonList.SaveSummaryPayFeeDaily();
-                Logger.TraceService("Save summary fee daily end");
+                Logger.Log("Save summary fee daily end");
 
-                Logger.TraceService("Auto extend contract start");
+                Logger.Log("Auto extend contract start");
                 CommonList.AutoExtendContract();
-                Logger.TraceService("Auto extend contract end");
+                Logger.Log("Auto extend contract end");
 
             }
             catch (Exception ex)
             {
-                Logger.TraceService("Error Entry at: " + ex.Message + Environment.NewLine + ex.StackTrace);
+                Logger.Log("Error Entry at: " + ex.Message + Environment.NewLine + ex.StackTrace);
             }
         }
     }

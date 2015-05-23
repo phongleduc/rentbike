@@ -9,14 +9,10 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormStoreDetail : System.Web.UI.Page
+    public partial class FormStoreDetail : FormBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
             if (!IsPostBack)
             {
                 Common.CommonList.LoadCity(ddlCity);
@@ -213,40 +209,17 @@ namespace RentBike
         {
             Log lg = new Log();
             lg.ACCOUNT = Session["username"].ToString();
-            string strStoreName = string.Empty;
-            if (CheckAdminPermission())
-            {
-                DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-                strStoreName = drpStore.SelectedItem.Text;
-            }
-            else
-            {
-                strStoreName = Session["store_name"].ToString();
-            }
-            lg.STORE = strStoreName;
+            lg.STORE = STORE_NAME;
             lg.LOG_ACTION = action;
             lg.LOG_DATE = DateTime.Now;
             lg.IS_CRASH = isCrashed;
-            lg.LOG_MSG = string.Format("Tài khoản {0} {1}thực hiện {2} vào lúc {3}", lg.ACCOUNT, strStoreName, lg.LOG_ACTION, lg.LOG_DATE);
+            lg.LOG_MSG = string.Format("Tài khoản {0} {1} thực hiện {2} vào lúc {3}", lg.ACCOUNT, STORE_NAME, lg.LOG_ACTION, lg.LOG_DATE);
             lg.SEARCH_TEXT = lg.LOG_MSG;
 
             using (var db = new RentBikeEntities())
             {
                 db.Logs.Add(lg);
                 db.SaveChanges();
-            }
-        }
-
-        public bool CheckAdminPermission()
-        {
-            string acc = Convert.ToString(Session["username"]);
-            using (var db = new RentBikeEntities())
-            {
-                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
-
-                if (item.PERMISSION_ID == 1)
-                    return true;
-                return false;
             }
         }
     }

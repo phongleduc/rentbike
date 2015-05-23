@@ -8,15 +8,11 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormInOutAndPeriodUpdate : System.Web.UI.Page
+    public partial class FormInOutAndPeriodUpdate : FormBase
     {
         public DateTime InOutDate { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
             if (!IsPostBack)
             {
                 // LOAD PAYPERIOD

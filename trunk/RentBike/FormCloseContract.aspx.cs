@@ -9,14 +9,10 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormCloseContract : System.Web.UI.Page
+    public partial class FormCloseContract : FormBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
             if (!IsPostBack)
             {
                 int id = Convert.ToInt32(Request.QueryString["ID"]);
@@ -246,15 +242,14 @@ namespace RentBike
             Log lg = new Log();
             lg.ACCOUNT = Session["username"].ToString();
             string strStoreName = string.Empty;
-            if (CheckAdminPermission())
+            if (IS_ADMIN)
             {
                 DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
                 strStoreName = drpStore.SelectedItem.Text;
             }
             else
-            {
                 strStoreName = Session["store_name"].ToString();
-            }
+
             lg.STORE = strStoreName;
             lg.LOG_ACTION = action;
             lg.LOG_DATE = DateTime.Now;
@@ -266,19 +261,6 @@ namespace RentBike
             {
                 db.Logs.Add(lg);
                 db.SaveChanges();
-            }
-        }
-
-        public bool CheckAdminPermission()
-        {
-            string acc = Convert.ToString(Session["username"]);
-            using (var db = new RentBikeEntities())
-            {
-                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
-
-                if (item.PERMISSION_ID == 1)
-                    return true;
-                return false;
             }
         }
     }

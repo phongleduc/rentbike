@@ -557,9 +557,7 @@ namespace RentBike.Common
                         sum.STORE_NAME = contract.STORE_NAME;
                         sum.NOTE = contract.NOTE;
                         sum.SEARCH_TEXT = contract.SEARCH_TEXT;
-                        sum.CREATED_BY = HttpContext.Current.Session["username"].ToString();
                         sum.CREATED_DATE = DateTime.Now;
-                        sum.UPDATED_BY = HttpContext.Current.Session["username"].ToString();
                         sum.UPDATED_DATE = DateTime.Now;
 
                         db.SummaryPayFeeDailies.Add(sum);
@@ -608,6 +606,9 @@ namespace RentBike.Common
 
                 if (!System.IO.Directory.Exists(directory))
                     System.IO.Directory.CreateDirectory(directory);
+
+                System.IO.DirectoryInfo directoryInfo = new System.IO.DirectoryInfo(directory);
+                directoryInfo.Empty();
 
                 // Here the procedure is called and executes successfully
                 db.Database.ExecuteSqlCommand(System.Data.Entity.TransactionalBehavior.DoNotEnsureTransaction, "EXEC [dbo].[BackUp] @path = N'" + fileName + "'");

@@ -11,11 +11,11 @@ namespace RentBike.Common
 {
     public class Helper
     {
-        public static int parseInt(string str)
+        public static int parseInt(object o)
         {
             try
             {
-                return int.Parse(str);
+                return Convert.ToInt32(o);
             }
             catch
             {
@@ -51,6 +51,17 @@ namespace RentBike.Common
                 return base64Buidler.ToString();
             }
             return string.Empty;
+        }
+
+        public static void EmptyCookies()
+        {
+            HttpCookie aCookie = new HttpCookie("UserName");
+            aCookie.Expires = DateTime.Now.AddDays(-1);
+            HttpContext.Current.Response.Cookies.Add(aCookie);
+
+            aCookie = new HttpCookie("Password");
+            aCookie.Expires = DateTime.Now.AddDays(-1);
+            HttpContext.Current.Response.Cookies.Add(aCookie);
         }
 
         public static string EncryptPassword(string strPassword)
