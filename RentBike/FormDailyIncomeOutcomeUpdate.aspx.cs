@@ -12,8 +12,9 @@ namespace RentBike
     public partial class FormDailyIncomeOutcomeUpdate : FormBase
     {
         private int inOutId = 0;
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void Page_Load(object sender, EventArgs e)
         {
+            base.Page_Load(sender, e);
             inOutId = Helper.parseInt(Request.QueryString["id"]);
             if (!IsPostBack)
             {

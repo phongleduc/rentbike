@@ -10,8 +10,9 @@ namespace RentBike
 {
     public partial class FormBadContractReport : FormBase
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void Page_Load(object sender, EventArgs e)
         {
+            base.Page_Load(sender, e);
             if (!IsPostBack)
             {
                 List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text);
@@ -120,7 +121,7 @@ namespace RentBike
             lblTotalBadContract.Text = totalBadContract == 0 ? "0" : string.Format("{0:0,0}", totalBadContract) + " VNĐ";
         }
 
-        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected override void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text);
             LoadGeneralInfo(result);

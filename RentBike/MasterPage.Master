@@ -80,7 +80,7 @@
                         <asp:HyperLink ID="hplReport" Text="Thông báo" runat="server" CssClass="color-text-white" NavigateUrl="FormReport.aspx"></asp:HyperLink></li>
                     <li class="color-info">
                         <asp:HyperLink ID="hplActivityLog" Text="Nhật ký hoạt động" runat="server" CssClass="color-text-white" NavigateUrl="FormActivityLog.aspx"></asp:HyperLink></li>
-                    <li class="color-warning">
+                    <li class="color-success">
                         <asp:HyperLink ID="hplAccountManagement" Text="Quản lý tài khoản" runat="server" CssClass="color-text-white" NavigateUrl="FormAccountManagement.aspx"></asp:HyperLink></li>
                     <li class="color-info">
                         <asp:HyperLink ID="hplCommonListSetting" Text="Cài đặt danh mục" runat="server" CssClass="color-text-white" NavigateUrl="FormCommonListSetting.aspx"></asp:HyperLink></li>

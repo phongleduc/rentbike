@@ -16,8 +16,9 @@ namespace RentBike
     {
         public string SearchDate { get; set; }
 
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void Page_Load(object sender, EventArgs e)
         {
+            base.Page_Load(sender, e);
             if (!IsPostBack)
             {
                 LoadData(string.Empty, string.Empty);
@@ -93,7 +94,7 @@ namespace RentBike
             LoadData(txtDate.Text, txtSearch.Text.Trim());
         }
 
-        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected override void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(txtDate.Text, txtSearch.Text.Trim());
         }

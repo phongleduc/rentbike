@@ -20,8 +20,9 @@ namespace RentBike
         int pageSize = 10;
         private List<INOUT_FULL_VW> listInOut;
 
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void Page_Load(object sender, EventArgs e)
         {
+            base.Page_Load(sender, e);
             if(!IsPostBack)
             {
                 LoadData(string.Empty, string.Empty, 0);
@@ -437,7 +438,7 @@ namespace RentBike
             }
         }
 
-        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected override void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(txtStartDate.Text, txtEndDate.Text, 0);
         }

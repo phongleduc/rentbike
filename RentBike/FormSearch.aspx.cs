@@ -11,8 +11,9 @@ namespace RentBike
     public partial class FormSearch : FormBase
     {
         int pageSize = 30;
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void Page_Load(object sender, EventArgs e)
         {
+            base.Page_Load(sender, e);
             string searchText = Request.QueryString["q"];
             if (!IsPostBack)
             {
@@ -21,7 +22,7 @@ namespace RentBike
             }
         }
 
-        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected override void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(txtSearch.Text.Trim(), 0);
         }

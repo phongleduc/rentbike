@@ -15,12 +15,12 @@ namespace RentBike
 {
     public partial class FormContractUpdate : FormBase
     {
-        int pageSize = 10;
         protected string ContractID { get; set; }
         protected int RentTypeID { get; set; }
         protected bool IsNewContract { get; set; }
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void Page_Load(object sender, EventArgs e)
         {
+            base.Page_Load(sender, e);
             if (!IsPostBack)
             {
                 try

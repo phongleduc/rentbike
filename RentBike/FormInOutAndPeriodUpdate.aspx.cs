@@ -11,8 +11,9 @@ namespace RentBike
     public partial class FormInOutAndPeriodUpdate : FormBase
     {
         public DateTime InOutDate { get; set; }
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void Page_Load(object sender, EventArgs e)
         {
+            base.Page_Load(sender, e);
             if (!IsPostBack)
             {
                 // LOAD PAYPERIOD
