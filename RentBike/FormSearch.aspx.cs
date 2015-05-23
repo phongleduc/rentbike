@@ -8,25 +8,11 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormSearch : System.Web.UI.Page
+    public partial class FormSearch : FormBase
     {
         int pageSize = 30;
-        private DropDownList drpStore;
-
-        //raise button click events on content page for the buttons on master page
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-            drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
-        }
-
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
-
             string searchText = Request.QueryString["q"];
             if (!IsPostBack)
             {
@@ -35,7 +21,7 @@ namespace RentBike
             }
         }
 
-        protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(txtSearch.Text.Trim(), 0);
         }
@@ -51,9 +37,9 @@ namespace RentBike
                     .OrderByDescending(c => c.CONTRACT_STATUS)
                     .ToList();
 
-                if (drpStore.Enabled == true && Helper.parseInt(drpStore.SelectedValue) != 0)
+                if (IS_ADMIN && STORE_ID != 0)
                 {
-                    dataList = dataList.Where(c => c.STORE_ID == Helper.parseInt(drpStore.SelectedValue)).ToList();
+                    dataList = dataList.Where(c =>c.STORE_ID == STORE_ID).ToList();
                 }
 
                 var totalRecord = dataList.Count;

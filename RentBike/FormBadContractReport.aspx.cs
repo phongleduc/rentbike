@@ -8,78 +8,58 @@ using RentBike.Common;
 
 namespace RentBike
 {
-    public partial class FormBadContractReport : System.Web.UI.Page
+    public partial class FormBadContractReport : FormBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
+            if (!IsPostBack)
             {
-                Response.Redirect("FormLogin.aspx");
+                List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text);
+                LoadGeneralInfo(result);
+                LoadData(result);
             }
+        }
+
+        private List<CONTRACT_FULL_VW> GetResultList(string strSearch)
+        {
             using (var db = new RentBikeEntities())
             {
-                List<CONTRACT_FULL_VW> result = GetResultList(db);
-                LoadGeneralInfo(result);
-                LoadData(result, db);
-            }
-        }
+                IQueryable<CONTRACT_FULL_VW> dataList = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true).OrderByDescending(c => c.ID);
 
-        private List<CONTRACT_FULL_VW> GetResultList(RentBikeEntities db)
-        {
-            var data = new List<CONTRACT_FULL_VW>();
-            if (CheckAdminPermission())
-            {
-                DropDownList ddlStore = Master.FindControl("ddlStore") as DropDownList;
-                if (ddlStore != null && !string.IsNullOrEmpty(ddlStore.SelectedValue))
-                {
-                    int storeid = Helper.parseInt(ddlStore.SelectedValue);
-                    data = db.CONTRACT_FULL_VW.ToList().Where(c =>c.CONTRACT_STATUS == true && c.STORE_ID == storeid)
-                   .OrderByDescending(c =>c.ID).ToList();
-                }
-                else
-                {
-                    data = db.CONTRACT_FULL_VW.ToList().Where(c =>c.CONTRACT_STATUS == true)
-                        .OrderByDescending(c =>c.ID).ToList();
-                }
-            }
-            else
-            {
-                int storeid = Helper.parseInt(Session["store_id"].ToString());
-                data = db.CONTRACT_FULL_VW.ToList().Where(c =>c.CONTRACT_STATUS == true && c.STORE_ID == storeid)
-                    .OrderByDescending(c =>c.ID).ToList();
-            }
+                if (STORE_ID != 0)
+                    dataList = dataList.Where(c => c.STORE_ID == STORE_ID);
 
-            if (!string.IsNullOrEmpty(txtSearch.Text))
-            {
-                data = data.Where(s => s.SEARCH_TEXT.ToLower().Contains(txtSearch.Text.ToLower()) 
-                    || s.CUSTOMER_NAME.ToLower().Contains(txtSearch.Text.ToLower())).ToList();
-            }
+                if (!string.IsNullOrEmpty(strSearch))
+                    dataList = dataList.Where(s => s.SEARCH_TEXT.ToLower().Contains(txtSearch.Text.ToLower())
+                        || s.CUSTOMER_NAME.ToLower().Contains(txtSearch.Text.ToLower()));
 
-            var result = new List<CONTRACT_FULL_VW>();
-            var lstPeriod = db.PayPeriods.Where(s =>s.STATUS == true).ToList();
-            foreach (CONTRACT_FULL_VW c in data)
-            {
-                var lstTempPeriod = lstPeriod.Where(s =>s.CONTRACT_ID == c.ID).ToList();
-                decimal totalPayed = lstTempPeriod.Select(s =>s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
-                foreach (PayPeriod pp in lstTempPeriod)
+
+                var result = new List<CONTRACT_FULL_VW>();
+                var lstPeriod = db.PayPeriods.Where(s => s.STATUS == true).ToList();
+                foreach (CONTRACT_FULL_VW c in dataList)
                 {
-                    if (pp.AMOUNT_PER_PERIOD > totalPayed)
+                    var lstTempPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID).ToList();
+                    decimal totalPayed = lstTempPeriod.Select(s => s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                    foreach (PayPeriod pp in lstTempPeriod)
                     {
-                        c.PAY_DATE = pp.PAY_DATE;
-                        c.OVER_DATE = DateTime.Now.Subtract(c.PAY_DATE).Days;
-                        if (c.OVER_DATE > 50)
+                        if (pp.AMOUNT_PER_PERIOD > totalPayed)
                         {
-                            result.Add(c);
+                            c.PAY_DATE = pp.PAY_DATE;
+                            c.OVER_DATE = DateTime.Now.Subtract(c.PAY_DATE).Days;
+                            if (c.OVER_DATE > 50)
+                            {
+                                result.Add(c);
+                            }
+                            break;
                         }
-                        break;
+                        totalPayed -= pp.AMOUNT_PER_PERIOD;
                     }
-                    totalPayed -= pp.AMOUNT_PER_PERIOD;
                 }
+                return result.OrderBy(c => c.OVER_DATE).ToList();
             }
-            return result.OrderBy(c =>c.OVER_DATE).ToList();
         }
 
-        private void LoadData(List<CONTRACT_FULL_VW> data, RentBikeEntities db)
+        private void LoadData(List<CONTRACT_FULL_VW> data)
         {
             rptContract.DataSource = data;
             rptContract.DataBind();
@@ -92,7 +72,9 @@ namespace RentBike
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            //LoadData(txtSearch.Text.Trim(), 0);
+            List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text);
+            LoadGeneralInfo(result);
+            LoadData(result);
         }
 
         private void LoadGeneralInfo(List<CONTRACT_FULL_VW> lstContract)
@@ -103,22 +85,22 @@ namespace RentBike
             decimal rentOtherNo = 0;
             decimal totalBadContract = 0;
 
-            IEnumerable<CONTRACT_FULL_VW> ieRentBike = lstContract.Where(x =>x.RENT_TYPE_ID == 1 && x.CONTRACT_STATUS == true);
+            IEnumerable<CONTRACT_FULL_VW> ieRentBike = lstContract.Where(x => x.RENT_TYPE_ID == 1 && x.CONTRACT_STATUS == true);
             if (ieRentBike.Any())
             {
-                rentbikeNo = ieRentBike.Sum(x =>x.CONTRACT_AMOUNT);
+                rentbikeNo = ieRentBike.Sum(x => x.CONTRACT_AMOUNT);
             }
 
-            IEnumerable<CONTRACT_FULL_VW> ieRentEquiq = lstContract.Where(x =>x.RENT_TYPE_ID == 2 && x.CONTRACT_STATUS == true);
+            IEnumerable<CONTRACT_FULL_VW> ieRentEquiq = lstContract.Where(x => x.RENT_TYPE_ID == 2 && x.CONTRACT_STATUS == true);
             if (ieRentEquiq.Any())
             {
-                rentEquipNo = ieRentEquiq.Sum(x =>x.CONTRACT_AMOUNT);
+                rentEquipNo = ieRentEquiq.Sum(x => x.CONTRACT_AMOUNT);
             }
 
-            IEnumerable<CONTRACT_FULL_VW> ieRentOther = lstContract.Where(x =>x.RENT_TYPE_ID == 3 && x.CONTRACT_STATUS == true);
+            IEnumerable<CONTRACT_FULL_VW> ieRentOther = lstContract.Where(x => x.RENT_TYPE_ID == 3 && x.CONTRACT_STATUS == true);
             if (ieRentBike.Any())
             {
-                rentOtherNo = ieRentOther.Sum(x =>x.CONTRACT_AMOUNT);
+                rentOtherNo = ieRentOther.Sum(x => x.CONTRACT_AMOUNT);
             }
 
             lblRentBikeCount.Text = ieRentBike.Count().ToString();
@@ -128,7 +110,7 @@ namespace RentBike
             lblTotalFeeBikeContract.Text = rentbikeNo == 0 ? "0" : string.Format("{0:0,0}", rentbikeNo) + " VNĐ";
             lblTotalFeeEquiqContract.Text = rentbikeNo == 0 ? "0" : string.Format("{0:0,0}", rentEquipNo) + " VNĐ";
             lblTotalFeeOtherContract.Text = rentbikeNo == 0 ? "0" : string.Format("{0:0,0}", rentOtherNo) + " VNĐ";
-            totalBadContract = lstContract.Sum(x =>x.CONTRACT_AMOUNT);
+            totalBadContract = lstContract.Sum(x => x.CONTRACT_AMOUNT);
             lblNumberOfBadContract.Text = lstContract.Count() + "/" + lstContract.Count();
             if (lstContract.Count() > 0)
                 lblPercentBadContract.Text = String.Format("{0:P2}", lstContract.Count() / lstContract.Count());
@@ -138,17 +120,11 @@ namespace RentBike
             lblTotalBadContract.Text = totalBadContract == 0 ? "0" : string.Format("{0:0,0}", totalBadContract) + " VNĐ";
         }
 
-        public bool CheckAdminPermission()
+        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string acc = Convert.ToString(Session["username"]);
-            using (var db = new RentBikeEntities())
-            {
-                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
-
-                if (item.PERMISSION_ID == 1)
-                    return true;
-                return false;
-            }
+            List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text);
+            LoadGeneralInfo(result);
+            LoadData(result);
         }
     }
 }

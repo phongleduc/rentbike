@@ -13,7 +13,7 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormContractUpdate : System.Web.UI.Page
+    public partial class FormContractUpdate : FormBase
     {
         int pageSize = 10;
         protected string ContractID { get; set; }
@@ -21,10 +21,6 @@ namespace RentBike
         protected bool IsNewContract { get; set; }
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
             if (!IsPostBack)
             {
                 try
@@ -35,7 +31,7 @@ namespace RentBike
                     string id = Request.QueryString["ID"];
                     string sId = Request.QueryString["sID"];
                     string copy = Request.QueryString["copy"];
-                    int storeId = Convert.ToInt32(Session["store_id"]);
+                    int STORE_ID = Convert.ToInt32(Session["store_id"]);
 
                     if (!string.IsNullOrEmpty(id) && string.IsNullOrEmpty(copy)) // EDIT
                     {
@@ -50,35 +46,30 @@ namespace RentBike
                             int contractid = Convert.ToInt32(id);
 
                             Store stor = new Store();
-                            stor = db.Stores.FirstOrDefault(s => s.ID == storeId);
+                            stor = db.Stores.FirstOrDefault(s => s.ID == STORE_ID);
 
                             var st = from s in db.CONTRACT_FULL_VW
                                      where s.ID == contractid
                                      select s;
 
                             lst = st.ToList<CONTRACT_FULL_VW>();
-                            bool bAdmin = CheckAdminPermission();
-                            if (bAdmin)
-                            {
-                                storeId = lst[0].STORE_ID;
-                            }
-                            ddlStore.SelectedValue = storeId.ToString();
+                            ddlStore.SelectedValue = STORE_ID.ToString();
 
-                            bool bDifferentStoreID = false;
-                            if (Helper.parseInt(sId) != storeId)
+                            bool bDifferentSTORE_ID = false;
+                            if (Helper.parseInt(sId) != STORE_ID)
                             {
-                                if(!bAdmin)
-                                    bDifferentStoreID = true;
-                                storeId = Helper.parseInt(sId);
+                                if(!IS_ADMIN)
+                                    bDifferentSTORE_ID = true;
+                                STORE_ID = Helper.parseInt(sId);
                             }
 
-                            ddlStore.SelectedValue = storeId.ToString();
-                            if (!bAdmin)
+                            ddlStore.SelectedValue = STORE_ID.ToString();
+                            if (!IS_ADMIN)
                             {
                                 ddlStore.Enabled = false;
                             }
 
-                            if (!lst[0].CONTRACT_STATUS || (bDifferentStoreID && !string.IsNullOrEmpty(Request.QueryString["sID"])))
+                            if (!lst[0].CONTRACT_STATUS || (bDifferentSTORE_ID && !string.IsNullOrEmpty(Request.QueryString["sID"])))
                             {
                                 pnlTable.Enabled = false;
                                 rptPayFeeSchedule.Visible = false; 
@@ -129,21 +120,10 @@ namespace RentBike
                         txtContractNo.Visible = false;
                         using (var db = new RentBikeEntities())
                         {
-                            Store stor = new Store();
-                            if (storeId != 0)
+                            if (!IS_ADMIN)
                             {
-                                stor = db.Stores.FirstOrDefault(s => s.ID == storeId);
-                                //txtRentDate.Enabled = false;
-                                //txtEndDate.Enabled = false;
-                                if (!CheckAdminPermission())
-                                {
-                                    ddlStore.SelectedValue = storeId.ToString();
-                                    ddlStore.Enabled = false;
-                                }
-                            }
-                            else
-                            {
-
+                                ddlStore.SelectedValue = STORE_ID.ToString();
+                                ddlStore.Enabled = false;
                             }
                             RentTypeID = Convert.ToInt32(ddlRentType.SelectedValue);
                             txtRentDate.Text = string.Format("{0:dd/MM/yyyy}", DateTime.Now);
@@ -155,17 +135,13 @@ namespace RentBike
                                 CONTRACT_FULL_VW cntrct = db.CONTRACT_FULL_VW.Where(s => s.ID == contractid).FirstOrDefault();
                                 if (cntrct != null)
                                 {
-                                    bool bAdmin = CheckAdminPermission();
-                                    if (bAdmin)
-                                    {
-                                        storeId = cntrct.STORE_ID;
-                                    }
-                                    ddlStore.SelectedValue = storeId.ToString();
-                                    if (!bAdmin)
-                                    {
-                                        ddlStore.SelectedValue = storeId.ToString();
+                                    if (IS_ADMIN)
+                                        STORE_ID = cntrct.STORE_ID;
+                                    else
                                         ddlStore.Enabled = false;
-                                    }
+
+                                    ddlStore.SelectedValue = STORE_ID.ToString();
+ 
                                     txtLicenseNumber.Text = cntrct.LICENSE_NO;
                                     txtCustomerName.Text = cntrct.CUSTOMER_NAME;
                                     txtBirthDay.Text = string.Format("{0:dd/MM/yyyy}", cntrct.BIRTH_DAY);
@@ -760,14 +736,14 @@ namespace RentBike
             Response.Redirect("FormContractManagement.aspx?q=" + txtSearch.Text.Trim());
         }
 
-        private decimal GetFeeRate(int storeId)
+        private decimal GetFeeRate(int STORE_ID)
         {
             decimal fee = 0;
             List<StoreFee> lst = new List<StoreFee>();
             using (var db = new RentBikeEntities())
             {
                 var item = from s in db.StoreFees
-                           where s.STORE_ID == storeId
+                           where s.STORE_ID == STORE_ID
                            select s;
                 lst = item.ToList();
                 if (lst.Count > 0)
@@ -784,22 +760,11 @@ namespace RentBike
         {
             Log lg = new Log();
             lg.ACCOUNT = Session["username"].ToString();
-            string strStoreName = string.Empty;
-            if (CheckAdminPermission())
-            {
-                DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-                strStoreName = drpStore.SelectedItem.Text;
-            }
-            else
-            {
-                strStoreName = Session["store_name"].ToString();
-
-            }
-            lg.STORE = strStoreName;
+            lg.STORE = STORE_NAME;
             lg.LOG_ACTION = action;
             lg.LOG_DATE = DateTime.Now;
             lg.IS_CRASH = isCrashed;
-            lg.LOG_MSG = string.Format("Tài khoản {0} {1}thực hiện {2} vào lúc {3}", lg.ACCOUNT, strStoreName, lg.LOG_ACTION, lg.LOG_DATE);
+            lg.LOG_MSG = string.Format("Tài khoản {0} {1}thực hiện {2} vào lúc {3}", lg.ACCOUNT, STORE_NAME, lg.LOG_ACTION, lg.LOG_DATE);
             lg.SEARCH_TEXT = lg.LOG_MSG;
 
             using (var db = new RentBikeEntities())
@@ -845,19 +810,6 @@ namespace RentBike
                 lst = st.ToList<Customer>();
             }
             return lst;
-        }
-
-        public bool CheckAdminPermission()
-        {
-            string acc = Convert.ToString(Session["username"]);
-            using (var db = new RentBikeEntities())
-            {
-                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
-
-                if (item.PERMISSION_ID == 1)
-                    return true;
-                return false;
-            }
         }
 
         public bool ShowBlueImage(decimal amountPer, decimal actualPay)

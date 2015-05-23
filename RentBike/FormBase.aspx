@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormBase.aspx.cs" Inherits="RentBike.FormBase" %>

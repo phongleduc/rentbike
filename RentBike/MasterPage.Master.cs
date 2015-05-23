@@ -13,10 +13,6 @@ namespace RentBike
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
             if (!Page.IsPostBack)
             {
                 try
@@ -99,33 +95,15 @@ namespace RentBike
             try
             {
                 WriteLog(Constants.ACTION_LOGOUT, false);
+                Session.RemoveAll();
+                Helper.EmptyCookies();
+                //System.Web.Security.FormsAuthentication.SignOut();
+                Response.Redirect("FormLogin.aspx");
             }
             catch (Exception ex)
             {
-                WriteLog(Constants.ACTION_LOGOUT, true);
+                Logger.Log(ex.Message + Environment.NewLine + ex.StackTrace);
             }
-            finally
-            {
-                Session.RemoveAll();
-                RemoveAllCookies();
-                Response.Redirect("FormLogin.aspx");
-            }
-        }
-
-        protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //LoadData(txtSearch.Text.Trim(), Convert.ToInt32(ddlPager.SelectedValue) - 1);
-        }
-
-        private void RemoveAllCookies()
-        {
-            HttpCookie aCookie = new HttpCookie("UserName");
-            aCookie.Expires = DateTime.Now.AddDays(-1);
-            Response.Cookies.Add(aCookie);
-
-            aCookie = new HttpCookie("Password");
-            aCookie.Expires = DateTime.Now.AddDays(-1);
-            Response.Cookies.Add(aCookie);
         }
 
         private void WriteLog(string action, bool isCrashed)

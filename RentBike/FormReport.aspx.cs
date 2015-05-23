@@ -10,26 +10,12 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormReport : System.Web.UI.Page
+    public partial class FormReport : FormBase
     {
-        int storeId = 0;
         public string SearchDate { get; set; }
 
-        private DropDownList drpStore;
-
-        //raise button click events on content page for the buttons on master page
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-            drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
-        }
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
-
             if (!IsPostBack)
             {
                 LoadData(string.Empty);
@@ -38,24 +24,14 @@ namespace RentBike
 
         private void LoadData(string searchText)
         {
-            //int totalRecord = 0;
             List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
             using (var db = new RentBikeEntities())
             {
-                int storeId = 0;
                 var st = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true);
 
-                if (CheckAdminPermission())
+                if (STORE_ID != 0)
                 {
-                    storeId = Helper.parseInt(drpStore.SelectedValue);
-                }
-                else
-                {
-                    storeId = Helper.parseInt(Session["store_id"].ToString());
-                }
-                if (storeId != 0)
-                {
-                    st = st.Where(c =>c.STORE_ID == storeId);
+                    st = st.Where(c => c.STORE_ID == STORE_ID);
                 }
                 st = st.OrderByDescending(c =>c.ID);
 
@@ -137,22 +113,9 @@ namespace RentBike
             LoadData(txtSearch.Text.Trim());
         }
 
-        protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(txtSearch.Text.Trim());
-        }
-
-        public bool CheckAdminPermission()
-        {
-            string acc = Convert.ToString(Session["username"]);
-            using (var db = new RentBikeEntities())
-            {
-                var item = db.Accounts.First(s =>s.ACC == acc);
-
-                if (item.PERMISSION_ID == 1)
-                    return true;
-                return false;
-            }
         }
 
         public string ShowClass(int overDate)

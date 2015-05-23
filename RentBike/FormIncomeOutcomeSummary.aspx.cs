@@ -10,24 +10,10 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormIncomeOutcomeSummary : System.Web.UI.Page
+    public partial class FormIncomeOutcomeSummary : FormBase
     {
-        private DropDownList drpStore;
-
-        //raise button click events on content page for the buttons on master page
-        protected void Page_Init(object sender, EventArgs e)
-        {
-            drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-            drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
-        }
-
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
-
             if(!IsPostBack)
             {
                 LoadMiddle(txtStartDate.Text, txtEndDate.Text);
@@ -37,17 +23,7 @@ namespace RentBike
 
         private void LoadData(string startDate, string endDate)
         {
-            int storeId = 0;
-            if (CheckAdminPermission())
-            {
-                storeId = Helper.parseInt(drpStore.SelectedValue);
-            }
-            else
-            {
-                storeId = Helper.parseInt(Session["store_id"].ToString());
-            }
-
-            List<SummaryInfo> listSum = GetSummaryData(storeId);
+            List<SummaryInfo> listSum = GetSummaryData(STORE_ID);
             if (listSum.Any())
             {
                 if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
@@ -85,14 +61,14 @@ namespace RentBike
             }
         }
 
-        private List<SummaryInfo> GetSummaryData(int storeId)
+        private List<SummaryInfo> GetSummaryData(int STORE_ID)
         {
             using (var db = new RentBikeEntities())
             {
                 List<InOut> lstInOut = db.InOuts.ToList();
-                if (storeId != 0)
+                if (STORE_ID != 0)
                 {
-                    lstInOut = lstInOut.Where(c =>c.STORE_ID == storeId).ToList();
+                    lstInOut = lstInOut.Where(c =>c.STORE_ID == STORE_ID).ToList();
                 }
                 var data = from d in lstInOut
                            group d by d.INOUT_DATE into g
@@ -255,7 +231,7 @@ namespace RentBike
             LoadData(txtStartDate.Text, txtEndDate.Text);
         }
 
-        protected void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(txtStartDate.Text, txtEndDate.Text);
         }
@@ -263,7 +239,7 @@ namespace RentBike
         private List<Contract> GetContractFeeByDay(DateTime date, RentBikeEntities db)
         {
             var data = from d in db.Contracts
-                       where EntityFunctions.TruncateTime(d.RENT_DATE) == EntityFunctions.TruncateTime(date)
+                       where d.RENT_DATE == date
                        select d;
             return data.ToList();
         }
@@ -272,11 +248,11 @@ namespace RentBike
         {
             var data = from d in db.Contracts
                        where d.RENT_TYPE_ID == rentType
-                       && EntityFunctions.TruncateTime(d.RENT_DATE) == EntityFunctions.TruncateTime(date)
+                       && d.RENT_DATE == date
                        select d;
             if (data.Any())
             {
-                return data.Sum(x =>x.FEE_PER_DAY);
+                return data.Select(x =>x.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
             }
             return 0;
         }
@@ -286,18 +262,7 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
-                int storeId = 0;
-                if (CheckAdminPermission())
-                {
-                    DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-                    storeId = Helper.parseInt(drpStore.SelectedValue);
-                }
-                else
-                {
-                    storeId = Convert.ToInt32(Session["store_id"]);
-                }
-
-                List<CONTRACT_FULL_VW> listContract = GetMiddleContract(storeId, startDate, endDate);
+                List<CONTRACT_FULL_VW> listContract = GetMiddleContract(STORE_ID, startDate, endDate);
 
                 decimal bikeAmount = listContract.Where(c =>c.RENT_TYPE_ID == 1).Select(c =>c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
                 decimal equipAmount = listContract.Where(c =>c.RENT_TYPE_ID == 2).Select(c =>c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
@@ -310,7 +275,7 @@ namespace RentBike
 
 
                 //============================================================
-                List<InOut> listInOut = GetMiddleInOut(storeId, startDate, endDate);
+                List<InOut> listInOut = GetMiddleInOut(STORE_ID, startDate, endDate);
 
                 decimal totalIn = listInOut.Select(c =>c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
                 decimal totalOut = listInOut.Select(c =>c.OUT_AMOUNT).DefaultIfEmpty(0).Sum(); ;
@@ -318,20 +283,20 @@ namespace RentBike
                 lblSumAllIn.Text = totalIn == 0 ? "0" : string.Format("{0:0,0}", totalIn);
                 lblSumAllOut.Text = totalOut == 0 ? "0" : string.Format("{0:0,0}", totalOut);
 
-                List<Store> listStore = GetMiddleStore(storeId);
+                List<Store> listStore = GetMiddleStore(STORE_ID);
                 decimal totalCapital = listStore.Select(c =>c.START_CAPITAL).DefaultIfEmpty(0).Sum();
                 lblTotalInvest.Text = totalCapital == 0 ? "0" : string.Format("{0:0,0}", totalCapital);
             }
         }
 
-        private List<CONTRACT_FULL_VW> GetMiddleContract(int storeId, string startDate, string endDate)
+        private List<CONTRACT_FULL_VW> GetMiddleContract(int STORE_ID, string startDate, string endDate)
         {
             using (var db = new RentBikeEntities())
             {
                 var listContract = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true).ToList();
-                if (storeId != 0)
+                if (STORE_ID != 0)
                 {
-                    listContract = listContract.Where(c =>c.STORE_ID == storeId).ToList();
+                    listContract = listContract.Where(c =>c.STORE_ID == STORE_ID).ToList();
                 }
                 if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
@@ -350,15 +315,15 @@ namespace RentBike
             }
         }
 
-        private List<InOut> GetMiddleInOut(int storeId, string startDate, string endDate)
+        private List<InOut> GetMiddleInOut(int STORE_ID, string startDate, string endDate)
         {
             using (var db = new RentBikeEntities())
             {
                 var listInOut = (from inout in db.InOuts
                                 select inout).ToList();
-                if (storeId != 0)
+                if (STORE_ID != 0)
                 {
-                    listInOut = listInOut.Where(c =>c.STORE_ID == storeId).ToList();
+                    listInOut = listInOut.Where(c =>c.STORE_ID == STORE_ID).ToList();
                 }
 
                 if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
@@ -378,30 +343,18 @@ namespace RentBike
             }
         }
 
-        private List<Store> GetMiddleStore(int storeId)
+        private List<Store> GetMiddleStore(int STORE_ID)
         {
             using (var db = new RentBikeEntities())
             {
                 var listStore = (from c in db.Stores
                                  select c).ToList();
-                if (storeId != 0)
+                if (STORE_ID != 0)
                 {
-                    listStore = listStore.Where(c =>c.ID == storeId).ToList();
+                    listStore = listStore.Where(c =>c.ID == STORE_ID).ToList();
                 }
                 return listStore.ToList();
             } 
-        }
-        public bool CheckAdminPermission()
-        {
-            string acc = Convert.ToString(Session["username"]);
-            using (var db = new RentBikeEntities())
-            {
-                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
-
-                if (item.PERMISSION_ID == 1)
-                    return true;
-                return false;
-            }
         }
     }
 }

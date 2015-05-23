@@ -120,6 +120,7 @@
     <Content Include="App_Themes\Theme1\image\tick-blue.png" />
     <Content Include="App_Themes\Theme1\image\tick-orange.png" />
     <Content Include="App_Themes\Theme1\image\unchecked.gif" />
+    <Content Include="FormBase.aspx" />
     <Content Include="FormSearch.aspx" />
     <Content Include="FormInOutAndPeriodUpdate.aspx" />
     <Content Include="FormReport.aspx" />
@@ -204,6 +205,7 @@
       <DependentUpon>RentBike.tt</DependentUpon>
     </Compile>
     <Compile Include="Common\Constants.cs" />
+    <Compile Include="Common\FileHelper.cs" />
     <Compile Include="Common\ImageHelper.cs" />
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Contract.cs">
@@ -227,6 +229,13 @@
     </Compile>
     <Compile Include="DailyBatchProcessing.aspx.designer.cs">
       <DependentUpon>DailyBatchProcessing.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FormBase.aspx.cs">
+      <DependentUpon>FormBase.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FormBase.aspx.designer.cs">
+      <DependentUpon>FormBase.aspx</DependentUpon>
     </Compile>
     <Compile Include="FormSearch.aspx.cs">
       <DependentUpon>FormSearch.aspx</DependentUpon>

@@ -9,14 +9,10 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormAccountUpdate : System.Web.UI.Page
+    public partial class FormAccountUpdate : FormBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["store_id"] == null)
-            {
-                Response.Redirect("FormLogin.aspx");
-            }
             if (!IsPostBack)
             {
                 LoadPermission();
@@ -28,33 +24,29 @@ namespace RentBike
                 string id = Request.QueryString["ID"];
                 if (!string.IsNullOrEmpty(id)) // Update account
                 {
-                    List<Account> lst;
                     int accid = Convert.ToInt32(id);
                     using (var db = new RentBikeEntities())
                     {
-                        var st = from s in db.Accounts
-                                 where s.ID == accid
-                                 select s;
+                        var item = (from s in db.Accounts
+                                    where s.ID == accid
+                                    select s).FirstOrDefault();
 
-                        lst = st.ToList<Account>();
+                        txtAccount.Text = item.ACC;
+                        //txtNewPassword.Text = item.PASSWORD;
+                        //item.PERMISSION_ID =
+                        //item.STORE_ID = 
+                        txtName.Text = item.NAME;
+                        //item.ADDRESS = txtAddress.Text.Trim();
+                        //item.CITY_ID = Convert.ToInt32(ddlCity.SelectedValue);
+                        txtPhone.Text = item.PHONE;
+                        txtRegisterDate.Text = item.REGISTER_DATE.ToShortDateString();
+                        rdbActive.Checked = item.ACTIVE;
+                        rdbDeActive.Checked = !rdbActive.Checked;
+                        txtNote.Text = item.NOTE;
+                        ddlPermission.SelectedValue = item.PERMISSION_ID.ToString();
+                        ddlStore.SelectedValue = item.STORE_ID.ToString();
+                        ddlCity.SelectedValue = item.CITY_ID.ToString();
                     }
-
-                    Account item = lst[0];
-                    txtAccount.Text = item.ACC;
-                    //txtNewPassword.Text = item.PASSWORD;
-                    //item.PERMISSION_ID =
-                    //item.STORE_ID = 
-                    txtName.Text = item.NAME;
-                    //item.ADDRESS = txtAddress.Text.Trim();
-                    //item.CITY_ID = Convert.ToInt32(ddlCity.SelectedValue);
-                    txtPhone.Text = item.PHONE;
-                    txtRegisterDate.Text = item.REGISTER_DATE.ToShortDateString();
-                    rdbActive.Checked = item.ACTIVE;
-                    rdbDeActive.Checked = !rdbActive.Checked;
-                    txtNote.Text = item.NOTE;
-                    ddlPermission.SelectedValue = item.PERMISSION_ID.ToString();
-                    ddlStore.SelectedValue = item.STORE_ID.ToString();
-                    ddlCity.SelectedValue = item.CITY_ID.ToString();
                 }
                 else // new account
                 {
@@ -152,28 +144,39 @@ namespace RentBike
             string id = Request.QueryString["ID"];
             if (string.IsNullOrEmpty(id))
             {
-                // New account
-                Account item = new Account();
-                item.ACC = txtAccount.Text.Trim();
-                item.PASSWORD = Helper.EncryptPassword(txtNewPassword.Text.Trim());
-                txtOldPassword.Enabled = false;
-                txtConfirmPassword.Enabled = false;
-                item.PERMISSION_ID = Convert.ToInt32(ddlPermission.SelectedValue);
-                item.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
-
-                item.NAME = txtName.Text.Trim();
-                item.CITY_ID = Convert.ToInt32(ddlCity.SelectedValue);
-                item.PHONE = txtPhone.Text.Trim();
-                item.REGISTER_DATE = Convert.ToDateTime(txtRegisterDate.Text);
-                item.ACTIVE = rdbActive.Checked;
-                item.NOTE = txtNote.Text.Trim();
-
-                item.SEARCH_TEXT = string.Format("{0} {1}", item.ACC, item.NAME);
-
-                using (var rb = new RentBikeEntities())
+                using (var db = new RentBikeEntities())
                 {
-                    rb.Accounts.Add(item);
-                    rb.SaveChanges();
+                    int accid = Convert.ToInt32(id);
+                    var acc = (from s in db.Accounts
+                               where s.ACC == txtAccount.Text.Trim()
+                                select s).FirstOrDefault();
+                    if(acc != null)
+                    {
+                        lblMessage.Text = "Tài khoản này đã tồn tại trên hệ thống.";
+                        return;
+                    }
+
+                    // New account
+                    Account item = new Account();
+                    item.ACC = txtAccount.Text.Trim();
+                    item.PASSWORD = Helper.EncryptPassword(txtNewPassword.Text.Trim());
+                    txtOldPassword.Enabled = false;
+                    txtConfirmPassword.Enabled = false;
+                    item.PERMISSION_ID = Convert.ToInt32(ddlPermission.SelectedValue);
+                    item.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
+
+                    item.NAME = txtName.Text.Trim();
+                    item.CITY_ID = Convert.ToInt32(ddlCity.SelectedValue);
+                    item.PHONE = txtPhone.Text.Trim();
+                    item.REGISTER_DATE = Convert.ToDateTime(txtRegisterDate.Text);
+                    item.ACTIVE = rdbActive.Checked;
+                    item.NOTE = txtNote.Text.Trim();
+
+                    item.SEARCH_TEXT = string.Format("{0} {1}", item.ACC, item.NAME);
+
+
+                    db.Accounts.Add(item);
+                    db.SaveChanges();
                 }
                 WriteLog(Constants.ACTION_CREATE_ACCOUNT, false);
             }
@@ -236,13 +239,6 @@ namespace RentBike
             ddlPermission.DataBind();
         }
 
-        //protected void ddlCity_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    List<Store> lst = GetStoreByCity(Convert.ToInt32(ddlCity.SelectedValue));
-
-        //    LoadStore(lst);
-        //}
-
         private void LoadStore(List<Store> lst)
         {
             ddlStore.Items.Add(new ListItem("--Tất cả--", "0"));
@@ -270,40 +266,17 @@ namespace RentBike
         {
             Log lg = new Log();
             lg.ACCOUNT = Session["username"].ToString();
-            string strStoreName = string.Empty;
-            if (CheckAdminPermission())
-            {
-                DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-                strStoreName = drpStore.SelectedItem.Text;
-            }
-            else
-            {
-                strStoreName = Session["store_name"].ToString();
-            }
-            lg.STORE = strStoreName;
+            lg.STORE = STORE_NAME;
             lg.LOG_ACTION = action;
             lg.LOG_DATE = DateTime.Now;
             lg.IS_CRASH = isCrashed;
-            lg.LOG_MSG = string.Format("Tài khoản {0} {1}thực hiện {2} vào lúc {3}", lg.ACCOUNT, strStoreName, lg.LOG_ACTION, lg.LOG_DATE);
+            lg.LOG_MSG = string.Format("Tài khoản {0} {1} thực hiện {2} vào lúc {3}", lg.ACCOUNT, STORE_NAME, lg.LOG_ACTION, lg.LOG_DATE);
             lg.SEARCH_TEXT = lg.LOG_MSG;
 
             using (var db = new RentBikeEntities())
             {
                 db.Logs.Add(lg);
                 db.SaveChanges();
-            }
-        }
-
-        public bool CheckAdminPermission()
-        {
-            string acc = Convert.ToString(Session["username"]);
-            using (var db = new RentBikeEntities())
-            {
-                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
-
-                if (item.PERMISSION_ID == 1)
-                    return true;
-                return false;
             }
         }
     }

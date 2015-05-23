@@ -17,20 +17,14 @@ namespace RentBike
         {
             if (!IsPostBack)
             {
-                Session.Timeout = 1440;
                 if (Request.Cookies["UserName"] != null && Request.Cookies["Password"] != null)
                 {
                     if (LoadUser(Request.Cookies["UserName"].Value, Request.Cookies["Password"].Value))
-                    {
                         Response.Redirect("FormReport.aspx", false);
-                    }
                     else
-                    {
                         Response.Redirect("FormLogin.aspx", false);
-                    }
                 }
             }
-            CommonList.SaveSummaryPayFeeDaily();
         }
 
         protected void btnLogin_Click(object sender, EventArgs e)
@@ -43,83 +37,89 @@ namespace RentBike
                     {
                         Response.Cookies["UserName"].Expires = DateTime.MaxValue;
                         Response.Cookies["Password"].Expires = DateTime.MaxValue;
+
+                        Response.Cookies["UserName"].Value = txtUsername.Text.Trim();
+                        Response.Cookies["Password"].Value = Helper.EncryptPassword(txtPassword.Text.Trim());
                     }
                     else
-                    {
-                        Response.Cookies["UserName"].Expires = DateTime.Now.AddDays(-1);
-                        Response.Cookies["Password"].Expires = DateTime.Now.AddDays(-1);
-
-                    }
-                    Response.Cookies["UserName"].Value = txtUsername.Text.Trim();
-                    Response.Cookies["Password"].Value = Helper.EncryptPassword(txtPassword.Text.Trim());
+                        Helper.EmptyCookies();
 
                     WriteLog(Constants.ACTION_LOGIN, false);
                     Response.Redirect("FormReport.aspx", false);
                 }
                 else
-                {
                     lblMessage.Text = "Đăng nhập không thành công.";
-                }
+
+
+                //string groups = adAuth.GetGroups(); 
+                //if (LoadUser(txtUsername.Text.Trim(), Helper.EncryptPassword(txtPassword.Text.Trim())))
+                //{
+                //    //Create the ticket, and add the groups.
+                //    FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(1,
+                //              txtUsername.Text.Trim(), DateTime.Now, DateTime.Now.AddHours(24), chkRememberMe.Checked, string.Empty);
+
+                //    //Encrypt the ticket.
+                //    string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+
+                //    //Create a cookie, and then add the encrypted ticket to the cookie as data.
+                //    HttpCookie authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+
+                //    if (chkRememberMe.Checked)
+                //        authCookie.Expires = authTicket.Expiration;
+
+                //    //Add the cookie to the outgoing cookies collection.
+                //    Response.Cookies.Add(authCookie);
+
+                //    //You can redirect now.
+                //    string redirectURL = FormsAuthentication.GetRedirectUrl(txtUsername.Text, chkRememberMe.Checked);
+                //    if (redirectURL == "/default.aspx")
+                //        redirectURL = "FormReport.aspx";
+
+                //    Response.Redirect(redirectURL, false);
+                //}
+                //else
+                //    lblMessage.Text = "Đăng nhập không thành công.";
             }
             catch (Exception ex)
             {
-                WriteLog(ex.Message, true);
-                throw ex;
+                Logger.Log(ex.Message + Environment.NewLine + ex.StackTrace);
+                lblMessage.Text = ex.Message;
             }
         }
 
         private bool LoadUser(string user, string password)
         {
-            List<Account> lst = new List<Account>();
+            if (string.IsNullOrEmpty(user) || string.IsNullOrEmpty(password))
+                return false;
+
             using (var db = new RentBikeEntities())
             {
-                var acc = from s in db.Accounts
-                          where s.ACC == user && s.PASSWORD == password
-                          select s;
+                var acc = (from s in db.Accounts
+                           where s.ACC == user && s.PASSWORD == password
+                           select s).FirstOrDefault();
 
-                lst = acc.ToList();
-            }
+                if (acc == null) return false;
 
-            if (lst.Count > 0)
-            {
-                int storeid = lst[0].STORE_ID;
-                using (var db = new RentBikeEntities())
+                if (acc.STORE_ID != 0)
                 {
-                    if (storeid != 0)
+                    var item = db.Stores.FirstOrDefault(s => s.ID == acc.STORE_ID);
+                    if (item != null)
                     {
-                        var item = db.Stores.FirstOrDefault(s =>s.ID == storeid);
-
                         if (!item.ACTIVE)
                             return false;
-                    }
-                } // Xu ly khi tai khoan cua hang bi khoa thi khong dang nhap duoc
-
-
-                Session["username"] = lst[0].ACC;
-                Session["name"] = lst[0].NAME;
-                Session["permission"] = lst[0].PERMISSION_ID;
-                Session["city_id"] = lst[0].CITY_ID;
-                Session["store_id"] = lst[0].STORE_ID;
-
-                using (var db = new RentBikeEntities())
-                {
-                    var st = from s in db.Stores
-                             where s.ID == storeid
-                             select s;
-
-                    List<Store> lstStore = st.ToList();
-                    if (lstStore.Count > 0)
-                    {
-                        Session["store_name"] = lstStore[0].NAME;
-                    }
-                    else
-                    {
-                        Session["store_name"] = string.Empty;
+                        Session["store_name"] = item.NAME;
                     }
                 }
+                else
+                    Session["store_name"] = string.Empty;
+
+                Session["username"] = acc.ACC;
+                Session["name"] = acc.NAME;
+                Session["permission"] = acc.PERMISSION_ID;
+                Session["city_id"] = acc.CITY_ID;
+                Session["store_id"] = acc.STORE_ID;
             }
-            //CommonList.BackUp();
-            return lst.Count > 0;
+            return true;
         }
 
         private void WriteLog(string action, bool isCrashed)
@@ -127,11 +127,9 @@ namespace RentBike
             Log lg = new Log();
             lg.ACCOUNT = Session["username"].ToString();
             string strStore = string.Empty;
-            string strStoreName = Session["store_name"].ToString();
-            if (strStoreName != string.Empty)
-            {
+            string strStoreName = Convert.ToString(Session["store_name"]);
+            if (!string.IsNullOrEmpty(strStoreName))
                 strStore = string.Format("cửa hàng {0} ", strStoreName);
-            }
             lg.STORE = strStore;
             lg.LOG_ACTION = action;
             lg.LOG_DATE = DateTime.Now;
