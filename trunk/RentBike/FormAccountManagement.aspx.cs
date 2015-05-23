@@ -11,15 +11,16 @@ namespace RentBike
     public partial class FormAccountManagement : FormBase
     {
         int pageSize = 20;
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void Page_Load(object sender, EventArgs e)
         {
+            base.Page_Load(sender, e);
             if (!IsPostBack)
             {
                 LoadData(0, string.Empty, 0);
             }
         }
 
-        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected override void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(STORE_ID, string.Empty, 0);
         }

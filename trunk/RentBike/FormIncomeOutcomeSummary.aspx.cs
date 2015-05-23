@@ -12,8 +12,9 @@ namespace RentBike
 {
     public partial class FormIncomeOutcomeSummary : FormBase
     {
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void Page_Load(object sender, EventArgs e)
         {
+            base.Page_Load(sender, e);
             if(!IsPostBack)
             {
                 LoadMiddle(txtStartDate.Text, txtEndDate.Text);
@@ -231,7 +232,7 @@ namespace RentBike
             LoadData(txtStartDate.Text, txtEndDate.Text);
         }
 
-        protected new void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
+        protected override void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
             LoadData(txtStartDate.Text, txtEndDate.Text);
         }
