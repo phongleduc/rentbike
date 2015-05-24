@@ -17,13 +17,8 @@ namespace RentBike
         {
             if (!IsPostBack)
             {
-                if (Request.Cookies["UserName"] != null && Request.Cookies["Password"] != null)
-                {
-                    if (LoadUser(Request.Cookies["UserName"].Value, Request.Cookies["Password"].Value))
-                        Response.Redirect("FormReport.aspx", false);
-                    else
-                        Response.Redirect("FormLogin.aspx", false);
-                }
+                if (Page.User.Identity.IsAuthenticated)
+                    Response.Redirect(Request.QueryString["ReturnUrl"]);        
             }
         }
 
@@ -33,52 +28,32 @@ namespace RentBike
             {
                 if (LoadUser(txtUsername.Text.Trim(), Helper.EncryptPassword(txtPassword.Text.Trim())))
                 {
+                    Response.Cookies.Clear();
+                    //Create the ticket, and add the groups.
+                    FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(1,
+                              txtUsername.Text.Trim(), DateTime.Now, DateTime.Now.AddDays(30), chkRememberMe.Checked, string.Empty);
+
+                    //Encrypt the ticket.
+                    string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
+
+                    //Create a cookie, and then add the encrypted ticket to the cookie as data.
+                    HttpCookie authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
+
                     if (chkRememberMe.Checked)
-                    {
-                        Response.Cookies["UserName"].Expires = DateTime.MaxValue;
-                        Response.Cookies["Password"].Expires = DateTime.MaxValue;
+                        authCookie.Expires = authTicket.Expiration;
 
-                        Response.Cookies["UserName"].Value = txtUsername.Text.Trim();
-                        Response.Cookies["Password"].Value = Helper.EncryptPassword(txtPassword.Text.Trim());
-                    }
-                    else
-                        Helper.EmptyCookies();
+                    //Add the cookie to the outgoing cookies collection.
+                    Response.Cookies.Add(authCookie);
 
-                    WriteLog(Constants.ACTION_LOGIN, false);
-                    Response.Redirect("FormReport.aspx", false);
+                    //You can redirect now.
+                    string redirectURL = FormsAuthentication.GetRedirectUrl(txtUsername.Text, chkRememberMe.Checked);
+                    if (redirectURL == "/default.aspx")
+                        redirectURL = "FormReport.aspx";
+
+                    Response.Redirect(redirectURL, false);
                 }
                 else
                     lblMessage.Text = "Đăng nhập không thành công.";
-
-
-                //string groups = adAuth.GetGroups(); 
-                //if (LoadUser(txtUsername.Text.Trim(), Helper.EncryptPassword(txtPassword.Text.Trim())))
-                //{
-                //    //Create the ticket, and add the groups.
-                //    FormsAuthenticationTicket authTicket = new FormsAuthenticationTicket(1,
-                //              txtUsername.Text.Trim(), DateTime.Now, DateTime.Now.AddHours(24), chkRememberMe.Checked, string.Empty);
-
-                //    //Encrypt the ticket.
-                //    string encryptedTicket = FormsAuthentication.Encrypt(authTicket);
-
-                //    //Create a cookie, and then add the encrypted ticket to the cookie as data.
-                //    HttpCookie authCookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
-
-                //    if (chkRememberMe.Checked)
-                //        authCookie.Expires = authTicket.Expiration;
-
-                //    //Add the cookie to the outgoing cookies collection.
-                //    Response.Cookies.Add(authCookie);
-
-                //    //You can redirect now.
-                //    string redirectURL = FormsAuthentication.GetRedirectUrl(txtUsername.Text, chkRememberMe.Checked);
-                //    if (redirectURL == "/default.aspx")
-                //        redirectURL = "FormReport.aspx";
-
-                //    Response.Redirect(redirectURL, false);
-                //}
-                //else
-                //    lblMessage.Text = "Đăng nhập không thành công.";
             }
             catch (Exception ex)
             {

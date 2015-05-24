@@ -53,7 +53,7 @@ namespace RentBike.Common
             return string.Empty;
         }
 
-        public static void EmptyCookies()
+        public static void ClearLogin()
         {
             HttpCookie aCookie = new HttpCookie("UserName");
             aCookie.Expires = DateTime.Now.AddDays(-1);
