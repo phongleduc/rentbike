@@ -6,7 +6,7 @@
             <tr>
                 <td>
                     <div class="col-lg-4">
-                        <asp:TextBox ID="txtDate" runat="server" CssClass="form-control input-md" placeholder="Hợp đồng đến hạn trong ngày"></asp:TextBox>
+                        <asp:TextBox ID="txtDate" runat="server" CssClass="form-control input-md" placeholder="Chọn ngày tìm kiếm"></asp:TextBox>
                     </div>
                     <div class="col-lg-7">
                         <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control input-md" placeholder="Tìm kiếm"></asp:TextBox>

@@ -38,16 +38,12 @@ namespace RentBike
                     }
 
                     txtUserFullName.Text = "Chào " + Session["name"] + ",";
-                    //using (var db = new RentBikeEntities())
-                    //{
-                    //    int storeid = Convert.ToInt32(Session["store_id"]);
-                    //    var item = db.Stores.FirstOrDefault(s => s.ID == storeid);
-                    //    lblStoreName.Text = item.NAME;
-                    //}
 
                 }
                 catch (Exception ex)
-                { }
+                {
+                    Logger.Log(ex.Message + Environment.NewLine + ex.StackTrace);
+                }
             }
         }
 
@@ -96,8 +92,7 @@ namespace RentBike
             {
                 WriteLog(Constants.ACTION_LOGOUT, false);
                 Session.RemoveAll();
-                Helper.EmptyCookies();
-                //System.Web.Security.FormsAuthentication.SignOut();
+                System.Web.Security.FormsAuthentication.SignOut();
                 Response.Redirect("FormLogin.aspx");
             }
             catch (Exception ex)

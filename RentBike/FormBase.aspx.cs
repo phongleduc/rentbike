@@ -16,18 +16,21 @@ namespace RentBike
 
         private DropDownList drpStore;
 
-        //raise button click events on content page for the buttons on master page
         protected virtual void Page_Load(object sender, EventArgs e)
         {
             if (Session["store_id"] == null)
             {
-                Response.Redirect("FormLogin.aspx");
+                if (Page.User.Identity.IsAuthenticated)
+                    LoadUser(Page.User.Identity.Name);
+                else
+                    Response.Redirect("FormLogin.aspx");
             }
 
+            //raise button click events on content page for the buttons on master page
             drpStore = this.Master.FindControl("ddlStore") as DropDownList;
             drpStore.SelectedIndexChanged += new EventHandler(ddlStore_SelectedIndexChanged);
 
-            IS_ADMIN = Convert.ToBoolean(Session["permission"]);
+            IS_ADMIN = Helper.parseInt(Session["permission"]) == 1 ? true : false;
 
             STORE_ID = Helper.parseInt(Session["store_id"]);
             STORE_NAME = Convert.ToString(Session["store_name"]);
@@ -43,6 +46,31 @@ namespace RentBike
         }
         protected virtual void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
+        }
+
+        private void LoadUser(string user)
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var acc = (from s in db.Accounts
+                           where s.ACC == user
+                           select s).FirstOrDefault();
+
+                if (acc.STORE_ID != 0)
+                {
+                    var item = db.Stores.FirstOrDefault(s => s.ID == acc.STORE_ID);
+                    if (item != null)
+                        Session["store_name"] = item.NAME;
+                }
+                else
+                    Session["store_name"] = string.Empty;
+
+                Session["username"] = acc.ACC;
+                Session["name"] = acc.NAME;
+                Session["permission"] = acc.PERMISSION_ID;
+                Session["city_id"] = acc.CITY_ID;
+                Session["store_id"] = acc.STORE_ID;
+            }
         }
     }
 }
