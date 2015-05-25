@@ -18,7 +18,12 @@ namespace RentBike
             if (!IsPostBack)
             {
                 if (Page.User.Identity.IsAuthenticated)
-                    Response.Redirect(Request.QueryString["ReturnUrl"]);        
+                {
+                    if (!string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]))
+                        Response.Redirect(Request.QueryString["ReturnUrl"]);
+                    else
+                        Response.Redirect("FormReport.aspx");
+                }
             }
         }
 

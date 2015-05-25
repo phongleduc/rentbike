@@ -33,8 +33,7 @@
         <ItemTemplate>
             <tr class="<%# Convert.ToBoolean(Eval("IS_BAD_CONTRACT")) == true ? "background-red" : "" %>">
                 <td><%# Container.ItemIndex + 1 %></td>
-                <%--<td><a href="FormContractHistoryUpdate.aspx"><%# Eval("CUSTOMER_NAME") %></a></td>--%>
-                <td><%# Eval("CUSTOMER_NAME") %></td>
+                <td><asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CUSTOMER_NAME") %>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
                 <td class="text-right"><%#  string.Format("{0:0,0}", Eval("CONTRACT_AMOUNT")) %></td>
                 <td class="text-right"><%#  string.Format("{0:0,0}", Eval("FEE_PER_DAY")) %></td>
