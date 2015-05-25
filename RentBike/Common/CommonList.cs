@@ -222,115 +222,6 @@ namespace RentBike.Common
             }
         }
 
-        #region The funtions for batch processing
-        public static void AutoUpdateAmountPayPeriod()
-        {
-            using (var db = new RentBikeEntities())
-            {
-                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
-                foreach (var contract in contracts)
-                {
-                    List<PayPeriod> listPayPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
-                    foreach (PayPeriod pp in listPayPeriod)
-                    {
-                        var inoutList = db.InOuts.Where(s => s.PERIOD_ID == pp.ID);
-                        var sumPay = inoutList.Select(s => s.IN_AMOUNT).DefaultIfEmpty(0).Sum();
-
-                        pp.ACTUAL_PAY = sumPay;
-                    }
-                }
-                db.SaveChanges();
-            }
-        }
-        public static void AutoExtendContract()
-        {
-            using (var db = new RentBikeEntities())
-            {
-                //db.Configuration.AutoDetectChangesEnabled = false;
-                //db.Configuration.ValidateOnSaveEnabled = false;
-
-                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
-                foreach (var contract in contracts)
-                {
-                    CommonList.AutoExtendPeriod(db, contract.ID);
-                }
-            }
-        }
-
-        public static void AutoUpdateAndRemovePeriod()
-        {
-            using (var db = new RentBikeEntities())
-            {
-                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
-                foreach (var contract in contracts)
-                {
-                    List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
-                    DateTime extendDate = contract.END_DATE.AddDays(-10);
-
-                    if (!contract.EXTEND_END_DATE.HasValue || contract.EXTEND_END_DATE == contract.END_DATE)
-                    {
-                        contract.EXTEND_END_DATE = contract.END_DATE;
-                        extendDate = contract.EXTEND_END_DATE.Value.AddDays(-10);
-                    }
-                    else
-                    {
-                        extendDate = contract.EXTEND_END_DATE.Value;
-                    }
-                    db.PayPeriods.RemoveRange(lstPay.Where(c => c.PAY_DATE > extendDate));
-                }
-                db.SaveChanges();
-            }
-        }
-
-        public static void ReCalculatePeriod()
-        {
-            using (var db = new RentBikeEntities())
-            {
-                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
-                foreach (var contract in contracts)
-                {
-                    List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
-                    int div = lstPay.Count % 3;
-                    if (div > 0)
-                    {
-                        div = 3 - div;
-                        PayPeriod lastPay = lstPay.LastOrDefault();
-                        for (int i = 1; i <= div; i++)
-                        {
-                            PayPeriod pp = new PayPeriod();
-                            pp.CONTRACT_ID = contract.ID;
-                            pp.PAY_DATE = lastPay.PAY_DATE.AddDays(i * 10);
-                            pp.AMOUNT_PER_PERIOD = lastPay.AMOUNT_PER_PERIOD;
-                            pp.STATUS = true;
-                            pp.ACTUAL_PAY = 0;
-
-                            db.PayPeriods.Add(pp);
-                        }
-                    }
-                }
-                db.SaveChanges();
-            }
-        }
-
-        public static void UpdateAllPeriodHavingOverFee()
-        {
-            using (var db = new RentBikeEntities())
-            {
-                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
-                foreach (var contract in contracts)
-                {
-                    List<PayPeriod> payList = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
-                    decimal totalActualPay = payList.Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
-                    decimal totalPlanPay = payList.Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
-
-                    if (totalActualPay > totalPlanPay)
-                    {
-                        CommonList.CreatePayPeriod(db, contract.ID, payList.LastOrDefault().PAY_DATE, false);
-                    }
-                }
-            }
-        }
-
         public static bool IsBadContract(RentBikeEntities db, int contractId)
         {
             var contract = db.Contracts.FirstOrDefault(c => c.ID == contractId && c.CONTRACT_STATUS == true);
@@ -525,6 +416,134 @@ namespace RentBike.Common
                     return con.RENT_TYPE_NAME = "Khác";
                 default:
                     return string.Empty;
+            }
+        }
+
+        #region The funtions for batch processing
+        public static void AutoUpdateAmountPayPeriod()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                foreach (var contract in contracts)
+                {
+                    List<PayPeriod> listPayPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
+                    foreach (PayPeriod pp in listPayPeriod)
+                    {
+                        var inoutList = db.InOuts.Where(s => s.PERIOD_ID == pp.ID);
+                        var sumPay = inoutList.Select(s => s.IN_AMOUNT).DefaultIfEmpty(0).Sum();
+
+                        pp.ACTUAL_PAY = sumPay;
+                    }
+                }
+                db.SaveChanges();
+            }
+        }
+        public static void AutoExtendContract()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                //db.Configuration.AutoDetectChangesEnabled = false;
+                //db.Configuration.ValidateOnSaveEnabled = false;
+
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                foreach (var contract in contracts)
+                {
+                    CommonList.AutoExtendPeriod(db, contract.ID);
+                }
+            }
+        }
+
+        public static void AutoUpdateAndRemovePeriod()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                foreach (var contract in contracts)
+                {
+                    List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
+                    DateTime extendDate = contract.END_DATE.AddDays(-10);
+
+                    if (!contract.EXTEND_END_DATE.HasValue || contract.EXTEND_END_DATE == contract.END_DATE)
+                    {
+                        contract.EXTEND_END_DATE = contract.END_DATE;
+                        extendDate = contract.EXTEND_END_DATE.Value.AddDays(-10);
+                    }
+                    else
+                    {
+                        extendDate = contract.EXTEND_END_DATE.Value;
+                    }
+                    db.PayPeriods.RemoveRange(lstPay.Where(c => c.PAY_DATE > extendDate));
+                }
+                db.SaveChanges();
+            }
+        }
+
+        public static void ReCalculatePeriod()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                foreach (var contract in contracts)
+                {
+                    List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
+                    int div = lstPay.Count % 3;
+                    if (div > 0)
+                    {
+                        div = 3 - div;
+                        PayPeriod lastPay = lstPay.LastOrDefault();
+                        for (int i = 1; i <= div; i++)
+                        {
+                            PayPeriod pp = new PayPeriod();
+                            pp.CONTRACT_ID = contract.ID;
+                            pp.PAY_DATE = lastPay.PAY_DATE.AddDays(i * 10);
+                            pp.AMOUNT_PER_PERIOD = lastPay.AMOUNT_PER_PERIOD;
+                            pp.STATUS = true;
+                            pp.ACTUAL_PAY = 0;
+
+                            db.PayPeriods.Add(pp);
+                        }
+                    }
+                }
+                db.SaveChanges();
+            }
+        }
+
+        public static void UpdateAllPeriodHavingOverFee()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                foreach (var contract in contracts)
+                {
+                    List<PayPeriod> payList = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
+                    decimal totalActualPay = payList.Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                    decimal totalPlanPay = payList.Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
+
+                    if (totalActualPay > totalPlanPay)
+                    {
+                        CommonList.CreatePayPeriod(db, contract.ID, payList.LastOrDefault().PAY_DATE, false);
+                    }
+                }
+            }
+        }
+
+        public static void UpdatePeriodAmount()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                foreach (var contract in contracts)
+                {
+                    List<PayPeriod> payList = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
+                    foreach (PayPeriod pp in payList)
+                    {
+                        var inOutList = db.InOuts.Where(c => c.PERIOD_ID == pp.ID);
+                        decimal total = inOutList.Select(c => c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
+                        pp.ACTUAL_PAY = total;
+                    }
+                    db.SaveChanges();
+                }
             }
         }
 

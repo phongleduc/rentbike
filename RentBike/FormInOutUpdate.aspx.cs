@@ -84,7 +84,7 @@ namespace RentBike
             List<InOut> payList = new List<InOut>();
             using (var db = new RentBikeEntities())
             {
-                var itemLst = db.InOuts.Where(s =>s.PERIOD_ID == pp.ID);
+                var itemLst = db.InOuts.Where(s =>s.PERIOD_ID == pp.ID && s.IN_AMOUNT > 0);
                 payList = itemLst.ToList();
             }
 
@@ -101,7 +101,7 @@ namespace RentBike
                 if (!string.IsNullOrEmpty(txtIncome.Text))
                 {
                     var pp = db.PayPeriods.FirstOrDefault(s =>s.ID == periodId);
-                    pp.ACTUAL_PAY = Convert.ToDecimal(txtIncome.Text);
+                    pp.ACTUAL_PAY = Convert.ToDecimal(txtIncome.Text) + pp.ACTUAL_PAY;
                     db.SaveChanges();
 
                     var contract = db.Contracts.FirstOrDefault(c => c.ID == pp.CONTRACT_ID && c.CONTRACT_STATUS == true);

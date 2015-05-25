@@ -19,7 +19,7 @@
         <HeaderTemplate>
             <div class="text-right" style="margin-bottom:5px">
                 <a class="print" href="javascript:void(0);">
-                    <img src="App_Themes/Theme1/image/printer-blue.png" /></a>&nbsp;&nbsp;
+                    <i class="glyphicon glyphicon-print"></i>&nbsp;In</a>&nbsp;&nbsp;
             </div>
             <div id="areaToPrint">
                 <table class="table">
@@ -32,13 +32,12 @@
                         <th class="text-right">Số lần đóng phí</th>
                         <th class="text-center">Thông báo</th>
                         <th class="text-center">Số ngày quá hạn</th>
-                        <th class="text-center">Xử lý HĐ</th>
                     </tr>
         </HeaderTemplate>
         <ItemTemplate>
             <tr id='<%# string.Format("HtmlTableRow{0}", Container.ItemIndex) %>' class="<%# Eval("CSS_CLASS") %>">
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><strong><%# Eval("CUSTOMER_NAME") %></strong><br />
+                <td><strong><asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CUSTOMER_NAME") %>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></strong><br />
                     (<%# Convert.ToDateTime(Eval("BIRTH_DAY")).ToString("dd/MM/yyyy") %>)</td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
                 <td><%# Eval("PHONE") %></td>
@@ -46,8 +45,6 @@
                 <td class="text-right"><%# Eval("PAYED_TIME") %> lần</td>
                 <td class="text-right"><%# Eval("NOTE") %></td>
                 <td class="text-center"><%# Eval("OVER_DATE") %> Ngày <br /><span style="color:red">(<%# Convert.ToDateTime(Eval("PAY_DATE")).ToString("dd/MM/yyyy") %>)</span></td>
-                <td>
-                    <asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CONTRACT_NO")%>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>
@@ -81,7 +78,6 @@
 
             function printDiv() {
                 var divToPrint = $('#areaToPrint').clone();
-                divToPrint.find('table').find("tr").find("th:last, td:last").remove();
                 divToPrint.prepend($("<h3 style='text-align:center;'>" + "Ngày <%= DateTime.Now.ToString("dd/MM/yyyy")%>" + "</h3>"));
                 divToPrint.prepend($("<h1 style='text-align:center;'>Thông Báo</h1>"));
                 divToPrint.find('table').css('width', '100%');

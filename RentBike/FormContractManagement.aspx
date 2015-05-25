@@ -54,7 +54,6 @@
                         <th class="text-right">Phí/ngày</th>
                         <th class="text-center">Ngày thuê</th>
                         <th class="text-center">Ngày hết hạn</th>
-                        <th class="text-center">Cập nhật</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,16 +61,12 @@
         <ItemTemplate>
             <tr>
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><%# Eval("CUSTOMER_NAME") %></td>
+                <td><asp:HyperLink ID="hplContractUpdate" runat="server" Text='<%# Eval("CUSTOMER_NAME") %>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
                 <td><%# Eval("CURRENT_RESIDENCE") == null? (Eval("PERMANENT_RESIDENCE") == null? Eval("ADDRESS") : Eval("PERMANENT_RESIDENCE")) : Eval("CURRENT_RESIDENCE") %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Eval("CONTRACT_AMOUNT")) %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Eval("FEE_PER_DAY")) %></td>
                 <td class="text-center"><%# String.Format("{0:dd/MM/yyyy}", Eval("RENT_DATE"))%></td>
                 <td class="text-center"><%# String.Format("{0:dd/MM/yyyy}", Eval("END_DATE"))%></td>
-                <td class="text-center">
-                    <asp:HiddenField ID="hdfContract_id" runat="server" Value='<%# Eval("ID") %>' />
-                    <asp:HyperLink ID="hplContractUpdate" runat="server" Text="Cập nhật" NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink>
-                </td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>
