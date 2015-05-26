@@ -110,6 +110,8 @@
                     location.href = "FormInOutAndPeriodUpdate.aspx?ID=" + $(this).attr('id').split('|')[0] + "&pid=" + $(this).attr('id').split('|')[1];
                 });
             });
+
+            main.toolTip("#tblContractInOut tbody tr", "Chỉnh sửa", "top left", "bottom left", 15, 20);
         });
     </script>
 </asp:Content>

@@ -57,6 +57,8 @@
                     location.href = "FormAccountUpdate.aspx?ID=" + $(this).attr('id');
                 });
             });
+
+            main.toolTip("#tblAccount tbody tr", "Chi tiết tài khoản", "top left", "bottom left", 15, 20);
         });
     </script>
 </asp:Content>

@@ -14,7 +14,8 @@ namespace RentBike
 {
     public partial class FormSummaryPayFeeDaily : FormBase
     {
-        public string SearchDate { get; set; }
+        public DateTime SearchDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         protected override void Page_Load(object sender, EventArgs e)
         {
@@ -25,11 +26,11 @@ namespace RentBike
             }
             if (!string.IsNullOrEmpty(txtDate.Text))
             {
-                SearchDate = Convert.ToDateTime(txtDate.Text).ToString("dd/MM/yyyy");
+                SearchDate = Convert.ToDateTime(txtDate.Text);
             }
             else
             {
-                SearchDate = DateTime.Now.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                SearchDate = DateTime.Today;
             }
         }
 
@@ -48,7 +49,7 @@ namespace RentBike
             using (var db = new RentBikeEntities())
             {
                 DateTime startDate = new DateTime(searchDate.Year, searchDate.Month, 6);
-                startDate = searchDate < startDate == true ? new DateTime(searchDate.Year, searchDate.Month - 1, 6) : startDate;
+                StartDate = startDate = searchDate < startDate == true ? new DateTime(searchDate.Year, searchDate.Month - 1, 6) : startDate;
 
                 int endYear = searchDate.Year;
                 int endMonth = searchDate.Month;
@@ -126,7 +127,7 @@ namespace RentBike
                     worksheet.Cells[1, 1, 1, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                     worksheet.Cells[2, 1, 2, 8].Merge = true;
-                    worksheet.Cells[2, 1, 2, 8].Value = "(" + SearchDate + ")";
+                    worksheet.Cells[2, 1, 2, 8].Value = "(" + searchDate + ")";
                     worksheet.Row(2).Height = 35;
                     worksheet.Cells[2, 1, 2, 8].Style.Font.Bold = true;
                     worksheet.Cells[2, 1, 2, 8].Style.Font.Size = 18;

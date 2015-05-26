@@ -114,7 +114,7 @@
                         <asp:TextBox ClientIDMode="Static" ID="txtEndDate" runat="server" CssClass="form-control input-sm text-right"></asp:TextBox>
                     </td>
                 </tr>
-                <tr>
+                <tr class="select-row">
                     <td class="text-right">Lịch trả phí</td>
                     <td>
                         <asp:Repeater ID="rptPayFeeSchedule" runat="server">

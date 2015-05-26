@@ -107,13 +107,13 @@ namespace RentBike
                     worksheet.Column(8).Width = 15;
                     worksheet.Column(7).Style.WrapText = true;
 
-                    worksheet.Cells[4, 1].Value = "#";
+                    worksheet.Cells[4, 1].Value = "STT";
                     worksheet.Cells[4, 2].Value = "Tên khách hàng";
-                    worksheet.Cells[4, 3].Value = "Loại hình thuê";
-                    worksheet.Cells[4, 4].Value = "Số ĐT khách hàng";
-                    worksheet.Cells[4, 5].Value = "Giá trị HĐ/Phí";
+                    worksheet.Cells[4, 3].Value = "Thuê";
+                    worksheet.Cells[4, 4].Value = "Số điện thoại liên hệ";
+                    worksheet.Cells[4, 5].Value = "Tiền phí";
                     worksheet.Cells[4, 6].Value = "Ghi chú";
-                    worksheet.Cells[4, 7].Value = "Số lần đóng phí";
+                    worksheet.Cells[4, 7].Value = "Số lần";
                     worksheet.Cells[4, 8].Value = "Thông báo";
                     worksheet.Cells[4, 1, 4, 8].Style.Font.Bold = true;
                     worksheet.Cells[4, 1, 4, 8].Style.Font.Size = 13;

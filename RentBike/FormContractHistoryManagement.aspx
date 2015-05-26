@@ -63,6 +63,8 @@
                     location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id') + "&copy=1";
                 });
             });
+
+            main.toolTip("#tblContractHistory tbody tr", "Sao chép hợp đồng", "top left", "bottom left", 15, 20);
         });
     </script>
 </asp:Content>

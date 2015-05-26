@@ -16,7 +16,7 @@
     </table>
     <asp:Repeater ID="rptStore" runat="server" OnItemCommand="rptStore_ItemCommand">
         <HeaderTemplate>
-            <table class="table table-striped table-hover ">
+            <table id="tblStore" class="table table-striped table-hover ">
                 <thead>
                     <tr class="success">
                         <th>#</th>
@@ -25,22 +25,18 @@
                         <th class="text-center">Số điện thoại*</th>
                         <th class="text-center">Ghi chú</th>
                         <th class="text-center">Trạng thái</th>
-                        <th class="text-center">Chức năng</th>
                     </tr>
                 </thead>
                 <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr>
+            <tr id='<%# Eval("ID") %>'>
                 <td><%# Container.ItemIndex + 1 %></td>
                 <td><%# Eval("NAME") %></td>
                 <td><%# Eval("CITY") %></td>
                 <td><%# Eval("PHONE") %></td>
                 <td><%# Eval("NOTE") %></td>
                 <td class="text-center"><%# Convert.ToBoolean(Eval("ACTIVE")) ? "Đang hoạt động" : "Ngừng hoạt động" %></td>
-                <td class="text-center">
-                    <asp:HiddenField ID="hdfStore_id" runat="server" Value='<%# Eval("ID") %>' />
-                    <asp:HyperLink ID="hplStoreDetail" runat="server" Text="Cập nhật" NavigateUrl='<%# Eval("ID","FormStoreDetail.aspx?ID={0}") %>'></asp:HyperLink></td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>
@@ -57,6 +53,13 @@
                     return false;
                 }
             });
+            $.each($('#tblStore tbody tr'), function () {
+                $(this).attr('style', 'cursor:pointer');
+                $(this).click(function () {
+                    location.href = "FormStoreDetail.aspx?ID=" + $(this).attr('id');
+                });
+            });
+            main.toolTip("#tblStore tbody tr", "Chi tiết cửa hàng", "top left", "bottom left", 15, 20);
         });
     </script>
 </asp:Content>
