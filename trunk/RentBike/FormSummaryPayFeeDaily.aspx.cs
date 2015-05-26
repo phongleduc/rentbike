@@ -42,8 +42,8 @@ namespace RentBike
             }
 
             List<SummaryPayFeeDaily> dataListDaily = CommonList.GetSummaryPayFeeDailyData(searchDate, DateTime.MinValue, strSearch, STORE_ID);
-            rptWarning.DataSource = dataListDaily;
-            rptWarning.DataBind();
+            rptSummaryFeeDaily.DataSource = dataListDaily;
+            rptSummaryFeeDaily.DataBind();
 
             using (var db = new RentBikeEntities())
             {

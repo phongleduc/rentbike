@@ -5,7 +5,7 @@
     <table class="table table-striped table-hover ">
         <tbody>
             <tr>
-                <td style="width:50%;">
+                <td style="width: 50%;">
                     <div class="col-lg-15">
                         <asp:TextBox ID="txtSearch" runat="server" CssClass="form-control input-md" placeholder="Tìm kiếm"></asp:TextBox>
                     </div>
@@ -15,54 +15,52 @@
             </tr>
         </tbody>
     </table>
-    <asp:Repeater ID="rptWarning" runat="server">
+    <asp:Repeater ID="rptReport" runat="server">
         <HeaderTemplate>
-            <div class="text-right" style="margin-bottom:5px">
+            <div class="text-right" style="margin-bottom: 5px">
                 <a class="print" href="javascript:void(0);">
                     <i class="glyphicon glyphicon-print"></i>&nbsp;In</a>&nbsp;&nbsp;
             </div>
             <div id="areaToPrint">
-                <table class="table">
-                    <tr class="success">
-                        <th>#</th>
-                        <th>Tên khách hàng</th>
-                        <th>Loại hình thuê</th>
-                        <th>Số ĐT khách hàng</th>
-                        <th class="text-right">Giá trị HĐ/Phí</th>
-                        <th class="text-right">Số lần đóng phí</th>
-                        <th class="text-center">Thông báo</th>
-                        <th class="text-center">Số ngày quá hạn</th>
-                    </tr>
+                <table id="tblReport" class="table table-hover ">
+                    <thead>
+                        <tr class="success">
+                            <th>#</th>
+                            <th>Tên khách hàng</th>
+                            <th>Loại hình thuê</th>
+                            <th>Số ĐT khách hàng</th>
+                            <th class="text-right">Giá trị HĐ/Phí</th>
+                            <th class="text-right">Số lần đóng phí</th>
+                            <th class="text-center">Thông báo</th>
+                            <th class="text-center">Số ngày quá hạn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr id='<%# string.Format("HtmlTableRow{0}", Container.ItemIndex) %>' class="<%# Eval("CSS_CLASS") %>">
+            <tr id='<%# Eval("ID") %>' class="<%# Eval("CSS_CLASS") %>">
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><strong><asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CUSTOMER_NAME") %>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></strong><br />
+                <td><strong><%# Eval("CUSTOMER_NAME") %></strong><br />
                     (<%# Convert.ToDateTime(Eval("BIRTH_DAY")).ToString("dd/MM/yyyy") %>)</td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
                 <td><%# Eval("PHONE") %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY"))) %></td>
                 <td class="text-right"><%# Eval("PAYED_TIME") %> lần</td>
                 <td class="text-right"><%# Eval("NOTE") %></td>
-                <td class="text-center"><%# Eval("OVER_DATE") %> Ngày <br /><span style="color:red">(<%# Convert.ToDateTime(Eval("PAY_DATE")).ToString("dd/MM/yyyy") %>)</span></td>
+                <td class="text-center"><%# Eval("OVER_DATE") %> Ngày
+                    <br />
+                    <span style="color: red">(<%# Convert.ToDateTime(Eval("PAY_DATE")).ToString("dd/MM/yyyy") %>)</span></td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>
+            </tbody>
             </table>
                 </div>
         </FooterTemplate>
     </asp:Repeater>
 
-    <%--    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-    <asp:HiddenField ID="hfPager" runat="server" />--%>
     <script>
         $(function () {
-<%--            $('#<%=txtDate.ClientID %>').datepicker();--%>
-
-<%--            $('#<%=ddlPager.ClientID %>').change(function () {
-                $('#<%=hfPager.ClientID %>').val($(this).val());
-            });--%>
-
             $('#<%=txtSearch.ClientID %>').keypress(function (e) {
                 if (e.which == 13) {
                     $('#<%=btnSearch.ClientID %>').click();
@@ -70,9 +68,7 @@
                 }
             });
 
-            var options = {};
             $('a.print').click(function (e) {
-                //$(this).parent().next().printArea(options);
                 printDiv();
             });
 
@@ -90,6 +86,13 @@
                 newWin.print();
                 newWin.close();
             }
+
+            $.each($('#tblReport tbody tr'), function () {
+                $(this).attr('style', 'cursor:pointer');
+                $(this).click(function () {
+                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id');
+                });
+            });
         });
     </script>
 </asp:Content>

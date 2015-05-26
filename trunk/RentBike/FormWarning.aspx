@@ -25,7 +25,7 @@
                 <asp:LinkButton ID="lnkExportExcel" runat="server" OnClick="lnkExportExcel_Click" Text="Xuất ra Excel"></asp:LinkButton>
             </div>
             <div id="areaToPrint">
-                <table class="table">
+                <table id="tblWarning" class="table table-hover">
                     <tr class="success">
                         <th>#</th>
                         <th>Tên khách hàng</th>
@@ -38,9 +38,9 @@
                     </tr>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr id='<%# string.Format("HtmlTableRow{0}", Container.ItemIndex) %>' class="<%# Eval("CSS_CLASS") %>">
+            <tr id='<%# Eval("ID") %>' class="<%# Eval("CSS_CLASS") %>">
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><strong><asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CUSTOMER_NAME") %>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></strong></td>
+                <td><strong><%# Eval("CUSTOMER_NAME") %></strong></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
                 <td><%# Eval("PHONE") %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY"))) %></td>
@@ -64,28 +64,12 @@
                     return false;
                 }
             });
-
-<%--            var options = {};
-            $('a.print').click(function (e) {
-                //$(this).parent().next().printArea(options);
-                printDiv();
+            $.each($('#tblWarning tbody tr'), function () {
+                $(this).attr('style', 'cursor:pointer');
+                $(this).click(function () {
+                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id');
+                });
             });
-
-            function printDiv() {
-                var divToPrint = $('#areaToPrint').clone();
-                divToPrint.find('table').find("tr").find("th:last, td:last").remove();
-                divToPrint.prepend($("<h3 style='text-align:center;'>" + "Ngày <%= SearchDate%>" + "</h3>"));
-                divToPrint.prepend($("<h1 style='text-align:center;'>Danh Sách Gọi Phí</h1>"));
-                divToPrint.find('table').css('width', '100%');
-                divToPrint.find('table').css('border-collapse', 'collapse');
-                divToPrint.find('table').find("tr").css('border', '1px solid black');
-                divToPrint.find('table').find("td").css('border', '1px solid black');
-                divToPrint.find('table').find("th").css('border', '1px solid black');
-                newWin = window.open("");
-                newWin.document.write(divToPrint.html());
-                newWin.print();
-                newWin.close();
-            }--%>
         });
     </script>
 </asp:Content>

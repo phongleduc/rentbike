@@ -44,7 +44,7 @@
     </table>
     <asp:Repeater ID="rptContract" runat="server">
         <HeaderTemplate>
-            <table class="table table-striped table-hover ">
+            <table id="tblContract" class="table table-striped table-hover ">
                 <thead>
                     <tr class="success">
                         <th>#</th>
@@ -59,9 +59,9 @@
                 <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr>
+            <tr id='<%# Eval("ID") %>'>
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><asp:HyperLink ID="hplContractUpdate" runat="server" Text='<%# Eval("CUSTOMER_NAME") %>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
+                <td><strong><%# Eval("CUSTOMER_NAME") %></strong></td>
                 <td><%# Eval("CURRENT_RESIDENCE") == null? (Eval("PERMANENT_RESIDENCE") == null? Eval("ADDRESS") : Eval("PERMANENT_RESIDENCE")) : Eval("CURRENT_RESIDENCE") %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Eval("CONTRACT_AMOUNT")) %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Eval("FEE_PER_DAY")) %></td>
@@ -83,6 +83,12 @@
                     $('#<%=btnSearch.ClientID %>').click();
                     return false;
                 }
+            });
+            $.each($('#tblContract tbody tr'), function () {
+                $(this).attr('style', 'cursor:pointer');
+                $(this).click(function () {
+                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id');
+                });
             });
         });
     </script>

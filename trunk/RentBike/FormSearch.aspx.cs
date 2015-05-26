@@ -63,8 +63,8 @@ namespace RentBike
                 int skip = page * pageSize;
                 dataList = dataList.Skip(skip).Take(pageSize).ToList();
 
-                rptCustomer.DataSource = dataList;
-                rptCustomer.DataBind();
+                rptSearch.DataSource = dataList;
+                rptSearch.DataBind();
             }
         }
 

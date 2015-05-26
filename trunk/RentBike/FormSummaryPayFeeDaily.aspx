@@ -37,14 +37,14 @@
             </tr>
         </tbody>
     </table>
-    <asp:Repeater ID="rptWarning" runat="server">
+    <asp:Repeater ID="rptSummaryFeeDaily" runat="server">
         <HeaderTemplate>
             <div class="text-right" style="margin-bottom: 5px;display:none;">
                 <asp:Image ID="ExcelIcon" runat="server" ImageUrl="~/App_Themes/Theme1/image/excel-icon.png" />
                 <asp:LinkButton ID="lnkExportExcel" runat="server" OnClick="lnkExportExcel_Click" Text="Xuất ra Excel"></asp:LinkButton>
             </div>
             <div id="areaToPrint">
-                <table class="table table-striped table-hover">
+                <table id="tblSummaryFeeDaily" class="table table-striped table-hover">
                     <tr class="success">
                         <th>#</th>
                         <th>Tên khách hàng</th>
@@ -57,9 +57,9 @@
                     </tr>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr id='<%# string.Format("HtmlTableRow{0}", Container.ItemIndex) %>'>
+            <tr id='<%# Eval("ID") %>'>
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><strong><asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CUSTOMER_NAME") %>' NavigateUrl='<%# Eval("CONTRACT_ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></strong></td>
+                <td><strong>'<%# Eval("CUSTOMER_NAME") %>'</strong></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
                 <td><%# Eval("PHONE") %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("PAY_FEE"))) %></td>
@@ -82,7 +82,12 @@
                     return false;
                 }
             });
-
+            $.each($('#tblSummaryFeeDaily tbody tr'), function () {
+                $(this).attr('style', 'cursor:pointer');
+                $(this).click(function () {
+                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id');
+                });
+            });
         });
     </script>
 </asp:Content>
