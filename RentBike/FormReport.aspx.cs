@@ -105,8 +105,8 @@ namespace RentBike
                 }
             }
 
-            rptWarning.DataSource = dataList.OrderByDescending(c =>c.OVER_DATE);
-            rptWarning.DataBind();
+            rptReport.DataSource = dataList.OrderByDescending(c => c.OVER_DATE);
+            rptReport.DataBind();
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)

@@ -4,7 +4,7 @@
     <h4 class="text-center">Cập nhật trả phí</h4>
     <asp:Repeater ID="rptContractInOut" runat="server">
         <HeaderTemplate>
-            <table class="table table-striped table-hover ">
+            <table id="tblContractInOut" class="table table-striped table-hover ">
                 <thead>
                     <tr class="success">
                         <th>#</th>
@@ -12,19 +12,17 @@
                         <th class="text-right">Số chi</th>
                         <th class="text-center">Ngày thu/chi</th>
                         <th class="text-center">Kỳ</th>
-                        <th class="text-center">Cập nhập</th>
                     </tr>
                 </thead>
                 <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr>
+            <tr id='<%# Eval("ID") + "|" + Eval("PERIOD_ID")%>'>
                 <td class="text-center"><%# Container.ItemIndex + 1 %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", (Eval("IN_AMOUNT").ToString() == "0" ? string.Empty : Eval("IN_AMOUNT"))) %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", (Eval("OUT_AMOUNT").ToString() == "0" ? string.Empty : Eval("OUT_AMOUNT"))) %></td>
                 <td class="text-center"><%# string.Format("{0:dd/MM/yyyy}", Eval("INOUT_DATE") == null ? Eval("PERIOD_DATE") : Eval("INOUT_DATE")) %></td>
                 <td class="text-center"><%# string.Format("{0:dd/MM/yyyy}", Eval("PERIOD_DATE")) %></td>
-                <td class="text-center"><a href="FormInOutAndPeriodUpdate.aspx?id=<%# Eval("ID") + "&pid=" + Eval("PERIOD_ID")%>">Cập nhập</a></td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>
@@ -104,6 +102,13 @@
                     $('#<%=btnSave.ClientID %>').click();
                     return false;
                 }
+            });
+
+            $.each($('#tblContractInOut tbody tr'), function () {
+                $(this).attr('style', 'cursor:pointer');
+                $(this).click(function () {
+                    location.href = "FormInOutAndPeriodUpdate.aspx?ID=" + $(this).attr('id').split('|')[0] + "&pid=" + $(this).attr('id').split('|')[1];
+                });
             });
         });
     </script>

@@ -14,9 +14,9 @@
     </table>
     <asp:Repeater ID="rptContractHistory" runat="server">
         <HeaderTemplate>
-            <table class="table">
+            <table id="tblContractHistory" class="table table-striped table-hover">
                 <thead>
-                    <tr class="success">
+                    <tr id='<%# Eval("ID") %>' class="success">
                         <th>#</th>
                         <th>Tên khách hàng</th>
                         <th>Loại hình</th>
@@ -25,23 +25,20 @@
                         <th class="text-center">Ngày thuê</th>
                         <th class="text-center">Ngày kết thúc</th>
                         <th class="text-center">Ngày thanh lý</th>
-                        <th>Sao chép</th>
                     </tr>
                 </thead>
                 <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr class="<%# Convert.ToBoolean(Eval("IS_BAD_CONTRACT")) == true ? "background-red" : "" %>">
+            <tr id='<%# Eval("CONTRACT_ID") %>' class="<%# Convert.ToBoolean(Eval("IS_BAD_CONTRACT")) == true ? "background-red" : "" %>">
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><asp:HyperLink ID="hplUpdateContract" CssClass="text-center" runat="server" Text='<%# Eval("CUSTOMER_NAME") %>' NavigateUrl='<%# Eval("ID","FormContractUpdate.aspx?ID={0}") %>'></asp:HyperLink></td>
+                <td><strong>'<%# Eval("CUSTOMER_NAME") %>'</strong></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
                 <td class="text-right"><%#  string.Format("{0:0,0}", Eval("CONTRACT_AMOUNT")) %></td>
                 <td class="text-right"><%#  string.Format("{0:0,0}", Eval("FEE_PER_DAY")) %></td>
                 <td class="text-center"><%# String.Format("{0:dd/MM/yyyy}", Eval("RENT_DATE"))%></td>
                 <td class="text-center"><%# String.Format("{0:dd/MM/yyyy}", Eval("END_DATE"))%></td>
                 <td class="text-center"><%# String.Format("{0:dd/MM/yyyy}", Eval("CLOSE_CONTRACT_DATE"))%></td>
-                <td>
-                    <asp:HyperLink ID="hplContractUpdate" runat="server" Text="Sao chép" NavigateUrl='<%# Eval("CONTRACT_ID","FormContractUpdate.aspx?ID={0}&copy=1") %>'></asp:HyperLink></td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>
@@ -56,9 +53,16 @@
             $('#<%=txtSearch.ClientID %>').keypress(function (e) {
                 if (e.which == 13) {
                     $('#<%=btnSearch.ClientID %>').click();
-                return false;
-            }
-        });
+                    return false;
+                }
+            });
+
+            $.each($('#tblContractHistory tbody tr'), function () {
+                $(this).attr('style', 'cursor:pointer');
+                $(this).click(function () {
+                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id') + "&copy=1";
+                });
+            });
         });
     </script>
 </asp:Content>

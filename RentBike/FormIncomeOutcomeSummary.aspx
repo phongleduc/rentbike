@@ -21,7 +21,7 @@
     </table>
     <asp:Repeater ID="rptInOut" runat="server">
         <HeaderTemplate>
-            <table class="table table-striped table-hover ">
+            <table id="tblInOut" class="table table-striped table-hover ">
                 <thead>
                     <tr class="success">
                         <th>Ngày/Tháng</th>
@@ -29,7 +29,7 @@
                         <th class="text-right">Tổng thu</th>
                         <th class="text-right">Tổng chi</th>
                         <th class="text-right">Dư cuối kỳ</th>
-                        <th class="text-right">Chi tiết</th>
+                        <th class="text-right" style="display: none;">Chi tiết</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,9 +41,9 @@
                 <td class="text-right"><%# Eval("TotalIn").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("TotalIn")) %></td>
                 <td class="text-right"><%# Eval("TotalOut").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("TotalOut")) %></td>
                 <td class="text-right"><%# Eval("EndAmount").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("EndAmount")) %></td>
-                <td class="text-right">
+                <td class="text-right" style="display: none;">
                     <a id='<%# String.Format("a-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' href='<%# String.Format("#detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' class="fancybox">Chi tiết...</a>
-                    <div id='<%# String.Format("detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' style="display: none;">
+                    <div id='<%# String.Format("detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>'>
                         <div class="detail-header">Tổng hợp thu chi</div>
                         <table class="table table-striped table-hover border_table" border="1">
                             <tbody>
@@ -125,7 +125,7 @@
                             </tbody>
                         </table>
                         <div class="text-right"><a class="print" href="javascript:void(0);">
-                            <img src="App_Themes/Theme1/image/printer-blue.png" /></a></div>
+                            <i class="glyphicon glyphicon-print"></i>&nbsp;In</a>&nbsp;&nbsp;</a></div>
                     </div>
                 </td>
             </tr>
@@ -194,9 +194,17 @@
     <script>
         $(function () {
             $("#txtViewDate").datepicker();
-            $('.fancybox').fancybox();
             $('#<%=txtStartDate.ClientID %>').datepicker();
             $('#<%=txtEndDate.ClientID %>').datepicker();
+
+            $('#tblInOut tbody tr').attr('style', 'cursor:pointer');
+            $('#tblInOut tbody tr').click(function () {
+                $.fancybox({
+                    href: $(this).find('a.fancybox').attr('href'),
+                    openEffect: 'elastic',
+                    closeEffect: 'elastic'
+                });
+            });
 
             var options = {};
             $('a.print').click(function (e) {

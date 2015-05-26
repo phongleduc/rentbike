@@ -13,9 +13,9 @@
             </tr>
         </tbody>
     </table>
-    <asp:Repeater ID="rptCustomer" runat="server">
+    <asp:Repeater ID="rptSearch" runat="server">
         <HeaderTemplate>
-            <table class="table">
+            <table id="tblSearch" class="table table-hover">
                 <thead>
                     <tr class="success">
                         <th>#</th>
@@ -23,23 +23,18 @@
                         <th>Số CMT/GPLX</th>
                         <th>Cửa hàng</th>
                         <th>Địa chỉ (HKTT)</th>
-                        <th>Số hợp đồng</th>
                         <th>Trạng thái</th>
                     </tr>
                 </thead>
                 <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr class="<%# (Convert.ToBoolean(Eval("IS_BAD_CONTRACT")) == true || IsBadContract(Convert.ToInt32(Eval("ID"))) == true) ? "background-red" : "" %>">
-                <td><%# Container.ItemIndex + 1 %><asp:HiddenField ID="hdfCustomerID" Value='<%# Eval("CUSTOMER_ID") %>' runat="server" />
-                </td>
-                <td><%# Eval("CUSTOMER_NAME") %></td>
+            <tr id='<%# Eval("ID") + "|" + Eval("STORE_ID") %>' class="<%# (Convert.ToBoolean(Eval("IS_BAD_CONTRACT")) == true || IsBadContract(Convert.ToInt32(Eval("ID"))) == true) ? "background-red" : "" %>">
+                <td><%# Container.ItemIndex + 1 %></td>
+                <td>'<%# Eval("CUSTOMER_NAME") %>'</td>
                 <td><%# Eval("LICENSE_NO") %></td>
                 <td><%# Eval("STORE_NAME") %></td>
                 <td><%# Eval("PERMANENT_RESIDENCE") %></td>
-                <td>
-                    <asp:HyperLink ID="hplContractInfo" runat="server" Text='<%# Eval("CONTRACT_NO") %>' NavigateUrl='<%# GetURL(Convert.ToString(Eval("ID")), Convert.ToString(Eval("STORE_ID"))) %>'></asp:HyperLink>
-                </td>
                 <td><%# Convert.ToBoolean(Eval("CONTRACT_STATUS")) ? "Chưa thanh lý" : "Đã thanh lý" %></td>
         </ItemTemplate>
         <FooterTemplate>
@@ -55,6 +50,13 @@
                     $('#<%=btnSearch.ClientID %>').click();
                     return false;
                 }
+            });
+
+            $.each($('#tblSearch tbody tr'), function () {
+                $(this).attr('style', 'cursor:pointer');
+                $(this).click(function () {
+                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id').split('|')[0] + "&sID=" + $(this).attr('id').split('|')[1];
+                });
             });
         });
     </script>

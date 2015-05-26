@@ -22,7 +22,7 @@
     </table>
     <asp:Repeater ID="rptInOut" runat="server" OnItemDataBound="rptInOut_ItemDataBound">
         <HeaderTemplate>
-            <table class="table table-striped table-hover ">
+            <table id="tblInOut" class="table table-striped table-hover ">
                 <thead>
                     <tr class="success">
                         <th>Ngày/Tháng</th>
@@ -30,7 +30,7 @@
                         <th class="text-right">Tổng thu</th>
                         <th class="text-right">Tổng chi</th>
                         <th class="text-right">Dư cuối kỳ</th>
-                        <th class="text-right">Chi tiết</th>
+                        <th class="text-right" style="display: none;">Chi tiết</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -42,9 +42,9 @@
                 <td class="text-right"><%# Eval("TotalIn").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("TotalIn")) %></td>
                 <td class="text-right"><%# Eval("TotalOut").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("TotalOut")) %></td>
                 <td class="text-right"><%# Eval("EndAmount").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("EndAmount")) %></td>
-                <td class="text-right">
+                <td class="text-right" style="display: none;">
                     <a id='<%# String.Format("a-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' href='<%# String.Format("#detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' class="fancybox">Chi tiết...</a>
-                    <div id='<%# String.Format("detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' style="display: none;">
+                    <div id='<%# String.Format("detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>'>
                         <asp:Repeater ID="rptInOutDayDetail" runat="server" OnItemDataBound="rptInOutDayDetail_ItemDataBound">
                             <HeaderTemplate>
                                 <table class="table border_table" border="1">
@@ -177,29 +177,19 @@
     <script>
         $(function () {
             //$("#txtViewDate").datepicker();
-            $(".fancybox").fancybox({
-                openEffect: 'elastic',
-                closeEffect: 'elastic'
-            });
             //$(".fancybox").fancybox({
             //    openEffect: 'elastic',
-            //    closeEffect: 'elastic',
-            //    type: 'ajax',
-            //    ajax: {
-            //        dataFilter: function (data) {
-            //            alert($(data).html());
-            //            return $(data).find($(this).attr('href'))[0];
-            //        }
-            //    }
+            //    closeEffect: 'elastic'
             //});
-            //$(".fancybox").click(function (event) {
-            //    $.fancybox.open(this.href, { type: "outside" });
-            //    $.fancybox.showLoading();
-            //    $("iframe.fancybox-iframe").load(function () {
-            //        $.fancybox.hideLoading();
-            //    });
-            //    event.preventDefault();
-            //});
+
+            $('#tblInOut tbody tr').attr('style', 'cursor:pointer');
+            $('#tblInOut tbody tr').click(function () {
+                $.fancybox({
+                    href: $(this).find('a.fancybox').attr('href'),
+                    openEffect: 'elastic',
+                    closeEffect: 'elastic'
+                });
+            });
 
             $('#<%=txtStartDate.ClientID %>').datepicker();
             $('#<%=txtEndDate.ClientID %>').datepicker();
