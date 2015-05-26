@@ -62,8 +62,8 @@ namespace RentBike
 
         private void LoadData(List<CONTRACT_FULL_VW> data)
         {
-            rptContract.DataSource = data;
-            rptContract.DataBind();
+            rptBadContract.DataSource = data;
+            rptBadContract.DataBind();
 
         }
         protected void btnNew_Click(object sender, EventArgs e)

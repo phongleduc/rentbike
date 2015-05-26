@@ -168,7 +168,7 @@ namespace RentBike
         private List<Contract> GetContractFeeByDay(DateTime date, RentBikeEntities db)
         {
             var data = from d in db.Contracts
-                       where EntityFunctions.TruncateTime(d.RENT_DATE) == EntityFunctions.TruncateTime(date)
+                       where d.RENT_DATE == date
                        select d;
             return data.ToList();
         }
@@ -177,7 +177,7 @@ namespace RentBike
         {
             var data = from d in db.Contracts
                        where d.RENT_TYPE_ID == rentType
-                       && EntityFunctions.TruncateTime(d.RENT_DATE) == EntityFunctions.TruncateTime(date)
+                       && d.RENT_DATE == date
                        select d;
             if (data.Any())
             {

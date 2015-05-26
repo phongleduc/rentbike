@@ -7,7 +7,8 @@
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>Hệ thống quản lý cho thuê - TSolution</title>
     <link rel="stylesheet" type="text/css" href="App_Themes/Theme1/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="App_Themes/Theme1/css/jquery-ui.css?d=20150517" />
+    <link rel="stylesheet" type="text/css" href="App_Themes/Theme1/css/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="App_Themes/Theme1/css/jquery.qtip.min.css" />
     <link rel="stylesheet" type="text/css" href="script/fancybox/jquery.fancybox.css" />
     <link rel="stylesheet" type="text/css" href="App_Themes/Theme1/css/PrintArea.css" />
     <link rel="stylesheet" type="text/css" href="App_Themes/Theme1/css/stylesheet.css?d=20150517" />
@@ -15,9 +16,11 @@
     <script src="script/jquery-1.10.2.min.js"></script>
     <script src="script/jquery-ui.js"></script>
     <script src="script/jquery.validate.js"></script>
+    <script src="script/jquery.qtip.min.js"></script>
     <script src="script/fancybox/jquery.fancybox.js"></script>
     <script src="script/jquery.price_format.1.8.min.js"></script>
     <script src="script/jquery.PrintArea.js"></script>
+    <script src="script/main.js"></script>
     <script>
         $(document).ready(function () {
             $('#<%=txtSearch.ClientID %>').keypress(function (e) {

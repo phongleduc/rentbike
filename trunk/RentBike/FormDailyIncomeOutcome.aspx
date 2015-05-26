@@ -53,8 +53,7 @@
                                             <asp:Literal ID="litInoutDate" runat="server"></asp:Literal></th>
                                     </tr>
                                     <tr>
-                                        <th colspan="2">&nbsp;</th>
-                                        <th>&nbsp;</th>
+                                        <th colspan="3">&nbsp;</th>
                                         <th colspan="4" style="text-align: center">THIẾT BỊ VĂN PHÒNG</th>
                                         <th colspan="4" style="text-align: center">GIẤY TỜ XE & KHÁC</th>
                                         <th colspan="5">&nbsp;</th>
@@ -79,7 +78,7 @@
                                     </tr>
                             </HeaderTemplate>
                             <ItemTemplate>
-                                <tr id="trItem" runat="server">
+                                <tr id="trItem" class="inout-detail" runat="server">
                                     <td>
                                         <asp:Literal ID="litNo" runat="server"></asp:Literal></td>
                                     <td>
@@ -182,8 +181,8 @@
             //    closeEffect: 'elastic'
             //});
 
-            $('#tblInOut tbody tr').attr('style', 'cursor:pointer');
-            $('#tblInOut tbody tr').click(function () {
+            $('#tblInOut tbody tr').not(".border_table tr").attr('style', 'cursor:pointer');
+            $('#tblInOut tbody tr').not(".border_table tr").click(function () {
                 $.fancybox({
                     href: $(this).find('a.fancybox').attr('href'),
                     openEffect: 'elastic',
@@ -216,6 +215,9 @@
                     }
                 }
             });
+
+            main.toolTip("#tblInOut tbody tr", "Chi tiết hàng ngày", "top left", "bottom left", 15, 20, ".border_table tr");
+            main.toolTip(".border_table tr td a", "Chỉnh sửa", "top left", "bottom left", 15, 20);
 
             <%--            $('#<%=txtViewDate.ClientID %>').keypress(function (e) {
                 if (e.which == 13) {

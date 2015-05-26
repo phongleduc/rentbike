@@ -547,6 +547,26 @@ namespace RentBike.Common
             }
         }
 
+        public static void UpdatePeriodAmount1()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                foreach (var contract in contracts)
+                {
+                    if (contract.FEE_PER_DAY == 0)
+                    {
+                        List<PayPeriod> payList = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID && c.AMOUNT_PER_PERIOD > 0).ToList();
+                        foreach (PayPeriod pp in payList)
+                        {
+                            pp.AMOUNT_PER_PERIOD = 0;
+                        }
+                        db.SaveChanges();
+                    }
+                }
+            }
+        }
+
         public static void SaveSummaryPayFeeDaily()
         {
             using (var db = new RentBikeEntities())

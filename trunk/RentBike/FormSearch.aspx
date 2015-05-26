@@ -58,6 +58,8 @@
                     location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id').split('|')[0] + "&sID=" + $(this).attr('id').split('|')[1];
                 });
             });
+
+            main.toolTip("#tblSearch tbody tr", "Chi tiết hợp đồng", "top left", "bottom left", 15, 20);
         });
     </script>
 </asp:Content>

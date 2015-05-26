@@ -283,6 +283,32 @@ button, input, optgroup, select, textarea {
     color: black;
 }
 
-/*.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-  background-color: #eeeeea;
-}*/
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: #9FAAF9;
+}
+
+.table-hover > tbody > tr.select-row:hover > td,
+.select-row > td {
+    background-color: #F5F5F5;
+}
+
+.table-hover > tbody > tr.select-row > td > div:hover {
+    background-color: #9FAAF9;
+}
+
+.ui-tooltip-custom {
+    color: white;
+    background: #18bc9c;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    behavior: url(App_Themes/Theme1/css/pie.htc);
+    border-color: #18bc9c;
+	font-size:14px;
+	line-height:120%;
+}
+ 
+.ui-tooltip-custom .ui-tooltip-tip {
+    background-color: #18bc9c;
+}
+

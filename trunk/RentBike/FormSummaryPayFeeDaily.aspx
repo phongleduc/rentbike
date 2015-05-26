@@ -20,18 +20,18 @@
     <table class="table table-striped table-hover ">
         <tbody>
             <tr>
-                <td class="text-left"><strong>Phí thu ngày:</strong></td>
+                <td class="text-left"><strong>Phí thu ngày&nbsp;<%=SearchDate.ToString("dd/MM/yyyy") %>:</strong></td>
                 <td class="text-left">
                     <asp:Label ID="lblTotalDailyFee" runat="server"  CssClass="text-left"></asp:Label></td>
-                <td class="text-left"><strong>Thực thu:</strong></td>
+                <td class="text-left"><strong>Thực thu ngày&nbsp;<%=SearchDate.ToString("dd/MM/yyyy") %>:</strong></td>
                 <td class="text-left">
                     <asp:Label ID="lblActualTotalDailyFee" runat="server" CssClass="text-left"></asp:Label></td>
             </tr>
             <tr>
-                <td class="text-left"><strong>Tổng thu:</strong></td>
+                <td class="text-left"><strong>Tổng thu tháng&nbsp;<%=StartDate.Month %>:</strong></td>
                 <td class="text-left">
                     <asp:Label ID="lblTotalMonthlyFee" runat="server" CssClass="text-left"></asp:Label></td>
-                <td class="text-left"><strong>Tổng thực thu:</strong></td>
+                <td class="text-left"><strong>Tổng thực thu tháng&nbsp;<%=StartDate.Month %>:</strong></td>
                 <td class="text-left">
                     <asp:Label ID="lblActualTotalMonthlyFee" runat="server" CssClass="text-left"></asp:Label></td>
             </tr>
@@ -57,7 +57,7 @@
                     </tr>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr id='<%# Eval("ID") %>'>
+            <tr id='<%# Eval("CONTRACT_ID") %>'>
                 <td><%# Container.ItemIndex + 1 %></td>
                 <td><strong>'<%# Eval("CUSTOMER_NAME") %>'</strong></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
@@ -88,6 +88,7 @@
                     location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id');
                 });
             });
+            main.toolTip("#tblSummaryFeeDaily tbody tr", "Chi tiết hợp đồng", "top left", "bottom left", 15, 20);
         });
     </script>
 </asp:Content>

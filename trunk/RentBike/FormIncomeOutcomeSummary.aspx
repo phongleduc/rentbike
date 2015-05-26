@@ -228,6 +228,8 @@
                     }
                 }
             });
+
+            main.toolTip("#tblInOut tbody tr", "Chi tiết thu chi", "top left", "bottom left", 15, 20);
         });
 
         function validateSearch() {
