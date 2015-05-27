@@ -58,7 +58,7 @@ namespace RentBike
                             bool bDifferentSTORE_ID = false;
                             if (Helper.parseInt(sId) != STORE_ID)
                             {
-                                if(!IS_ADMIN)
+                                if (!IS_ADMIN)
                                     bDifferentSTORE_ID = true;
                                 STORE_ID = Helper.parseInt(sId);
                             }
@@ -72,7 +72,7 @@ namespace RentBike
                             if (!lst[0].CONTRACT_STATUS || (bDifferentSTORE_ID && !string.IsNullOrEmpty(Request.QueryString["sID"])))
                             {
                                 pnlTable.Enabled = false;
-                                rptPayFeeSchedule.Visible = false; 
+                                rptPayFeeSchedule.Visible = false;
                             }
 
                             CONTRACT_FULL_VW cntrct = lst[0];
@@ -141,7 +141,7 @@ namespace RentBike
                                         ddlStore.Enabled = false;
 
                                     ddlStore.SelectedValue = STORE_ID.ToString();
- 
+
                                     txtLicenseNumber.Text = cntrct.LICENSE_NO;
                                     txtCustomerName.Text = cntrct.CUSTOMER_NAME;
                                     txtBirthDay.Text = string.Format("{0:dd/MM/yyyy}", cntrct.BIRTH_DAY);
@@ -355,15 +355,15 @@ namespace RentBike
                             using (HtmlTextWriter writer = new HtmlTextWriter(stringWriter))
                             {
                                 writer.Write("Số CMTND/GPLX này hiện tại đã đăng ký hợp đồng ");
-                                writer.AddAttribute(HtmlTextWriterAttribute.Href, string.Format("FormContractUpdate.aspx?ID={0}&sID={1}",contract.ID,contract.STORE_ID));
+                                writer.AddAttribute(HtmlTextWriterAttribute.Href, string.Format("FormContractUpdate.aspx?ID={0}&sID={1}", contract.ID, contract.STORE_ID));
                                 writer.RenderBeginTag(HtmlTextWriterTag.A); // Start of A
                                 writer.Write(contract.CONTRACT_NO);
                                 writer.RenderEndTag();  //End of A
 
                                 lblMessage.Text = stringWriter.ToString();
-                                return; 
+                                return;
                             }
-                                                             
+
                         }
                         using (var db = new RentBikeEntities())
                         {
@@ -703,15 +703,22 @@ namespace RentBike
                     decimal totalPaid = payList.Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
                     for (int i = 0; i < payList.Count; i++)
                     {
-                        if (totalPaid < payList[i].AMOUNT_PER_PERIOD)
-                            payList[i].ACTUAL_PAY = totalPaid;
-                        else
-                            payList[i].ACTUAL_PAY = payList[i].AMOUNT_PER_PERIOD;
+                        bool bCheck = false;
+                        if (totalPaid > 0)
+                        {
+                            if (totalPaid < payList[i].AMOUNT_PER_PERIOD)
+                            {
+                                payList[i].ACTUAL_PAY = totalPaid;
+                                bCheck = true;
+                            }
+                            else
+                                payList[i].ACTUAL_PAY = payList[i].AMOUNT_PER_PERIOD;
+                        }
 
                         totalPaid -= payList[i].AMOUNT_PER_PERIOD;
 
-                        if (totalPaid <= 0)
-                            break;
+                        if (totalPaid < 0 && !bCheck)
+                            payList[i].ACTUAL_PAY = 0;
                     }
 
                     rptPayFeeSchedule.DataSource = payList;

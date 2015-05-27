@@ -26,16 +26,19 @@
             </div>
             <div id="areaToPrint">
                 <table id="tblWarning" class="table table-hover">
-                    <tr class="success">
-                        <th>#</th>
-                        <th>Tên khách hàng</th>
-                        <th>Loại hình thuê</th>
-                        <th>Số ĐT khách hàng</th>
-                        <th class="text-right">Giá trị HĐ/Phí</th>
-                        <th class="text-center">Ghi chú</th>
-                        <th class="text-right">Số lần đóng phí</th>
-                        <th class="text-center">Thông báo</th>
-                    </tr>
+                    <thead>
+                        <tr class="success">
+                            <th>#</th>
+                            <th>Tên khách hàng</th>
+                            <th>Loại hình thuê</th>
+                            <th>Số ĐT khách hàng</th>
+                            <th class="text-right">Giá trị HĐ/Phí</th>
+                            <th class="text-center">Ghi chú</th>
+                            <th class="text-right">Số lần đóng phí</th>
+                            <th class="text-center">Thông báo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
         </HeaderTemplate>
         <ItemTemplate>
             <tr id='<%# Eval("ID") %>' class="<%# Eval("CSS_CLASS") %>">
@@ -50,6 +53,7 @@
             </tr>
         </ItemTemplate>
         <FooterTemplate>
+            </tbody>
             </table>
                 </div>
         </FooterTemplate>

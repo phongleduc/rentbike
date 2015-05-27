@@ -94,7 +94,6 @@ namespace RentBike
                 Session.RemoveAll();
                 System.Web.Security.FormsAuthentication.SignOut();
                 Response.Redirect("FormLogin.aspx", false);
-                Response.End();
             }
             catch (Exception ex)
             {

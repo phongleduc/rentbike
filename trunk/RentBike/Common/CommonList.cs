@@ -160,24 +160,29 @@ namespace RentBike.Common
             else
             {
                 pp1.PAY_DATE = lastPeriodDate.AddDays(10);
-                switch (contract.RENT_TYPE_ID)
+                if (contract.FEE_PER_DAY > 0)
                 {
-                    case 1:
-                        if (((contract.FEE_PER_DAY / multipleFee) * 10) < 4000)
-                            pp1.AMOUNT_PER_PERIOD = increateFeeCar;
-                        else
+                    switch (contract.RENT_TYPE_ID)
+                    {
+                        case 1:
+                            if (((contract.FEE_PER_DAY / multipleFee) * 10) < 4000)
+                                pp1.AMOUNT_PER_PERIOD = increateFeeCar;
+                            else
+                                pp1.AMOUNT_PER_PERIOD = increateFeeOther;
+                            break;
+                        case 2:
+                            if (((contract.FEE_PER_DAY / multipleFee) * 10) < 6000)
+                                pp1.AMOUNT_PER_PERIOD = increateFeeEquip;
+                            else
+                                pp1.AMOUNT_PER_PERIOD = increateFeeOther;
+                            break;
+                        default:
                             pp1.AMOUNT_PER_PERIOD = increateFeeOther;
-                        break;
-                    case 2:
-                        if (((contract.FEE_PER_DAY / multipleFee) * 10) < 6000)
-                            pp1.AMOUNT_PER_PERIOD = increateFeeEquip;
-                        else
-                            pp1.AMOUNT_PER_PERIOD = increateFeeOther;
-                        break;
-                    default:
-                        pp1.AMOUNT_PER_PERIOD = increateFeeOther;
-                        break;
+                            break;
+                    }
                 }
+                else
+                    pp1.AMOUNT_PER_PERIOD = increateFeeCar;
             }
             pp1.STATUS = true;
             pp1.ACTUAL_PAY = 0;
@@ -574,7 +579,7 @@ namespace RentBike.Common
                 var stores = db.Stores.Where(c => c.ACTIVE == true).ToList();
                 foreach (var store in stores)
                 {
-                    List<CONTRACT_FULL_VW> listContract = GetWarningData(DateTime.Today.ToString(), string.Empty, store.ID).Where(c =>c.OVER_DATE <= 50).ToList();
+                    List<CONTRACT_FULL_VW> listContract = GetWarningData(DateTime.Today.ToString(), string.Empty, store.ID).Where(c => c.OVER_DATE <= 50).ToList();
                     foreach (var contract in listContract)
                     {
                         if (db.SummaryPayFeeDailies.Any(c => c.PERIOD_DATE == DateTime.Today
