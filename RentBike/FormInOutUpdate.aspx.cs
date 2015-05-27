@@ -10,6 +10,7 @@ namespace RentBike
 {
     public partial class FormInOutUpdate : FormBase
     {
+        public DateTime PeriodDate { get; set; }
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
@@ -22,6 +23,7 @@ namespace RentBike
                 {
                     var item = db.PayPeriods.Where(s =>s.ID == periodId).FirstOrDefault();
                     pp = item;
+                    PeriodDate = item.PAY_DATE;
                 }
 
                 LoadGrid(pp);

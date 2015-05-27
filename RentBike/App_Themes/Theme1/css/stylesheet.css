@@ -292,9 +292,9 @@ button, input, optgroup, select, textarea {
     background-color: #F5F5F5;
 }
 
-.table-hover > tbody > tr.select-row > td > div:hover {
+/*.table-hover > tbody > tr.select-row > td > div:hover {
     background-color: #9FAAF9;
-}
+}*/
 
 .ui-tooltip-custom {
     color: white;

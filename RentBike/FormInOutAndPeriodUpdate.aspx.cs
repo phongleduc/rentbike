@@ -68,8 +68,9 @@ namespace RentBike
                 if (periodId != 0)
                 {
                     // SAVE PERIOD
-                    var pp = db.PayPeriods.FirstOrDefault(s =>s.ID == periodId);
-                    pp.ACTUAL_PAY = Convert.ToDecimal(txtIncome.Text);
+                    decimal totalInAmountOfPeriod = db.InOuts.Where(c =>c.PERIOD_ID == periodId).Select(c =>c.IN_AMOUNT).DefaultIfEmpty(0).Sum(); 
+                    var pp = db.PayPeriods.FirstOrDefault(c =>c.ID == periodId);
+                    pp.ACTUAL_PAY = totalInAmountOfPeriod;
                     db.SaveChanges();
 
                     Response.Redirect(string.Format("FormInOutUpdate.aspx?ID={0}", periodId), false);

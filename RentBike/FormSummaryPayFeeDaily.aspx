@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormSummaryPayFeeDaily.aspx.cs" Inherits="RentBike.FormSummaryPayFeeDaily" %>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h2>BẢNG THU PHÍ</h2>
     <table class="table table-striped table-hover ">
@@ -22,7 +23,7 @@
             <tr>
                 <td class="text-left"><strong>Phí thu ngày&nbsp;<%=SearchDate.ToString("dd/MM/yyyy") %>:</strong></td>
                 <td class="text-left">
-                    <asp:Label ID="lblTotalDailyFee" runat="server"  CssClass="text-left"></asp:Label></td>
+                    <asp:Label ID="lblTotalDailyFee" runat="server" CssClass="text-left"></asp:Label></td>
                 <td class="text-left"><strong>Thực thu ngày&nbsp;<%=SearchDate.ToString("dd/MM/yyyy") %>:</strong></td>
                 <td class="text-left">
                     <asp:Label ID="lblActualTotalDailyFee" runat="server" CssClass="text-left"></asp:Label></td>
@@ -39,22 +40,25 @@
     </table>
     <asp:Repeater ID="rptSummaryFeeDaily" runat="server">
         <HeaderTemplate>
-            <div class="text-right" style="margin-bottom: 5px;display:none;">
+            <div class="text-right" style="margin-bottom: 5px; display: none;">
                 <asp:Image ID="ExcelIcon" runat="server" ImageUrl="~/App_Themes/Theme1/image/excel-icon.png" />
                 <asp:LinkButton ID="lnkExportExcel" runat="server" OnClick="lnkExportExcel_Click" Text="Xuất ra Excel"></asp:LinkButton>
             </div>
             <div id="areaToPrint">
                 <table id="tblSummaryFeeDaily" class="table table-striped table-hover">
-                    <tr class="success">
-                        <th>#</th>
-                        <th>Tên khách hàng</th>
-                        <th>Loại hình thuê</th>
-                        <th>Số ĐT khách hàng</th>
-                        <th class="text-right">Giá trị HĐ/Phí</th>
-                        <th class="text-center">Ghi chú</th>
-                        <th class="text-right">Số lần đóng phí</th>
-                        <th class="text-center">Thông báo</th>
-                    </tr>
+                    <thead>
+                        <tr class="success">
+                            <th>#</th>
+                            <th>Tên khách hàng</th>
+                            <th>Loại hình thuê</th>
+                            <th>Số ĐT khách hàng</th>
+                            <th class="text-right">Giá trị HĐ/Phí</th>
+                            <th class="text-center">Ghi chú</th>
+                            <th class="text-right">Số lần đóng phí</th>
+                            <th class="text-center">Thông báo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
         </HeaderTemplate>
         <ItemTemplate>
             <tr id='<%# Eval("CONTRACT_ID") %>'>
@@ -69,6 +73,7 @@
             </tr>
         </ItemTemplate>
         <FooterTemplate>
+            </tbody>
             </table>
                 </div>
         </FooterTemplate>

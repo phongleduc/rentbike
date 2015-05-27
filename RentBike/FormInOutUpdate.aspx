@@ -26,27 +26,27 @@
             </tr>
         </ItemTemplate>
         <FooterTemplate>
-            <tr class="danger">
+            <tr class="danger untooltip">
                 <td>Mức phí:</td>
                 <td>
                     <asp:Label ID="lblAmountPerDay" runat="server" CssClass="text-right"></asp:Label></td>
             </tr>
-            <tr class="info">
+            <tr class="info untooltip">
                 <td>Tổng số đã thanh toán:</td>
                 <td>
                     <asp:Label ID="lblTotalPaid" runat="server" CssClass="text-right"></asp:Label></td>
             </tr>
-            <tr class="warning">
+            <tr class="warning untooltip">
                 <td>Số tiền dư lần trước:</td>
                 <td>
                     <asp:Label ID="lblAmountRemain" runat="server" CssClass="text-right"></asp:Label></td>
             </tr>
-            <tr class="danger">
+            <tr class="danger untooltip">
                 <td>Số tiền còn thiếu:</td>
                 <td>
                     <asp:Label ID="lblAmountLeft" runat="server" CssClass="text-right"></asp:Label></td>
             </tr>
-            <tr class="info">
+            <tr class="info untooltip">
                 <td>Tổng số phí còn thiếu:</td>
                 <td>
                     <asp:Label ID="lblTotalAmoutLeft" runat="server" CssClass="text-right"></asp:Label></td>
@@ -59,7 +59,7 @@
     <table class="table table-striped table-hover" style="width: 50%; margin-left: 25%;">
         <tbody>
             <tr>
-                <td colspan="2" class="text-center"><strong>Chi tiết khoản trả phí</strong></td>
+                <td colspan="2" class="text-center"><strong>Chi tiết khoản trả phí kỳ <%=PeriodDate.ToString("dd/MM/yyyy") %></strong></td>
             </tr>
             <tr>
                 <td class="text-right">Loại chi phí</td>
@@ -104,14 +104,14 @@
                 }
             });
 
-            $.each($('#tblContractInOut tbody tr'), function () {
+            $.each($('#tblContractInOut tbody tr').not(".untooltip"), function () {
                 $(this).attr('style', 'cursor:pointer');
                 $(this).click(function () {
                     location.href = "FormInOutAndPeriodUpdate.aspx?ID=" + $(this).attr('id').split('|')[0] + "&pid=" + $(this).attr('id').split('|')[1];
                 });
             });
 
-            main.toolTip("#tblContractInOut tbody tr", "Chỉnh sửa", "top left", "bottom left", 15, 20);
+            main.toolTip("#tblContractInOut tbody tr", "Chỉnh sửa", "top left", "bottom left", 15, 20, ".untooltip");
         });
     </script>
 </asp:Content>
