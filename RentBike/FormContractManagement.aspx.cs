@@ -13,6 +13,10 @@ namespace RentBike
         private decimal TotalFeeBike = 0;
         private decimal TotalFeeEquip = 0;
         private decimal TotalFeeOther = 0;
+
+        private decimal TotalAmountBikeContract = 0;
+        private decimal TotalAmountEquipContract = 0;
+        private decimal TotalAmountOtherContract = 0;
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
@@ -87,6 +91,11 @@ namespace RentBike
             lblRentBikeNo.Text = rentbikeNo == 0 ? "0" : string.Format("{0:0,0}", rentbikeNo);
             lblRentOfficeEquip.Text = rentequipNo == 0 ? "0" : string.Format("{0:0,0}", rentequipNo);
             lblRentOther.Text = rentotherNo == 0 ? "0" : string.Format("{0:0,0}", rentotherNo);
+
+            lblTotalBikeContractAmount.Text = TotalAmountBikeContract == 0 ? "0" : string.Format("{0:0,0}", TotalAmountBikeContract);
+            lblTotalEquipContractAmount.Text = TotalAmountEquipContract == 0 ? "0" : string.Format("{0:0,0}", TotalAmountEquipContract);
+            lblTotalOtherContractAmount.Text = TotalAmountOtherContract == 0 ? "0" : string.Format("{0:0,0}", TotalAmountOtherContract);
+
             lblNotFinishedContract.Text = notFinishContract == 0 ? "0" : string.Format("{0:0,0}", notFinishContract);
             lblTotalMoneyOfNotFinishContract.Text = totalmoneynotfinishContract == 0 ? "0" : string.Format("{0:0,0}", totalmoneynotfinishContract);
             lblTotalFeeContract.Text = TotalFeeBike + TotalFeeEquip + TotalFeeOther == 0 ? "0" : string.Format("{0:0,0}", TotalFeeBike + TotalFeeEquip + TotalFeeOther);
@@ -118,6 +127,7 @@ namespace RentBike
                 {
                     no = item.Count();
                     TotalFeeBike = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                    TotalAmountBikeContract = item.Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
                 }
             }
             return no;
@@ -139,6 +149,7 @@ namespace RentBike
                 {
                     no = item.Count();
                     TotalFeeEquip = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                    TotalAmountEquipContract = item.Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
                 }
             }
             return no;
@@ -161,6 +172,7 @@ namespace RentBike
                 {
                     no = item.Count();
                     TotalFeeOther = item.Select(c => c.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                    TotalAmountOtherContract = item.Select(c => c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
                 }
             }
 

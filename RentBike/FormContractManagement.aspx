@@ -19,15 +19,21 @@
             <tr>
                 <td class="text-right"><strong>Hợp đồng cho thuê xe</strong></td>
                 <td class="text-right">
-                    <asp:Label ID="lblRentBikeNo" runat="server"  CssClass="text-right"></asp:Label></td>
+                    <asp:Label ID="lblRentBikeNo" runat="server" CssClass="text-right"></asp:Label></td>
+                <td class="text-right"><strong>Tổng giá trị hợp đồng thuê xe</strong></td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalBikeContractAmount" runat="server" CssClass="text-right"></asp:Label></td>
                 <td class="text-right"><strong>Tổng số hợp đồng chưa thanh lý</strong></td>
                 <td class="text-right">
                     <asp:Label ID="lblNotFinishedContract" runat="server" CssClass="text-right"></asp:Label></td>
             </tr>
             <tr>
-                <td class="text-right"><strong>Hợp đồng cho thuê thiết bị</strong></td>
+                <td class="text-right"><strong>Hợp đồng cho thuê TBVP</strong></td>
                 <td class="text-right">
                     <asp:Label ID="lblRentOfficeEquip" runat="server" CssClass="text-right"></asp:Label></td>
+                <td class="text-right"><strong>Tổng giá trị hợp đồng thuê TBVP</strong></td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalEquipContractAmount" runat="server" CssClass="text-right"></asp:Label></td>
                 <td class="text-right"><strong>Tổng phí hợp đồng/ngày</strong></td>
                 <td class="text-right">
                     <asp:Label ID="lblTotalFeeContract" runat="server" CssClass="text-right"></asp:Label></td>
@@ -36,6 +42,9 @@
                 <td class="text-right"><strong>Hợp đồng khác</strong></td>
                 <td class="text-right">
                     <asp:Label ID="lblRentOther" runat="server" CssClass="text-right"></asp:Label></td>
+                <td class="text-right"><strong>Tổng giá trị hợp đồng thuê khác</strong></td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalOtherContractAmount" runat="server" CssClass="text-right"></asp:Label></td>
                 <td class="text-right"><strong>Tổng số tiền hợp đồng chưa thanh lý</strong></td>
                 <td class="text-right">
                     <asp:Label ID="lblTotalMoneyOfNotFinishContract" runat="server" CssClass="text-right"></asp:Label></td>
@@ -74,8 +83,9 @@
            </table>
         </FooterTemplate>
     </asp:Repeater>
-<%--    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true" Visible="false"></asp:DropDownList>--%>
-        <b>Loại hợp đồng:</b>  <asp:DropDownList ID="drpRentType" runat="server" CssClass="form-control drp-renttype" OnSelectedIndexChanged="drpRentType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+    <%--    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true" Visible="false"></asp:DropDownList>--%>
+    <b>Loại hợp đồng:</b>
+    <asp:DropDownList ID="drpRentType" runat="server" CssClass="form-control drp-renttype" OnSelectedIndexChanged="drpRentType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
     <script>
         $(function () {
             $('#<%=txtSearch.ClientID %>').keypress(function (e) {

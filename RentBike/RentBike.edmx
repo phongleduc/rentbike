@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="RentBikeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="RentBikeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Account">
           <Key>
             <PropertyRef Name="ID" />
@@ -145,7 +145,7 @@
           <Property Name="CURRENT_RESIDENCE" Type="nvarchar" MaxLength="300" />
           <Property Name="BIRTH_DAY" Type="datetime" />
           <Property Name="EMAIL" Type="varchar" MaxLength="50" />
-          <Property Name="PHONE" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="PHONE" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="ADDRESS" Type="nvarchar" MaxLength="300" />
           <Property Name="PHOTO" Type="image" />
           <Property Name="CITY_ID" Type="int" Nullable="false" />
@@ -726,8 +726,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
     FROM [dbo].[STORE_FULL_VW] AS [STORE_FULL_VW]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="RentBikeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -871,7 +870,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CURRENT_RESIDENCE" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="BIRTH_DAY" Type="DateTime" Precision="3" />
           <Property Name="EMAIL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PHONE" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PHONE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ADDRESS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
           <Property Name="PHOTO" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="CITY_ID" Type="Int32" Nullable="false" />
@@ -1277,7 +1276,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySet Name="INOUT_FULL_VW" EntityType="Self.INOUT_FULL_VW" />
           <EntitySet Name="STORE_FULL_VW" EntityType="Self.STORE_FULL_VW" />
           <FunctionImport Name="BackUp">
-            <Parameter Name="path" Mode="In" Type="String" />
+          <Parameter Name="path" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
       </Schema>
