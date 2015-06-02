@@ -514,6 +514,29 @@ namespace RentBike.Common
             }
         }
 
+        public static void RemoveRedundantPeriod()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                foreach (var contract in contracts)
+                {
+                    List<PayPeriod> lstPay = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).ToList();
+                    int div = lstPay.Count % 3;
+                    if (div > 0)
+                    {
+                        int index = lstPay.Count - 1;
+                        for (int i = 1; i <= div; i++)
+                        {
+                            db.PayPeriods.Remove(lstPay[index]);
+                            index -= 1;
+                        }
+                    }
+                }
+                db.SaveChanges();
+            }
+        }
+
         public static void UpdateAllPeriodHavingOverFee()
         {
             using (var db = new RentBikeEntities())
@@ -547,8 +570,8 @@ namespace RentBike.Common
                         decimal total = inOutList.Select(c => c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
                         pp.ACTUAL_PAY = total;
                     }
-                    db.SaveChanges();
                 }
+                db.SaveChanges();
             }
         }
 
@@ -566,9 +589,9 @@ namespace RentBike.Common
                         {
                             pp.AMOUNT_PER_PERIOD = 0;
                         }
-                        db.SaveChanges();
                     }
                 }
+                db.SaveChanges();
             }
         }
 

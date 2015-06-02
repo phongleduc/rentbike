@@ -284,7 +284,7 @@ button, input, optgroup, select, textarea {
 }
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
-    background-color: #9FAAF9;
+    background-color: #18bc9c;
 }
 
 .table-hover > tbody > tr.select-row:hover > td,

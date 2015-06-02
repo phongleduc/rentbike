@@ -49,6 +49,15 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.Label lblRentBikeNo;
         
         /// <summary>
+        /// lblTotalBikeContractAmount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalBikeContractAmount;
+        
+        /// <summary>
         /// lblNotFinishedContract control.
         /// </summary>
         /// <remarks>
@@ -67,6 +76,15 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.Label lblRentOfficeEquip;
         
         /// <summary>
+        /// lblTotalEquipContractAmount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalEquipContractAmount;
+        
+        /// <summary>
         /// lblTotalFeeContract control.
         /// </summary>
         /// <remarks>
@@ -83,6 +101,15 @@ namespace RentBike {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblRentOther;
+        
+        /// <summary>
+        /// lblTotalOtherContractAmount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalOtherContractAmount;
         
         /// <summary>
         /// lblTotalMoneyOfNotFinishContract control.
