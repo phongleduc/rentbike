@@ -63,7 +63,7 @@
         <ItemTemplate>
             <tr id='<%# Eval("CONTRACT_ID") %>'>
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><strong>'<%# Eval("CUSTOMER_NAME") %>'</strong></td>
+                <td><strong><%# Eval("CUSTOMER_NAME") %></strong></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
                 <td><%# Eval("PHONE") %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("PAY_FEE"))) %></td>

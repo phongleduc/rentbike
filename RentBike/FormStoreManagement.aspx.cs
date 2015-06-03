@@ -52,7 +52,7 @@ namespace RentBike
             // LOAD PAGER
             using (var db = new RentBikeEntities())
             {
-                IQueryable<Store> dataList = db.Stores;
+                IQueryable<STORE_FULL_VW> dataList = db.STORE_FULL_VW;
 
                 if (storeId != 0)
                     dataList = dataList.Where(c => c.ID == storeId);
@@ -60,8 +60,8 @@ namespace RentBike
                 if (!string.IsNullOrEmpty(strSearch))
                     dataList = dataList.Where(c => c.ID == storeId);
 
-
-                int totalRecord = dataList.Count();
+                var result = dataList.ToList();
+                int totalRecord = result.Count;
                 int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
                 IEnumerable<int> pageList = Enumerable.Range(1, totalPage);
 
@@ -73,9 +73,9 @@ namespace RentBike
 
                 // LOAD DATA WITH PAGING
                 int skip = page * pageSize;
-                dataList = dataList.Skip(skip).Take(pageSize);
+                result = result.Skip(skip).Take(pageSize).ToList();
 
-                rptStore.DataSource = dataList.ToList();
+                rptStore.DataSource = result;
                 rptStore.DataBind();
             }
         }

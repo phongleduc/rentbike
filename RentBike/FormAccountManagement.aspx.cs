@@ -38,7 +38,8 @@ namespace RentBike
                 if(!string.IsNullOrEmpty(strSearch))
                     accList = accList.Where(c =>c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower()));
 
-                int totalRecord = accList.Count();
+                var result = accList.ToList();
+                int totalRecord = result.Count;
                 int totalPage = totalRecord % pageSize == 0 ? totalRecord / pageSize : totalRecord / pageSize + 1;
 
                 IEnumerable<int> pageList = Enumerable.Range(1, totalPage);
@@ -50,9 +51,9 @@ namespace RentBike
 
                 // LOAD DATA WITH PAGING
                 int skip = page * pageSize;
-                accList = accList.Skip(skip).Take(pageSize);
+                result = result.Skip(skip).Take(pageSize).ToList();
 
-                rptAccount.DataSource = accList.ToList();
+                rptAccount.DataSource = result;
                 rptAccount.DataBind();
             }
         }
