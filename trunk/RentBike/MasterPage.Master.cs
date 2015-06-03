@@ -18,25 +18,15 @@ namespace RentBike
                 try
                 {
                     int permissionid = Convert.ToInt32(Session["permission"]);
+                    int storeid = Convert.ToInt32(Session["store_id"]);
                     LoadStore(permissionid);
+                    CalcFeeStore(storeid);
                     hplCommonListSetting.Visible = false;
                     if (permissionid != 1)
                     {
                         hplStoreManagement.Visible = false;
-                        //hplPendingContract.Visible = false;
-                        hplAccountManagement.Visible = false;
-                        int storeid = Convert.ToInt32(Session["store_id"]);
-                        CalcFeeStore(storeid);
-                    }
-                    else if (permissionid == 1)
-                    {
-                        CalcFeeStore(0);
-                    }
-                    if (permissionid != 1 && permissionid != 2)
-                    {
                         hplAccountManagement.Visible = false;
                     }
-
                     txtUserFullName.Text = "Chào " + Session["name"] + ",";
 
                 }
@@ -156,7 +146,7 @@ namespace RentBike
             string acc = Convert.ToString(Session["username"]);
             using (var db = new RentBikeEntities())
             {
-                var item = db.Accounts.FirstOrDefault(s =>s.ACC == acc);
+                var item = db.Accounts.FirstOrDefault(s => s.ACC == acc);
 
                 if (item.PERMISSION_ID == 1)
                     return true;
@@ -173,161 +163,80 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
-                if (storeId == 0)
+                IQueryable<InOut> inOut = db.InOuts;
+                if (storeId != 0)
                 {
-                    var data = from d in db.InOuts
-                               group d by d.INOUT_DATE into g
-                               select new
-                               {
-                                   Period = g.Key,
-                                   Record = from o in g
-                                            select new
-                                            {
-                                                ID = o.STORE_ID,
-                                                InOutDate = o.INOUT_DATE,
-                                                InAmount = o.IN_AMOUNT,
-                                                OutAmount = o.OUT_AMOUNT,
-                                                TotalIn = g.Sum(x =>x.IN_AMOUNT),
-                                                TotalOut = g.Sum(x =>x.OUT_AMOUNT),
-                                                BeginAmount = 0,
-                                                EndAmount = 0,
-                                                ContractFeeCar = 0,
-                                                RentFeeCar = 0,
-                                                CloseFeeCar = 0,
-                                                ContractFeeEquip = 0,
-                                                RentFeeEquip = 0,
-                                                CloseFeeEquip = 0,
-                                                ContractFeeOther = 0,
-                                                RentFeeOther = 0,
-                                                CloseFeeOther = 0,
-                                                RemainEndOfDay = 0,
-                                                InOutTypeId = o.INOUT_TYPE_ID,
-                                                InCapital = 0,
-                                                OutCapital = 0,
-                                                InOther = 0,
-                                                OutOther = 0
+                    inOut = db.InOuts.Where(c => c.STORE_ID == storeId);
+                }
+                var data = from d in inOut.ToList()
+                           group d by d.INOUT_DATE into g
+                           select new
+                           {
+                               Period = g.Key,
+                               Record = from o in g
+                                        select new
+                                        {
+                                            ID = o.STORE_ID,
+                                            InOutDate = o.INOUT_DATE,
+                                            InAmount = o.IN_AMOUNT,
+                                            OutAmount = o.OUT_AMOUNT,
+                                            TotalIn = g.Sum(x => x.IN_AMOUNT),
+                                            TotalOut = g.Sum(x => x.OUT_AMOUNT),
+                                            BeginAmount = 0,
+                                            EndAmount = 0,
+                                            ContractFeeCar = 0,
+                                            RentFeeCar = 0,
+                                            CloseFeeCar = 0,
+                                            ContractFeeEquip = 0,
+                                            RentFeeEquip = 0,
+                                            CloseFeeEquip = 0,
+                                            ContractFeeOther = 0,
+                                            RentFeeOther = 0,
+                                            CloseFeeOther = 0,
+                                            RemainEndOfDay = 0,
+                                            InOutTypeId = o.INOUT_TYPE_ID,
+                                            InCapital = 0,
+                                            OutCapital = 0,
+                                            InOther = 0,
+                                            OutOther = 0
 
-                                            }
-                               };
+                                        }
+                           };
 
-                    List<SummaryInfo> lst = new List<SummaryInfo>();
-                    foreach (var g in data)
+                List<SummaryInfo> lst = new List<SummaryInfo>();
+                foreach (var g in data)
+                {
+                    SummaryInfo si = new SummaryInfo();
+                    si.StoreId = g.Record.ToList()[0].ID;
+                    si.InOutDate = g.Record.ToList()[0].InOutDate.Value;
+                    si.TotalIn = g.Record.ToList()[0].TotalIn;
+                    si.TotalOut = g.Record.ToList()[0].TotalOut;
+                    si.BeginAmount = 0;
+                    si.EndAmount = g.Record.ToList()[0].TotalIn - g.Record.ToList()[0].TotalOut;
+
+                    lst.Add(si);
+                }
+
+                for (int i = 0; i < lst.Count; i++)
+                {
+                    if (i > 0)
                     {
-                        SummaryInfo si = new SummaryInfo();
-                        si.StoreId = g.Record.ToList()[0].ID;
-                        si.InOutDate = g.Record.ToList()[0].InOutDate.Value;
-                        si.TotalIn = g.Record.ToList()[0].TotalIn;
-                        si.TotalOut = g.Record.ToList()[0].TotalOut;
-                        si.BeginAmount = 0;
-                        si.EndAmount = g.Record.ToList()[0].TotalIn - g.Record.ToList()[0].TotalOut;
-
-                        lst.Add(si);
-                    }
-
-                    for (int i = 0; i < lst.Count; i++)
-                    {
-                        if (i > 0)
-                        {
-                            lst[i].BeginAmount = lst[i - 1].EndAmount;
-                            lst[i].EndAmount += lst[i].BeginAmount;
-                        }
-                    }
-
-
-                    decimal sumIn = 0;
-                    decimal sumOut = 0;
-                    decimal sumBegin = 0;
-                    decimal sumEnd = 0;
-
-                    if (lst.Any())
-                    {
-                        sumBegin = lst[0].BeginAmount;
-                        foreach (SummaryInfo itm in lst)
-                        {
-                            sumIn += itm.TotalIn;
-                            sumOut += itm.TotalOut;
-                        }
-                        sumEnd = sumIn - sumOut;
-                        lblTotalValue.Text = string.Format("{0:0,0}", sumEnd);
+                        lst[i].BeginAmount = lst[i - 1].EndAmount;
+                        lst[i].EndAmount += lst[i].BeginAmount;
                     }
                 }
-                else
+
+
+                decimal sumIn = 0;
+                decimal sumOut = 0;
+                decimal sumEnd = 0;
+
+                if (lst.Any())
                 {
-                    var data = from d in db.InOuts
-                               where d.STORE_ID == storeId
-                               group d by d.INOUT_DATE into g
-                               select new
-                               {
-                                   Period = g.Key,
-                                   Record = from o in g
-                                            select new
-                                            {
-                                                ID = o.STORE_ID,
-                                                InOutDate = o.INOUT_DATE,
-                                                InAmount = o.IN_AMOUNT,
-                                                OutAmount = o.OUT_AMOUNT,
-                                                TotalIn = g.Sum(x =>x.IN_AMOUNT),
-                                                TotalOut = g.Sum(x =>x.OUT_AMOUNT),
-                                                BeginAmount = 0,
-                                                EndAmount = 0,
-                                                ContractFeeCar = 0,
-                                                RentFeeCar = 0,
-                                                CloseFeeCar = 0,
-                                                ContractFeeEquip = 0,
-                                                RentFeeEquip = 0,
-                                                CloseFeeEquip = 0,
-                                                ContractFeeOther = 0,
-                                                RentFeeOther = 0,
-                                                CloseFeeOther = 0,
-                                                RemainEndOfDay = 0,
-                                                InOutTypeId = o.INOUT_TYPE_ID,
-                                                InCapital = 0,
-                                                OutCapital = 0,
-                                                InOther = 0,
-                                                OutOther = 0
-
-                                            }
-                               };
-
-                    List<SummaryInfo> lst = new List<SummaryInfo>();
-                    foreach (var g in data)
-                    {
-                        SummaryInfo si = new SummaryInfo();
-                        si.StoreId = g.Record.ToList()[0].ID;
-                        si.InOutDate = g.Record.ToList()[0].InOutDate.Value;
-                        si.TotalIn = g.Record.ToList()[0].TotalIn;
-                        si.TotalOut = g.Record.ToList()[0].TotalOut;
-                        si.BeginAmount = 0;
-                        si.EndAmount = g.Record.ToList()[0].TotalIn - g.Record.ToList()[0].TotalOut;
-
-                        lst.Add(si);
-                    }
-
-                    for (int i = 0; i < lst.Count; i++)
-                    {
-                        if (i > 0)
-                        {
-                            lst[i].BeginAmount = lst[i - 1].EndAmount;
-                            lst[i].EndAmount += lst[i].BeginAmount;
-                        }
-                    }
-
-
-                    decimal sumIn = 0;
-                    decimal sumOut = 0;
-                    decimal sumBegin = 0;
-                    decimal sumEnd = 0;
-                    if (lst.Any())
-                    {
-                        sumBegin = lst[0].BeginAmount;
-                        foreach (SummaryInfo itm in lst)
-                        {
-                            sumIn += itm.TotalIn;
-                            sumOut += itm.TotalOut;
-                        }
-                        sumEnd = sumIn - sumOut;
-                        lblTotalValue.Text = string.Format("{0:0,0}", sumEnd);
-                    }
+                    sumIn = lst.Select(c =>c.TotalIn).DefaultIfEmpty(0).Sum();
+                    sumOut = lst.Select(c => c.TotalOut).DefaultIfEmpty(0).Sum();
+                    sumEnd = sumIn - sumOut;
+                    lblTotalValue.Text = string.Format("{0:0,0}", sumEnd);
                 }
             }
         }
