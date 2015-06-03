@@ -46,10 +46,10 @@ namespace RentBike
                             int contractid = Convert.ToInt32(id);
 
                             Store stor = new Store();
-                            stor = db.Stores.FirstOrDefault(s => s.ID == STORE_ID);
+                            stor = db.Stores.FirstOrDefault(s => s.ID == STORE_ID && s.ACTIVE == true);
 
                             var st = from s in db.CONTRACT_FULL_VW
-                                     where s.ID == contractid
+                                     where s.ID == contractid && s.ACTIVE == true
                                      select s;
 
                             lst = st.ToList<CONTRACT_FULL_VW>();
@@ -132,7 +132,7 @@ namespace RentBike
                             if (!string.IsNullOrEmpty(id) && !string.IsNullOrEmpty(copy))
                             {
                                 int contractid = Convert.ToInt32(id);
-                                CONTRACT_FULL_VW cntrct = db.CONTRACT_FULL_VW.Where(s => s.ID == contractid).FirstOrDefault();
+                                CONTRACT_FULL_VW cntrct = db.CONTRACT_FULL_VW.Where(s => s.ID == contractid && s.ACTIVE == true).FirstOrDefault();
                                 if (cntrct != null)
                                 {
                                     if (IS_ADMIN)

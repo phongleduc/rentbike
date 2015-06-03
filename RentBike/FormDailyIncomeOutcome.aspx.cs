@@ -93,7 +93,7 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
-                listInOut = db.INOUT_FULL_VW.ToList();
+                listInOut = db.INOUT_FULL_VW.Where(c =>c.ACTIVE == true).ToList();
                 if (STORE_ID != 0)
                 {
                     listInOut = listInOut.Where(c =>c.STORE_ID == STORE_ID).ToList();
@@ -269,7 +269,7 @@ namespace RentBike
         {
             List<SummaryInfo> listSI = new List<SummaryInfo>();
 
-            List<INOUT_FULL_VW> listInOutTemp = listInOut.Where(c =>c.INOUT_DATE == inoutDate).ToList();
+            List<INOUT_FULL_VW> listInOutTemp = listInOut.Where(c =>c.INOUT_DATE == inoutDate && c.ACTIVE == true).ToList();
             List<INOUT_FULL_VW> listInOutEquipAndCarAndOther = listInOutTemp.Where(c =>c.RENT_TYPE_ID == 1 || c.RENT_TYPE_ID == 2 || c.RENT_TYPE_ID == 3).ToList();
             List<INOUT_FULL_VW> listInOutOther = listInOutTemp.Where(c =>c.INOUT_TYPE_ID == 10 || c.INOUT_TYPE_ID == 11 || c.INOUT_TYPE_ID == 12 || c.INOUT_TYPE_ID == 13).ToList();
 

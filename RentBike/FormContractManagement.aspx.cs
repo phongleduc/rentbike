@@ -40,7 +40,7 @@ namespace RentBike
             using (var db = new RentBikeEntities())
             {
                 var dataList = (from s in db.CONTRACT_FULL_VW
-                                where s.CONTRACT_STATUS == true
+                                where s.CONTRACT_STATUS == true && s.ACTIVE == true
                                 select s).OrderByDescending(c => c.RENT_DATE).ToList();
 
                 if (STORE_ID != 0)

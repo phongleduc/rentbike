@@ -25,7 +25,7 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
-                IQueryable<CONTRACT_FULL_VW> dataList = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true).OrderByDescending(c => c.ID);
+                IQueryable<CONTRACT_FULL_VW> dataList = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true && c.ACTIVE == true).OrderByDescending(c => c.ID);
 
                 if (STORE_ID != 0)
                     dataList = dataList.Where(c => c.STORE_ID == STORE_ID);

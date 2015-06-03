@@ -61,7 +61,7 @@ namespace RentBike
                 int contractId = Convert.ToInt32(Request.QueryString["ID"]);
                 using (var db = new RentBikeEntities())
                 {
-                    var con = db.CONTRACT_FULL_VW.FirstOrDefault(c =>c.ID == contractId);
+                    var con = db.CONTRACT_FULL_VW.FirstOrDefault(c => c.ID == contractId && c.ACTIVE == true);
                     string closedContractName = string.Empty;
                     switch (con.RENT_TYPE_ID)
                     {
