@@ -39,5 +39,6 @@ namespace RentBike
         public int INOUT_TYPE_ID { get; set; }
         public Nullable<System.DateTime> INOUT_DATE { get; set; }
         public string CONTRACT_NO { get; set; }
+        public bool ACTIVE { get; set; }
     }
 }

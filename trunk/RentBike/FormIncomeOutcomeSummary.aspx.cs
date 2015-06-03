@@ -294,7 +294,7 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
-                var listContract = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true).ToList();
+                var listContract = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true && c.ACTIVE == true).ToList();
                 if (STORE_ID != 0)
                 {
                     listContract = listContract.Where(c =>c.STORE_ID == STORE_ID).ToList();

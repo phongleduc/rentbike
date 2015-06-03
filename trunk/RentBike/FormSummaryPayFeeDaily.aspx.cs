@@ -66,7 +66,7 @@ namespace RentBike
                 int[] dailyContractIds = dataListDaily.Select(c => c.CONTRACT_ID).ToArray();
                 int[] monthlycontractIds = dataListMonthly.Select(c => c.CONTRACT_ID).ToArray();
 
-                IQueryable<INOUT_FULL_VW> inOutList = db.INOUT_FULL_VW.Where(c => c.INOUT_TYPE_ID == 14 || c.INOUT_TYPE_ID == 15 || c.INOUT_TYPE_ID == 16);
+                IQueryable<INOUT_FULL_VW> inOutList = db.INOUT_FULL_VW.Where(c =>c.ACTIVE == true && (c.INOUT_TYPE_ID == 14 || c.INOUT_TYPE_ID == 15 || c.INOUT_TYPE_ID == 16));
                 if (STORE_ID != 0)
                 {
                     inOutList = inOutList.Where(c => c.STORE_ID == STORE_ID);

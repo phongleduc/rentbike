@@ -254,7 +254,7 @@ namespace RentBike.Common
                 //int totalRecord = 0;
                 List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
 
-                var st = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true);
+                var st = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true && c.ACTIVE == true);
 
                 if (storeId != 0)
                 {

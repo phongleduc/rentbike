@@ -51,7 +51,7 @@ namespace RentBike
 
                 using (var db = new RentBikeEntities())
                 {
-                    var item = db.CONTRACT_FULL_VW.FirstOrDefault(itm => itm.ID == pp.CONTRACT_ID);
+                    var item = db.CONTRACT_FULL_VW.FirstOrDefault(itm => itm.ID == pp.CONTRACT_ID && itm.ACTIVE == true);
                     int inoutType = 0;
                     switch (item.RENT_TYPE_NAME)
                     {

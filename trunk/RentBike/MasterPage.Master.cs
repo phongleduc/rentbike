@@ -163,10 +163,10 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
-                IQueryable<InOut> inOut = db.InOuts;
+                IQueryable<INOUT_FULL_VW> inOut = db.INOUT_FULL_VW.Where(c =>c.ACTIVE == true);
                 if (storeId != 0)
                 {
-                    inOut = db.InOuts.Where(c => c.STORE_ID == storeId);
+                    inOut = inOut.Where(c => c.STORE_ID == storeId);
                 }
                 var data = from d in inOut.ToList()
                            group d by d.INOUT_DATE into g
