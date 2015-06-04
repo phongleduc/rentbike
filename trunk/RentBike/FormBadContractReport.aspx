@@ -65,7 +65,7 @@
                 <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr id='<%# Eval("ID") %>' class="background-red">
+            <tr id='<%# Eval("ID") + "|" + Eval("STORE_ID") %>' class="background-red">
                 <td><%# Container.ItemIndex + 1 %></td>
                 <td><strong><%# Eval("CUSTOMER_NAME") %></strong></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
@@ -86,7 +86,7 @@
             $.each($('#tblBadContract tbody tr'), function () {
                 $(this).attr('style', 'cursor:pointer');
                 $(this).click(function () {
-                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id');
+                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id').split('|')[0] + "&sID=" + $(this).attr('id').split('|')[1];
                 });
             });
             main.toolTip("#tblBadContract tbody tr", "Chi tiết hợp đồng", "top left", "bottom left", 15, 20);

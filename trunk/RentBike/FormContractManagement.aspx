@@ -68,7 +68,7 @@
                 <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr id='<%# Eval("ID") %>'>
+            <tr id='<%# Eval("ID") + "|" + Eval("STORE_ID") %>'>
                 <td><%# Container.ItemIndex + 1 %></td>
                 <td><strong><%# Eval("CUSTOMER_NAME") %></strong></td>
                 <td><%# Eval("CURRENT_RESIDENCE") == null? (Eval("PERMANENT_RESIDENCE") == null? Eval("ADDRESS") : Eval("PERMANENT_RESIDENCE")) : Eval("CURRENT_RESIDENCE") %></td>
@@ -97,7 +97,7 @@
             $.each($('#tblContract tbody tr'), function () {
                 $(this).attr('style', 'cursor:pointer');
                 $(this).click(function () {
-                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id');
+                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id').split('|')[0] + "&sID=" + $(this).attr('id').split('|')[1];
                 });
             });
 
