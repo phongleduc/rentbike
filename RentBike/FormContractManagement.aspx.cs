@@ -162,7 +162,7 @@ namespace RentBike
             {
                 var item = (from itm in db.Contracts
                             where itm.RENT_TYPE_ID == 3 // Other
-                            && itm.STORE_ID == STORE_ID && itm.CONTRACT_STATUS == true
+                            && itm.CONTRACT_STATUS == true
                             select itm);
 
                 if (STORE_ID != 0)

@@ -38,7 +38,7 @@
                     <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr id='<%# Eval("ID") %>' class="<%# Eval("CSS_CLASS") %>">
+            <tr id='<%# Eval("ID") + "|" + Eval("STORE_ID") %>' class="<%# Eval("CSS_CLASS") %>">
                 <td><%# Container.ItemIndex + 1 %></td>
                 <td><strong><%# Eval("CUSTOMER_NAME") %></strong><br />
                     (<%# Convert.ToDateTime(Eval("BIRTH_DAY")).ToString("dd/MM/yyyy") %>)</td>
@@ -90,7 +90,7 @@
             $.each($('#tblReport tbody tr'), function () {
                 $(this).attr('style', 'cursor:pointer');
                 $(this).click(function () {
-                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id');
+                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id').split('|')[0] + "&sID=" + $(this).attr('id').split('|')[1];
                 });
             });
 

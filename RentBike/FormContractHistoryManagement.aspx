@@ -16,7 +16,7 @@
         <HeaderTemplate>
             <table id="tblContractHistory" class="table table-striped table-hover">
                 <thead>
-                    <tr id='<%# Eval("ID") %>' class="success">
+                    <tr id='<%# Eval("ID") + "|" + Eval("STORE_ID") %>' class="success">
                         <th>#</th>
                         <th>Tên khách hàng</th>
                         <th>Loại hình</th>
@@ -30,7 +30,7 @@
                 <tbody>
         </HeaderTemplate>
         <ItemTemplate>
-            <tr id='<%# Eval("CONTRACT_ID") %>' class="<%# Convert.ToBoolean(Eval("IS_BAD_CONTRACT")) == true ? "background-red" : "" %>">
+            <tr id='<%# Eval("CONTRACT_ID") + "|" + Eval("STORE_ID") %>' class="<%# Convert.ToBoolean(Eval("IS_BAD_CONTRACT")) == true ? "background-red" : "" %>">
                 <td><%# Container.ItemIndex + 1 %></td>
                 <td><strong>'<%# Eval("CUSTOMER_NAME") %>'</strong></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
@@ -60,7 +60,7 @@
             $.each($('#tblContractHistory tbody tr'), function () {
                 $(this).attr('style', 'cursor:pointer');
                 $(this).click(function () {
-                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id') + "&copy=1";
+                    location.href = "FormContractUpdate.aspx?ID=" + $(this).attr('id').split('|')[0] + "&sID=" + $(this).attr('id').split('|')[1] + "&copy=1";
                 });
             });
 
