@@ -261,7 +261,7 @@
           <Property Name="CONTRACT_ID" Type="int" Nullable="false" />
           <Property Name="CONTRACT_NO" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="CUSTOMER_NAME" Type="nvarchar" MaxLength="80" Nullable="false" />
-          <Property Name="PHONE" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="PHONE" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="RENT_TYPE_ID" Type="int" Nullable="false" />
           <Property Name="RENT_TYPE_NAME" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="PERIOD_DATE" Type="date" Nullable="false" />
@@ -991,7 +991,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CONTRACT_ID" Type="Int32" Nullable="false" />
           <Property Name="CONTRACT_NO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="CUSTOMER_NAME" Type="String" MaxLength="80" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="PHONE" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PHONE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="RENT_TYPE_ID" Type="Int32" Nullable="false" />
           <Property Name="RENT_TYPE_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="PERIOD_DATE" Type="DateTime" Nullable="false" Precision="0" />
