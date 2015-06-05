@@ -48,7 +48,7 @@ namespace RentBike.Common
         {
             using (var db = new RentBikeEntities())
             {
-                var rt = from s in db.Stores
+                var rt = from s in db.Stores where s.ACTIVE == true
                          select s;
 
                 foreach (Store store in rt)
@@ -599,38 +599,55 @@ namespace RentBike.Common
         {
             using (var db = new RentBikeEntities())
             {
-                var stores = db.Stores.Where(c => c.ACTIVE == true).ToList();
-                foreach (var store in stores)
+                try
                 {
-                    List<CONTRACT_FULL_VW> listContract = GetWarningData(DateTime.Today.ToString(), string.Empty, store.ID).Where(c => c.OVER_DATE <= 50).ToList();
-                    foreach (var contract in listContract)
+                    var stores = db.Stores.Where(c => c.ACTIVE == true).ToList();
+                    foreach (var store in stores)
                     {
-                        if (db.SummaryPayFeeDailies.Any(c => c.PERIOD_DATE == DateTime.Today
-                            && c.STORE_ID == store.ID))
-                            continue;
+                        List<CONTRACT_FULL_VW> listContract = GetWarningData(DateTime.Today.ToString(), string.Empty, store.ID).Where(c => c.OVER_DATE <= 50).ToList();
+                        foreach (var contract in listContract)
+                        {
+                            if (db.SummaryPayFeeDailies.Any(c => c.PERIOD_DATE == DateTime.Today
+                                && c.STORE_ID == store.ID))
+                                continue;
 
-                        SummaryPayFeeDaily sum = new SummaryPayFeeDaily();
-                        sum.CONTRACT_ID = contract.ID;
-                        sum.CONTRACT_NO = contract.CONTRACT_NO;
-                        sum.CUSTOMER_NAME = contract.CUSTOMER_NAME;
-                        sum.PHONE = contract.PHONE;
-                        sum.RENT_TYPE_ID = contract.RENT_TYPE_ID;
-                        sum.RENT_TYPE_NAME = contract.RENT_TYPE_NAME;
-                        sum.PERIOD_DATE = DateTime.Today;
-                        sum.PAY_FEE = contract.FEE_PER_DAY;
-                        sum.PAY_TIME = contract.PAYED_TIME;
-                        sum.PAY_MESSAGE = contract.PERIOD_MESSAGE;
-                        sum.STORE_ID = contract.STORE_ID;
-                        sum.STORE_NAME = contract.STORE_NAME;
-                        sum.NOTE = contract.NOTE;
-                        sum.SEARCH_TEXT = contract.SEARCH_TEXT;
-                        sum.CREATED_DATE = DateTime.Now;
-                        sum.UPDATED_DATE = DateTime.Now;
+                            SummaryPayFeeDaily sum = new SummaryPayFeeDaily();
+                            sum.CONTRACT_ID = contract.ID;
+                            sum.CONTRACT_NO = contract.CONTRACT_NO;
+                            sum.CUSTOMER_NAME = contract.CUSTOMER_NAME;
+                            sum.PHONE = contract.PHONE;
+                            sum.RENT_TYPE_ID = contract.RENT_TYPE_ID;
+                            sum.RENT_TYPE_NAME = contract.RENT_TYPE_NAME;
+                            sum.PERIOD_DATE = DateTime.Today;
+                            sum.PAY_FEE = contract.FEE_PER_DAY;
+                            sum.PAY_TIME = contract.PAYED_TIME;
+                            sum.PAY_MESSAGE = contract.PERIOD_MESSAGE;
+                            sum.STORE_ID = contract.STORE_ID;
+                            sum.STORE_NAME = contract.STORE_NAME;
+                            sum.NOTE = contract.NOTE;
+                            sum.SEARCH_TEXT = contract.SEARCH_TEXT;
+                            sum.CREATED_DATE = DateTime.Now;
+                            sum.UPDATED_DATE = DateTime.Now;
 
-                        db.SummaryPayFeeDailies.Add(sum);
+                            db.SummaryPayFeeDailies.Add(sum);
+                        }
                     }
+                    db.SaveChanges();
                 }
-                db.SaveChanges();
+                catch (System.Data.Entity.Validation.DbEntityValidationException e)
+                {
+                    foreach (var eve in e.EntityValidationErrors)
+                    {
+                        Logger.Log(string.Format("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                            eve.Entry.Entity.GetType().Name, eve.Entry.State));
+                        foreach (var ve in eve.ValidationErrors)
+                        {
+                           Logger.Log(string.Format("- Property: \"{0}\", Error: \"{1}\"",
+                                ve.PropertyName, ve.ErrorMessage));
+                        }
+                    }
+                    throw;
+                }
             }
         }
 
