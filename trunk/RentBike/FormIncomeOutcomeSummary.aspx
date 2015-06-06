@@ -45,7 +45,7 @@
                     <a id='<%# String.Format("a-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' href='<%# String.Format("#detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' class="fancybox">Chi tiết...</a>
                     <div id='<%# String.Format("detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>'>
                         <div class="detail-header">Tổng hợp thu chi</div>
-                        <table class="table table-striped table-hover border_table" border="1">
+                        <table class="table border_table" border="1">
                             <tbody>
                                 <tr class="success">
                                     <td colspan="2">Chi tiết ngày: <%# Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy") %></td>
@@ -197,8 +197,8 @@
             $('#<%=txtStartDate.ClientID %>').datepicker();
             $('#<%=txtEndDate.ClientID %>').datepicker();
 
-            $('#tblInOut tbody tr').attr('style', 'cursor:pointer');
-            $('#tblInOut tbody tr').click(function () {
+            $('#tblInOut tbody tr').not('.border_table tr').attr('style', 'cursor:pointer');
+            $('#tblInOut tbody tr').not('.border_table tr').click(function () {
                 $.fancybox({
                     href: $(this).find('a.fancybox').attr('href'),
                     openEffect: 'elastic',
@@ -229,7 +229,7 @@
                 }
             });
 
-            main.toolTip("#tblInOut tbody tr", "Chi tiết thu chi", "top left", "bottom left", 15, 20);
+            main.toolTip("#tblInOut tbody tr", "Chi tiết thu chi", "top left", "bottom left", 15, 20, ".border_table tr");
         });
 
         function validateSearch() {
