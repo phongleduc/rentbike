@@ -66,12 +66,12 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
-                List<InOut> lstInOut = db.InOuts.ToList();
+                var lstInOut = db.INOUT_FULL_VW.Where(c =>c.ACTIVE == true);
                 if (STORE_ID != 0)
                 {
-                    lstInOut = lstInOut.Where(c =>c.STORE_ID == STORE_ID).ToList();
+                    lstInOut = lstInOut.Where(c =>c.STORE_ID == STORE_ID);
                 }
-                var data = from d in lstInOut
+                var data = from d in lstInOut.ToList()
                            group d by d.INOUT_DATE into g
                            select new
                            {
@@ -276,7 +276,7 @@ namespace RentBike
 
 
                 //============================================================
-                List<InOut> listInOut = GetMiddleInOut(STORE_ID, startDate, endDate);
+                List<INOUT_FULL_VW> listInOut = GetMiddleInOut(STORE_ID, startDate, endDate);
 
                 decimal totalIn = listInOut.Select(c =>c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
                 decimal totalOut = listInOut.Select(c =>c.OUT_AMOUNT).DefaultIfEmpty(0).Sum(); ;
@@ -316,31 +316,30 @@ namespace RentBike
             }
         }
 
-        private List<InOut> GetMiddleInOut(int STORE_ID, string startDate, string endDate)
+        private List<INOUT_FULL_VW> GetMiddleInOut(int STORE_ID, string startDate, string endDate)
         {
             using (var db = new RentBikeEntities())
             {
-                var listInOut = (from inout in db.InOuts
-                                select inout).ToList();
+                var listInOut = db.INOUT_FULL_VW.Where(c =>c.ACTIVE == true);
                 if (STORE_ID != 0)
                 {
-                    listInOut = listInOut.Where(c =>c.STORE_ID == STORE_ID).ToList();
+                    listInOut = listInOut.Where(c =>c.STORE_ID == STORE_ID);
                 }
 
                 if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listInOut = listInOut.Where(c =>c.INOUT_DATE >= Convert.ToDateTime(startDate) && c.INOUT_DATE <= Convert.ToDateTime(endDate)).ToList();
+                    listInOut = listInOut.Where(c =>c.INOUT_DATE >= Convert.ToDateTime(startDate) && c.INOUT_DATE <= Convert.ToDateTime(endDate));
                 }
                 else if (!string.IsNullOrEmpty(startDate) && string.IsNullOrEmpty(endDate))
                 {
-                    listInOut = listInOut.Where(c =>c.INOUT_DATE >= Convert.ToDateTime(startDate)).ToList();
+                    listInOut = listInOut.Where(c =>c.INOUT_DATE >= Convert.ToDateTime(startDate));
                 }
                 else if (string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listInOut = listInOut.Where(c =>c.INOUT_DATE <= Convert.ToDateTime(endDate)).ToList();
+                    listInOut = listInOut.Where(c =>c.INOUT_DATE <= Convert.ToDateTime(endDate));
                 }
 
-                return listInOut;
+                return listInOut.ToList();
             }
         }
 
