@@ -48,7 +48,8 @@ namespace RentBike.Common
         {
             using (var db = new RentBikeEntities())
             {
-                var rt = from s in db.Stores where s.ACTIVE == true
+                var rt = from s in db.Stores
+                         where s.ACTIVE == true
                          select s;
 
                 foreach (Store store in rt)
@@ -446,16 +447,23 @@ namespace RentBike.Common
         }
         public static void AutoExtendContract()
         {
-            using (var db = new RentBikeEntities())
+            try
             {
-                //db.Configuration.AutoDetectChangesEnabled = false;
-                //db.Configuration.ValidateOnSaveEnabled = false;
-
-                var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
-                foreach (var contract in contracts)
+                using (var db = new RentBikeEntities())
                 {
-                    CommonList.AutoExtendPeriod(db, contract.ID);
+                    //db.Configuration.AutoDetectChangesEnabled = false;
+                    //db.Configuration.ValidateOnSaveEnabled = false;
+
+                    var contracts = db.Contracts.Where(c => c.CONTRACT_STATUS == true).ToList();
+                    foreach (var contract in contracts)
+                    {
+                        CommonList.AutoExtendPeriod(db, contract.ID);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message + Environment.NewLine + ex.StackTrace);
             }
         }
 
@@ -642,11 +650,14 @@ namespace RentBike.Common
                             eve.Entry.Entity.GetType().Name, eve.Entry.State));
                         foreach (var ve in eve.ValidationErrors)
                         {
-                           Logger.Log(string.Format("- Property: \"{0}\", Error: \"{1}\"",
-                                ve.PropertyName, ve.ErrorMessage));
+                            Logger.Log(string.Format("- Property: \"{0}\", Error: \"{1}\"",
+                                 ve.PropertyName, ve.ErrorMessage));
                         }
                     }
-                    throw;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex.Message + Environment.NewLine + ex.StackTrace);
                 }
             }
         }
@@ -682,20 +693,32 @@ namespace RentBike.Common
 
         public static void BackUp()
         {
-            using (var db = new RentBikeEntities())
+            try
             {
-                string dataTime = db.Database.Connection.Database + "_" + DateTime.Now.ToString("yyyyMMddHHmm");
-                string directory = HttpContext.Current.Server.MapPath("~/") + "/backups/";
-                string fileName = directory + dataTime + ".bak";
+                using (var db = new RentBikeEntities())
+                {
+                    string dataTime = db.Database.Connection.Database + "_" + DateTime.Now.ToString("yyyyMMddHHmm");
+                    string directory = HttpContext.Current.Server.MapPath("~/") + "/backups/";
+                    string fileName = directory + dataTime + ".bak";
 
-                if (!System.IO.Directory.Exists(directory))
-                    System.IO.Directory.CreateDirectory(directory);
+                    if (!System.IO.Directory.Exists(directory))
+                        System.IO.Directory.CreateDirectory(directory);
 
-                System.IO.DirectoryInfo directoryInfo = new System.IO.DirectoryInfo(directory);
-                directoryInfo.Empty();
+                    System.IO.DirectoryInfo directoryInfo = new System.IO.DirectoryInfo(directory);
+                    var files = directoryInfo.GetFiles();
+                    if (files.Any() && files.Count() > 7)
+                    {
+                        files.OrderBy(c => c.Name).FirstOrDefault().Delete();
+                    }
 
-                // Here the procedure is called and executes successfully
-                db.Database.ExecuteSqlCommand(System.Data.Entity.TransactionalBehavior.DoNotEnsureTransaction, "EXEC [dbo].[BackUp] @path = N'" + fileName + "'");
+                    // Here the procedure is called and executes successfully
+                    db.Database.ExecuteSqlCommand(System.Data.Entity.TransactionalBehavior.DoNotEnsureTransaction, "EXEC [dbo].[BackUp] @path = N'" + fileName + "'");
+                    //db.BackUp(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message + Environment.NewLine + ex.StackTrace);
             }
 
         }
