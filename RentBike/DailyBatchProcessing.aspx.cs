@@ -15,18 +15,24 @@ namespace RentBike
         {
             try
             {
-                Logger.Log("Backup database start");
-                CommonList.BackUp();
-                Logger.Log("Backup database end");
+                if(!Singleton.IsRunningBatch())
+                {
+                    Singleton.CreateSingletonFile();
 
-                Logger.Log("Save summary fee daily start");
-                CommonList.SaveSummaryPayFeeDaily();
-                Logger.Log("Save summary fee daily end");
+                    Logger.Log("Backup database start");
+                    CommonList.BackUp();
+                    Logger.Log("Backup database end");
 
-                Logger.Log("Auto extend contract start");
-                CommonList.AutoExtendContract();
-                Logger.Log("Auto extend contract end");
+                    Logger.Log("Save summary fee daily start");
+                    CommonList.SaveSummaryPayFeeDaily();
+                    Logger.Log("Save summary fee daily end");
 
+                    Logger.Log("Auto extend contract start");
+                    CommonList.AutoExtendContract();
+                    Logger.Log("Auto extend contract end");
+
+                    Singleton.DeleteSingletonFile();
+                }
             }
             catch (Exception ex)
             {

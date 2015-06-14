@@ -21,7 +21,7 @@ namespace RentBike
                 PayPeriod pp = new PayPeriod();
                 using (var db = new RentBikeEntities())
                 {
-                    var item = db.PayPeriods.Where(s =>s.ID == periodId).FirstOrDefault();
+                    var item = db.PayPeriods.Where(s => s.ID == periodId).FirstOrDefault();
                     pp = item;
                     PeriodDate = item.PAY_DATE;
                 }
@@ -35,11 +35,11 @@ namespace RentBike
                 Store st = new Store();
                 using (var db = new RentBikeEntities())
                 {
-                    var contract = db.Contracts.Where(c =>c.ID == pp.CONTRACT_ID).FirstOrDefault();
+                    var contract = db.Contracts.Where(c => c.ID == pp.CONTRACT_ID).FirstOrDefault();
                     if (contract != null)
                     {
                         STORE_ID = contract.STORE_ID;
-                        var item = db.Stores.Where(s =>s.ID == contract.STORE_ID).FirstOrDefault();
+                        var item = db.Stores.Where(s => s.ID == contract.STORE_ID).FirstOrDefault();
                         if (item != null)
                         {
                             st = item;
@@ -66,7 +66,7 @@ namespace RentBike
                             break;
                     }
 
-                    var inouttypelist = db.InOutTypes.Where(s =>s.IS_CONTRACT == true && s.ACTIVE == true).ToList();
+                    var inouttypelist = db.InOutTypes.Where(s => s.IS_CONTRACT == true && s.ACTIVE == true).ToList();
 
                     ddInOutType.DataSource = inouttypelist;
                     ddInOutType.DataTextField = "NAME";
@@ -86,12 +86,11 @@ namespace RentBike
             List<InOut> payList = new List<InOut>();
             using (var db = new RentBikeEntities())
             {
-                var itemLst = db.InOuts.Where(s =>s.PERIOD_ID == pp.ID && s.IN_AMOUNT > 0);
-                payList = itemLst.ToList();
-            }
+                var itemLst = db.InOuts.Where(s => s.PERIOD_ID == pp.ID && s.IN_AMOUNT != 0).ToList();
 
-            rptContractInOut.DataSource = payList;
-            rptContractInOut.DataBind();
+                rptContractInOut.DataSource = itemLst;
+                rptContractInOut.DataBind();
+            }
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -102,14 +101,14 @@ namespace RentBike
             {
                 if (!string.IsNullOrEmpty(txtIncome.Text))
                 {
-                    var pp = db.PayPeriods.FirstOrDefault(s =>s.ID == periodId);
+                    var pp = db.PayPeriods.FirstOrDefault(s => s.ID == periodId);
                     pp.ACTUAL_PAY = Convert.ToDecimal(txtIncome.Text) + pp.ACTUAL_PAY;
                     db.SaveChanges();
 
                     var contract = db.Contracts.FirstOrDefault(c => c.ID == pp.CONTRACT_ID && c.CONTRACT_STATUS == true);
-                    List<PayPeriod> payList = db.PayPeriods.Where(c =>c.CONTRACT_ID == pp.CONTRACT_ID).ToList();
-                    decimal totalActualPay = payList.Select(c =>c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
-                    decimal totalPlanPay = payList.Select(c =>c.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
+                    List<PayPeriod> payList = db.PayPeriods.Where(c => c.CONTRACT_ID == pp.CONTRACT_ID).ToList();
+                    decimal totalActualPay = payList.Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                    decimal totalPlanPay = payList.Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
 
                     if (totalActualPay > totalPlanPay)
                     {
@@ -158,7 +157,7 @@ namespace RentBike
                     total -= io.OUT_AMOUNT;
                 }
 
-                var lstPeriod = db.PayPeriods.Where(c =>c.CONTRACT_ID == pp.CONTRACT_ID).ToList();
+                var lstPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == pp.CONTRACT_ID).ToList();
                 if (lstPeriod != null)
                 {
                     if (pp.ID == lstPeriod[0].ID)
@@ -181,8 +180,8 @@ namespace RentBike
                             remain = totalActualPay - totalPerAmount;
                     }
 
-                    decimal totalAmountPeriod = lstPeriod.Where(c =>c.PAY_DATE <= DateTime.Today).Select(c =>c.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
-                    decimal totalAmoutPaid = lstPeriod.Where(c =>c.PAY_DATE <= DateTime.Today).Select(c =>c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                    decimal totalAmountPeriod = lstPeriod.Where(c => c.PAY_DATE <= DateTime.Today).Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
+                    decimal totalAmoutPaid = lstPeriod.Where(c => c.PAY_DATE <= DateTime.Today).Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
                     totalAmountLeft = totalAmountPeriod - totalAmoutPaid <= 0 ? 0 : totalAmountPeriod - totalAmoutPaid;
                 }
 
@@ -210,7 +209,7 @@ namespace RentBike
             PayPeriod pp = new PayPeriod();
             using (var db = new RentBikeEntities())
             {
-                var item = db.PayPeriods.FirstOrDefault(s =>s.ID == periodId);
+                var item = db.PayPeriods.FirstOrDefault(s => s.ID == periodId);
                 pp = item;
             }
 
