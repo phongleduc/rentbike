@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RentBike.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -43,6 +44,19 @@ namespace RentBike
             //        lblMessage.Text = "Delete data successfully!!!";
             //    }
             //}
+        }
+        protected void btnTest_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                DropboxHelper.BackUp();
+                lblTest.Text = "Backup successful!";
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex.Message + Environment.NewLine + ex.StackTrace);
+                lblTest.Text = ex.Message;
+            }
         }
     }
 }

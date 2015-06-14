@@ -32,7 +32,7 @@
         <ItemTemplate>
             <tr id='<%# Eval("CONTRACT_ID") + "|" + Eval("STORE_ID") %>' class="<%# Convert.ToBoolean(Eval("IS_BAD_CONTRACT")) == true ? "background-red" : "" %>">
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td><strong>'<%# Eval("CUSTOMER_NAME") %>'</strong></td>
+                <td><strong><%# Eval("CUSTOMER_NAME") %></strong></td>
                 <td><%# Eval("RENT_TYPE_NAME") %></td>
                 <td class="text-right"><%#  string.Format("{0:0,0}", Eval("CONTRACT_AMOUNT")) %></td>
                 <td class="text-right"><%#  string.Format("{0:0,0}", Eval("FEE_PER_DAY")) %></td>
