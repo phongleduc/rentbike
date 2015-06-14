@@ -11,31 +11,41 @@ namespace RentBike
 {
     public partial class DailyBatchProcessing : System.Web.UI.Page
     {
+        static readonly object _object = new object();
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
-                if(!Singleton.IsRunningBatch())
+                // Lock on the readonly object.
+                if (!Singleton.IsRunningBatch())
                 {
-                    Singleton.CreateSingletonFile();
+                    lock (_object)
+                    {
+                        Singleton.CreateSingletonFile();
 
-                    Logger.Log("Backup database start");
-                    CommonList.BackUp();
-                    Logger.Log("Backup database end");
+                        Logger.Log("Backup database start");
+                        CommonList.BackUp();
+                        Logger.Log("Backup database end");
 
-                    Logger.Log("Save summary fee daily start");
-                    CommonList.SaveSummaryPayFeeDaily();
-                    Logger.Log("Save summary fee daily end");
+                        Logger.Log("Save summary fee daily start");
+                        CommonList.SaveSummaryPayFeeDaily();
+                        Logger.Log("Save summary fee daily end");
 
-                    Logger.Log("Auto extend contract start");
-                    CommonList.AutoExtendContract();
-                    Logger.Log("Auto extend contract end");
+                        Logger.Log("Auto extend contract start");
+                        CommonList.AutoExtendContract();
+                        Logger.Log("Auto extend contract end");
 
-                    Singleton.DeleteSingletonFile();
+                        Logger.Log("Backup database into dropbox start");
+                        DropboxHelper.BackUp();
+                        Logger.Log("Backup database into dropbox end");
+
+                        Singleton.DeleteSingletonFile();
+                    }
                 }
             }
             catch (Exception ex)
             {
+                Singleton.DeleteSingletonFile();
                 Logger.Log("Error Entry at: " + ex.Message + Environment.NewLine + ex.StackTrace);
             }
         }
