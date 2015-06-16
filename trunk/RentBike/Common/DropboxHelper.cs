@@ -20,7 +20,7 @@ namespace RentBike.Common
             var _client = new DropNetClient(WebConfigurationManager.AppSettings["Dropbox.AppKey"], WebConfigurationManager.AppSettings["Dropbox.AppSecret"], WebConfigurationManager.AppSettings["Dropbox.AccessToken"]);
             
             //Get metadata from Backup folder
-            var metaData = _client.GetMetaData("Backup", null, false, false);
+            var metaData = _client.GetMetaData("/Backup", null, false, false);
             var backup = metaData.Contents.FirstOrDefault(c =>c.Extension == ".bak" && c.Name.Contains("prohaihung"));
             //Delete existing file.
             if (backup != null)
