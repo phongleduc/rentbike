@@ -12,13 +12,14 @@ namespace RentBike
 {
     public partial class FormIncomeOutcomeSummary : FormBase
     {
+        private List<INOUT_FULL_VW> listInOut;
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
             if(!IsPostBack)
             {
-                LoadMiddle(txtStartDate.Text, txtEndDate.Text);
-                LoadData(txtStartDate.Text, txtEndDate.Text);
+                LoadMiddle(string.Empty, string.Empty);
+                LoadData(string.Empty, string.Empty);
             }
         }
 
@@ -29,26 +30,28 @@ namespace RentBike
             {
                 if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listSum = listSum.Where(c =>c.InOutDate >= Convert.ToDateTime(startDate) && c.InOutDate <= Convert.ToDateTime(endDate)).ToList();
+                    listSum = listSum.Where(c => c.InOutDate >= Convert.ToDateTime(startDate) && c.InOutDate <= Convert.ToDateTime(endDate)).ToList();
                 }
                 else if (!string.IsNullOrEmpty(startDate) && string.IsNullOrEmpty(endDate))
                 {
-                    listSum = listSum.Where(c =>c.InOutDate >= Convert.ToDateTime(startDate)).ToList();
+                    listSum = listSum.Where(c => c.InOutDate >= Convert.ToDateTime(startDate)).ToList();
                 }
                 else if (string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listSum = listSum.Where(c =>c.InOutDate <= Convert.ToDateTime(endDate)).ToList();
+                    listSum = listSum.Where(c => c.InOutDate <= Convert.ToDateTime(endDate)).ToList();
                 }
 
-                rptInOut.DataSource = listSum.OrderByDescending(c =>c.InOutDate);
+                listSum = listSum.OrderByDescending(c => c.InOutDate).ToList();
+
+                rptInOut.DataSource = listSum;
                 rptInOut.DataBind();
                 decimal sumIn = 0;
                 decimal sumOut = 0;
                 decimal sumBegin = 0;
                 decimal sumEnd = 0;
 
-                sumIn = listSum.Select(c =>c.TotalIn).DefaultIfEmpty(0).Sum();
-                sumOut = listSum.Select(c =>c.TotalOut).DefaultIfEmpty(0).Sum();
+                sumIn = listSum.Select(c => c.TotalIn).DefaultIfEmpty(0).Sum();
+                sumOut = listSum.Select(c => c.TotalOut).DefaultIfEmpty(0).Sum();
                 sumEnd = sumIn - sumOut;
 
                 Label lblTotalIn = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalIn");
@@ -66,12 +69,12 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
-                var lstInOut = db.INOUT_FULL_VW.Where(c =>c.ACTIVE == true);
+                listInOut = db.INOUT_FULL_VW.Where(c => c.ACTIVE == true).ToList();
                 if (STORE_ID != 0)
                 {
-                    lstInOut = lstInOut.Where(c =>c.STORE_ID == STORE_ID);
+                    listInOut = listInOut.Where(c => c.STORE_ID == STORE_ID).ToList();
                 }
-                var data = from d in lstInOut.ToList()
+                var data = from d in listInOut
                            group d by d.INOUT_DATE into g
                            select new
                            {
@@ -81,10 +84,13 @@ namespace RentBike
                                         {
                                             ID = o.STORE_ID,
                                             InOutDate = o.INOUT_DATE,
+                                            RentTypeName = o.RENT_TYPE_NAME,
+                                            CustomerId = o.CUSTOMER_ID,
+                                            CustomerName = o.CUSTOMER_NAME,
                                             InAmount = o.IN_AMOUNT,
                                             OutAmount = o.OUT_AMOUNT,
-                                            TotalIn = g.Sum(x =>x.IN_AMOUNT),
-                                            TotalOut = g.Sum(x =>x.OUT_AMOUNT),
+                                            TotalIn = g.Sum(x => x.IN_AMOUNT),
+                                            TotalOut = g.Sum(x => x.OUT_AMOUNT),
                                             BeginAmount = 0,
                                             EndAmount = 0,
                                             ContractFeeCar = 0,
@@ -112,6 +118,9 @@ namespace RentBike
                     SummaryInfo si = new SummaryInfo();
                     si.StoreId = g.Record.ToList()[0].ID;
                     si.InOutDate = g.Record.ToList()[0].InOutDate.Value;
+                    si.RentTypeName = g.Record.ToList()[0].RentTypeName;
+                    si.CustomerId = g.Record.ToList()[0].CustomerId;
+                    si.CustomerName = g.Record.ToList()[0].CustomerName;
                     si.TotalIn = g.Record.ToList()[0].TotalIn;
                     si.TotalOut = g.Record.ToList()[0].TotalOut;
                     si.BeginAmount = 0;
