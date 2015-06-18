@@ -10,6 +10,7 @@ namespace RentBike
 {
     public partial class FormTest : System.Web.UI.Page
     {
+        static readonly object _object = new object();
         protected void Page_Load(object sender, EventArgs e)
         {
             //string del = Request.QueryString["del"];
@@ -49,7 +50,31 @@ namespace RentBike
         {
             try
             {
-                DropboxHelper.BackUp();
+                if (!Singleton.IsRunningBatch())
+                {
+                    lock (_object)
+                    {
+                        Singleton.CreateSingletonFile();
+
+                        Logger.Log("Backup database start");
+                        CommonList.BackUp();
+                        Logger.Log("Backup database end");
+
+                        Logger.Log("Save summary fee daily start");
+                        CommonList.SaveSummaryPayFeeDaily();
+                        Logger.Log("Save summary fee daily end");
+
+                        Logger.Log("Auto extend contract start");
+                        CommonList.AutoExtendContract();
+                        Logger.Log("Auto extend contract end");
+
+                        Logger.Log("Backup database into dropbox start");
+                        DropboxHelper.BackUp();
+                        Logger.Log("Backup database into dropbox end");
+
+                        Singleton.DeleteSingletonFile();
+                    }
+                }
                 lblTest.Text = "Backup successful!";
             }
             catch (Exception ex)
