@@ -707,7 +707,7 @@ namespace RentBike.Common
 
                     System.IO.DirectoryInfo directoryInfo = new System.IO.DirectoryInfo(directory);
                     var files = directoryInfo.GetFiles();
-                    if (files.Any() && files.Count() > 7)
+                    if (files.Any() && files.Count() >= 7)
                     {
                         files.OrderBy(c => c.Name).FirstOrDefault().Delete();
                     }
