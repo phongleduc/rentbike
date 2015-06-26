@@ -8,11 +8,12 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormTest : System.Web.UI.Page
+    public partial class FormTest : FormBase
     {
         static readonly object _object = new object();
         protected void Page_Load(object sender, EventArgs e)
         {
+            base.Page_Load(sender, e);
             //string del = Request.QueryString["del"];
             //if (!string.IsNullOrEmpty(del))
             //{
@@ -56,18 +57,6 @@ namespace RentBike
                     {
                         Singleton.CreateSingletonFile();
 
-                        Logger.Log("Backup database start");
-                        CommonList.BackUp();
-                        Logger.Log("Backup database end");
-
-                        Logger.Log("Save summary fee daily start");
-                        CommonList.SaveSummaryPayFeeDaily();
-                        Logger.Log("Save summary fee daily end");
-
-                        Logger.Log("Auto extend contract start");
-                        CommonList.AutoExtendContract();
-                        Logger.Log("Auto extend contract end");
-
                         Logger.Log("Backup database into dropbox start");
                         DropboxHelper.BackUp();
                         Logger.Log("Backup database into dropbox end");
@@ -79,6 +68,7 @@ namespace RentBike
             }
             catch (Exception ex)
             {
+                Singleton.DeleteSingletonFile();
                 Logger.Log(ex.Message + Environment.NewLine + ex.StackTrace);
                 lblTest.Text = ex.Message;
             }
