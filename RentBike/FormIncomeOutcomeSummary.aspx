@@ -191,6 +191,7 @@
             </tr>
         </tbody>
     </table>
+    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
     <script>
         $(function () {
             $("#txtViewDate").datepicker();

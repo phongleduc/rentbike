@@ -18,7 +18,7 @@ namespace RentBike.Common
         public static void BackUp()
         {
             var _client = new DropNetClient(WebConfigurationManager.AppSettings["Dropbox.AppKey"], WebConfigurationManager.AppSettings["Dropbox.AppSecret"], WebConfigurationManager.AppSettings["Dropbox.AccessToken"]);
-            
+
             //Get metadata from Backup folder
             var metaData = _client.GetMetaData("/Backup", null, false, false);
             var backup = metaData.Contents.FirstOrDefault(c =>c.Extension == ".bak" && c.Name.Contains("prohaihung"));
@@ -31,7 +31,9 @@ namespace RentBike.Common
             var directoryInfo = new DirectoryInfo(directory);
             var files = directoryInfo.GetFiles();
             var file = files.OrderByDescending(c => c.Name).FirstOrDefault();
-            byte[] bytes = File.ReadAllBytes(directory + file.Name);
+            Logger.Log(file.FullName);
+            byte[] bytes = File.ReadAllBytes(file.FullName);
+            Logger.Log("Length file: " + bytes.LongLength);
 
             _client.UploadFile("/Backup", file.Name, bytes);
         }

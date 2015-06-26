@@ -246,6 +246,11 @@ namespace RentBike
             LoadData(txtStartDate.Text, txtEndDate.Text);
         }
 
+        protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //LoadData(txtStartDate.Text, txtEndDate.Text);
+        }
+
         private List<Contract> GetContractFeeByDay(DateTime date, RentBikeEntities db)
         {
             var data = from d in db.Contracts
