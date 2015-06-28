@@ -6,6 +6,7 @@
         <HeaderTemplate>
             <table id="tblContractInOut" class="table table-striped table-hover ">
                 <thead>
+                    <tr><td colspan="5" class="text-center">Cập nhật trả phí hợp đồng: <strong><%=CustomerName %></strong></td></tr>
                     <tr class="success">
                         <th>#</th>
                         <th class="text-right">Số thu</th>
