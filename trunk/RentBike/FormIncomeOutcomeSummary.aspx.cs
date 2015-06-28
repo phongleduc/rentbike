@@ -12,14 +12,15 @@ namespace RentBike
 {
     public partial class FormIncomeOutcomeSummary : FormBase
     {
-        private List<INOUT_FULL_VW> listInOut;
+        public DateTime SearchDate { get; set; }
+        public DateTime StartDate { get; set; }
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
-            if(!IsPostBack)
+            if (!IsPostBack)
             {
-                LoadMiddle(string.Empty, string.Empty);
-                LoadData(string.Empty, string.Empty);
+                //LoadData(string.Empty, string.Empty);
+                LoadData(1);
             }
         }
 
@@ -65,14 +66,98 @@ namespace RentBike
             }
         }
 
+        private void LoadData(int page)
+        {
+            using (var db = new RentBikeEntities())
+            {
+                List<SummaryInfo> listSum = GetSummaryData(STORE_ID);
+                if (listSum.Any())
+                {
+                    int count = ((listSum.LastOrDefault().InOutDate.Year - listSum.FirstOrDefault().InOutDate.Year) * 12) + (listSum.LastOrDefault().InOutDate.Month - listSum.FirstOrDefault().InOutDate.Month);
+                    IEnumerable<int> pageList = Enumerable.Range(1, count);
+
+                    ddlPager.DataSource = pageList;
+                    ddlPager.DataBind();
+                    if (pageList.Count() > 0)
+                    {
+                        ddlPager.SelectedValue = page.ToString();
+                    }
+
+                    DateTime startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 6);
+                    StartDate = startDate = DateTime.Today < startDate == true ? new DateTime(DateTime.Today.Year, DateTime.Today.Month - 1, 6) : startDate;
+
+                    if (page > 1)
+                    {
+                        startDate = startDate.AddMonths(1 - page);
+                        StartDate = startDate = new DateTime(startDate.Year, startDate.Month, 6);
+                    }
+
+                    int endYear = startDate.Year;
+                    int endMonth = startDate.Month;
+                    if (endMonth == 12)
+                    {
+                        endMonth = 1;
+                        endYear = endYear + 1;
+                    }
+                    DateTime endDate = new DateTime(endYear, endMonth + 1, 5);
+                    txtStartDate.Text = startDate.ToString("dd/MM/yyyy");
+                    txtEndDate.Text = endDate.ToString("dd/MM/yyyy");
+
+                    listSum = listSum.Where(c => c.InOutDate >= startDate && c.InOutDate <= endDate).OrderByDescending(c => c.InOutDate).ToList();
+                    rptInOut.DataSource = listSum;
+                    rptInOut.DataBind();
+
+                    decimal beginAmount = listSum.Select(c => c.BeginAmount).DefaultIfEmpty(0).Sum();
+                    decimal contractFee = listSum.Select(c => c.ContractFee).DefaultIfEmpty(0).Sum();
+                    decimal rentFee = listSum.Select(c => c.RentFee).DefaultIfEmpty(0).Sum();
+                    decimal closedFee = listSum.Select(c => c.CloseFee).DefaultIfEmpty(0).Sum();
+                    decimal redundantFee = listSum.Select(c => c.RedundantFee).DefaultIfEmpty(0).Sum();
+                    decimal outOtherFee = listSum.Select(c => c.OutOther).DefaultIfEmpty(0).Sum();
+                    decimal inOtherFee = listSum.Select(c => c.InOther).DefaultIfEmpty(0).Sum();
+                    decimal outCapitalFee = listSum.Select(c => c.OutCapital).DefaultIfEmpty(0).Sum();
+                    decimal inCapitalFee = listSum.Select(c => c.InCapital).DefaultIfEmpty(0).Sum();
+                    decimal endAmount = listSum.Select(c => c.EndAmount).DefaultIfEmpty(0).Sum();
+                    decimal sumIn = listSum.Select(c => c.TotalIn).DefaultIfEmpty(0).Sum();
+                    decimal sumOut = listSum.Select(c => c.TotalOut).DefaultIfEmpty(0).Sum();
+
+                    Label lblTotalBegin = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalBegin");
+                    Label lblTotalContractFee = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalContractFee");
+                    Label lblTotalRentFee = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalRentFee");
+                    Label lblTotalClosedFee = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalClosedFee");
+                    Label lblTotalRedundantFee = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalRedundantFee");
+                    Label lblTotalOutOtherFee = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalOutOtherFee");
+                    Label lblTotalInOtherFee = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalInOtherFee");
+                    Label lblTotalOutCapital = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalOutCapital");
+                    Label lblTotalInCapital = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalInCapital");
+                    Label lblTotalEnd = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalEnd");
+
+                    lblTotalContractFee.Text = contractFee == 0 ? "0" : string.Format("{0:0,0}", contractFee);
+                    lblTotalRentFee.Text = rentFee == 0 ? "0" : string.Format("{0:0,0}", rentFee);
+                    lblTotalClosedFee.Text = closedFee == 0 ? "0" : string.Format("{0:0,0}", closedFee);
+                    lblTotalRedundantFee.Text = redundantFee == 0 ? "0" : string.Format("{0:0,0}", redundantFee);
+                    lblTotalOutOtherFee.Text = outOtherFee == 0 ? "0" : string.Format("{0:0,0}", outOtherFee);
+                    lblTotalInOtherFee.Text = inOtherFee == 0 ? "0" : string.Format("{0:0,0}", inOtherFee);
+                    lblTotalOutCapital.Text = outCapitalFee == 0 ? "0" : string.Format("{0:0,0}", outCapitalFee);
+                    lblTotalInCapital.Text = inCapitalFee == 0 ? "0" : string.Format("{0:0,0}", inCapitalFee);
+
+                    lblTotalContractAmount.Text = contractFee == 0 ? "0" : string.Format("{0:0,0}", contractFee);
+                    lblClosedAmount.Text = closedFee == 0 ? "0" : string.Format("{0:0,0}", closedFee);
+                    lblResultAmount.Text = contractFee - closedFee == 0 ? "0" : string.Format("{0:0,0}", contractFee - closedFee);
+                    lblTotalInAmount.Text = rentFee + inOtherFee == 0 ? "0" : string.Format("{0:0,0}", rentFee + inOtherFee);
+                    lblTotalOutAmount.Text = redundantFee + outOtherFee == 0 ? "0" : string.Format("{0:0,0}", redundantFee + outOtherFee);
+                    lblRevenue.Text = sumIn - sumOut == 0 ? "0" : string.Format("{0:0,0}", sumIn - sumOut);
+                }
+            }
+        }
+
         private List<SummaryInfo> GetSummaryData(int STORE_ID)
         {
             using (var db = new RentBikeEntities())
             {
-                listInOut = db.INOUT_FULL_VW.Where(c => c.ACTIVE == true).ToList();
+                var listInOut = db.INOUT_FULL_VW.Where(c => c.ACTIVE == true);
                 if (STORE_ID != 0)
                 {
-                    listInOut = listInOut.Where(c => c.STORE_ID == STORE_ID).ToList();
+                    listInOut = listInOut.Where(c => c.STORE_ID == STORE_ID);
                 }
                 var data = from d in listInOut
                            group d by d.INOUT_DATE into g
@@ -126,101 +211,109 @@ namespace RentBike
                     si.BeginAmount = 0;
                     si.EndAmount = g.Record.ToList()[0].TotalIn - g.Record.ToList()[0].TotalOut;
 
-                    var inout = g.Record.Where(x =>x.InOutTypeId == 17);
+                    var inout = g.Record.Where(x => x.InOutTypeId == 17);
                     if (inout.Any())
                     {
-                        si.ContractFeeCar = inout.Sum(x =>x.OutAmount);
+                        si.ContractFeeCar = inout.Sum(x => x.OutAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 22);
+                    inout = g.Record.Where(x => x.InOutTypeId == 22);
                     if (inout.Any())
                     {
-                        si.ContractFeeEquip = inout.Sum(x =>x.OutAmount);
+                        si.ContractFeeEquip = inout.Sum(x => x.OutAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 23);
+                    inout = g.Record.Where(x => x.InOutTypeId == 23);
                     if (inout.Any())
                     {
-                        si.ContractFeeOther = inout.Sum(x =>x.OutAmount);
+                        si.ContractFeeOther = inout.Sum(x => x.OutAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 14);
+                    si.ContractFee = si.ContractFeeCar + si.ContractFeeEquip + si.ContractFeeOther;
+
+                    inout = g.Record.Where(x => x.InOutTypeId == 14);
                     if (inout.Any())
                     {
-                        si.RentFeeCar = inout.Sum(x =>x.InAmount);
+                        si.RentFeeCar = inout.Sum(x => x.InAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 15);
+                    inout = g.Record.Where(x => x.InOutTypeId == 15);
                     if (inout.Any())
                     {
-                        si.RentFeeEquip = inout.Sum(x =>x.InAmount);
+                        si.RentFeeEquip = inout.Sum(x => x.InAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 16);
+                    inout = g.Record.Where(x => x.InOutTypeId == 16);
                     if (inout.Any())
                     {
-                        si.RentFeeOther = inout.Sum(x =>x.InAmount);
+                        si.RentFeeOther = inout.Sum(x => x.InAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 10);
+                    si.RentFee = si.RentFeeCar + si.RentFeeEquip + si.RentFeeOther;
+
+                    inout = g.Record.Where(x => x.InOutTypeId == 10);
                     if (inout.Any())
                     {
-                        si.InCapital = inout.Sum(x =>x.InAmount);
+                        si.InCapital = inout.Sum(x => x.InAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 11);
+                    inout = g.Record.Where(x => x.InOutTypeId == 11);
                     if (inout.Any())
                     {
-                        si.OutCapital = inout.Sum(x =>x.OutAmount);
+                        si.OutCapital = inout.Sum(x => x.OutAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 12);
+                    inout = g.Record.Where(x => x.InOutTypeId == 12);
                     if (inout.Any())
                     {
-                        si.InOther = inout.Sum(x =>x.InAmount);
+                        si.InOther = inout.Sum(x => x.InAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 13);
+                    inout = g.Record.Where(x => x.InOutTypeId == 13);
                     if (inout.Any())
                     {
-                        si.OutOther = inout.Sum(x =>x.OutAmount);
+                        si.OutOther = inout.Sum(x => x.OutAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 18 && x.RentTypeId == 1);
+                    inout = g.Record.Where(x => x.InOutTypeId == 18 && x.RentTypeId == 1);
                     if (inout.Any())
                     {
-                        si.CloseFeeCar = inout.Sum(x =>x.InAmount);
+                        si.CloseFeeCar = inout.Sum(x => x.InAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 18 && x.RentTypeId == 2);
+                    inout = g.Record.Where(x => x.InOutTypeId == 18 && x.RentTypeId == 2);
                     if (inout.Any())
                     {
-                        si.CloseFeeEquip = inout.Sum(x =>x.InAmount);
+                        si.CloseFeeEquip = inout.Sum(x => x.InAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 18 && x.RentTypeId == 3);
+                    inout = g.Record.Where(x => x.InOutTypeId == 18 && x.RentTypeId == 3);
                     if (inout.Any())
                     {
-                        si.CloseFeeOther = inout.Sum(x =>x.InAmount);
+                        si.CloseFeeOther = inout.Sum(x => x.InAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 19 && x.RentTypeId == 1);
+                    si.CloseFee = si.CloseFeeCar + si.CloseFeeEquip + si.CloseFeeOther;
+
+                    inout = g.Record.Where(x => x.InOutTypeId == 19 && x.RentTypeId == 1);
                     if (inout.Any())
                     {
-                        si.RedundantFeeCar = inout.Sum(x =>x.OutAmount);
+                        si.RedundantFeeCar = inout.Sum(x => x.OutAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 19 && x.RentTypeId == 2);
+                    inout = g.Record.Where(x => x.InOutTypeId == 19 && x.RentTypeId == 2);
                     if (inout.Any())
                     {
-                        si.RedundantFeeEquip = inout.Sum(x =>x.OutAmount);
+                        si.RedundantFeeEquip = inout.Sum(x => x.OutAmount);
                     }
 
-                    inout = g.Record.Where(x =>x.InOutTypeId == 19 && x.RentTypeId == 3);
+                    inout = g.Record.Where(x => x.InOutTypeId == 19 && x.RentTypeId == 3);
                     if (inout.Any())
                     {
-                        si.RedundantFeeOther = inout.Sum(x =>x.OutAmount);
+                        si.RedundantFeeOther = inout.Sum(x => x.OutAmount);
                     }
+
+                    si.RedundantFee = si.RedundantFeeCar + si.RedundantFeeEquip + si.RedundantFeeOther;
 
                     listSum.Add(si);
                 }
@@ -248,7 +341,7 @@ namespace RentBike
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //LoadData(txtStartDate.Text, txtEndDate.Text);
+            LoadData(Helper.parseInt(ddlPager.SelectedValue));
         }
 
         private List<Contract> GetContractFeeByDay(DateTime date, RentBikeEntities db)
@@ -267,63 +360,31 @@ namespace RentBike
                        select d;
             if (data.Any())
             {
-                return data.Select(x =>x.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
+                return data.Select(x => x.FEE_PER_DAY).DefaultIfEmpty(0).Sum();
             }
             return 0;
-        }
-
-
-        private void LoadMiddle(string startDate, string endDate)
-        {
-            using (var db = new RentBikeEntities())
-            {
-                List<CONTRACT_FULL_VW> listContract = GetMiddleContract(STORE_ID, startDate, endDate);
-
-                decimal bikeAmount = listContract.Where(c =>c.RENT_TYPE_ID == 1).Select(c =>c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
-                decimal equipAmount = listContract.Where(c =>c.RENT_TYPE_ID == 2).Select(c =>c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
-                decimal otherAmount = listContract.Where(c =>c.RENT_TYPE_ID == 3).Select(c =>c.CONTRACT_AMOUNT).DefaultIfEmpty(0).Sum();
-
-                lblRentBikeAmount.Text = bikeAmount == 0 ? "0" : string.Format("{0:0,0}", bikeAmount);
-                lblRentEquipAmount.Text = equipAmount == 0 ? "0" : string.Format("{0:0,0}", equipAmount);
-                lblRentOtherAmount.Text = otherAmount == 0 ? "0" : string.Format("{0:0,0}", otherAmount);
-                lblRentAll.Text = bikeAmount + equipAmount + otherAmount == 0 ? "0" : string.Format("{0:0,0}", (bikeAmount + equipAmount + otherAmount));
-
-
-                //============================================================
-                List<INOUT_FULL_VW> listInOut = GetMiddleInOut(STORE_ID, startDate, endDate);
-
-                decimal totalIn = listInOut.Select(c =>c.IN_AMOUNT).DefaultIfEmpty(0).Sum();
-                decimal totalOut = listInOut.Select(c =>c.OUT_AMOUNT).DefaultIfEmpty(0).Sum(); ;
-
-                lblSumAllIn.Text = totalIn == 0 ? "0" : string.Format("{0:0,0}", totalIn);
-                lblSumAllOut.Text = totalOut == 0 ? "0" : string.Format("{0:0,0}", totalOut);
-
-                List<Store> listStore = GetMiddleStore(STORE_ID);
-                decimal totalCapital = listStore.Select(c =>c.START_CAPITAL).DefaultIfEmpty(0).Sum();
-                lblTotalInvest.Text = totalCapital == 0 ? "0" : string.Format("{0:0,0}", totalCapital);
-            }
         }
 
         private List<CONTRACT_FULL_VW> GetMiddleContract(int STORE_ID, string startDate, string endDate)
         {
             using (var db = new RentBikeEntities())
             {
-                var listContract = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true && c.ACTIVE == true).ToList();
+                var listContract = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true && c.ACTIVE == true).ToList();
                 if (STORE_ID != 0)
                 {
-                    listContract = listContract.Where(c =>c.STORE_ID == STORE_ID).ToList();
+                    listContract = listContract.Where(c => c.STORE_ID == STORE_ID).ToList();
                 }
                 if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listContract = listContract.Where(c =>c.CREATED_DATE >= Convert.ToDateTime(startDate) && c.CREATED_DATE <= Convert.ToDateTime(endDate)).ToList();
+                    listContract = listContract.Where(c => c.CREATED_DATE >= Convert.ToDateTime(startDate) && c.CREATED_DATE <= Convert.ToDateTime(endDate)).ToList();
                 }
                 else if (!string.IsNullOrEmpty(startDate) && string.IsNullOrEmpty(endDate))
                 {
-                    listContract = listContract.Where(c =>c.CREATED_DATE >= Convert.ToDateTime(startDate)).ToList();
+                    listContract = listContract.Where(c => c.CREATED_DATE >= Convert.ToDateTime(startDate)).ToList();
                 }
                 else if (string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listContract = listContract.Where(c =>c.CREATED_DATE <= Convert.ToDateTime(endDate)).ToList();
+                    listContract = listContract.Where(c => c.CREATED_DATE <= Convert.ToDateTime(endDate)).ToList();
                 }
 
                 return listContract;
@@ -334,23 +395,23 @@ namespace RentBike
         {
             using (var db = new RentBikeEntities())
             {
-                var listInOut = db.INOUT_FULL_VW.Where(c =>c.ACTIVE == true);
+                var listInOut = db.INOUT_FULL_VW.Where(c => c.ACTIVE == true);
                 if (STORE_ID != 0)
                 {
-                    listInOut = listInOut.Where(c =>c.STORE_ID == STORE_ID);
+                    listInOut = listInOut.Where(c => c.STORE_ID == STORE_ID);
                 }
 
                 if (!string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listInOut = listInOut.Where(c =>c.INOUT_DATE >= Convert.ToDateTime(startDate) && c.INOUT_DATE <= Convert.ToDateTime(endDate));
+                    listInOut = listInOut.Where(c => c.INOUT_DATE >= Convert.ToDateTime(startDate) && c.INOUT_DATE <= Convert.ToDateTime(endDate));
                 }
                 else if (!string.IsNullOrEmpty(startDate) && string.IsNullOrEmpty(endDate))
                 {
-                    listInOut = listInOut.Where(c =>c.INOUT_DATE >= Convert.ToDateTime(startDate));
+                    listInOut = listInOut.Where(c => c.INOUT_DATE >= Convert.ToDateTime(startDate));
                 }
                 else if (string.IsNullOrEmpty(startDate) && !string.IsNullOrEmpty(endDate))
                 {
-                    listInOut = listInOut.Where(c =>c.INOUT_DATE <= Convert.ToDateTime(endDate));
+                    listInOut = listInOut.Where(c => c.INOUT_DATE <= Convert.ToDateTime(endDate));
                 }
 
                 return listInOut.ToList();
@@ -365,10 +426,10 @@ namespace RentBike
                                  select c).ToList();
                 if (STORE_ID != 0)
                 {
-                    listStore = listStore.Where(c =>c.ID == STORE_ID).ToList();
+                    listStore = listStore.Where(c => c.ID == STORE_ID).ToList();
                 }
                 return listStore.ToList();
-            } 
+            }
         }
     }
 }

@@ -31,7 +31,7 @@
         <ItemTemplate>
             <tr id='<%# Eval("ID") + "|" + Eval("STORE_ID") %>' class="<%# (Convert.ToBoolean(Eval("IS_BAD_CONTRACT")) == true || IsBadContract(Convert.ToInt32(Eval("ID"))) == true) ? "background-red" : "" %>">
                 <td><%# Container.ItemIndex + 1 %></td>
-                <td>'<%# Eval("CUSTOMER_NAME") %>'</td>
+                <td><%# Eval("CUSTOMER_NAME") %></td>
                 <td><%# Eval("LICENSE_NO") %></td>
                 <td><%# Eval("STORE_NAME") %></td>
                 <td><%# Eval("PERMANENT_RESIDENCE") %></td>
