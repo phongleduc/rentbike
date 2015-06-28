@@ -31,15 +31,6 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.TextBox txtEndDate;
         
         /// <summary>
-        /// btnSearch control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSearch;
-        
-        /// <summary>
         /// rptInOut control.
         /// </summary>
         /// <remarks>
@@ -49,67 +40,58 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.Repeater rptInOut;
         
         /// <summary>
-        /// lblRentBikeAmount control.
+        /// lblTotalContractAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRentBikeAmount;
+        protected global::System.Web.UI.WebControls.Label lblTotalContractAmount;
         
         /// <summary>
-        /// lblRentEquipAmount control.
+        /// lblClosedAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRentEquipAmount;
+        protected global::System.Web.UI.WebControls.Label lblClosedAmount;
         
         /// <summary>
-        /// lblRentOtherAmount control.
+        /// lblResultAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRentOtherAmount;
+        protected global::System.Web.UI.WebControls.Label lblResultAmount;
         
         /// <summary>
-        /// lblRentAll control.
+        /// lblTotalInAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblRentAll;
+        protected global::System.Web.UI.WebControls.Label lblTotalInAmount;
         
         /// <summary>
-        /// lblSumAllIn control.
+        /// lblTotalOutAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSumAllIn;
+        protected global::System.Web.UI.WebControls.Label lblTotalOutAmount;
         
         /// <summary>
-        /// lblSumAllOut control.
+        /// lblRevenue control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSumAllOut;
-        
-        /// <summary>
-        /// lblTotalInvest control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotalInvest;
+        protected global::System.Web.UI.WebControls.Label lblRevenue;
         
         /// <summary>
         /// ddlPager control.

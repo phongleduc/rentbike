@@ -312,5 +312,54 @@ namespace RentBike.Common
         }
 
         #endregion
+
+        #region Static Methods
+        private static INetFwPolicy2 getCurrPolicy()
+        {
+            INetFwPolicy2 fwPolicy2;
+            Type tNetFwPolicy2 = Type.GetTypeFromProgID("HNetCfg.FwPolicy2");
+            if (tNetFwPolicy2 != null)
+                fwPolicy2 = (INetFwPolicy2)Activator.CreateInstance(tNetFwPolicy2);
+            else
+                return null;
+            return fwPolicy2;
+        }
+
+        public static bool GetFirewallStatus()
+        {
+            bool result = false;
+            try
+            {
+                INetFwPolicy2 fwPolicy2 = getCurrPolicy();
+                NET_FW_PROFILE_TYPE2_ fwCurrentProfileTypes;
+                //read Current Profile Types (only to increase Performace)
+                //avoids access on CurrentProfileTypes from each Property
+                fwCurrentProfileTypes = (NET_FW_PROFILE_TYPE2_)fwPolicy2.CurrentProfileTypes;
+                result = (fwPolicy2.get_FirewallEnabled(NET_FW_PROFILE_TYPE2_.NET_FW_PROFILE2_PUBLIC));
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.ToString());
+            }
+            return result;
+        }
+
+        public static void SetFirewallStatus(bool newStatus)
+        {
+            try
+            {
+                NET_FW_PROFILE_TYPE2_ fwCurrentProfileTypes;
+                INetFwPolicy2 currPolicy = getCurrPolicy();
+                //read Current Profile Types (only to increase Performace)
+                //avoids access on CurrentProfileTypes from each Property
+                fwCurrentProfileTypes = (NET_FW_PROFILE_TYPE2_)currPolicy.CurrentProfileTypes;
+                currPolicy.set_FirewallEnabled(fwCurrentProfileTypes, newStatus);
+            }
+            catch (Exception e)
+            {
+                Logger.Log(e.ToString());
+            }
+        }
+        #endregion
     }
 }

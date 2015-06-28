@@ -1,21 +1,25 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormIncomeOutcomeSummary.aspx.cs" Inherits="RentBike.FormIncomeOutcomeSummary" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h2>TỔNG HỢP THU CHI</h2>
+    <h2>TỔNG HỢP THU CHI THÁNG <%=StartDate.Month %></h2>
     <table class="table table-striped table-hover ">
         <tbody>
             <tr>
                 <td style="width: 50%;">
-                    <div class="col-lg-6">
-                        <asp:TextBox ID="txtStartDate" runat="server" CssClass="form-control input-md" placeholder="Ngày bắt đầu"></asp:TextBox>
-                    </div>
-                    <div class="col-lg-6">
-                        <asp:TextBox ID="txtEndDate" runat="server" CssClass="form-control input-md" placeholder="Ngày kết thúc"></asp:TextBox>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <label>Từ ngày </label>
+                            <asp:TextBox ID="txtStartDate" runat="server" CssClass="form-control input-md" Enabled="false"></asp:TextBox>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <label>Đến ngày </label>
+                            <asp:TextBox ID="txtEndDate" runat="server" CssClass="form-control input-md" Enabled="false"></asp:TextBox>
+                        </div>
                     </div>
                 </td>
 
-                <td>
-                    <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClick="btnSearch_Click" OnClientClick="return validateSearch();" /></td>
+                <%--                <td>
+                    <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClick="btnSearch_Click" OnClientClick="return validateSearch();" /></td>--%>
             </tr>
         </tbody>
     </table>
@@ -26,8 +30,14 @@
                     <tr class="success">
                         <th>Ngày/Tháng</th>
                         <th class="text-right">Dư đầu kỳ</th>
-                        <th class="text-right">Tổng thu</th>
-                        <th class="text-right">Tổng chi</th>
+                        <th class="text-right">Cho thuê</th>
+                        <th class="text-right">Thu Phí</th>
+                        <th class="text-right">Thanh lý</th>
+                        <th class="text-right">Thừa phí</th>
+                        <th class="text-right">Chi khác</th>
+                        <th class="text-right">Thu khác</th>
+                        <th class="text-right">Xuất vốn</th>
+                        <th class="text-right">Nhập vốn</th>
                         <th class="text-right">Dư cuối kỳ</th>
                         <th class="text-right" style="display: none;">Chi tiết</th>
                     </tr>
@@ -38,8 +48,14 @@
             <tr>
                 <td><%# Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy") %></td>
                 <td class="text-right"><%# Eval("BeginAmount").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("BeginAmount")) %></td>
-                <td class="text-right"><%# Eval("TotalIn").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("TotalIn")) %></td>
-                <td class="text-right"><%# Eval("TotalOut").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("TotalOut")) %></td>
+                <td class="text-right"><%# Eval("ContractFee").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("ContractFee")) %></td>
+                <td class="text-right"><%# Eval("RentFee").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("RentFee")) %></td>
+                <td class="text-right"><%# Eval("CloseFee").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("CloseFee")) %></td>
+                <td class="text-right"><%# Eval("RedundantFee").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("RedundantFee")) %></td>
+                <td class="text-right"><%# Eval("OutOther").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("OutOther")) %></td>
+                <td class="text-right"><%# Eval("InOther").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("InOther")) %></td>
+                <td class="text-right"><%# Eval("OutCapital").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("OutCapital")) %></td>
+                <td class="text-right"><%# Eval("InCapital").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("InCapital")) %></td>
                 <td class="text-right"><%# Eval("EndAmount").ToString() == "0"? "0": string.Format("{0:0,0}", Eval("EndAmount")) %></td>
                 <td class="text-right" style="display: none;">
                     <a id='<%# String.Format("a-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' href='<%# String.Format("#detail-{0}-{1}", Eval("StoreId"), Convert.ToDateTime(Eval("InOutDate")).ToString("dd/MM/yyyy").Replace("/", "-")) %>' class="fancybox">Chi tiết...</a>
@@ -124,22 +140,36 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="text-right"><a class="print" href="javascript:void(0);">
-                            <i class="glyphicon glyphicon-print"></i>&nbsp;In</a>&nbsp;&nbsp;</a></div>
+                        <div class="text-right">
+                            <a class="print" href="javascript:void(0);">
+                                <i class="glyphicon glyphicon-print"></i>&nbsp;In</a>&nbsp;&nbsp;</a>
+                        </div>
                     </div>
                 </td>
             </tr>
         </ItemTemplate>
         <FooterTemplate>
-            <tr>
+            <tr class="success">
                 <td>Tổng hợp cuối kỳ</td>
                 <td class="text-right">
                     <asp:Label ID="lblTotalBegin" runat="server" Text=""></asp:Label>
                 </td>
                 <td class="text-right">
-                    <asp:Label ID="lblTotalIn" runat="server" Text=""></asp:Label></td>
+                    <asp:Label ID="lblTotalContractFee" runat="server" Text=""></asp:Label></td>
                 <td class="text-right">
-                    <asp:Label ID="lblTotalOut" runat="server" Text=""></asp:Label></td>
+                    <asp:Label ID="lblTotalRentFee" runat="server" Text=""></asp:Label></td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalClosedFee" runat="server" Text=""></asp:Label></td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalRedundantFee" runat="server" Text=""></asp:Label></td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalOutOtherFee" runat="server" Text=""></asp:Label></td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalInOtherFee" runat="server" Text=""></asp:Label></td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalOutCapital" runat="server" Text=""></asp:Label></td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalInCapital" runat="server" Text=""></asp:Label></td>
                 <td class="text-right text-result">
                     <asp:Label ID="lblTotalEnd" runat="server" Text=""></asp:Label>
                 </td>
@@ -152,42 +182,37 @@
     <table class="table table-striped table-hover" style="width: 50%; margin-left: 25%;">
         <tbody>
             <tr class="success">
-                <td colspan="2" class="text-center"><strong>Tổng kết kinh doanh</strong></td>
+                <td colspan="2" class="text-center"><strong>Tổng kết kinh doanh tháng <%=StartDate.Month %></strong></td>
             </tr>
             <tr>
-                <td>Tổng giá trị hợp đồng thuê xe</td>
+                <td>Tổng cho thuê</td>
                 <td class="text-right">
-                    <asp:Label ID="lblRentBikeAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                    <asp:Label ID="lblTotalContractAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
             <tr>
-                <td>Tổng giá trị hợp đồng cho thuê thiết bị</td>
+                <td>Tổng thanh lý</td>
                 <td class="text-right">
-                    <asp:Label ID="lblRentEquipAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                    <asp:Label ID="lblClosedAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
             <tr>
-                <td>Tổng giá trị hợp đồng cho thuê khác</td>
+                <td>Hiệu quả</td>
                 <td class="text-right">
-                    <asp:Label ID="lblRentOtherAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                    <asp:Label ID="lblResultAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
             <tr>
-                <td>Tổng giá trị tất cả hợp đồng cho thuê</td>
+                <td>Tổng thu</td>
                 <td class="text-right">
-                    <asp:Label ID="lblRentAll" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                    <asp:Label ID="lblTotalInAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
             <tr>
-                <td>Tổng phí</td>
+                <td>Tổng chi</td>
                 <td class="text-right">
-                    <asp:Label ID="lblSumAllIn" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                    <asp:Label ID="lblTotalOutAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
             <tr>
-                <td>Tổng chi phí</td>
+                <td>Doanh thu</td>
                 <td class="text-right">
-                    <asp:Label ID="lblSumAllOut" runat="server" Text="" CssClass="text-right"></asp:Label></td>
-            </tr>
-            <tr>
-                <td>Tổng đầu tư</td>
-                <td class="text-right">
-                    <asp:Label ID="lblTotalInvest" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                    <asp:Label ID="lblRevenue" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
         </tbody>
     </table>
@@ -212,23 +237,23 @@
                 $(this).parent().parent().printArea(options);
             });
 
-            $('#<%=txtStartDate.ClientID %>').keypress(function (e) {
+            <%--            $('#<%=txtStartDate.ClientID %>').keypress(function (e) {
                 if (e.which == 13) {
                     if (validateSearch()) {
                         $('#<%=btnSearch.ClientID %>').click();
                         return false;
                     }
                 }
-            });
+            });--%>
 
-            $('#<%=txtEndDate.ClientID %>').keypress(function (e) {
+<%--            $('#<%=txtEndDate.ClientID %>').keypress(function (e) {
                 if (e.which == 13) {
                     if (validateSearch()) {
                         $('#<%=btnSearch.ClientID %>').click();
                         return false;
                     }
                 }
-            });
+            });--%>
 
             main.toolTip("#tblInOut tbody tr", "Chi tiết thu chi", "top left", "bottom left", 15, 20, ".border_table tr");
         });
