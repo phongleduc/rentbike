@@ -99,7 +99,10 @@ namespace RentBike
                         endMonth = 1;
                         endYear = endYear + 1;
                     }
-                    DateTime endDate = new DateTime(endYear, endMonth + 1, 5);
+                    else
+                        endMonth += 1;
+                    DateTime endDate = new DateTime(endYear, endMonth, 5);
+
                     txtStartDate.Text = startDate.ToString("dd/MM/yyyy");
                     txtEndDate.Text = endDate.ToString("dd/MM/yyyy");
 
