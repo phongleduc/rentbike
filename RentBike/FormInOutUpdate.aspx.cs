@@ -11,6 +11,7 @@ namespace RentBike
     public partial class FormInOutUpdate : FormBase
     {
         public DateTime PeriodDate { get; set; }
+        public string CustomerName { get; set; }
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
@@ -46,6 +47,9 @@ namespace RentBike
                             txtStore.Text = st.NAME;
                             txtStore.Enabled = false;
                         }
+
+                        var customer = db.Customers.FirstOrDefault(c =>c.ID == contract.CUSTOMER_ID);
+                        if (customer != null) CustomerName = customer.NAME;
                     }
                 }
 
