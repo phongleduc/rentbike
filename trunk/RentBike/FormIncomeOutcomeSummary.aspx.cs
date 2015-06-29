@@ -120,8 +120,6 @@ namespace RentBike
                     decimal outCapitalFee = listSum.Select(c => c.OutCapital).DefaultIfEmpty(0).Sum();
                     decimal inCapitalFee = listSum.Select(c => c.InCapital).DefaultIfEmpty(0).Sum();
                     decimal endAmount = listSum.Select(c => c.EndAmount).DefaultIfEmpty(0).Sum();
-                    decimal sumIn = listSum.Select(c => c.TotalIn).DefaultIfEmpty(0).Sum();
-                    decimal sumOut = listSum.Select(c => c.TotalOut).DefaultIfEmpty(0).Sum();
 
                     Label lblTotalBegin = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalBegin");
                     Label lblTotalContractFee = (Label)rptInOut.Controls[rptInOut.Controls.Count - 1].Controls[0].FindControl("lblTotalContractFee");
@@ -148,7 +146,7 @@ namespace RentBike
                     lblResultAmount.Text = contractFee - closedFee == 0 ? "0" : string.Format("{0:0,0}", contractFee - closedFee);
                     lblTotalInAmount.Text = rentFee + inOtherFee == 0 ? "0" : string.Format("{0:0,0}", rentFee + inOtherFee);
                     lblTotalOutAmount.Text = redundantFee + outOtherFee == 0 ? "0" : string.Format("{0:0,0}", redundantFee + outOtherFee);
-                    lblRevenue.Text = sumIn - sumOut == 0 ? "0" : string.Format("{0:0,0}", sumIn - sumOut);
+                    lblRevenue.Text = (rentFee + inOtherFee) - (redundantFee + outOtherFee) == 0 ? "0" : string.Format("{0:0,0}", (rentFee + inOtherFee) - (redundantFee + outOtherFee));
                 }
             }
         }
@@ -334,12 +332,12 @@ namespace RentBike
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            LoadData(txtStartDate.Text, txtEndDate.Text);
+            LoadData(1);
         }
 
         protected override void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadData(txtStartDate.Text, txtEndDate.Text);
+            LoadData(1);
         }
 
         protected void ddlPager_SelectedIndexChanged(object sender, EventArgs e)
