@@ -176,67 +176,22 @@ namespace RentBike
                                Record = from o in g
                                         select new
                                         {
-                                            ID = o.STORE_ID,
-                                            InOutDate = o.INOUT_DATE,
-                                            InAmount = o.IN_AMOUNT,
-                                            OutAmount = o.OUT_AMOUNT,
                                             TotalIn = g.Sum(x => x.IN_AMOUNT),
                                             TotalOut = g.Sum(x => x.OUT_AMOUNT),
-                                            BeginAmount = 0,
-                                            EndAmount = 0,
-                                            ContractFeeCar = 0,
-                                            RentFeeCar = 0,
-                                            CloseFeeCar = 0,
-                                            ContractFeeEquip = 0,
-                                            RentFeeEquip = 0,
-                                            CloseFeeEquip = 0,
-                                            ContractFeeOther = 0,
-                                            RentFeeOther = 0,
-                                            CloseFeeOther = 0,
-                                            RemainEndOfDay = 0,
-                                            InOutTypeId = o.INOUT_TYPE_ID,
-                                            InCapital = 0,
-                                            OutCapital = 0,
-                                            InOther = 0,
-                                            OutOther = 0
 
                                         }
                            };
 
-                List<SummaryInfo> lst = new List<SummaryInfo>();
-                foreach (var g in data)
+                if (data.Any())
                 {
-                    SummaryInfo si = new SummaryInfo();
-                    si.StoreId = g.Record.ToList()[0].ID;
-                    si.InOutDate = g.Record.ToList()[0].InOutDate.Value;
-                    si.TotalIn = g.Record.ToList()[0].TotalIn;
-                    si.TotalOut = g.Record.ToList()[0].TotalOut;
-                    si.BeginAmount = 0;
-                    si.EndAmount = g.Record.ToList()[0].TotalIn - g.Record.ToList()[0].TotalOut;
+                    decimal sumIn = 0;
+                    decimal sumOut = 0;
+                    decimal sumEnd = 0;
 
-                    lst.Add(si);
-                }
-
-                for (int i = 0; i < lst.Count; i++)
-                {
-                    if (i > 0)
-                    {
-                        lst[i].BeginAmount = lst[i - 1].EndAmount;
-                        lst[i].EndAmount += lst[i].BeginAmount;
-                    }
-                }
-
-
-                decimal sumIn = 0;
-                decimal sumOut = 0;
-                decimal sumEnd = 0;
-
-                if (lst.Any())
-                {
-                    sumIn = lst.Select(c =>c.TotalIn).DefaultIfEmpty(0).Sum();
-                    sumOut = lst.Select(c => c.TotalOut).DefaultIfEmpty(0).Sum();
+                    sumIn = data.Select(c => c.Record.ToList()[0].TotalIn).DefaultIfEmpty(0).Sum();
+                    sumOut = data.Select(c => c.Record.ToList()[0].TotalOut).DefaultIfEmpty(0).Sum();
                     sumEnd = sumIn - sumOut;
-                    lblTotalValue.Text = string.Format("{0:0,0}", sumEnd);
+                    lblTotalValue.Text = sumEnd == 0 ? "0" : string.Format("{0:0,0}", sumEnd);
                 }
             }
         }
