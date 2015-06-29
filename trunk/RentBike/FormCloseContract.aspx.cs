@@ -52,6 +52,8 @@ namespace RentBike
                     }
                 }
             }
+            //Disable UI for Admin account
+            if (IS_ADMIN) pnlTable.Enabled = false;
         }
 
         protected void btnSave_Click(object sender, EventArgs e)

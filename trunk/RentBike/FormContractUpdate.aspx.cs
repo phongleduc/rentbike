@@ -182,6 +182,9 @@ namespace RentBike
                     lblMessage.CssClass = "text-center text-danger";
                 }
             }
+
+            //Disable UI for Admin account
+            if(IS_ADMIN) pnlTable.Enabled = false;
         }
 
         private void BuildPhotoLibrary(CONTRACT_FULL_VW cntrct)
