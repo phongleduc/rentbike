@@ -83,6 +83,8 @@ namespace RentBike
                     //
                 }
             }
+            //Disable UI for Admin account
+            if (IS_ADMIN) pnlTable.Enabled = false;
         }
 
         private void LoadGrid(PayPeriod pp)

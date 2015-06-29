@@ -13,6 +13,15 @@ namespace RentBike {
     public partial class FormDailyIncomeOutcomeUpdate {
         
         /// <summary>
+        /// pnlTable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlTable;
+        
+        /// <summary>
         /// ddlInOutFee control.
         /// </summary>
         /// <remarks>

@@ -22,6 +22,8 @@ namespace RentBike
                 LoadInOutType();
                 LoadInfor();
             }
+            //Disable UI for Admin account
+            if (IS_ADMIN) pnlTable.Enabled = false;
         }
 
         private void LoadStore()

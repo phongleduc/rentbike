@@ -22,7 +22,12 @@ namespace RentBike
                     if (!string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]))
                         Response.Redirect(Request.QueryString["ReturnUrl"]);
                     else
-                        Response.Redirect("FormReport.aspx");
+                    {
+                        if (Session["permission"] != null && Session["permission"].ToString() == "1")
+                            Response.Redirect("FormIncomeOutcomeSummary.aspx");
+                        else
+                            Response.Redirect("FormReport.aspx");
+                    }
                 }
             }
         }
@@ -52,8 +57,13 @@ namespace RentBike
 
                     //You can redirect now.
                     string redirectURL = FormsAuthentication.GetRedirectUrl(txtUsername.Text, chkRememberMe.Checked);
-                    if (redirectURL == "/default.aspx")
-                        redirectURL = "FormReport.aspx";
+                    if (Session["permission"] != null && Session["permission"].ToString() == "1")
+                        redirectURL = "FormIncomeOutcomeSummary.aspx";
+                    else
+                    {
+                        if (redirectURL == "/default.aspx")
+                            redirectURL = "FormReport.aspx";
+                    }
 
                     Response.Redirect(redirectURL, false);
                 }
