@@ -28,13 +28,15 @@ namespace RentBike
 
         private void LoadData(string strSearch, int page)
         {
-            int storeid = Convert.ToInt32(Session["store_id"]);
             using (var db = new RentBikeEntities())
             {
                 IQueryable<Log> dataList = db.Logs.Where(c => c.IS_CRASH == false).OrderByDescending(c => c.ID);
 
-                if (storeid != 0)
-                    dataList = dataList.Where(c => c.STORE_ID == storeid);
+                if (STORE_ID != 0)
+                {
+                    var store = db.Stores.FirstOrDefault(c =>c.ID == STORE_ID);
+                    dataList = dataList.Where(c => c.STORE == store.NAME);  
+                }
 
                 if (!string.IsNullOrEmpty(strSearch))
                     dataList = dataList.Where(c => c.SEARCH_TEXT.ToLower().Contains(strSearch.ToLower()));
