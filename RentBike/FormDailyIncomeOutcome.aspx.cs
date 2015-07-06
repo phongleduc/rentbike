@@ -339,6 +339,7 @@ namespace RentBike
             {
                 SummaryInfo si = new SummaryInfo();
                 si.InOutId = c.ID;
+                si.StoreId = c.STORE_ID;
                 si.CssClass = "background-yellow";
 
                 switch (c.INOUT_TYPE_ID)
@@ -408,7 +409,7 @@ namespace RentBike
                         // Put HtmlTextWriter in using block because it needs to call Dispose.
                         using (HtmlTextWriter writer = new HtmlTextWriter(stringWriter))
                         {
-                            writer.AddAttribute(HtmlTextWriterAttribute.Href, "FormDailyIncomeOutcomeUpdate.aspx?id=" + inout.InOutId);
+                            writer.AddAttribute(HtmlTextWriterAttribute.Href, "FormDailyIncomeOutcomeUpdate.aspx?id=" + inout.InOutId + "&sID=" + inout.StoreId);
                             writer.RenderBeginTag(HtmlTextWriterTag.A);
                             writer.Write(inout.CustomerName);
                             writer.RenderEndTag();

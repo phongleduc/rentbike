@@ -108,6 +108,8 @@ namespace RentBike
                 Session["permission"] = acc.PERMISSION_ID;
                 Session["city_id"] = acc.CITY_ID;
                 Session["store_id"] = acc.STORE_ID;
+
+                WriteLog(Constants.ACTION_LOGIN, false);
             }
             return true;
         }

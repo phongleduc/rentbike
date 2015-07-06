@@ -73,7 +73,7 @@ namespace RentBike
                 List<SummaryInfo> listSum = GetSummaryData(STORE_ID);
                 if (listSum.Any())
                 {
-                    int count = ((listSum.LastOrDefault().InOutDate.Year - listSum.FirstOrDefault().InOutDate.Year) * 12) + (listSum.LastOrDefault().InOutDate.Month - listSum.FirstOrDefault().InOutDate.Month);
+                    int count = ((listSum.LastOrDefault().InOutDate.Year - listSum.FirstOrDefault().InOutDate.Year) * 12) + (listSum.LastOrDefault().InOutDate.Month - listSum.FirstOrDefault().InOutDate.Month) + 1;
                     IEnumerable<int> pageList = Enumerable.Range(1, count);
 
                     ddlPager.DataSource = pageList;
@@ -91,6 +91,7 @@ namespace RentBike
                         startDate = startDate.AddMonths(1 - page);
                         StartDate = startDate = new DateTime(startDate.Year, startDate.Month, 6);
                     }
+                    if (count > page) count = page;
 
                     int endYear = startDate.Year;
                     int endMonth = startDate.Month;

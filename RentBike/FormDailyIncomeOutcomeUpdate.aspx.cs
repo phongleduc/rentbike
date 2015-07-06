@@ -12,10 +12,12 @@ namespace RentBike
     public partial class FormDailyIncomeOutcomeUpdate : FormBase
     {
         private int inOutId = 0;
+        private int storeId = 0;
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
             inOutId = Helper.parseInt(Request.QueryString["id"]);
+            storeId = Helper.parseInt(Request.QueryString["sID"]);
             if (!IsPostBack)
             {
                 LoadStore();
@@ -40,7 +42,7 @@ namespace RentBike
                     {
                         ddlStore.Items.Add(new ListItem(store.NAME, store.ID.ToString()));
                     }
-                    ddlStore.SelectedValue = STORE_ID.ToString();
+                    ddlStore.SelectedValue = storeId.ToString();
                     if (!IS_ADMIN)
                         ddlStore.Enabled = false;
                 }
