@@ -74,6 +74,7 @@ namespace RentBike
                     var pp = db.PayPeriods.FirstOrDefault(c =>c.ID == periodId);
                     pp.ACTUAL_PAY = totalInAmountOfPeriod;
                     db.SaveChanges();
+                    WriteLog(Constants.ACTION_UPDATE_INOUT, false);
 
                     Response.Redirect(string.Format("FormInOutUpdate.aspx?ID={0}", periodId), false);
                 }
@@ -84,6 +85,24 @@ namespace RentBike
         protected void btnCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect(string.Format("FormInOutUpdate.aspx?ID={0}", Request.QueryString["pid"]), false);
+        }
+
+        private void WriteLog(string action, bool isCrashed)
+        {
+            Log lg = new Log();
+            lg.ACCOUNT = Session["username"].ToString();
+            lg.STORE = STORE_NAME;
+            lg.LOG_ACTION = action;
+            lg.LOG_DATE = DateTime.Now;
+            lg.IS_CRASH = isCrashed;
+            lg.LOG_MSG = string.Format("Tài khoản {0} {1} thực hiện {2} vào lúc {3}", lg.ACCOUNT, STORE_NAME, lg.LOG_ACTION, lg.LOG_DATE);
+            lg.SEARCH_TEXT = lg.LOG_MSG;
+
+            using (var db = new RentBikeEntities())
+            {
+                db.Logs.Add(lg);
+                db.SaveChanges();
+            }
         }
     }
 }

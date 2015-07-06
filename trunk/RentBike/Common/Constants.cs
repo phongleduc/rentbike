@@ -23,6 +23,9 @@ namespace RentBike.Common
         public const string ACTION_CREATE_TYPE = "Tạo danh mục";
 
         public const string ACTION_CREATE_INOUT = "Thu/Chi";
+        public const string ACTION_UPDATE_INOUT = "Cập nhật Thu/Chi";
+
+        public const string ACTION_UPDATE_FEE = "Cập nhật phí";
 
         public const string SINGLETON_FILE = "batch.sg";
     }

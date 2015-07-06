@@ -145,6 +145,7 @@ namespace RentBike
                         io.UPDATED_DATE = DateTime.Now;
 
                         db.InOuts.Add(io);
+                        WriteLog(Constants.ACTION_CREATE_INOUT, false);
                     }
                     else
                     {
@@ -173,11 +174,11 @@ namespace RentBike
                         io.SEARCH_TEXT = string.Format("{0} {1} {2}", io.INOUT_DATE, io.MORE_INFO, item.NAME);
                         io.UPDATED_BY = Session["username"].ToString();
                         io.UPDATED_DATE = DateTime.Now;
+
+                        WriteLog(Constants.ACTION_UPDATE_FEE, false);
                     }
                     db.SaveChanges();
                 }
-
-                WriteLog(Constants.ACTION_CREATE_INOUT, false);
 
                 ts.Complete();
             }
