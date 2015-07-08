@@ -40,5 +40,6 @@ namespace RentBike
         public Nullable<System.DateTime> INOUT_DATE { get; set; }
         public string CONTRACT_NO { get; set; }
         public bool ACTIVE { get; set; }
+        public bool IS_DUMMY { get; set; }
     }
 }

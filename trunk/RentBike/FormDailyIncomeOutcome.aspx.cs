@@ -297,7 +297,8 @@ namespace RentBike
                                                                 InCapital = 0,
                                                                 OutCapital = 0,
                                                                 InOther = 0,
-                                                                OutOther = 0
+                                                                OutOther = 0,
+                                                                IsDummy = o.IS_DUMMY
                                                             }
                                                };
 
@@ -310,6 +311,7 @@ namespace RentBike
                 si.BeginAmount = 0;
                 si.EndAmount = c.Record.ToList()[0].TotalIn - c.Record.ToList()[0].TotalOut;
                 si.CustomerName = c.CustomerName;
+                si.IsDummy = c.Record.ToList()[0].IsDummy;
 
                 si.ContractFeeCar = c.Record.Where(s =>s.InOutTypeId == 17).Select(s =>s.OutAmount).DefaultIfEmpty(0).Sum();
                 si.ContractFeeEquip = c.Record.Where(s =>s.InOutTypeId == 22).Select(s =>s.OutAmount).DefaultIfEmpty(0).Sum();
@@ -341,6 +343,7 @@ namespace RentBike
                 si.InOutId = c.ID;
                 si.StoreId = c.STORE_ID;
                 si.CssClass = "background-yellow";
+                si.IsDummy = c.IS_DUMMY;
 
                 switch (c.INOUT_TYPE_ID)
                 {
@@ -377,6 +380,8 @@ namespace RentBike
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 var inout = e.Item.DataItem as SummaryInfo;
+
+                if (inout.IsDummy) return;
 
                 HtmlTableRow trItem = e.Item.FindControl("trItem") as HtmlTableRow;
 
@@ -627,7 +632,7 @@ namespace RentBike
 
         protected void btnNew_Click(object sender, EventArgs e)
         {
-            Response.Redirect("FormDailyIncomeOutcomeUpdate.aspx");
+            Response.Redirect("FormDailyIncomeOutcomeUpdate.aspx?sID=" + STORE_ID);
         }
     }
 }

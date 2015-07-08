@@ -27,6 +27,9 @@ namespace RentBike.Common
 
         public const string ACTION_UPDATE_FEE = "Cập nhật phí";
 
+        public const string DUMMY_INOUT = "This is a dummy record";
+        public const string DUMMY_USER = "Dummy User";
+
         public const string SINGLETON_FILE = "batch.sg";
     }
 }

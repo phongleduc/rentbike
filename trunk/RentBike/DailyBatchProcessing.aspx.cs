@@ -32,6 +32,10 @@ namespace RentBike
                     CommonList.AutoExtendContract();
                     Logger.Log("Auto extend contract end");
 
+                    Logger.Log("Auto create dummy inout start");
+                    CommonList.CreateDummyInout();
+                    Logger.Log("Auto create dummy inout end");
+
                     Logger.Log("Backup database into dropbox start");
                     DropboxHelper.BackUp();
                     Logger.Log("Backup database into dropbox end");

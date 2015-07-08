@@ -584,7 +584,7 @@ namespace RentBike.Common
             }
         }
 
-        public static void UpdatePeriodAmount1()
+        public static void UpdatePeriodAmountToZero()
         {
             using (var db = new RentBikeEntities())
             {
@@ -689,6 +689,40 @@ namespace RentBike.Common
                 }
 
                 return sumList.ToList();
+            }
+        }
+
+        public static void CreateDummyInout()
+        {
+            using (var db = new RentBikeEntities())
+            {
+                var stores = db.Stores.Where(c => c.ACTIVE == true).ToList();
+                foreach (var store in stores)
+                {
+                    if (db.InOuts.Any(c => c.INOUT_DATE == DateTime.Today && c.STORE_ID == store.ID))
+                        continue;
+
+                    InOut io = new InOut();
+                    io.IN_AMOUNT = 0;
+                    io.OUT_AMOUNT = 0;
+                    io.CONTRACT_ID = 1;
+                    io.PERIOD_ID = 1;
+                    io.RENT_TYPE_ID = 3;
+                    io.INOUT_TYPE_ID = 23;
+                    io.PERIOD_DATE = DateTime.Today;
+                    io.MORE_INFO = Constants.DUMMY_INOUT;
+                    io.STORE_ID = store.ID;
+                    io.SEARCH_TEXT = Constants.DUMMY_INOUT;
+                    io.INOUT_DATE = DateTime.Now;
+                    io.CREATED_BY = Constants.DUMMY_USER;
+                    io.CREATED_DATE = DateTime.Now;
+                    io.UPDATED_BY = Constants.DUMMY_USER;
+                    io.UPDATED_DATE = DateTime.Now;
+                    io.IS_DUMMY = true;
+
+                    db.InOuts.Add(io);
+                }
+                db.SaveChanges();
             }
         }
 

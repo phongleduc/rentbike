@@ -166,6 +166,7 @@
           <Property Name="SEARCH_TEXT" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="INOUT_TYPE_ID" Type="int" Nullable="false" />
           <Property Name="INOUT_DATE" Type="date" />
+          <Property Name="IS_DUMMY" Type="bit" Nullable="false" />
           <Property Name="CREATED_BY" Type="nvarchar" MaxLength="50" />
           <Property Name="CREATED_DATE" Type="datetime" />
           <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
@@ -470,6 +471,7 @@ warning 6002: The table/view 'prohaihung.dbo.INOUT_FULL_VW' does not have a prim
             <PropertyRef Name="SEARCH_TEXT" />
             <PropertyRef Name="STORE_NAME" />
             <PropertyRef Name="ACTIVE" />
+            <PropertyRef Name="IS_DUMMY" />
             <PropertyRef Name="CUSTOMER_ID" />
             <PropertyRef Name="CUSTOMER_NAME" />
             <PropertyRef Name="INOUT_TYPE_ID" />
@@ -487,6 +489,7 @@ warning 6002: The table/view 'prohaihung.dbo.INOUT_FULL_VW' does not have a prim
           <Property Name="STORE_NAME" Type="nvarchar" MaxLength="150" Nullable="false" />
           <Property Name="ACTIVE" Type="bit" Nullable="false" />
           <Property Name="RENT_TYPE_NAME" Type="nvarchar" MaxLength="100" />
+          <Property Name="IS_DUMMY" Type="bit" Nullable="false" />
           <Property Name="CREATED_BY" Type="nvarchar" MaxLength="50" />
           <Property Name="CREATED_DATE" Type="datetime" />
           <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
@@ -694,6 +697,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
     [INOUT_FULL_VW].[STORE_NAME] AS [STORE_NAME], 
     [INOUT_FULL_VW].[ACTIVE] AS [ACTIVE], 
     [INOUT_FULL_VW].[RENT_TYPE_NAME] AS [RENT_TYPE_NAME], 
+    [INOUT_FULL_VW].[IS_DUMMY] AS [IS_DUMMY], 
     [INOUT_FULL_VW].[CREATED_BY] AS [CREATED_BY], 
     [INOUT_FULL_VW].[CREATED_DATE] AS [CREATED_DATE], 
     [INOUT_FULL_VW].[UPDATED_BY] AS [UPDATED_BY], 
@@ -900,6 +904,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
           <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
+          <Property Name="IS_DUMMY" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="InOutType">
           <Key>
@@ -1197,6 +1202,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
             <PropertyRef Name="CUSTOMER_NAME" />
             <PropertyRef Name="INOUT_TYPE_ID" />
             <PropertyRef Name="ACTIVE" />
+            <PropertyRef Name="IS_DUMMY" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="IN_AMOUNT" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
@@ -1224,6 +1230,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Property Name="INOUT_DATE" Type="DateTime" Precision="0" />
           <Property Name="CONTRACT_NO" Type="String" MaxLength="13" FixedLength="false" Unicode="false" />
           <Property Name="ACTIVE" Type="Boolean" Nullable="false" />
+          <Property Name="IS_DUMMY" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="STORE_FULL_VW">
           <Key>
@@ -1447,6 +1454,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="InOuts">
             <EntityTypeMapping TypeName="RentBikeModel.InOut">
               <MappingFragment StoreEntitySet="InOut">
+                <ScalarProperty Name="IS_DUMMY" ColumnName="IS_DUMMY" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="IN_AMOUNT" ColumnName="IN_AMOUNT" />
                 <ScalarProperty Name="OUT_AMOUNT" ColumnName="OUT_AMOUNT" />
@@ -1706,6 +1714,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySetMapping Name="INOUT_FULL_VW">
             <EntityTypeMapping TypeName="RentBikeModel.INOUT_FULL_VW">
               <MappingFragment StoreEntitySet="INOUT_FULL_VW">
+                <ScalarProperty Name="IS_DUMMY" ColumnName="IS_DUMMY" />
                 <ScalarProperty Name="ACTIVE" ColumnName="ACTIVE" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="IN_AMOUNT" ColumnName="IN_AMOUNT" />
