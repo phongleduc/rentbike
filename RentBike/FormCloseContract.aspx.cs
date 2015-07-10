@@ -11,6 +11,7 @@ namespace RentBike
 {
     public partial class FormCloseContract : FormBase
     {
+        public string CustomerName { get; set; }
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
@@ -20,6 +21,9 @@ namespace RentBike
                 using (var db = new RentBikeEntities())
                 {
                     Contract con = db.Contracts.FirstOrDefault(c =>c.ID == id);
+
+                    var customer = db.Customers.FirstOrDefault(c => c.ID == con.CUSTOMER_ID);
+                    if (customer != null) CustomerName = customer.NAME;
 
                     txtEndDate.Text = string.Format("{0:dd/MM/yyyy}", con.END_DATE);
                     txtAmount.Text = string.Format("{0:0,0}", con.CONTRACT_AMOUNT);
@@ -257,7 +261,7 @@ namespace RentBike
             lg.LOG_ACTION = action;
             lg.LOG_DATE = DateTime.Now;
             lg.IS_CRASH = isCrashed;
-            lg.LOG_MSG = string.Format("Tài khoản {0} {1}thực hiện {2} vào lúc {3}", lg.ACCOUNT, strStoreName, lg.LOG_ACTION, lg.LOG_DATE);
+            lg.LOG_MSG = string.Format("Tài khoản {0} cửa hàng {1} thực hiện {2} vào lúc {3}", lg.ACCOUNT, strStoreName, lg.LOG_ACTION, lg.LOG_DATE);
             lg.SEARCH_TEXT = lg.LOG_MSG;
 
             using (var db = new RentBikeEntities())

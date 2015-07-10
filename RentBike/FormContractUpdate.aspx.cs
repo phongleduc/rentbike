@@ -774,7 +774,7 @@ namespace RentBike
             lg.LOG_ACTION = action;
             lg.LOG_DATE = DateTime.Now;
             lg.IS_CRASH = isCrashed;
-            lg.LOG_MSG = string.Format("Tài khoản {0} {1}thực hiện {2} vào lúc {3}", lg.ACCOUNT, STORE_NAME, lg.LOG_ACTION, lg.LOG_DATE);
+            lg.LOG_MSG = string.Format("Tài khoản {0} cửa hàng {1} thực hiện {2} vào lúc {3}", lg.ACCOUNT, STORE_NAME, lg.LOG_ACTION, lg.LOG_DATE);
             lg.SEARCH_TEXT = lg.LOG_MSG;
 
             using (var db = new RentBikeEntities())

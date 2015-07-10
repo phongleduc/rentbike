@@ -5,7 +5,7 @@
         <table class="table table-striped table-hover" style="width: 50%; margin-left: 25%;">
             <tbody>
                 <tr>
-                    <td colspan="2" class="text-center">Thanh lý hợp đồng</td>
+                    <td colspan="2" class="text-center">Thanh lý hợp đồng <strong><%=CustomerName %></strong></td>
                 </tr>
                 <tr>
                     <td class="text-right">Hợp đồng hết hạn ngày</td>
