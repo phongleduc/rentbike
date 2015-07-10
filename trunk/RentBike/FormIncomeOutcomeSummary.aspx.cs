@@ -195,7 +195,8 @@ namespace RentBike
                                             InCapital = 0,
                                             OutCapital = 0,
                                             InOther = 0,
-                                            OutOther = 0
+                                            OutOther = 0,
+                                            IsDummy = o.IS_DUMMY
 
                                         }
                            };
@@ -212,6 +213,7 @@ namespace RentBike
                     si.TotalOut = g.Record.ToList()[0].TotalOut;
                     si.BeginAmount = 0;
                     si.EndAmount = g.Record.ToList()[0].TotalIn - g.Record.ToList()[0].TotalOut;
+                    si.IsDummy = g.Record.ToList()[0].IsDummy;
 
                     var inout = g.Record.Where(x => x.InOutTypeId == 17);
                     if (inout.Any())
