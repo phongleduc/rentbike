@@ -94,7 +94,7 @@
                 <tr>
                     <td class="text-right">Giá trị tài sản</td>
                     <td>
-                        <asp:TextBox ID="txtAmount" ClientIDMode="Static" runat="server" CssClass="form-control input-sm text-right" onchange="calculate()"></asp:TextBox></td>
+                        <asp:TextBox ID="txtAmount" ClientIDMode="Static" runat="server" CssClass="form-control input-sm text-right"></asp:TextBox></td>
                 </tr>
                 <tr>
                     <td class="text-right">Phí thuê/1 ngày</td>
@@ -219,6 +219,15 @@
     <script type="text/javascript" src="script/fancybox/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
     <script>
         $(document).ready(function () {
+            $('#<%=txtAmount.ClientID %>').keyup(function () {
+                calculateContractFee($(this).val());
+            });
+
+            $('#<%=ddlRentType.ClientID %>').change(function () {
+                var value = $('#<%=txtAmount.ClientID %>').val();
+                calculateContractFee(value);
+            });
+
             $('#<%=txtRentDate.ClientID %>').datepicker({
                 dateFormat: 'dd/mm/yy',
                 onSelect: function (dateStr) {
@@ -320,12 +329,32 @@
 
         }
 
-        function calculate() {
-            var amount = $('#txtAmount').val();
-            var amnt = amount.replace(/\,/g, '');
-            var feeperday = $('#hdfFeeRate').val();
-            $('#txtFeePerDay').val(Math.round(amnt * feeperday));
-            $("#txtFeePerDay").priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
+        var RentCarFeePerDay = parseInt('<%=RentCarFeePerDay%>');
+        var RentEquipFeePerDay = parseInt('<%=RentEquipFeePerDay%>');
+        var RentOtherFeePerDay = parseInt('<%=RentOtherFeePerDay%>');
+
+        function calculateContractFee(value) {
+            if (value != undefined && value != '') {
+                var rentTypeId = $('#<%= ddlRentType.ClientID%>').val();
+                var amount = value.replace(/\,/g, '');
+                var multipleFee = Math.floor(parseInt(amount) / 100000);
+
+                if (multipleFee > 0) {
+                    switch (rentTypeId) {
+                        case '1':
+                            $('#<%=txtFeePerDay.ClientID %>').val(Math.round(multipleFee * RentCarFeePerDay)).priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
+                            break;
+                        case '2':
+                            $('#<%=txtFeePerDay.ClientID %>').val(Math.round(multipleFee * RentEquipFeePerDay)).priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
+                            break;
+                        default:
+                            $('#<%=txtFeePerDay.ClientID %>').val(Math.round(multipleFee * RentOtherFeePerDay)).priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
+                            break;
+                    }
+                }
+                else
+                    $('#<%=txtFeePerDay.ClientID %>').val(Math.round(multipleFee * RentOtherFeePerDay)).priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
+            }
         }
     </script>
 </asp:Content>

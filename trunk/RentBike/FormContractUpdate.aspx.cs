@@ -18,6 +18,10 @@ namespace RentBike
         protected string ContractID { get; set; }
         protected int RentTypeID { get; set; }
         protected bool IsNewContract { get; set; }
+
+        public int RentCarFeePerDay = Convert.ToInt32(System.Web.Configuration.WebConfigurationManager.AppSettings["RentBike.RentCarFeePerDay"]);
+        public int RentEquipFeePerDay = Convert.ToInt32(System.Web.Configuration.WebConfigurationManager.AppSettings["RentBike.RentEquipFeePerDay"]);
+        public int RentOtherFeePerDay = Convert.ToInt32(System.Web.Configuration.WebConfigurationManager.AppSettings["RentBike.RentOtherFeePerDay"]);
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
@@ -184,7 +188,7 @@ namespace RentBike
             }
 
             //Disable UI for Admin account
-            if(IS_ADMIN) pnlTable.Enabled = false;
+            if (IS_ADMIN) pnlTable.Enabled = false;
         }
 
         private void BuildPhotoLibrary(CONTRACT_FULL_VW cntrct)
@@ -266,6 +270,30 @@ namespace RentBike
             {
                 return "Bạn phải nhập phí thuê ngày.";
             }
+
+            int rentTypeId = Helper.parseInt(ddlRentType.SelectedValue);
+            decimal multipleFee = Decimal.Floor(Convert.ToDecimal(txtAmount.Text.Trim()) / 100000);
+            decimal feePerDay = 0;
+
+            switch (rentTypeId)
+            {
+                case 1:
+                    feePerDay = Decimal.Floor(multipleFee * RentCarFeePerDay);
+                    break;
+                case 2:
+                    feePerDay = Decimal.Floor(multipleFee * RentEquipFeePerDay);
+                    break;
+                default:
+                    break;
+            }
+            if (rentTypeId == 1 || rentTypeId == 2)
+            {
+                if (Convert.ToDecimal(txtFeePerDay.Text.Trim()) < feePerDay)
+                {
+                    return string.Format("Không thể tạo hợp đồng với mức phí nhỏ hơn {0}", string.Format("{0:0,0}", feePerDay));
+                }
+            }
+
             if (string.IsNullOrEmpty(txtRentDate.Text.Trim()))
             {
                 return "Bạn phải nhập ngày bắt đầu hợp đồng.";
@@ -341,14 +369,15 @@ namespace RentBike
                     string copy = Request.QueryString["copy"];
                     string result = ValidateFields();
                     int cusid = 0;
+
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        lblMessage.Text = result;
+                        return;
+                    }
+
                     if (string.IsNullOrEmpty(id) || (!string.IsNullOrEmpty(copy) && copy == "1")) // NEW
                     {
-                        if (!string.IsNullOrEmpty(result))
-                        {
-                            lblMessage.Text = result;
-                            return;
-                        }
-
                         Contract contract = CommonList.GetContractByLicenseNo(txtLicenseNumber.Text.Trim());
                         if (contract != null)
                         {
