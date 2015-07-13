@@ -132,7 +132,8 @@ namespace RentBike
                                             InCapital = 0,
                                             OutCapital = 0,
                                             InOther = 0,
-                                            OutOther = 0
+                                            OutOther = 0,
+                                            IsDummy = o.IS_DUMMY
 
                                         }
                            };
@@ -147,6 +148,7 @@ namespace RentBike
                     si.CustomerName = g.Record.ToList()[0].CustomerName;
                     si.TotalIn = g.Record.ToList()[0].TotalIn;
                     si.TotalOut = g.Record.ToList()[0].TotalOut;
+                    si.IsDummy = g.Record.ToList()[0].IsDummy;
                     si.BeginAmount = 0;
                     si.EndAmount = g.Record.ToList()[0].TotalIn - g.Record.ToList()[0].TotalOut;
 
@@ -202,7 +204,7 @@ namespace RentBike
                     List<SummaryInfo> listSI = GetDailyData(summaryInfo.InOutDate);
                     if (listSI.Any())
                     {
-                        rptInOutDayDetail.DataSource = listSI;
+                        rptInOutDayDetail.DataSource = listSI.Where(c =>c.IsDummy == false);
                         rptInOutDayDetail.DataBind();
 
 
@@ -311,7 +313,7 @@ namespace RentBike
                 si.BeginAmount = 0;
                 si.EndAmount = c.Record.ToList()[0].TotalIn - c.Record.ToList()[0].TotalOut;
                 si.CustomerName = c.CustomerName;
-                si.IsDummy = c.Record.ToList()[0].IsDummy;
+                si.IsDummy = c.Record.ToList()[c.Record.Count() - 1].IsDummy;
 
                 si.ContractFeeCar = c.Record.Where(s =>s.InOutTypeId == 17).Select(s =>s.OutAmount).DefaultIfEmpty(0).Sum();
                 si.ContractFeeEquip = c.Record.Where(s =>s.InOutTypeId == 22).Select(s =>s.OutAmount).DefaultIfEmpty(0).Sum();
@@ -380,8 +382,6 @@ namespace RentBike
             if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
             {
                 var inout = e.Item.DataItem as SummaryInfo;
-
-                if (inout.IsDummy) return;
 
                 HtmlTableRow trItem = e.Item.FindControl("trItem") as HtmlTableRow;
 

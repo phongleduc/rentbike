@@ -5,12 +5,16 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.UI.WebControls;
 
 namespace RentBike.Common
 {
     public class CommonList
     {
+        public int RentCarFeePerDay = Convert.ToInt32(WebConfigurationManager.AppSettings["RentBike.RentCarFeePerDay"]);
+        public int RentEquipFeePerDay = Convert.ToInt32(WebConfigurationManager.AppSettings["RentBike.RentEquipFeePerDay"]);
+        public int RentOtherFeePerDay = Convert.ToInt32(WebConfigurationManager.AppSettings["RentBike.RentOtherFeePerDay"]);
         public static void LoadCity(DropDownList ddlCt)
         {
             List<City> lst;
@@ -106,8 +110,8 @@ namespace RentBike.Common
             }
             else
             {
-                increateFeeCar = (contract.FEE_PER_DAY * 10) + (multipleFee * 50 * 10);
-                increateFeeEquip = (contract.FEE_PER_DAY * 10) + (multipleFee * 100 * 10);
+                increateFeeCar = increateFeeEquip = (contract.FEE_PER_DAY * 10) + (multipleFee * 50 * 10);
+                //increateFeeEquip = (contract.FEE_PER_DAY * 10) + (multipleFee * 100 * 10);
                 increateFeeOther = (contract.FEE_PER_DAY * 10);
             }
         }
@@ -167,17 +171,18 @@ namespace RentBike.Common
                     switch (contract.RENT_TYPE_ID)
                     {
                         case 1:
+                        case 2:
                             if (((contract.FEE_PER_DAY / multipleFee) * 10) < 4000)
                                 pp1.AMOUNT_PER_PERIOD = increateFeeCar;
                             else
                                 pp1.AMOUNT_PER_PERIOD = increateFeeOther;
                             break;
-                        case 2:
-                            if (((contract.FEE_PER_DAY / multipleFee) * 10) < 6000)
-                                pp1.AMOUNT_PER_PERIOD = increateFeeEquip;
-                            else
-                                pp1.AMOUNT_PER_PERIOD = increateFeeOther;
-                            break;
+                        //case 2:
+                        //    if (((contract.FEE_PER_DAY / multipleFee) * 10) < 6000)
+                        //        pp1.AMOUNT_PER_PERIOD = increateFeeEquip;
+                        //    else
+                        //        pp1.AMOUNT_PER_PERIOD = increateFeeOther;
+                        //    break;
                         default:
                             pp1.AMOUNT_PER_PERIOD = increateFeeOther;
                             break;

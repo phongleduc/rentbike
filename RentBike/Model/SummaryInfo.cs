@@ -14,6 +14,7 @@ namespace RentBike.Model
         public List<DateTime> ListPeriodDate { get; set; }
         public int InOutId { get; set; }
         public DateTime InOutDate { get; set; }
+        public string RentTypeId { get; set; }
         public string RentTypeName { get; set; }
         public int CustomerId { get; set; }
         public string CustomerName { get; set; }
