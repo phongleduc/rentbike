@@ -119,6 +119,10 @@ namespace RentBike
                     }
                     else // NEW
                     {
+                        //Remove [rent other] option if user is just staff 
+                        if (PERMISSION == Role.Staff)
+                            ddlRentType.Items.Remove(ddlRentType.Items[ddlRentType.Items.Count - 1]);
+
                         IsNewContract = true;
                         btnFinishContract.Visible = false;
                         txtContractNo.Visible = false;
