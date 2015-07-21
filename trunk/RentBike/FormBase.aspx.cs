@@ -10,6 +10,14 @@ namespace RentBike
 {
     public partial class FormBase : System.Web.UI.Page
     {
+        public enum Role
+        {
+            Staff,
+            HeadShop,
+            Director
+        };
+
+        public Role PERMISSION { get; set; }
         public bool IS_ADMIN { get; set; }
         public int STORE_ID { get; set; }
         public string STORE_NAME { get; set; }
@@ -43,6 +51,19 @@ namespace RentBike
                 }
             }
             if (string.IsNullOrEmpty(STORE_NAME)) STORE_NAME = "Tất cả";
+
+            switch(Helper.parseInt(Session["permission"]))
+            {
+                case 1:
+                    PERMISSION = Role.Director;
+                    break;
+                case 2:
+                    PERMISSION = Role.HeadShop;
+                    break;
+                default:
+                    PERMISSION = Role.Staff;
+                    break;
+            }
         }
         protected virtual void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {

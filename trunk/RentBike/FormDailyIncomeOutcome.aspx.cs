@@ -335,6 +335,10 @@ namespace RentBike
                 {
                     si.ListPeriodDate = c.Record.Where(s => s.InOutTypeId == 14 || s.InOutTypeId == 15 || s.InOutTypeId == 16).Select(s => s.Period).ToList();
                 }
+                if (c.Record.Any(s => s.RentTypeId == 3))
+                {
+                    si.CssClass = "background-yellow"; 
+                }
 
                 listSI.Add(si);
             }
