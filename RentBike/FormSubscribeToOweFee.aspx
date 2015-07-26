@@ -18,7 +18,7 @@
         <table class="table table-striped table-hover ">
         <tbody>
             <tr>
-                <td class="text-left" style="font-size:16px;"><strong>Tổng nợ phí hiện tại&nbsp;:&nbsp;&nbsp;<asp:Label ID="lblTotalAmountLeft" runat="server" CssClass="text-left"></asp:Label></strong></td>
+                <td class="text-left" style="font-size:28px;"><strong>Tổng nợ phí hiện tại&nbsp;:&nbsp;&nbsp;<asp:Label ID="lblTotalAmountLeft" runat="server" CssClass="text-left"></asp:Label></strong></td>
             </tr>
         </tbody>
     </table>

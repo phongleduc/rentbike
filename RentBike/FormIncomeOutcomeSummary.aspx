@@ -179,7 +179,7 @@
         </FooterTemplate>
     </asp:Repeater>
 
-    <table class="table table-striped table-hover" style="width: 50%; margin-left: 25%;">
+    <table class="table table-striped table-hover" style="width: 70%; margin-left: 15%;">
         <tbody>
             <tr class="success">
                 <td colspan="4" class="text-center"><strong>Tổng kết kinh doanh tháng <%=StartDate.Month %></strong></td>
