@@ -91,6 +91,8 @@
                         <asp:HyperLink ID="hplPendingContract" Text="Hợp đồng xấu" runat="server" CssClass="color-text-white" NavigateUrl="FormBadContractReport.aspx"></asp:HyperLink></li>
                     <li class="color-warning">
                         <asp:HyperLink ID="hplSummaryPayFeeDaily" Text="Bảng Thu Phí" runat="server" CssClass="color-text-white" NavigateUrl="FormSummaryPayFeeDaily.aspx"></asp:HyperLink></li>
+                    <li class="color-success">
+                        <asp:HyperLink ID="hplSubscribeToOweFee" Text="Theo Dõi Nợ Phí" runat="server" CssClass="color-text-white" NavigateUrl="FormSubscribeToOweFee.aspx"></asp:HyperLink></li>
                 </ul>
             </div>
             <div id="rightcenter">

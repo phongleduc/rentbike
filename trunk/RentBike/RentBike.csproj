@@ -131,6 +131,7 @@
     <Content Include="App_Themes\Theme1\image\tick-orange.png" />
     <Content Include="App_Themes\Theme1\image\unchecked.gif" />
     <Content Include="FormBase.aspx" />
+    <Content Include="FormSubscribeToOweFee.aspx" />
     <Content Include="FormSearch.aspx" />
     <Content Include="FormInOutAndPeriodUpdate.aspx" />
     <Content Include="FormReport.aspx" />
@@ -251,6 +252,13 @@
     </Compile>
     <Compile Include="FormBase.aspx.designer.cs">
       <DependentUpon>FormBase.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="FormSubscribeToOweFee.aspx.cs">
+      <DependentUpon>FormSubscribeToOweFee.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="FormSubscribeToOweFee.aspx.designer.cs">
+      <DependentUpon>FormSubscribeToOweFee.aspx</DependentUpon>
     </Compile>
     <Compile Include="FormSearch.aspx.cs">
       <DependentUpon>FormSearch.aspx</DependentUpon>

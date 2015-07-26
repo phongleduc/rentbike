@@ -1,7 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormReport.aspx.cs" Inherits="RentBike.FormReport" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormSubscribeToOweFee.aspx.cs" Inherits="RentBike.FormSubscribeToOweFee" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <h2>THÔNG BÁO</h2>
+    <h2>THEO DÕI NỢ PHÍ</h2>
     <table class="table table-striped table-hover ">
         <tbody>
             <tr>
@@ -15,19 +15,19 @@
             </tr>
         </tbody>
     </table>
-    <table class="table table-striped table-hover ">
+        <table class="table table-striped table-hover ">
         <tbody>
             <tr>
-                <td class="text-left" style="font-size:16px;"><strong>Tổng phí chậm&nbsp;:&nbsp;&nbsp;<asp:Label ID="lblTotalAmountLeft" runat="server" CssClass="text-left"></asp:Label></strong></td>
+                <td class="text-left" style="font-size:16px;"><strong>Tổng nợ phí hiện tại&nbsp;:&nbsp;&nbsp;<asp:Label ID="lblTotalAmountLeft" runat="server" CssClass="text-left"></asp:Label></strong></td>
             </tr>
         </tbody>
     </table>
     <asp:Repeater ID="rptReport" runat="server">
         <HeaderTemplate>
-            <div class="text-right" style="margin-bottom: 5px">
+<%--            <div class="text-right" style="margin-bottom: 5px">
                 <a class="print" href="javascript:void(0);">
                     <i class="glyphicon glyphicon-print"></i>&nbsp;In</a>&nbsp;&nbsp;
-            </div>
+            </div>--%>
             <div id="areaToPrint">
                 <table id="tblReport" class="table table-hover ">
                     <thead>
@@ -38,7 +38,7 @@
                             <th>Số ĐT khách hàng</th>
                             <th class="text-right">Giá trị HĐ/Phí</th>
                             <th class="text-right">Số lần đóng phí</th>
-                            <th class="text-center">Thông báo</th>
+                            <th class="text-center">Phí đang nợ</th>
                             <th class="text-center">Số ngày quá hạn</th>
                         </tr>
                     </thead>
@@ -53,7 +53,7 @@
                 <td><%# Eval("PHONE") %></td>
                 <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("FEE_PER_DAY"))) %></td>
                 <td class="text-right"><%# Eval("PAYED_TIME") %> lần</td>
-                <td class="text-right"><%# Eval("NOTE") %></td>
+                <td class="text-right"><%# string.Format("{0:0,0}", Convert.ToDecimal(Eval("AMOUNT_LEFT"))) %></td>
                 <td class="text-center"><%# Eval("OVER_DATE") %> Ngày
                     <br />
                     <span style="color: red">(<%# Convert.ToDateTime(Eval("PAY_DATE")).ToString("dd/MM/yyyy") %>)</span></td>

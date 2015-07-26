@@ -27,5 +27,6 @@ namespace RentBike
         public string ADDRESS { get; set; }
         public byte[] PHOTO { get; set; }
         public int CITY_ID { get; set; }
+        public bool IS_LOW_RECOVERABILITY { get; set; }
     }
 }

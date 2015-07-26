@@ -190,5 +190,6 @@ namespace RentBike
         public int PERIOD_ID { get; set; }
         public string PERIOD_MESSAGE { get; set; }
         public string CSS_CLASS { get; set; }
+        public decimal AMOUNT_LEFT { get; set; }
     }
 }

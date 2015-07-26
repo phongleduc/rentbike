@@ -10,7 +10,7 @@
 namespace RentBike {
     
     
-    public partial class FormReport {
+    public partial class FormSubscribeToOweFee {
         
         /// <summary>
         /// txtSearch control.

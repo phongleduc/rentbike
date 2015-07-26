@@ -14,6 +14,9 @@
             </tr>
         </tbody>
     </table>
+    <b>Loại hợp đồng:</b>
+                    <asp:DropDownList ID="drpRentType" runat="server" CssClass="form-control drp-renttype" OnSelectedIndexChanged="drpRentType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+    <br />
     <table class="table table-striped table-hover ">
         <tbody>
             <tr>
@@ -84,8 +87,6 @@
         </FooterTemplate>
     </asp:Repeater>
     <%--    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true" Visible="false"></asp:DropDownList>--%>
-    <b>Loại hợp đồng:</b>
-    <asp:DropDownList ID="drpRentType" runat="server" CssClass="form-control drp-renttype" OnSelectedIndexChanged="drpRentType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
     <script>
         $(function () {
             $('#<%=txtSearch.ClientID %>').keypress(function (e) {

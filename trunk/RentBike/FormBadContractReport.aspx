@@ -11,7 +11,10 @@
                     </div>
                 </td>
                 <td>
-                    <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClick="btnSearch_Click" /></td>
+                    <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn btn-primary" OnClick="btnSearch_Click" />
+                    &nbsp;&nbsp;&nbsp;<strong style="display:inline-block;">Loại khách hàng:&nbsp;</strong>
+                    <asp:DropDownList ID="drpCustomerType" runat="server" CssClass="form-control drp-renttype" style="display:inline-block;" OnSelectedIndexChanged="drpCustomerType_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                </td>
             </tr>
         </tbody>
     </table>

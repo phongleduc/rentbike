@@ -69,5 +69,6 @@ namespace RentBike
         public byte[] PHOTO { get; set; }
         public string RENT_TYPE_NAME { get; set; }
         public System.DateTime CLOSE_CONTRACT_DATE { get; set; }
+        public bool IS_LOW_RECOVERABILITY { get; set; }
     }
 }

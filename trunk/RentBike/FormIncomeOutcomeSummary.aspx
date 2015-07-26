@@ -182,41 +182,59 @@
     <table class="table table-striped table-hover" style="width: 50%; margin-left: 25%;">
         <tbody>
             <tr class="success">
-                <td colspan="2" class="text-center"><strong>Tổng kết kinh doanh tháng <%=StartDate.Month %></strong></td>
+                <td colspan="4" class="text-center"><strong>Tổng kết kinh doanh tháng <%=StartDate.Month %></strong></td>
             </tr>
             <tr>
                 <td>Tổng cho thuê</td>
                 <td class="text-right">
                     <asp:Label ID="lblTotalContractAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                <td>Tổng nhập vốn</td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalInCapitalF" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
             <tr>
                 <td>Tổng thanh lý</td>
                 <td class="text-right">
                     <asp:Label ID="lblClosedAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                <td>Tổng xuất vốn</td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalOutCapitalF" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
             <tr>
                 <td>Hiệu quả</td>
                 <td class="text-right">
                     <asp:Label ID="lblResultAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                <td>Tổng phí lý thuyết</td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalTheoryFee" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
             <tr>
                 <td>Tổng thu</td>
                 <td class="text-right">
                     <asp:Label ID="lblTotalInAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                <td>Tổng thu</td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalRealFee" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
             <tr>
                 <td>Tổng chi</td>
                 <td class="text-right">
                     <asp:Label ID="lblTotalOutAmount" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                <td>Tổng phí chậm</td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalSlowFee" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
             <tr>
                 <td>Doanh thu</td>
                 <td class="text-right">
                     <asp:Label ID="lblRevenue" runat="server" Text="" CssClass="text-right"></asp:Label></td>
+                <td>Tổng nợ phí</td>
+                <td class="text-right">
+                    <asp:Label ID="lblTotalDebtFee" runat="server" Text="" CssClass="text-right"></asp:Label></td>
             </tr>
         </tbody>
     </table>
-    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control dropdown-pager-width" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+    <asp:DropDownList ID="ddlPager" runat="server" CssClass="form-control drp-renttype" OnSelectedIndexChanged="ddlPager_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
     <script>
         $(function () {
             $("#txtViewDate").datepicker();
