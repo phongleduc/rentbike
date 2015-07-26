@@ -145,7 +145,7 @@ namespace RentBike.Common
                         {
                             break;
                         }
-                        lastPayPeriod = CreateOneMorePayPeriod(db, contract, lastPayPeriod.PAY_DATE, multipleFee, increateFeeCar, increateFeeEquip, increateFeeOther, false);
+                        lastPayPeriod = CreateOneMorePayPeriod(db, contract, lastPayPeriod, multipleFee, increateFeeCar, increateFeeEquip, increateFeeOther, false);
                     }
 
                     contract.EXTEND_END_DATE = lastPayPeriod.PAY_DATE;
@@ -154,28 +154,33 @@ namespace RentBike.Common
             }
         }
 
-        private static PayPeriod CreateOneMorePayPeriod(RentBikeEntities db, Contract contract, DateTime lastPeriodDate, decimal multipleFee, decimal increateFeeCar, decimal increateFeeEquip, decimal increateFeeOther, bool bFirstCreated)
+        private static PayPeriod CreateOneMorePayPeriod(RentBikeEntities db, Contract contract, PayPeriod lastPeriod, decimal multipleFee, decimal increateFeeCar, decimal increateFeeEquip, decimal increateFeeOther, bool bFirstCreated)
         {
             PayPeriod pp1 = new PayPeriod();
             pp1.CONTRACT_ID = contract.ID;
             if (bFirstCreated)
             {
-                pp1.PAY_DATE = lastPeriodDate;
+                pp1.PAY_DATE = lastPeriod.PAY_DATE;
                 pp1.AMOUNT_PER_PERIOD = increateFeeCar;
             }
             else
             {
-                pp1.PAY_DATE = lastPeriodDate.AddDays(10);
+                pp1.PAY_DATE = lastPeriod.PAY_DATE.AddDays(10);
                 if (contract.FEE_PER_DAY > 0)
                 {
                     switch (contract.RENT_TYPE_ID)
                     {
                         case 1:
                         case 2:
-                            if (((contract.FEE_PER_DAY / multipleFee) * 10) < 4000)
-                                pp1.AMOUNT_PER_PERIOD = increateFeeCar;
+                            if (contract.FEE_PER_DAY < (lastPeriod.AMOUNT_PER_PERIOD / 10))
+                                pp1.AMOUNT_PER_PERIOD = lastPeriod.AMOUNT_PER_PERIOD;
                             else
-                                pp1.AMOUNT_PER_PERIOD = increateFeeOther;
+                            {
+                                if (((contract.FEE_PER_DAY / multipleFee) * 10) < 4000)
+                                    pp1.AMOUNT_PER_PERIOD = increateFeeCar;
+                                else
+                                    pp1.AMOUNT_PER_PERIOD = increateFeeOther;
+                            }
                             break;
                         //case 2:
                         //    if (((contract.FEE_PER_DAY / multipleFee) * 10) < 6000)
@@ -219,7 +224,7 @@ namespace RentBike.Common
 
             return pp3;
         }
-        public static void CreatePayPeriod(RentBikeEntities db, int contractId, DateTime lastPeriodDate, bool bFirstCreate)
+        public static void CreatePayPeriod(RentBikeEntities db, int contractId, PayPeriod lastPeriod, bool bFirstCreate)
         {
             var contract = db.Contracts.FirstOrDefault(c => c.CONTRACT_STATUS == true && c.ID == contractId);
             if (contract != null)
@@ -230,7 +235,7 @@ namespace RentBike.Common
                 decimal increateFeeOther;
 
                 CalculatePeriodFee(contract, out multipleFee, out increateFeeCar, out increateFeeEquip, out increateFeeOther, bFirstCreate);
-                CreateOneMorePayPeriod(db, contract, lastPeriodDate, multipleFee, increateFeeCar, increateFeeEquip, increateFeeOther, bFirstCreate);
+                CreateOneMorePayPeriod(db, contract, lastPeriod, multipleFee, increateFeeCar, increateFeeEquip, increateFeeOther, bFirstCreate);
             }
         }
 
@@ -636,7 +641,7 @@ namespace RentBike.Common
 
                     if (totalActualPay > totalPlanPay)
                     {
-                        CommonList.CreatePayPeriod(db, contract.ID, payList.LastOrDefault().PAY_DATE, false);
+                        CommonList.CreatePayPeriod(db, contract.ID, payList.LastOrDefault(), false);
                     }
                 }
             }

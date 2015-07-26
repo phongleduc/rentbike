@@ -500,12 +500,14 @@ namespace RentBike
                             db.SaveChanges();
 
 
-                            DateTime periodTime = DateTime.Now;
+                            DateTime periodTime = DateTime.Today;
                             if (!string.IsNullOrEmpty(txtRentDate.Text))
                             {
                                 periodTime = DateTime.ParseExact(txtRentDate.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                             }
-                            CommonList.CreatePayPeriod(db, item.ID, periodTime, true);
+                            PayPeriod newPeriod = new PayPeriod();
+                            newPeriod.PAY_DATE = periodTime;
+                            CommonList.CreatePayPeriod(db, item.ID, newPeriod, true);
                         }
 
                         InOut io = new InOut();

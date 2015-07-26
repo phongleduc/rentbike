@@ -118,7 +118,7 @@ namespace RentBike
 
                     if (totalActualPay > totalPlanPay)
                     {
-                        CommonList.CreatePayPeriod(db, contract.ID, payList.LastOrDefault().PAY_DATE, false);
+                        CommonList.CreatePayPeriod(db, contract.ID, payList.LastOrDefault(), false);
                     }
 
                     InOut io = new InOut();
