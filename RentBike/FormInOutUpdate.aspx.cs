@@ -187,8 +187,8 @@ namespace RentBike
                     }
 
                     decimal totalAmountPeriod = lstPeriod.Where(c => c.PAY_DATE <= DateTime.Today).Select(c => c.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
-                    decimal totalAmoutPaid = lstPeriod.Where(c => c.PAY_DATE <= DateTime.Today).Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
-                    totalAmountLeft = totalAmountPeriod - totalAmoutPaid <= 0 ? 0 : totalAmountPeriod - totalAmoutPaid;
+                    decimal totalAmountPaid = lstPeriod.Where(c => c.PAY_DATE <= DateTime.Today).Select(c => c.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                    totalAmountLeft = totalAmountPeriod - totalAmountPaid <= 0 ? 0 : totalAmountPeriod - totalAmountPaid;
                 }
 
                 if (pp.AMOUNT_PER_PERIOD - total > 0)

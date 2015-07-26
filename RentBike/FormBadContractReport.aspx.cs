@@ -15,13 +15,21 @@ namespace RentBike
             base.Page_Load(sender, e);
             if (!IsPostBack)
             {
-                List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text);
+                InitCustType();
+                List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text, string.Empty);
                 LoadGeneralInfo(result);
                 LoadData(result);
             }
         }
 
-        private List<CONTRACT_FULL_VW> GetResultList(string strSearch)
+        private void InitCustType()
+        {
+            drpCustomerType.Items.Add(new ListItem("Tất cả", ""));
+            drpCustomerType.Items.Add(new ListItem("Khách hàng xấu", "1"));
+            drpCustomerType.Items.Add(new ListItem("Khách hàng khả năng thu hồi thấp", "2"));
+        }
+
+        private List<CONTRACT_FULL_VW> GetResultList(string strSearch, string customerType)
         {
             using (var db = new RentBikeEntities())
             {
@@ -30,6 +38,21 @@ namespace RentBike
                 if (STORE_ID != 0)
                     dataList = dataList.Where(c => c.STORE_ID == STORE_ID);
 
+                if (!string.IsNullOrEmpty(customerType))
+                {
+                    switch(customerType)
+                    {
+                        case "1":
+                            dataList = dataList.Where(c =>c.IS_LOW_RECOVERABILITY == false);
+                            break;
+                        case "2":
+                            dataList = dataList.Where(c => c.IS_LOW_RECOVERABILITY == true);
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
                 if (!string.IsNullOrEmpty(strSearch))
                     dataList = dataList.Where(s => s.SEARCH_TEXT.ToLower().Contains(txtSearch.Text.ToLower())
                         || s.CUSTOMER_NAME.ToLower().Contains(txtSearch.Text.ToLower()));
@@ -73,7 +96,14 @@ namespace RentBike
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text);
+            List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text, string.Empty);
+            LoadGeneralInfo(result);
+            LoadData(result);
+        }
+
+        protected void drpCustomerType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text, drpCustomerType.SelectedValue);
             LoadGeneralInfo(result);
             LoadData(result);
         }
@@ -123,7 +153,7 @@ namespace RentBike
 
         protected override void ddlStore_SelectedIndexChanged(object sender, EventArgs e)
         {
-            List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text);
+            List<CONTRACT_FULL_VW> result = GetResultList(txtSearch.Text, string.Empty);
             LoadGeneralInfo(result);
             LoadData(result);
         }

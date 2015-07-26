@@ -10,9 +10,10 @@ using System.Web.UI.WebControls;
 
 namespace RentBike
 {
-    public partial class FormReport : FormBase
+    public partial class FormSubscribeToOweFee : FormBase
     {
         public string SearchDate { get; set; }
+        public decimal TotalAmountLeft { get; set; }
 
         protected override void Page_Load(object sender, EventArgs e)
         {
@@ -28,7 +29,7 @@ namespace RentBike
             List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
             using (var db = new RentBikeEntities())
             {
-                var st = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true && c.ACTIVE == true);
+                var st = db.CONTRACT_FULL_VW.Where(c =>c.CONTRACT_STATUS == true && c.ACTIVE == true && c.IS_LOW_RECOVERABILITY == false);
 
                 if (STORE_ID != 0)
                 {
@@ -87,7 +88,7 @@ namespace RentBike
                                     }
                                 }
                                 c.PERIOD_ID = pp.ID;
-                                if (c.OVER_DATE >= 0 && c.OVER_DATE <= 50)
+                                if (c.OVER_DATE >= 11)
                                     bAdd = true;
                                 break;
                             }

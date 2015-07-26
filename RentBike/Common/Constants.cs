@@ -30,6 +30,9 @@ namespace RentBike.Common
         public const string DUMMY_INOUT = "This is a dummy record";
         public const string DUMMY_USER = "Dummy User";
 
+        public const string LOW_RECOVERABILITY = "Khách hàng {0} đã bị liệt vào danh sách có khả năng thu hồi thấp và không thể được nhìn thấy ở màn hình Danh sách gọi phí và Theo dõi nợ phí";
+        public const string REVERT_LOW_RECOVERABILITY = "Khách hàng {0} đã được bỏ khỏi danh sách có khả năng thu hồi thấp và có thể được nhìn thấy ở màn hình Danh sách gọi phí và Theo dõi nợ phí";
+
         public const string SINGLETON_FILE = "batch.sg";
     }
 }

@@ -110,6 +110,16 @@ namespace RentBike
                             txtSchool.Text = cntrct.SCHOOL_NAME;
                             txtClass.Text = cntrct.CLASS_NAME;
 
+                            Customer customer = db.Customers.FirstOrDefault(c => c.ID == cntrct.CUSTOMER_ID);
+                            if (customer != null)
+                            {
+                                if (customer.IS_LOW_RECOVERABILITY)
+                                {
+                                    btnLowRecoverability.Text = "Bỏ khả năng thu hồi thấp";
+                                    btnLowRecoverability.CommandArgument = "RevertLowRecoverability";
+                                }
+                            }
+
                             BuildPhotoLibrary(cntrct);
 
                             ddlStore.Enabled = txtContractNo.Enabled = txtRentDate.Enabled = txtEndDate.Enabled = false;
@@ -662,6 +672,7 @@ namespace RentBike
             {
                 lblMessage.Text = ex.Message;
                 lblMessage.CssClass = "text-center text-danger";
+                Logger.Log(ex.Message);
             }
         }
 
@@ -707,7 +718,7 @@ namespace RentBike
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Logger.Log(ex.Message);
                 }
             }
         }
@@ -719,7 +730,7 @@ namespace RentBike
                 if (!string.IsNullOrEmpty(path) && File.Exists(Server.MapPath("~") + path))
                     File.Delete(Server.MapPath("~") + path);
             }
-            catch { ; }
+            catch(Exception ex) { Logger.Log(ex.Message); }
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
@@ -760,6 +771,47 @@ namespace RentBike
                     rptPayFeeSchedule.DataSource = payList;
                     rptPayFeeSchedule.DataBind();
                 }
+            }
+        }
+
+        protected void btnLowRecoverability_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string id = Request.QueryString["ID"];
+                using (var db = new RentBikeEntities())
+                {
+                    int contractId = Helper.parseInt(id);
+                    var contract = db.Contracts.FirstOrDefault(c => c.CONTRACT_STATUS == true && c.ID == contractId);
+                    if (contract != null)
+                    {
+                        Customer customer = db.Customers.FirstOrDefault(c => c.ID == contract.CUSTOMER_ID);
+                        if (customer != null)
+                        {
+                            if (btnLowRecoverability.CommandArgument == "LowRecoverability")
+                            {
+                                customer.IS_LOW_RECOVERABILITY = true;
+                                lblMessage.Text = string.Format(Constants.LOW_RECOVERABILITY, customer.NAME);
+                                btnLowRecoverability.Text = "Bỏ khả năng thu hồi thấp";
+                                btnLowRecoverability.CommandArgument = "RevertLowRecoverability";
+                            }
+                            else
+                            {
+                                customer.IS_LOW_RECOVERABILITY = false;
+                                lblMessage.Text = string.Format(Constants.REVERT_LOW_RECOVERABILITY, customer.NAME);
+                                btnLowRecoverability.Text = "Khả năng thu hồi thấp";
+                                btnLowRecoverability.CommandArgument = "LowRecoverability";
+                            }
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                lblMessage.Text = ex.Message;
+                lblMessage.CssClass = "text-center text-danger";
+                Logger.Log(ex.Message);
             }
         }
 

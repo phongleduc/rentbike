@@ -261,7 +261,7 @@ namespace RentBike.Common
                 //int totalRecord = 0;
                 List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
 
-                var st = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true && c.ACTIVE == true);
+                var st = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true && c.ACTIVE == true && c.IS_LOW_RECOVERABILITY == false);
 
                 if (storeId != 0)
                 {
@@ -382,6 +382,78 @@ namespace RentBike.Common
                 }
                 return dataList.OrderBy(c => c.DAY_DONE).ToList();
             }
+        }
+
+        public static List<CONTRACT_FULL_VW> GetReportData(int storeId)
+        {
+            List<CONTRACT_FULL_VW> dataList = new List<CONTRACT_FULL_VW>();
+            using (var db = new RentBikeEntities())
+            {
+                var st = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true && c.ACTIVE == true);
+
+                if (storeId != 0)
+                {
+                    st = st.Where(c => c.STORE_ID == storeId);
+                }
+                st = st.OrderByDescending(c => c.ID);
+
+                var lstPeriod = db.PayPeriods.Where(s => s.STATUS == true).ToList();
+                foreach (CONTRACT_FULL_VW c in st)
+                {
+                    var inOutList = db.InOuts.Where(s => s.CONTRACT_ID == c.ID).ToList();
+
+                    c.PAYED_TIME = 0;
+                    c.PAY_DATE = c.RENT_DATE;
+                    c.DAY_DONE = DateTime.Now.Subtract(c.PAY_DATE).Days;
+
+                    var tmpLstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID);
+                    if (tmpLstPeriod != null)
+                    {
+                        decimal totalAmountPeriod = tmpLstPeriod.Where(s => s.PAY_DATE <= DateTime.Today).Select(s => s.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
+                        decimal totalAmountPaid = tmpLstPeriod.Where(s => s.PAY_DATE <= DateTime.Today).Select(s => s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                        c.AMOUNT_LEFT = totalAmountPeriod - totalAmountPaid <= 0 ? 0 : totalAmountPeriod - totalAmountPaid;
+
+                        decimal paidAmount = tmpLstPeriod.Where(s => s.ACTUAL_PAY > 0).Select(s => s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                        int paidNumberOfFee = 0;
+                        foreach (PayPeriod pp in tmpLstPeriod)
+                        {
+                            if (pp.AMOUNT_PER_PERIOD == 0)
+                            {
+                                c.OVER_DATE = 0;
+                                break;
+                            }
+                            paidAmount -= pp.AMOUNT_PER_PERIOD;
+                            if (paidAmount >= 0)
+                                paidNumberOfFee += 1;
+
+                            if (paidAmount <= 0)
+                            {
+                                if (paidAmount < 0)
+                                {
+                                    c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE).Days;
+                                    c.PAY_DATE = pp.PAY_DATE;
+                                }
+                                else
+                                {
+                                    if (tmpLstPeriod.Any(s => s.PAY_DATE == pp.PAY_DATE.AddDays(9)))
+                                    {
+                                        c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE.AddDays(9)).Days;
+                                        c.PAY_DATE = pp.PAY_DATE.AddDays(9);
+                                    }
+                                    else
+                                    {
+                                        c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE.AddDays(10)).Days;
+                                        c.PAY_DATE = pp.PAY_DATE.AddDays(10);
+                                    }
+                                }
+                                c.PERIOD_ID = pp.ID;
+                            }
+                        }
+                        dataList.Add(c);
+                    }
+                }
+            }
+            return dataList;
         }
 
         private static string GetPeriodMessage(List<PayPeriod> listPay, DateTime searchDate)

@@ -77,9 +77,6 @@ body {
     width: 200px;
 }
 
-
-
-
 .color-danger {
     background-color: #e74c3c;
 }
@@ -310,5 +307,15 @@ button, input, optgroup, select, textarea {
  
 .ui-tooltip-custom .ui-tooltip-tip {
     background-color: #18bc9c;
+}
+
+.rent-type-extra {
+    width:62%;
+    display:inline-block;
+}
+.low-recoverability {
+    display:inline-block;
+    margin-top:-5px;
+    margin-left:15px;
 }
 

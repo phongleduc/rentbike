@@ -84,7 +84,9 @@
                 <tr>
                     <td class="text-right">Loại hình</td>
                     <td>
-                        <asp:DropDownList ID="ddlRentType" runat="server" CssClass="form-control" onchange="onRentTypeChange();"></asp:DropDownList></td>
+                        <asp:DropDownList ID="ddlRentType" runat="server" CssClass="form-control rent-type-extra" onchange="onRentTypeChange();"></asp:DropDownList>
+                        <asp:Button ID="btnLowRecoverability" runat="server" Text="Khả năng thu hồi thấp" CssClass="btn btn-primary low-recoverability" OnClick="btnLowRecoverability_Click"  CommandArgument="LowRecoverability"/>
+                    </td>
                 </tr>
                 <tr>
                     <td class="text-right">Cửa hàng</td>

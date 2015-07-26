@@ -70,5 +70,6 @@ namespace RentBike
         public string UPDATED_BY { get; set; }
         public Nullable<System.DateTime> UPDATED_DATE { get; set; }
         public Nullable<bool> ACTIVE { get; set; }
+        public bool IS_LOW_RECOVERABILITY { get; set; }
     }
 }

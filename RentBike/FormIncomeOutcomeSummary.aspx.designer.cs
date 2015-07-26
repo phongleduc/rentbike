@@ -49,6 +49,15 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.Label lblTotalContractAmount;
         
         /// <summary>
+        /// lblTotalInCapitalF control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalInCapitalF;
+        
+        /// <summary>
         /// lblClosedAmount control.
         /// </summary>
         /// <remarks>
@@ -56,6 +65,15 @@ namespace RentBike {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblClosedAmount;
+        
+        /// <summary>
+        /// lblTotalOutCapitalF control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalOutCapitalF;
         
         /// <summary>
         /// lblResultAmount control.
@@ -67,6 +85,15 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.Label lblResultAmount;
         
         /// <summary>
+        /// lblTotalTheoryFee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalTheoryFee;
+        
+        /// <summary>
         /// lblTotalInAmount control.
         /// </summary>
         /// <remarks>
@@ -74,6 +101,15 @@ namespace RentBike {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTotalInAmount;
+        
+        /// <summary>
+        /// lblTotalRealFee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalRealFee;
         
         /// <summary>
         /// lblTotalOutAmount control.
@@ -85,6 +121,15 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.Label lblTotalOutAmount;
         
         /// <summary>
+        /// lblTotalSlowFee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalSlowFee;
+        
+        /// <summary>
         /// lblRevenue control.
         /// </summary>
         /// <remarks>
@@ -92,6 +137,15 @@ namespace RentBike {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblRevenue;
+        
+        /// <summary>
+        /// lblTotalDebtFee control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTotalDebtFee;
         
         /// <summary>
         /// ddlPager control.
