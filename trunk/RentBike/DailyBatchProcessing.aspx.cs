@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -28,6 +29,16 @@ namespace RentBike
                     CommonList.SaveSummaryPayFeeDaily();
                     Logger.Log("Save summary fee daily end");
 
+                    int day = Convert.ToInt32(WebConfigurationManager.AppSettings["RentBike.EndDayOfMonth"]);
+                    if (day == 0) day = 6;
+
+                    if (Helper.IsDay(day))
+                    {
+                        Logger.Log("Save summary fee montly start");
+                        CommonList.SaveSummaryPayFeeMonthly();
+                        Logger.Log("Save summary fee montly start");
+                    }
+
                     Logger.Log("Auto extend contract start");
                     CommonList.AutoExtendContract();
                     Logger.Log("Auto extend contract end");
@@ -39,14 +50,15 @@ namespace RentBike
                     Logger.Log("Backup database into dropbox start");
                     DropboxHelper.BackUp();
                     Logger.Log("Backup database into dropbox end");
-
-                    Singleton.DeleteSingletonFile();
                 }
             }
             catch (Exception ex)
             {
-                Singleton.DeleteSingletonFile();
                 Logger.Log("Error Entry at: " + ex.Message + Environment.NewLine + ex.StackTrace);
+            }
+            finally
+            {
+                Singleton.DeleteSingletonFile();
             }
         }
     }

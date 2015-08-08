@@ -81,5 +81,13 @@ namespace RentBike.Common
 
             return encrypted;
         }
+
+        public static bool IsDay(int day)
+        {
+            DateTime now = DateTime.Today;
+            if (day == now.Day) return true;
+
+            return false;
+        }
     }
 }
