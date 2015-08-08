@@ -279,6 +279,22 @@
           <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
           <Property Name="UPDATED_DATE" Type="datetime" />
         </EntityType>
+        <EntityType Name="SummaryPayFeeMonthly">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SUMMURY_FEE" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="SUMMURY_FEE_TYPE" Type="int" Nullable="false" />
+          <Property Name="SUMMURY_DATE" Type="date" Nullable="false" />
+          <Property Name="STORE_ID" Type="int" Nullable="false" />
+          <Property Name="STORE_NAME" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="NOTE" Type="nvarchar" MaxLength="500" />
+          <Property Name="CREATED_BY" Type="nvarchar" MaxLength="50" />
+          <Property Name="CREATED_DATE" Type="datetime" />
+          <Property Name="UPDATED_BY" Type="nvarchar" MaxLength="50" />
+          <Property Name="UPDATED_DATE" Type="datetime" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'prohaihung.dbo.CONTRACT_FULL_VW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="CONTRACT_FULL_VW">
@@ -568,6 +584,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <EntitySet Name="Store" EntityType="Self.Store" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="StoreFee" EntityType="Self.StoreFee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SummaryPayFeeDaily" EntityType="Self.SummaryPayFeeDaily" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SummaryPayFeeMonthly" EntityType="Self.SummaryPayFeeMonthly" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CONTRACT_FULL_VW" EntityType="Self.CONTRACT_FULL_VW" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [CONTRACT_FULL_VW].[ID] AS [ID], 
@@ -1305,7 +1322,24 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <FunctionImport Name="BackUp">
           <Parameter Name="path" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="SummaryPayFeeMonthlies" EntityType="RentBikeModel.SummaryPayFeeMonthly" />
         </EntityContainer>
+        <EntityType Name="SummaryPayFeeMonthly">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SUMMURY_FEE" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="SUMMURY_DATE" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="STORE_ID" Type="Int32" Nullable="false" />
+          <Property Name="STORE_NAME" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="NOTE" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CREATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CREATED_DATE" Type="DateTime" Precision="3" />
+          <Property Name="UPDATED_BY" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UPDATED_DATE" Type="DateTime" Precision="3" />
+          <Property Name="SUMMURY_FEE_TYPE" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1783,6 +1817,23 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="BackUp" FunctionName="RentBikeModel.Store.BackUp" />
+          <EntitySetMapping Name="SummaryPayFeeMonthlies">
+            <EntityTypeMapping TypeName="RentBikeModel.SummaryPayFeeMonthly">
+              <MappingFragment StoreEntitySet="SummaryPayFeeMonthly">
+                <ScalarProperty Name="SUMMURY_FEE_TYPE" ColumnName="SUMMURY_FEE_TYPE" />
+                <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
+                <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
+                <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
+                <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
+                <ScalarProperty Name="NOTE" ColumnName="NOTE" />
+                <ScalarProperty Name="STORE_NAME" ColumnName="STORE_NAME" />
+                <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
+                <ScalarProperty Name="SUMMURY_DATE" ColumnName="SUMMURY_DATE" />
+                <ScalarProperty Name="SUMMURY_FEE" ColumnName="SUMMURY_FEE" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

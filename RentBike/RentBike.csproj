@@ -330,6 +330,9 @@
     <Compile Include="SummaryPayFeeDaily.cs">
       <DependentUpon>RentBike.tt</DependentUpon>
     </Compile>
+    <Compile Include="SummaryPayFeeMonthly.cs">
+      <DependentUpon>RentBike.tt</DependentUpon>
+    </Compile>
     <Content Include="App_Code\CommonClass.cs" />
     <Compile Include="Common\CommonList.cs" />
     <Compile Include="Common\Helper.cs" />

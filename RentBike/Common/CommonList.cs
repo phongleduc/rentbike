@@ -104,15 +104,22 @@ namespace RentBike.Common
         private static void CalculatePeriodFee(Contract contract, out int multipleFee, out decimal increateFeeCar, out decimal increateFeeEquip, out decimal increateFeeOther, bool bFirstCreate)
         {
             multipleFee = Convert.ToInt32(Decimal.Floor(contract.CONTRACT_AMOUNT / 100000));
-            if (bFirstCreate)
+            if (contract.FEE_PER_DAY == 0)
             {
-                increateFeeCar = increateFeeEquip = increateFeeOther = contract.FEE_PER_DAY * 10;
+                increateFeeCar = increateFeeEquip = increateFeeOther = 0;
             }
             else
             {
-                increateFeeCar = increateFeeEquip = (contract.FEE_PER_DAY * 10) + (multipleFee * 50 * 10);
-                //increateFeeEquip = (contract.FEE_PER_DAY * 10) + (multipleFee * 100 * 10);
-                increateFeeOther = (contract.FEE_PER_DAY * 10);
+                if (bFirstCreate)
+                {
+                    increateFeeCar = increateFeeEquip = increateFeeOther = contract.FEE_PER_DAY * 10;
+                }
+                else
+                {
+                    increateFeeCar = increateFeeEquip = (contract.FEE_PER_DAY * 10) + (multipleFee * 50 * 10);
+                    //increateFeeEquip = (contract.FEE_PER_DAY * 10) + (multipleFee * 100 * 10);
+                    increateFeeOther = (contract.FEE_PER_DAY * 10);
+                }
             }
         }
 
@@ -745,6 +752,144 @@ namespace RentBike.Common
             }
         }
 
+        public static void GetSummuryFeeMonthly(out decimal totalSlowFee, out decimal totalDebtFee, int storeId)
+        {
+            totalSlowFee = 0;
+            totalDebtFee = 0;
+            using (var db = new RentBikeEntities())
+            {
+                var lstPeriod = db.PayPeriods.Where(s => s.STATUS == true).ToList();
+                List<CONTRACT_FULL_VW> dataSlowList = new List<CONTRACT_FULL_VW>();
+                List<CONTRACT_FULL_VW> dataDebtList = new List<CONTRACT_FULL_VW>();
+
+                var st = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true && c.ACTIVE == true);
+                if (storeId != 0)
+                {
+                    st = st.Where(c => c.STORE_ID == storeId);
+                }
+                foreach (CONTRACT_FULL_VW c in st)
+                {
+                    c.PAYED_TIME = 0;
+                    c.PAY_DATE = c.RENT_DATE;
+                    c.DAY_DONE = DateTime.Now.Subtract(c.PAY_DATE).Days;
+
+                    var tmpLstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID);
+                    if (tmpLstPeriod != null)
+                    {
+                        decimal totalAmountPeriod = tmpLstPeriod.Where(s => s.PAY_DATE <= DateTime.Today).Select(s => s.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
+                        decimal totalAmountPaid = tmpLstPeriod.Where(s => s.PAY_DATE <= DateTime.Today).Select(s => s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                        c.AMOUNT_LEFT = totalAmountPeriod - totalAmountPaid <= 0 ? 0 : totalAmountPeriod - totalAmountPaid;
+
+                        decimal paidAmount = tmpLstPeriod.Where(s => s.ACTUAL_PAY > 0).Select(s => s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
+                        foreach (PayPeriod pp in tmpLstPeriod)
+                        {
+                            if (pp.AMOUNT_PER_PERIOD == 0)
+                            {
+                                c.OVER_DATE = 0;
+                                break;
+                            }
+                            paidAmount -= pp.AMOUNT_PER_PERIOD;
+                            if (paidAmount <= 0)
+                            {
+                                if (paidAmount < 0)
+                                {
+                                    c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE).Days;
+                                }
+                                else
+                                {
+                                    if (tmpLstPeriod.Any(s => s.PAY_DATE == pp.PAY_DATE.AddDays(9)))
+                                    {
+                                        c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE.AddDays(9)).Days;
+                                    }
+                                    else
+                                    {
+                                        c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE.AddDays(10)).Days;
+                                    }
+                                }
+                                c.PERIOD_ID = pp.ID;
+                                if (c.OVER_DATE >= 0)
+                                {
+                                    if (c.OVER_DATE <= 50)
+                                        dataSlowList.Add(c);
+
+                                    if (c.OVER_DATE >= 11 && c.IS_LOW_RECOVERABILITY == false)
+                                        dataDebtList.Add(c);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                totalSlowFee = dataSlowList.Select(c => c.AMOUNT_LEFT).DefaultIfEmpty(0).Sum();
+                totalDebtFee = dataDebtList.Select(c => c.AMOUNT_LEFT).DefaultIfEmpty(0).Sum();
+            }
+        }
+
+        public static void SaveSummaryPayFeeMonthly()
+        {
+            decimal totalSlowFee, totalDebtFee;
+            using (var db = new RentBikeEntities())
+            {
+                try
+                {
+                    var stores = db.Stores.Where(c => c.ACTIVE == true).ToList();
+                    foreach (var store in stores)
+                    {
+                        if (db.SummaryPayFeeMonthlies.Any(c => c.SUMMURY_DATE == DateTime.Today
+                                && c.STORE_ID == store.ID))
+                            continue;
+
+                        GetSummuryFeeMonthly(out totalSlowFee, out totalDebtFee, store.ID);
+
+                        SummaryPayFeeMonthly sum1 = new SummaryPayFeeMonthly();
+                        sum1.STORE_ID = store.ID;
+                        sum1.STORE_NAME = store.NAME;
+                        sum1.SUMMURY_FEE = totalSlowFee;
+                        sum1.SUMMURY_FEE_TYPE = (int)SUMMURY_FEE_TYPE.SLOW_FEE;
+                        sum1.SUMMURY_DATE = DateTime.Today;
+                        sum1.NOTE = Constants.SUMMURY_SLOW_FEE;
+                        sum1.CREATED_DATE = DateTime.Now;
+                        sum1.CREATED_BY = Constants.DUMMY_USER;
+                        sum1.UPDATED_DATE = DateTime.Now;
+                        sum1.UPDATED_BY = Constants.DUMMY_USER;
+                        db.SummaryPayFeeMonthlies.Add(sum1);
+
+                        SummaryPayFeeMonthly sum2 = new SummaryPayFeeMonthly();
+                        sum2.STORE_ID = store.ID;
+                        sum2.STORE_NAME = store.NAME;
+                        sum2.SUMMURY_FEE = totalDebtFee;
+                        sum2.SUMMURY_FEE_TYPE = (int)SUMMURY_FEE_TYPE.DEBT_FEE;
+                        sum2.SUMMURY_DATE = DateTime.Today;
+                        sum2.NOTE = Constants.SUMMURY_DEBT_FEE;
+                        sum2.CREATED_DATE = DateTime.Now;
+                        sum2.CREATED_BY = Constants.DUMMY_USER;
+                        sum2.UPDATED_DATE = DateTime.Now;
+                        sum2.UPDATED_BY = Constants.DUMMY_USER;
+                        db.SummaryPayFeeMonthlies.Add(sum2);
+
+                    }
+                    db.SaveChanges();
+                }
+                catch (System.Data.Entity.Validation.DbEntityValidationException e)
+                {
+                    foreach (var eve in e.EntityValidationErrors)
+                    {
+                        Logger.Log(string.Format("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                            eve.Entry.Entity.GetType().Name, eve.Entry.State));
+                        foreach (var ve in eve.ValidationErrors)
+                        {
+                            Logger.Log(string.Format("- Property: \"{0}\", Error: \"{1}\"",
+                                 ve.PropertyName, ve.ErrorMessage));
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log(ex.Message + Environment.NewLine + ex.StackTrace);
+                }
+            }
+        }
+
         public static List<SummaryPayFeeDaily> GetSummaryPayFeeDailyData(DateTime startDate, DateTime endDate, string searchText, int storeId)
         {
             using (var db = new RentBikeEntities())
@@ -840,5 +985,11 @@ namespace RentBike.Common
 
         }
         #endregion
+    }
+
+    public enum SUMMURY_FEE_TYPE
+    {
+        SLOW_FEE = 1,
+        DEBT_FEE = 2
     }
 }

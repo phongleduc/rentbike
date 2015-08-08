@@ -170,74 +170,21 @@ namespace RentBike
                     lblTotalTheoryFee.Text = totalMonthlyFee == 0 ? "0" : string.Format("{0:0,0}", totalMonthlyFee);
                     lblTotalRealFee.Text = rentFee == 0 ? "0" : string.Format("{0:0,0}", rentFee);
 
-                    List<CONTRACT_FULL_VW> dataSlowList = new List<CONTRACT_FULL_VW>();
-                    List<CONTRACT_FULL_VW> dataDebtList = new List<CONTRACT_FULL_VW>();
-                    var st = db.CONTRACT_FULL_VW.Where(c => c.CONTRACT_STATUS == true && c.ACTIVE == true);
-
+                    decimal totalSlowFee = 0, totalDebtFee = 0;
+                    var sumMonthlies = db.SummaryPayFeeMonthlies.Where(c => c.SUMMURY_DATE.Month == startDate.Month && c.SUMMURY_DATE.Year == startDate.Year);
                     if (STORE_ID != 0)
+                        sumMonthlies = sumMonthlies.Where(c => c.STORE_ID == STORE_ID);
+
+                    if(sumMonthlies.Any())
                     {
-                        st = st.Where(c => c.STORE_ID == STORE_ID);
+                        totalSlowFee = sumMonthlies.Where(c => c.SUMMURY_FEE_TYPE == (int)SUMMURY_FEE_TYPE.SLOW_FEE).Select(c => c.SUMMURY_FEE).DefaultIfEmpty(0).Sum();
+                        totalDebtFee = sumMonthlies.Where(c => c.SUMMURY_FEE_TYPE == (int)SUMMURY_FEE_TYPE.DEBT_FEE).Select(c => c.SUMMURY_FEE).DefaultIfEmpty(0).Sum();
                     }
-                    st = st.OrderByDescending(c => c.ID);
-
-                    var lstPeriod = db.PayPeriods.Where(s => s.STATUS == true).ToList();
-                    foreach (CONTRACT_FULL_VW c in st)
+                    else
                     {
-                        var inOutList = db.InOuts.Where(s => s.CONTRACT_ID == c.ID).ToList();
-
-                        c.PAYED_TIME = 0;
-                        c.PAY_DATE = c.RENT_DATE;
-                        c.DAY_DONE = DateTime.Now.Subtract(c.PAY_DATE).Days;
-
-                        var tmpLstPeriod = lstPeriod.Where(s => s.CONTRACT_ID == c.ID);
-                        if (tmpLstPeriod != null)
-                        {
-                            decimal totalAmountPeriod = tmpLstPeriod.Where(s => s.PAY_DATE <= DateTime.Today).Select(s => s.AMOUNT_PER_PERIOD).DefaultIfEmpty(0).Sum();
-                            decimal totalAmountPaid = tmpLstPeriod.Where(s => s.PAY_DATE <= DateTime.Today).Select(s => s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
-                            c.AMOUNT_LEFT = totalAmountPeriod - totalAmountPaid <= 0 ? 0 : totalAmountPeriod - totalAmountPaid;
-
-                            decimal paidAmount = tmpLstPeriod.Where(s => s.ACTUAL_PAY > 0).Select(s => s.ACTUAL_PAY).DefaultIfEmpty(0).Sum();
-                            foreach (PayPeriod pp in tmpLstPeriod)
-                            {
-                                if (pp.AMOUNT_PER_PERIOD == 0)
-                                {
-                                    c.OVER_DATE = 0;
-                                    break;
-                                }
-                                paidAmount -= pp.AMOUNT_PER_PERIOD;
-                                if (paidAmount <= 0)
-                                {
-                                    if (paidAmount < 0)
-                                    {
-                                        c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE).Days;
-                                    }
-                                    else
-                                    {
-                                        if (tmpLstPeriod.Any(s => s.PAY_DATE == pp.PAY_DATE.AddDays(9)))
-                                        {
-                                            c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE.AddDays(9)).Days;
-                                        }
-                                        else
-                                        {
-                                            c.OVER_DATE = DateTime.Today.Subtract(pp.PAY_DATE.AddDays(10)).Days;
-                                        }
-                                    }
-                                    c.PERIOD_ID = pp.ID;
-                                    if (c.OVER_DATE >= 0)
-                                    {
-                                        if(c.OVER_DATE <= 50)
-                                            dataSlowList.Add(c);
-
-                                        if(c.OVER_DATE >= 11)
-                                            dataDebtList.Add(c);
-                                    }
-                                    break;
-                                }
-                            }
-                        }
+                        CommonList.GetSummuryFeeMonthly(out totalSlowFee, out totalDebtFee, STORE_ID);
                     }
-                    decimal totalSlowFee = dataSlowList.Select(c => c.AMOUNT_LEFT).DefaultIfEmpty(0).Sum();
-                    decimal totalDebtFee = dataDebtList.Select(c => c.AMOUNT_LEFT).DefaultIfEmpty(0).Sum();
+
                     lblTotalSlowFee.Text = totalSlowFee == 0 ? "0" : string.Format("{0:0,0}", totalSlowFee);
                     lblTotalDebtFee.Text = totalDebtFee == 0 ? "0" : string.Format("{0:0,0}", totalDebtFee);
                 }
