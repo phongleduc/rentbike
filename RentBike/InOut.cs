@@ -26,10 +26,10 @@ namespace RentBike
         public string SEARCH_TEXT { get; set; }
         public int INOUT_TYPE_ID { get; set; }
         public Nullable<System.DateTime> INOUT_DATE { get; set; }
+        public bool IS_DUMMY { get; set; }
         public string CREATED_BY { get; set; }
         public Nullable<System.DateTime> CREATED_DATE { get; set; }
         public string UPDATED_BY { get; set; }
         public Nullable<System.DateTime> UPDATED_DATE { get; set; }
-        public bool IS_DUMMY { get; set; }
     }
 }

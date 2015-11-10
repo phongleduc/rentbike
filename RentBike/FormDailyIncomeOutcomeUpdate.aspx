@@ -8,7 +8,17 @@
                     <td colspan="2" class="text-center"><strong>Chi tiết khoản thu/chi</strong></td>
                 </tr>
                 <tr>
-                    <td>Loại chi phí</td>
+                    <td colspan="2" class="text-center"><strong>
+                        <asp:Label ID="lblMessage" runat="server" Text="" CssClass="text-center text-warning"></asp:Label></strong></td>
+                </tr>
+                <tr>
+                    <td>Chi phí ngày</td>
+                    <td>
+                        <asp:TextBox ClientIDMode="Static" ID="txtFeeDate" runat="server" CssClass="form-control input-sm text-right"></asp:TextBox>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Loại chi phí <span class="red">*</span></td>
                     <td>
                         <asp:DropDownList ID="ddlInOutFee" runat="server" CssClass="form-control"></asp:DropDownList></td>
                 </tr>
@@ -40,8 +50,9 @@
         </table>
         <script>
             $(document).ready(function () {
+                $("#txtFeeDate").datepicker();
                 $('#<%=txtFeeAmount.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
-        });
+            });
         </script>
     </asp:Panel>
 </asp:Content>

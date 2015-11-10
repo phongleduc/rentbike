@@ -20,6 +20,7 @@ namespace RentBike
             storeId = Helper.parseInt(Request.QueryString["sID"]);
             if (!IsPostBack)
             {
+                txtFeeDate.Text = DateTime.Today.ToString("MM/dd/yyyy");
                 LoadStore();
                 LoadInOutType();
                 LoadInfor();
@@ -62,12 +63,11 @@ namespace RentBike
 
                 if (lst.Count > 0)
                 {
-                    ddlInOutFee.DataValueField = "ID";
-                    ddlInOutFee.DataTextField = "NAME";
-
-                    ddlInOutFee.DataSource = lst;
-                    ddlInOutFee.DataBind();
-
+                    ddlInOutFee.Items.Add(new ListItem { Text = "Hãy chọn loại chi phí", Value = "-1"});
+                    foreach(var data in lst)
+                    {
+                        ddlInOutFee.Items.Add(new ListItem { Text = data.NAME, Value = data.ID.ToString() });
+                    }
                     if (inOutId != 0)
                     {
                         var io = db.InOuts.FirstOrDefault(c =>c.ID == inOutId);
@@ -95,14 +95,32 @@ namespace RentBike
                             txtFeeAmount.Text = io.OUT_AMOUNT.ToString();
                     }
                     txtMoreInfo.Text = io.MORE_INFO;
+                    txtFeeDate.Text = io.INOUT_DATE.Value.ToString("MM/dd/yyyy");
                 }
             }
         }
 
+        protected string ValidateFields()
+        {
+            if (string.IsNullOrEmpty(ddlInOutFee.SelectedValue.Trim()) || "-1".Equals(ddlInOutFee.SelectedValue))
+            {
+                return "Bạn cần phải chọn loại chi phí.";
+            }
+            return string.Empty;
+        }
+
         protected void btnSave_Click(object sender, EventArgs e)
         {
+            string result = ValidateFields();
+            if (!string.IsNullOrEmpty(result))
+            {
+                lblMessage.Text = result;
+                return;
+            }
+
             using (TransactionScope ts = new TransactionScope())
             {
+
                 using (var db = new RentBikeEntities())
                 {
                     InOut io = db.InOuts.FirstOrDefault(c =>c.ID == inOutId);
@@ -137,7 +155,7 @@ namespace RentBike
                             io.OUT_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
                         }
 
-                        io.INOUT_DATE = DateTime.Now;
+                        io.INOUT_DATE = Convert.ToDateTime(txtFeeDate.Text);
                         io.SEARCH_TEXT = string.Format("{0} {1} {2}", io.INOUT_DATE, io.MORE_INFO, item.NAME);
                         io.CREATED_BY = Session["username"].ToString();
                         io.CREATED_DATE = DateTime.Now;
@@ -150,6 +168,7 @@ namespace RentBike
                     else
                     {
                         io.INOUT_TYPE_ID = Convert.ToInt32(ddlInOutFee.SelectedValue);
+                        io.INOUT_DATE = Convert.ToDateTime(txtFeeDate.Text);
                         io.MORE_INFO = txtMoreInfo.Text.Trim();
                         if (ddlStore.Enabled == false)
                         {

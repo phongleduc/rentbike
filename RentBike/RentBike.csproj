@@ -19,6 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -135,6 +136,16 @@
     <Content Include="FormSearch.aspx" />
     <Content Include="FormInOutAndPeriodUpdate.aspx" />
     <Content Include="FormReport.aspx" />
+    <Content Include="RentBike.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>RentBike.edmx</DependentUpon>
+      <LastGenOutput>RentBike.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="RentBike.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>RentBike.edmx</DependentUpon>
+      <LastGenOutput>RentBike.cs</LastGenOutput>
+    </Content>
     <Content Include="script\date.js" />
     <Content Include="script\fancybox\blank.gif" />
     <Content Include="script\fancybox\fancybox_loading%402x.gif" />
@@ -493,18 +504,8 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>RentBike.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="RentBike.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>RentBike.edmx</DependentUpon>
-      <LastGenOutput>RentBike.Context.cs</LastGenOutput>
-    </Content>
     <Content Include="RentBike.edmx.diagram">
       <DependentUpon>RentBike.edmx</DependentUpon>
-    </Content>
-    <Content Include="RentBike.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>RentBike.edmx</DependentUpon>
-      <LastGenOutput>RentBike.cs</LastGenOutput>
     </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -25,7 +25,9 @@ namespace RentBike
         public int STORE_ID { get; set; }
         public string SEARCH_TEXT { get; set; }
         public string STORE_NAME { get; set; }
+        public bool ACTIVE { get; set; }
         public string RENT_TYPE_NAME { get; set; }
+        public bool IS_DUMMY { get; set; }
         public string CREATED_BY { get; set; }
         public Nullable<System.DateTime> CREATED_DATE { get; set; }
         public string UPDATED_BY { get; set; }
@@ -39,7 +41,5 @@ namespace RentBike
         public int INOUT_TYPE_ID { get; set; }
         public Nullable<System.DateTime> INOUT_DATE { get; set; }
         public string CONTRACT_NO { get; set; }
-        public bool ACTIVE { get; set; }
-        public bool IS_DUMMY { get; set; }
     }
 }

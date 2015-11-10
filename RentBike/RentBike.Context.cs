@@ -42,11 +42,11 @@ namespace RentBike
         public virtual DbSet<Store> Stores { get; set; }
         public virtual DbSet<StoreFee> StoreFees { get; set; }
         public virtual DbSet<SummaryPayFeeDaily> SummaryPayFeeDailies { get; set; }
+        public virtual DbSet<SummaryPayFeeMonthly> SummaryPayFeeMonthlies { get; set; }
         public virtual DbSet<CONTRACT_FULL_VW> CONTRACT_FULL_VW { get; set; }
         public virtual DbSet<CONTRACT_HISTORY_FULL_VW> CONTRACT_HISTORY_FULL_VW { get; set; }
         public virtual DbSet<INOUT_FULL_VW> INOUT_FULL_VW { get; set; }
         public virtual DbSet<STORE_FULL_VW> STORE_FULL_VW { get; set; }
-        public virtual DbSet<SummaryPayFeeMonthly> SummaryPayFeeMonthlies { get; set; }
     
         public virtual int BackUp(string path)
         {

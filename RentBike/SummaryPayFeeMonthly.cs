@@ -16,6 +16,7 @@ namespace RentBike
     {
         public int ID { get; set; }
         public decimal SUMMURY_FEE { get; set; }
+        public int SUMMURY_FEE_TYPE { get; set; }
         public System.DateTime SUMMURY_DATE { get; set; }
         public int STORE_ID { get; set; }
         public string STORE_NAME { get; set; }
@@ -24,6 +25,5 @@ namespace RentBike
         public Nullable<System.DateTime> CREATED_DATE { get; set; }
         public string UPDATED_BY { get; set; }
         public Nullable<System.DateTime> UPDATED_DATE { get; set; }
-        public int SUMMURY_FEE_TYPE { get; set; }
     }
 }

@@ -5,8 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>Login</title>
-    <link rel="stylesheet" type="text/css" href="\App_Themes\Theme1\css\stylesheet.css" />
-    <link rel="stylesheet" type="text/css" href="\App_Themes\Theme1\css\bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/App_Themes/Theme1/css/stylesheet.css" />
+    <link rel="stylesheet" type="text/css" href="~/App_Themes/Theme1/css/bootstrap.min.css" />
 </head>
 <body>
     <form id="formlogin" runat="server">

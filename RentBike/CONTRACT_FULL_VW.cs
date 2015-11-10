@@ -54,12 +54,14 @@ namespace RentBike
         public Nullable<System.DateTime> BIRTH_DAY { get; set; }
         public string EMAIL { get; set; }
         public byte[] PHOTO { get; set; }
+        public bool IS_LOW_RECOVERABILITY { get; set; }
         public string REFERENCE_PHONE { get; set; }
         public string SCHOOL_NAME { get; set; }
         public string CLASS_NAME { get; set; }
         public string ADDRESS { get; set; }
         public int CUS_CITY_ID { get; set; }
         public string STORE_NAME { get; set; }
+        public Nullable<bool> ACTIVE { get; set; }
         public string RENT_TYPE_NAME { get; set; }
         public System.DateTime CLOSE_CONTRACT_DATE { get; set; }
         public string CONTRACT_NO { get; set; }
@@ -69,7 +71,5 @@ namespace RentBike
         public Nullable<System.DateTime> CREATED_DATE { get; set; }
         public string UPDATED_BY { get; set; }
         public Nullable<System.DateTime> UPDATED_DATE { get; set; }
-        public Nullable<bool> ACTIVE { get; set; }
-        public bool IS_LOW_RECOVERABILITY { get; set; }
     }
 }
