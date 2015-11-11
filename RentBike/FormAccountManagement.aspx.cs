@@ -16,7 +16,15 @@ namespace RentBike
             base.Page_Load(sender, e);
             if (!IsPostBack)
             {
-                LoadData(0, string.Empty, 0);
+                if (PERMISSION == ROLE.ADMIN)
+                {
+                    LoadData(0, string.Empty, 0);
+                }
+                else
+                {
+                    LoadData(STORE_ID, string.Empty, 0);
+                }
+
             }
         }
 
@@ -31,7 +39,7 @@ namespace RentBike
             using (var db = new RentBikeEntities())
             {
                 IQueryable<Account> accList = db.Accounts;
-
+                
                 if (storeId != 0)
                     accList = accList.Where(c => c.STORE_ID == storeId);
 

@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormContractUpdate.aspx.cs" Inherits="RentBike.FormContractUpdate" %>
+﻿<%@ Import Namespace ="RentBike.Common" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.Master" AutoEventWireup="true" CodeBehind="FormContractUpdate.aspx.cs" Inherits="RentBike.FormContractUpdate" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <h4 class="text-center">Chi tiết hợp đồng</h4>
@@ -74,7 +75,7 @@
                     <td colspan="2" class="text-center"><strong>Thông tin hợp đồng</strong></td>
                 </tr>
                 <%if (!IsNewContract)
-                  {%>
+                    {%>
                 <tr>
                     <td class="text-right">Số hợp đồng</td>
                     <td>
@@ -85,7 +86,7 @@
                     <td class="text-right">Loại hình</td>
                     <td>
                         <asp:DropDownList ID="ddlRentType" runat="server" CssClass="form-control rent-type-extra" onchange="onRentTypeChange();"></asp:DropDownList>
-                        <asp:Button ID="btnLowRecoverability" runat="server" Text="Khả năng thu hồi thấp" CssClass="btn btn-primary low-recoverability" OnClick="btnLowRecoverability_Click"  CommandArgument="LowRecoverability"/>
+                        <asp:Button ID="btnLowRecoverability" runat="server" Text="Khả năng thu hồi thấp" CssClass="btn btn-primary low-recoverability" OnClick="btnLowRecoverability_Click" CommandArgument="LowRecoverability" />
                     </td>
                 </tr>
                 <tr>
@@ -210,11 +211,53 @@
                 <tr>
                     <td></td>
                     <td>
-                        <asp:Button ID="btnSave" runat="server" Text="Lưu & thoát" CssClass="btn btn-primary" OnClick="btnSave_Click" />&nbsp;<asp:Button ID="btnFinishContract" runat="server" Text="Thanh lý HĐ" CssClass="btn btn-primary" OnClick="btnFinishContract_Click" />&nbsp;<asp:Button ID="btnCancel" runat="server" Text="Quay lại" CssClass="btn btn-primary" OnClick="btnCancel_Click" />
+                        <%if (PERMISSION != ROLE.STAFF) { %>
+                            <asp:Button ID="btnSave" runat="server" Text="Lưu & thoát" CssClass="btn btn-primary" OnClick="btnSave_Click" />
+                        <% } else { %>
+                            <asp:Button ID="btnSave1" runat="server" Text="Lưu & thoát" CssClass="btn btn-primary btn-save" OnClientClick="return false;"/>
+                        <% } %>
+                        &nbsp;<asp:Button ID="btnFinishContract" runat="server" Text="Thanh lý HĐ" CssClass="btn btn-primary" OnClick="btnFinishContract_Click" />
+                        &nbsp;<asp:Button ID="btnCancel" runat="server" Text="Quay lại" CssClass="btn btn-primary" OnClick="btnCancel_Click" />
                     </td>
                 </tr>
             </tbody>
         </table>
+        <!-- Modal HTML -->
+        <div id="myModal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Bạn cần nhập tài khoản cửa hàng trưởng để tiếp tục</h4>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <strong>Tài khoản</strong>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtUsername" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Mật khẩu</strong>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control input-sm"></asp:TextBox>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <asp:LinkButton runat="server" ID="lnkSave" CssClass="btn btn-primary" OnClick="btnSave_Click" Text="Lưu & thoát"></asp:LinkButton>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </asp:Panel>
     <!-- Add Button helper (this is optional) -->
     <link rel="stylesheet" type="text/css" href="script/fancybox/helpers/jquery.fancybox-buttons.css?v=1.0.5" />
@@ -358,5 +401,11 @@
                     $('#<%=txtFeePerDay.ClientID %>').val(Math.round(multipleFee * RentOtherFeePerDay)).priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
             }
         }
+
+        <%if (PERMISSION == ROLE.STAFF) { %>
+            $(".btn-save").click(function () {
+                $("#myModal").modal('show');
+            });
+        <% } %>
     </script>
 </asp:Content>

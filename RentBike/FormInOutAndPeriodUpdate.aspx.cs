@@ -37,11 +37,11 @@ namespace RentBike
                             txtStore.Enabled = false;
                         }
 
-                        var inouttypelist = db.InOutTypes.Where(s =>s.IS_CONTRACT == true && s.ACTIVE == true).ToList();
-                        ddInOutType.DataSource = inouttypelist;
-                        ddInOutType.DataTextField = "NAME";
-                        ddInOutType.DataValueField = "ID";
-                        ddInOutType.DataBind();
+                        var lst = db.InOutTypes.Where(s => s.IS_CONTRACT == true && s.ACTIVE == true).ToList();
+                        foreach (var data in lst)
+                        {
+                            ddInOutType.Items.Add(new ListItem { Text = data.NAME, Value = data.ID.ToString() });
+                        }
                         ddInOutType.SelectedValue = io.INOUT_TYPE_ID.ToString();
                     }
                 }
@@ -52,6 +52,13 @@ namespace RentBike
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
+            string result = ValidateFields();
+            if (!string.IsNullOrEmpty(result))
+            {
+                lblMessage.Text = result;
+                return;
+            }
+
             using (var db = new RentBikeEntities())
             {
                 int inOutId = Helper.parseInt(Request.QueryString["id"]);
@@ -80,6 +87,35 @@ namespace RentBike
                 }
                 Response.Redirect("FormDailyIncomeOutcome.aspx", false);
             }
+        }
+
+        protected string ValidateFields()
+        {
+            if (PERMISSION == ROLE.STAFF)
+            {
+                if (string.IsNullOrEmpty(txtUsername.Text.Trim()) || string.IsNullOrEmpty(txtPassword.Text.Trim()))
+                {
+                    return "Bạn cần phải nhập tài khoản cửa hàng trưởng để xác nhận.";
+                }
+
+                using (var db = new RentBikeEntities())
+                {
+
+                    var acc = db.Accounts.ToList().Where(c => c.ACC == txtUsername.Text.Trim()
+                    && c.PASSWORD == Helper.EncryptPassword(txtPassword.Text.Trim())
+                    && c.STORE_ID == STORE_ID).FirstOrDefault();
+
+                    if (acc == null)
+                    {
+                        return "Thông tin cửa hàng trưởng bạn nhập không tồn tại.";
+                    }
+                }
+            }
+            if (string.IsNullOrEmpty(ddInOutType.SelectedValue.Trim()) || "-1".Equals(ddInOutType.SelectedValue))
+            {
+                return "Bạn cần phải chọn loại chi phí.";
+            }
+            return string.Empty;
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)

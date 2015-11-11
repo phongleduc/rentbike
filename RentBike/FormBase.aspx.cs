@@ -55,7 +55,7 @@ namespace RentBike
                     PERMISSION = ROLE.STORE_MANAGER;
                     break;
                 default:
-                    PERMISSION = ROLE.STORE_MANAGER;
+                    PERMISSION = ROLE.STAFF;
                     break;
             }
         }

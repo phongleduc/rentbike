@@ -244,6 +244,27 @@ namespace RentBike
 
         protected string ValidateFields()
         {
+            if(PERMISSION == ROLE.STAFF)
+            {
+                if (string.IsNullOrEmpty(txtUsername.Text.Trim()) || string.IsNullOrEmpty(txtPassword.Text.Trim()))
+                {
+                    return "Bạn cần phải nhập tài khoản cửa hàng trưởng để xác nhận.";
+                }
+
+                using (var db = new RentBikeEntities())
+                {
+
+                    var acc = db.Accounts.ToList().Where(c => c.ACC == txtUsername.Text.Trim()
+                    && c.PASSWORD == Helper.EncryptPassword(txtPassword.Text.Trim())
+                    && c.STORE_ID == STORE_ID).FirstOrDefault();
+
+                    if (acc == null)
+                    {
+                        return "Thông tin cửa hàng trưởng bạn nhập không tồn tại.";
+                    }
+                }
+            }
+
             if (string.IsNullOrEmpty(txtCustomerName.Text.Trim()))
             {
                 return "Bạn cần phải nhập tên khách hàng.";
