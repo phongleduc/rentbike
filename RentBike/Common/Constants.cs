@@ -39,4 +39,11 @@ namespace RentBike.Common
 
         public const string SINGLETON_FILE = "batch.sg";
     }
+
+    public enum ROLE
+    {
+        ADMIN = 1,
+        STORE_MANAGER = 2,
+        STAFF = 3
+    }
 }

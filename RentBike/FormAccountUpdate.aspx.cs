@@ -22,6 +22,12 @@ namespace RentBike
                 ddlStore.Items.Add(new ListItem("--Tất cả cửa hàng--", "0"));
                 Common.CommonList.LoadStore(ddlStore);
 
+                if(PERMISSION != ROLE.ADMIN)
+                {
+                    ddlStore.SelectedValue = STORE_ID.ToString();
+                    ddlStore.Enabled = false;
+                }
+
                 string id = Request.QueryString["ID"];
                 if (!string.IsNullOrEmpty(id)) // Update account
                 {
@@ -238,6 +244,11 @@ namespace RentBike
                 ddlPermission.DataValueField = "ID";
             }
             ddlPermission.DataBind();
+
+            if (PERMISSION != ROLE.ADMIN)
+            {
+                ddlPermission.Enabled = false;
+            }
         }
 
         private void LoadStore(List<Store> lst)
