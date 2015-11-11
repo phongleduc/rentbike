@@ -14,7 +14,7 @@ namespace RentBike
     
     public partial class Log
     {
-        public int ID { get; set; }
+        public long ID { get; set; }
         public string LOG_MSG { get; set; }
         public string ACCOUNT { get; set; }
         public string STORE { get; set; }

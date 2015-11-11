@@ -184,8 +184,10 @@ namespace RentBike
 
                     db.Accounts.Add(item);
                     db.SaveChanges();
+
+                    string message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện tạo mới tài khoản {2} vào lúc {3}", Convert.ToString(Session["username"]), STORE_NAME, item.ACC, DateTime.Now);
+                    Helper.WriteLog(Convert.ToString(Session["username"]), STORE_NAME, Constants.ACTION_CREATE_ACCOUNT, false);
                 }
-                WriteLog(Constants.ACTION_CREATE_ACCOUNT, false);
             }
             else
             {
@@ -212,7 +214,8 @@ namespace RentBike
                     item.NOTE = txtNote.Text.Trim();
 
                     db.SaveChanges();
-                    WriteLog(Constants.ACTION_UPDATE_ACCOUNT, false);
+                    string message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện chỉnh sửa tài khoản {2} vào lúc {3}", Convert.ToString(Session["username"]), STORE_NAME, item.ACC, DateTime.Now);
+                    Helper.WriteLog(Convert.ToString(Session["username"]), STORE_NAME, Constants.ACTION_UPDATE_ACCOUNT, false);
                 }
             }
             Response.Redirect("FormAccountManagement.aspx");
@@ -272,24 +275,6 @@ namespace RentBike
                 lst = st.ToList<Store>();
             }
             return lst;
-        }
-
-        private void WriteLog(string action, bool isCrashed)
-        {
-            Log lg = new Log();
-            lg.ACCOUNT = Session["username"].ToString();
-            lg.STORE = STORE_NAME;
-            lg.LOG_ACTION = action;
-            lg.LOG_DATE = DateTime.Now;
-            lg.IS_CRASH = isCrashed;
-            lg.LOG_MSG = string.Format("Tài khoản {0} cửa hàng {1} thực hiện {2} vào lúc {3}", lg.ACCOUNT, STORE_NAME, lg.LOG_ACTION, lg.LOG_DATE);
-            lg.SEARCH_TEXT = lg.LOG_MSG;
-
-            using (var db = new RentBikeEntities())
-            {
-                db.Logs.Add(lg);
-                db.SaveChanges();
-            }
         }
     }
 }

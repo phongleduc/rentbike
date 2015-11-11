@@ -109,31 +109,9 @@ namespace RentBike
                 Session["city_id"] = acc.CITY_ID;
                 Session["store_id"] = acc.STORE_ID;
 
-                WriteLog(Constants.ACTION_LOGIN, false);
+                Helper.WriteLog(acc.ACC, Convert.ToString(Session["store_name"]), Constants.ACTION_LOGIN, false);
             }
             return true;
-        }
-
-        private void WriteLog(string action, bool isCrashed)
-        {
-            Log lg = new Log();
-            lg.ACCOUNT = Session["username"].ToString();
-            string strStore = string.Empty;
-            string strStoreName = Convert.ToString(Session["store_name"]);
-            if (!string.IsNullOrEmpty(strStoreName))
-                strStore = string.Format("cửa hàng {0} ", strStoreName);
-            lg.STORE = strStore;
-            lg.LOG_ACTION = action;
-            lg.LOG_DATE = DateTime.Now;
-            lg.IS_CRASH = isCrashed;
-            lg.LOG_MSG = string.Format("Tài khoản {0} {1}thực hiện {2} vào lúc {3}", lg.ACCOUNT, strStore, lg.LOG_ACTION, lg.LOG_DATE);
-            lg.SEARCH_TEXT = lg.LOG_MSG;
-            lg.STORE_ID = Convert.ToInt32(Session["store_id"]);
-            using (var db = new RentBikeEntities())
-            {
-                db.Logs.Add(lg);
-                db.SaveChanges();
-            }
         }
     }
 }

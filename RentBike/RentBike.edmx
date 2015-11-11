@@ -187,7 +187,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="LOG_MSG" Type="nvarchar" MaxLength="1000" Nullable="false" />
           <Property Name="ACCOUNT" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="STORE" Type="nvarchar" MaxLength="250" Nullable="false" />
@@ -946,7 +946,7 @@ warning 6002: The table/view 'prohaihung.dbo.STORE_FULL_VW' does not have a prim
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="LOG_MSG" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ACCOUNT" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="STORE" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />

@@ -173,9 +173,25 @@ namespace RentBike
                         }
                     }
                     db.SaveChanges();
+
+                    // Writelog
+                    string rentTypeNameClosed = string.Empty;
+                    switch (con.RENT_TYPE_ID)
+                    {
+                        case 1:
+                            rentTypeNameClosed = "thuê xe";
+                            break;
+                        case 2:
+                            rentTypeNameClosed = "thuê thiết bị";
+                            break;
+                        default:
+                            rentTypeNameClosed = "thuê khác";
+                            break;
+                    }
+                    var customer = db.Customers.FirstOrDefault(c => c.ID == con.CUSTOMER_ID);
+                    string message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện thanh lý hợp đồng {2} của khách hàng {3} vào lúc {4}", Convert.ToString(Session["username"]), STORE_NAME, rentTypeNameClosed, customer.NAME, DateTime.Now);
+                    Helper.WriteLog(Convert.ToString(Session["username"]), STORE_NAME, Constants.ACTION_CLOSE_CONTRACT, message, false);
                 }
-                // Writelog
-                WriteLog(Constants.ACTION_CLOSE_CONTRACT, false);
 
                 using (var db = new RentBikeEntities())
                 {
@@ -242,33 +258,6 @@ namespace RentBike
         {
             string id = Request.QueryString["ID"];
             Response.Redirect(string.Format("FormContractUpdate.aspx?ID={0}", id));
-        }
-
-        private void WriteLog(string action, bool isCrashed)
-        {
-            Log lg = new Log();
-            lg.ACCOUNT = Session["username"].ToString();
-            string strStoreName = string.Empty;
-            if (IS_ADMIN)
-            {
-                DropDownList drpStore = this.Master.FindControl("ddlStore") as DropDownList;
-                strStoreName = drpStore.SelectedItem.Text;
-            }
-            else
-                strStoreName = Session["store_name"].ToString();
-
-            lg.STORE = strStoreName;
-            lg.LOG_ACTION = action;
-            lg.LOG_DATE = DateTime.Now;
-            lg.IS_CRASH = isCrashed;
-            lg.LOG_MSG = string.Format("Tài khoản {0} cửa hàng {1} thực hiện {2} vào lúc {3}", lg.ACCOUNT, strStoreName, lg.LOG_ACTION, lg.LOG_DATE);
-            lg.SEARCH_TEXT = lg.LOG_MSG;
-
-            using (var db = new RentBikeEntities())
-            {
-                db.Logs.Add(lg);
-                db.SaveChanges();
-            }
         }
     }
 }

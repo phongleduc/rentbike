@@ -89,5 +89,41 @@ namespace RentBike.Common
 
             return false;
         }
+
+        public static void WriteLog(string userName, string storeName, string action, bool isCrashed)
+        {
+            Log lg = new Log();
+            lg.ACCOUNT = userName;
+            lg.STORE = storeName;
+            lg.LOG_ACTION = action;
+            lg.LOG_DATE = DateTime.Now;
+            lg.IS_CRASH = isCrashed;
+            lg.LOG_MSG = string.Format("Tài khoản {0} cửa hàng {1} thực hiện {2} vào lúc {3}", lg.ACCOUNT, storeName, lg.LOG_ACTION, lg.LOG_DATE);
+            lg.SEARCH_TEXT = lg.LOG_MSG;
+
+            using (var db = new RentBikeEntities())
+            {
+                db.Logs.Add(lg);
+                db.SaveChanges();
+            }
+        }
+
+        public static void WriteLog(string userName, string storeName, string action, string message, bool isCrashed)
+        {
+            Log lg = new Log();
+            lg.ACCOUNT = userName;
+            lg.STORE = storeName;
+            lg.LOG_ACTION = action;
+            lg.LOG_DATE = DateTime.Now;
+            lg.IS_CRASH = isCrashed;
+            lg.LOG_MSG = message;
+            lg.SEARCH_TEXT = lg.LOG_MSG;
+
+            using (var db = new RentBikeEntities())
+            {
+                db.Logs.Add(lg);
+                db.SaveChanges();
+            }
+        }
     }
 }

@@ -81,7 +81,11 @@ namespace RentBike
                     var pp = db.PayPeriods.FirstOrDefault(c =>c.ID == periodId);
                     pp.ACTUAL_PAY = totalInAmountOfPeriod;
                     db.SaveChanges();
-                    WriteLog(Constants.ACTION_UPDATE_INOUT, false);
+
+                    var contract = db.Contracts.FirstOrDefault(c => c.ID == pp.CONTRACT_ID);
+                    var customer = db.Customers.FirstOrDefault(c =>c.ID == contract.CUSTOMER_ID);
+                    string message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện chỉnh sửa thu phí kỳ hạn ngày {2} của hợp đồng {3} số tiền {4} vào lúc {5}", Convert.ToString(Session["username"]), STORE_NAME, pp.PAY_DATE.ToString("dd/MM/yyyy"), customer.NAME, Helper.FormatedAsCurrency(Convert.ToDecimal(txtIncome.Text.Trim())), DateTime.Now);
+                    Helper.WriteLog(Convert.ToString(Session["username"]), STORE_NAME, Constants.ACTION_UPDATE_INOUT, message, false);
 
                     Response.Redirect(string.Format("FormInOutUpdate.aspx?ID={0}", periodId), false);
                 }
@@ -122,24 +126,6 @@ namespace RentBike
         protected void btnCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect(string.Format("FormInOutUpdate.aspx?ID={0}", Request.QueryString["pid"]), false);
-        }
-
-        private void WriteLog(string action, bool isCrashed)
-        {
-            Log lg = new Log();
-            lg.ACCOUNT = Session["username"].ToString();
-            lg.STORE = STORE_NAME;
-            lg.LOG_ACTION = action;
-            lg.LOG_DATE = DateTime.Now;
-            lg.IS_CRASH = isCrashed;
-            lg.LOG_MSG = string.Format("Tài khoản {0} cửa hàng {1} thực hiện {2} vào lúc {3}", lg.ACCOUNT, STORE_NAME, lg.LOG_ACTION, lg.LOG_DATE);
-            lg.SEARCH_TEXT = lg.LOG_MSG;
-
-            using (var db = new RentBikeEntities())
-            {
-                db.Logs.Add(lg);
-                db.SaveChanges();
-            }
         }
     }
 }

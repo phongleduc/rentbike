@@ -437,10 +437,11 @@ namespace RentBike
                             }
 
                         }
+                        Customer cusItem = null;
                         using (var db = new RentBikeEntities())
                         {
                             bool IsNewCust = false;
-                            Customer cusItem = db.Customers.FirstOrDefault(c => c.LICENSE_NO == txtLicenseNumber.Text.Trim() && c.NAME == txtCustomerName.Text.Trim());
+                            cusItem = db.Customers.FirstOrDefault(c => c.LICENSE_NO == txtLicenseNumber.Text.Trim() && c.NAME == txtCustomerName.Text.Trim());
                             if (cusItem == null)
                             {
                                 IsNewCust = true;
@@ -562,8 +563,8 @@ namespace RentBike
 
                             CommonList.AutoExtendPeriod(rbdb, item.ID);
                         }
-
-                        WriteLog(Constants.ACTION_CREATE_CONTRACT, false);
+                        string message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện làm hợp đồng cho khách hàng {2} vào lúc {3}", Convert.ToString(Session["username"]), STORE_NAME, cusItem.NAME, DateTime.Now);
+                        Helper.WriteLog(Convert.ToString(Session["username"]), STORE_NAME, Constants.ACTION_CREATE_CONTRACT, message, false);
                         ts.Complete();
                     }
                     else // EDIT
@@ -696,9 +697,10 @@ namespace RentBike
                             }
 
                             db.SaveChanges();
-                        }
 
-                        WriteLog(Constants.ACTION_UPDATE_CONTRACT, false);
+                            string message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện chỉnh sửa hợp đồng của khách hàng {2} vào lúc {3}", Convert.ToString(Session["username"]), STORE_NAME, cusItem.NAME, DateTime.Now);
+                            Helper.WriteLog(Convert.ToString(Session["username"]), STORE_NAME, Constants.ACTION_UPDATE_CONTRACT, message, false);
+                        }
                         ts.Complete();
                     }
                     Response.Redirect("FormContractManagement.aspx", false);
@@ -824,12 +826,14 @@ namespace RentBike
                         Customer customer = db.Customers.FirstOrDefault(c => c.ID == contract.CUSTOMER_ID);
                         if (customer != null)
                         {
+                            string message = string.Empty;
                             if (btnLowRecoverability.CommandArgument == "LowRecoverability")
                             {
                                 customer.IS_LOW_RECOVERABILITY = true;
                                 lblMessage.Text = string.Format(Constants.LOW_RECOVERABILITY, customer.NAME);
                                 btnLowRecoverability.Text = "Bỏ khả năng thu hồi thấp";
                                 btnLowRecoverability.CommandArgument = "RevertLowRecoverability";
+                                message = string.Format("Tài khoản {0} cửa hàng {1} đã đánh dấu khả năng thu hồi thấp cho khách hàng {2} vào lúc {3}", Convert.ToString(Session["username"]), STORE_NAME, customer.NAME, DateTime.Now);
                             }
                             else
                             {
@@ -837,8 +841,10 @@ namespace RentBike
                                 lblMessage.Text = string.Format(Constants.REVERT_LOW_RECOVERABILITY, customer.NAME);
                                 btnLowRecoverability.Text = "Khả năng thu hồi thấp";
                                 btnLowRecoverability.CommandArgument = "LowRecoverability";
+                                message = string.Format("Tài khoản {0} cửa hàng {1} đã bỏ khả năng thu hồi thấp cho khách hàng {2} vào lúc {3}", Convert.ToString(Session["username"]), STORE_NAME, customer.NAME, DateTime.Now);
                             }
                             db.SaveChanges();
+                            Helper.WriteLog(Convert.ToString(Session["username"]), STORE_NAME, Constants.ACTION_UPDATE_CONTRACT, message, false);
                         }
                     }
                 }
@@ -884,63 +890,6 @@ namespace RentBike
             }
 
             return fee;
-        }
-
-
-        private void WriteLog(string action, bool isCrashed)
-        {
-            Log lg = new Log();
-            lg.ACCOUNT = Session["username"].ToString();
-            lg.STORE = STORE_NAME;
-            lg.LOG_ACTION = action;
-            lg.LOG_DATE = DateTime.Now;
-            lg.IS_CRASH = isCrashed;
-            lg.LOG_MSG = string.Format("Tài khoản {0} cửa hàng {1} thực hiện {2} vào lúc {3}", lg.ACCOUNT, STORE_NAME, lg.LOG_ACTION, lg.LOG_DATE);
-            lg.SEARCH_TEXT = lg.LOG_MSG;
-
-            using (var db = new RentBikeEntities())
-            {
-                db.Logs.Add(lg);
-                db.SaveChanges();
-            }
-        }
-
-
-        private void LoadStore(List<Store> lst)
-        {
-            ddlStore.DataSource = lst;
-            ddlStore.DataValueField = "ID";
-            ddlStore.DataTextField = "NAME";
-            ddlStore.DataBind();
-        }
-
-        private static List<Store> GetStoreByCity(int city_id)
-        {
-            List<Store> lst;
-            using (var db = new RentBikeEntities())
-            {
-                var st = from s in db.Stores
-                         where s.CITY_ID == city_id
-                         select s;
-
-                lst = st.ToList<Store>();
-            }
-            return lst;
-        }
-
-        private static List<Customer> GetCustomerByCity(int city_id)
-        {
-            List<Customer> lst;
-            using (var db = new RentBikeEntities())
-            {
-                var st = from s in db.Customers
-                         where s.CITY_ID == city_id
-                         orderby s.NAME
-                         select s;
-
-                lst = st.ToList<Customer>();
-            }
-            return lst;
         }
 
         public bool ShowBlueImage(decimal amountPer, decimal actualPay)

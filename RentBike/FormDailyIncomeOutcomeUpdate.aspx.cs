@@ -145,6 +145,7 @@ namespace RentBike
 
                 using (var db = new RentBikeEntities())
                 {
+                    string message = string.Empty;
                     InOut io = db.InOuts.FirstOrDefault(c =>c.ID == inOutId);
                     if (io == null)
                     {
@@ -170,11 +171,13 @@ namespace RentBike
                         {
                             io.IN_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
                             io.OUT_AMOUNT = 0;
+                            message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện {2} ({3}) vào lúc {4}", Convert.ToString(Session["username"]), STORE_NAME, ddlInOutFee.SelectedItem.Text, Helper.FormatedAsCurrency(io.IN_AMOUNT), DateTime.Now);
                         }
                         else
                         {
                             io.IN_AMOUNT = 0;
                             io.OUT_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
+                            message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện {2} ({3}) vào lúc {4}", Convert.ToString(Session["username"]), STORE_NAME, ddlInOutFee.SelectedItem.Text, Helper.FormatedAsCurrency(io.IN_AMOUNT), DateTime.Now);
                         }
 
                         io.INOUT_DATE = Convert.ToDateTime(txtFeeDate.Text);
@@ -185,7 +188,7 @@ namespace RentBike
                         io.UPDATED_DATE = DateTime.Now;
 
                         db.InOuts.Add(io);
-                        WriteLog(Constants.ACTION_CREATE_INOUT, false);
+                        Helper.WriteLog(Convert.ToString(Session["username"]), STORE_NAME, Constants.ACTION_CREATE_INOUT, message, false);
                     }
                     else
                     {
@@ -206,17 +209,19 @@ namespace RentBike
                         {
                             io.IN_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
                             io.OUT_AMOUNT = 0;
+                            message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện chỉnh sửa {2} ({3}) vào lúc {4}", Convert.ToString(Session["username"]), STORE_NAME, ddlInOutFee.SelectedItem.Text, Helper.FormatedAsCurrency(io.IN_AMOUNT), DateTime.Now);
                         }
                         else
                         {
                             io.IN_AMOUNT = 0;
                             io.OUT_AMOUNT = Convert.ToDecimal(txtFeeAmount.Text.Trim());
+                            message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện chỉnh sửa {2} ({3}) vào lúc {4}", Convert.ToString(Session["username"]), STORE_NAME, ddlInOutFee.SelectedItem.Text, Helper.FormatedAsCurrency(io.IN_AMOUNT), DateTime.Now);
                         }
                         io.SEARCH_TEXT = string.Format("{0} {1} {2}", io.INOUT_DATE, io.MORE_INFO, item.NAME);
                         io.UPDATED_BY = Session["username"].ToString();
                         io.UPDATED_DATE = DateTime.Now;
 
-                        WriteLog(Constants.ACTION_UPDATE_FEE, false);
+                        Helper.WriteLog(Convert.ToString(Session["username"]), STORE_NAME, Constants.ACTION_CREATE_INOUT, message, false);
                     }
                     db.SaveChanges();
                 }
@@ -229,24 +234,6 @@ namespace RentBike
         protected void btnCancel_Click(object sender, EventArgs e)
         {
             Response.Redirect("FormDailyIncomeOutcome.aspx", false);
-        }
-
-        private void WriteLog(string action, bool isCrashed)
-        {
-            Log lg = new Log();
-            lg.ACCOUNT = Session["username"].ToString();
-            lg.STORE = STORE_NAME;
-            lg.LOG_ACTION = action;
-            lg.LOG_DATE = DateTime.Now;
-            lg.IS_CRASH = isCrashed;
-            lg.LOG_MSG = string.Format("Tài khoản {0} cửa hàng {1} thực hiện {2} vào lúc {3}", lg.ACCOUNT, STORE_NAME, lg.LOG_ACTION, lg.LOG_DATE);
-            lg.SEARCH_TEXT = lg.LOG_MSG;
-
-            using (var db = new RentBikeEntities())
-            {
-                db.Logs.Add(lg);
-                db.SaveChanges();
-            }
         }
     }
 }

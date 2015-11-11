@@ -83,7 +83,8 @@ namespace RentBike
         {
             try
             {
-                WriteLog(Constants.ACTION_LOGOUT, false);
+                Helper.WriteLog(Convert.ToString(Session["username"]), Convert.ToString(Session["store_name"]), Constants.ACTION_LOGOUT, false);
+
                 Session.RemoveAll();
                 System.Web.Security.FormsAuthentication.SignOut();
                 Response.Redirect("FormLogin.aspx", false);
@@ -91,56 +92,6 @@ namespace RentBike
             catch (Exception ex)
             {
                 Logger.Log(ex.Message + Environment.NewLine + ex.StackTrace);
-            }
-        }
-
-        private void WriteLog(string action, bool isCrashed)
-        {
-            try
-            {
-                Log lg = new Log();
-                lg.ACCOUNT = Session["username"].ToString();
-                string strStore = string.Empty;
-                using (var db = new RentBikeEntities())
-                {
-                    int storeid = 0;
-                    if (CheckAdminPermission())
-                    {
-                        storeid = Helper.parseInt(ddlStore.SelectedValue);
-                    }
-                    else
-                    {
-                        storeid = Convert.ToInt32(Session["store_id"]);
-                    }
-                    var item = from itm in db.Stores
-                               where itm.ID == storeid
-                               select itm;
-                    List<Store> lst = item.ToList();
-
-                    if (lst.Count > 0)
-                    {
-                        lg.STORE = lst[0].NAME;
-                        strStore = string.Format("cửa hàng {0} ", lst[0].NAME);
-                    }
-                    else
-                    { lg.STORE = string.Empty; }
-                }
-                lg.LOG_ACTION = action;
-                lg.LOG_DATE = DateTime.Now;
-                lg.IS_CRASH = isCrashed;
-                lg.LOG_MSG = string.Format("Tài khoản {0} {1}thực hiện {2} vào lúc {3}", lg.ACCOUNT, strStore, lg.LOG_ACTION, lg.LOG_DATE);
-                lg.SEARCH_TEXT = lg.LOG_MSG;
-
-
-                using (var db = new RentBikeEntities())
-                {
-                    db.Logs.Add(lg);
-                    db.SaveChanges();
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteLog(Constants.ACTION_LOGOUT, true);
             }
         }
 

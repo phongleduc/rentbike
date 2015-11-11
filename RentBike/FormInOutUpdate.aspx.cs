@@ -141,6 +141,10 @@ namespace RentBike
                     db.InOuts.Add(io);
                     db.SaveChanges();
 
+                    var customer = db.Customers.FirstOrDefault(c => c.ID == contract.CUSTOMER_ID);
+                    string message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện thu phí kỳ hạn ngày {2} của hợp đồng {3} số tiền {4} vào lúc {5}", Convert.ToString(Session["username"]), STORE_NAME, pp.PAY_DATE.ToString("dd/MM/yyyy"), customer.NAME, Helper.FormatedAsCurrency(io.IN_AMOUNT), DateTime.Now);
+                    Helper.WriteLog(Convert.ToString(Session["username"]), STORE_NAME, Constants.ACTION_CREATE_INOUT, message, false);
+
                     Response.Redirect("FormContractUpdate.aspx?ID=" + pp.CONTRACT_ID, false);
                 }
             }

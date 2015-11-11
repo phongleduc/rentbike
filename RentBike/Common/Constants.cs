@@ -15,7 +15,7 @@ namespace RentBike.Common
 
         public const string ACTION_CREATE_CONTRACT = "Làm hợp đồng";
         public const string ACTION_UPDATE_CONTRACT = "Cập nhật hợp đồng";
-        public const string ACTION_CLOSE_CONTRACT = "Cập nhật hợp đồng";
+        public const string ACTION_CLOSE_CONTRACT = "Thanh lý hợp đồng";
 
         public const string ACTION_CREATE_ACCOUNT = "Tạo tài khoản";
         public const string ACTION_UPDATE_ACCOUNT = "Cập nhật tài khoản";
