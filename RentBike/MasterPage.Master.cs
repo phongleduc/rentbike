@@ -22,7 +22,7 @@ namespace RentBike
                     LoadStore(permissionid);
                     CalcFeeStore(storeid);
                     hplCommonListSetting.Visible = false;
-                    if (permissionid != (int)ROLE.STAFF)
+                    if (permissionid != (int)ROLE.ADMIN)
                     {
                         hplStoreManagement.Visible = false;
                     }
@@ -44,7 +44,7 @@ namespace RentBike
         {
             ddlStore.Items.Add(new ListItem("--Tất cả cửa hàng--", ""));
             CommonList.LoadStore(ddlStore);
-            if (permissionid != (int)ROLE.STAFF)
+            if (permissionid != (int)ROLE.ADMIN)
             {
                 ddlStore.SelectedValue = Session["store_id"].ToString();
                 ddlStore.Enabled = false;
