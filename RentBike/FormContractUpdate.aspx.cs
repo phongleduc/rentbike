@@ -244,26 +244,6 @@ namespace RentBike
 
         protected string ValidateFields()
         {
-            if(PERMISSION == ROLE.STAFF)
-            {
-                if (string.IsNullOrEmpty(txtUsername.Text.Trim()) || string.IsNullOrEmpty(txtPassword.Text.Trim()))
-                {
-                    return "Bạn cần phải nhập tài khoản cửa hàng trưởng để xác nhận.";
-                }
-
-                using (var db = new RentBikeEntities())
-                {
-
-                    var acc = db.Accounts.ToList().Where(c => c.ACC == txtUsername.Text.Trim()
-                    && c.PASSWORD == Helper.EncryptPassword(txtPassword.Text.Trim())
-                    && c.STORE_ID == STORE_ID).FirstOrDefault();
-
-                    if (acc == null)
-                    {
-                        return "Thông tin cửa hàng trưởng bạn nhập không tồn tại.";
-                    }
-                }
-            }
 
             if (string.IsNullOrEmpty(txtCustomerName.Text.Trim()))
             {
@@ -390,6 +370,31 @@ namespace RentBike
             if (Request.Files.Count > 5)
             {
                 return "Bạn không thể chọn quá 5 file ảnh.";
+            }
+            return string.Empty;
+        }
+
+        private string ValidatePermission()
+        {
+            if (PERMISSION == ROLE.STAFF)
+            {
+                if (string.IsNullOrEmpty(txtUsername.Text.Trim()) || string.IsNullOrEmpty(txtPassword.Text.Trim()))
+                {
+                    return "Bạn cần phải nhập tài khoản cửa hàng trưởng để xác nhận.";
+                }
+
+                using (var db = new RentBikeEntities())
+                {
+
+                    var acc = db.Accounts.ToList().Where(c => c.ACC == txtUsername.Text.Trim()
+                    && c.PASSWORD == Helper.EncryptPassword(txtPassword.Text.Trim())
+                    && c.STORE_ID == STORE_ID).FirstOrDefault();
+
+                    if (acc == null)
+                    {
+                        return "Thông tin cửa hàng trưởng bạn nhập không tồn tại.";
+                    }
+                }
             }
             return string.Empty;
         }
@@ -563,6 +568,14 @@ namespace RentBike
                     }
                     else // EDIT
                     {
+
+                        result = ValidatePermission();
+                        if (!string.IsNullOrEmpty(result))
+                        {
+                            lblMessage.Text = result;
+                            return;
+                        }
+
                         int contractId = Helper.parseInt(id);
                         bool bUpdateInOutAndPeriod = false;
                         using (var db = new RentBikeEntities())

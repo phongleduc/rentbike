@@ -91,6 +91,11 @@ namespace RentBike
 
         protected string ValidateFields()
         {
+            if (string.IsNullOrEmpty(ddInOutType.SelectedValue.Trim()) || "-1".Equals(ddInOutType.SelectedValue))
+            {
+                return "Bạn cần phải chọn loại chi phí.";
+            }
+
             if (PERMISSION == ROLE.STAFF)
             {
                 if (string.IsNullOrEmpty(txtUsername.Text.Trim()) || string.IsNullOrEmpty(txtPassword.Text.Trim()))
@@ -110,10 +115,6 @@ namespace RentBike
                         return "Thông tin cửa hàng trưởng bạn nhập không tồn tại.";
                     }
                 }
-            }
-            if (string.IsNullOrEmpty(ddInOutType.SelectedValue.Trim()) || "-1".Equals(ddInOutType.SelectedValue))
-            {
-                return "Bạn cần phải chọn loại chi phí.";
             }
             return string.Empty;
         }
