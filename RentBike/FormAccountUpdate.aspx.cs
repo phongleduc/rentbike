@@ -233,6 +233,10 @@ namespace RentBike
                         }
                         bRefresh = true;
                     }
+                    else
+                    {
+                        item.PASSWORD = Helper.EncryptPassword(txtNewPassword.Text.Trim());
+                    }
 
                     item.ACC = txtAccount.Text.Trim();
                     item.PERMISSION_ID = Convert.ToInt32(ddlPermission.SelectedValue);
