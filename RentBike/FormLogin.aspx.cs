@@ -85,7 +85,7 @@ namespace RentBike
             using (var db = new RentBikeEntities())
             {
                 var acc = (from s in db.Accounts
-                           where s.ACC == user && s.PASSWORD == password
+                           where s.ACC == user && s.PASSWORD == password && s.ACTIVE == true
                            select s).FirstOrDefault();
 
                 if (acc == null) return false;

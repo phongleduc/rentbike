@@ -31,6 +31,15 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.TextBox txtAccount;
         
         /// <summary>
+        /// trOldPassword control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow trOldPassword;
+        
+        /// <summary>
         /// txtOldPassword control.
         /// </summary>
         /// <remarks>
@@ -40,6 +49,15 @@ namespace RentBike {
         protected global::System.Web.UI.WebControls.TextBox txtOldPassword;
         
         /// <summary>
+        /// trNewPassword control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow trNewPassword;
+        
+        /// <summary>
         /// txtNewPassword control.
         /// </summary>
         /// <remarks>
@@ -47,6 +65,15 @@ namespace RentBike {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNewPassword;
+        
+        /// <summary>
+        /// trConfirmPassword control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow trConfirmPassword;
         
         /// <summary>
         /// txtConfirmPassword control.
@@ -110,6 +137,15 @@ namespace RentBike {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRegisterDate;
+        
+        /// <summary>
+        /// trActive control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow trActive;
         
         /// <summary>
         /// rdbActive control.

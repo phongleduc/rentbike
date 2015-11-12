@@ -15,17 +15,17 @@
                 <td>
                     <asp:TextBox ID="txtAccount" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
             </tr>
-            <tr>
+            <tr id="trOldPassword" runat="server">
                 <td class="text-right">Mật khẩu cũ</td>
                 <td>
                     <asp:TextBox ID="txtOldPassword" TextMode="Password" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
             </tr>
-            <tr>
+            <tr id="trNewPassword" runat="server">
                 <td class="text-right">Mật khẩu mới</td>
                 <td>
                     <asp:TextBox ID="txtNewPassword" TextMode="Password" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
             </tr>
-            <tr>
+            <tr id="trConfirmPassword" runat="server">
                 <td class="text-right">Xác nhận mật khẩu</td>
                 <td>
                     <asp:TextBox ID="txtConfirmPassword" TextMode="Password" runat="server" CssClass="form-control input-sm"></asp:TextBox></td>
@@ -66,7 +66,7 @@
                     <asp:TextBox ClientIDMode="Static" ID="txtRegisterDate" runat="server" CssClass="form-control input-sm text-right"></asp:TextBox>
                 </td>
             </tr>
-            <tr>
+            <tr  id="trActive" runat="server">
                 <td class="text-right">Kích hoạt</td>
                 <td>
                     <asp:RadioButton ID="rdbActive" runat="server" Text="Sử dụng" GroupName="activegroup" Checked="True" />

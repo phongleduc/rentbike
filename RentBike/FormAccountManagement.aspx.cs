@@ -11,6 +11,9 @@ namespace RentBike
     public partial class FormAccountManagement : FormBase
     {
         int pageSize = 20;
+        private List<Store> listStore = new List<Store>();
+        private List<AccountPermission> listPermission = new List<AccountPermission>();
+
         protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
@@ -38,6 +41,9 @@ namespace RentBike
             // LOAD PAGER
             using (var db = new RentBikeEntities())
             {
+                listStore = db.Stores.ToList();
+                listPermission = db.AccountPermissions.ToList();
+
                 IQueryable<Account> accList = db.Accounts;
                 
                 if (storeId != 0)
@@ -68,7 +74,20 @@ namespace RentBike
 
         public string GetStoreName(int storeId)
         {
-            return Session["store_name"] == null ? "Tất cả" : Session["store_name"].ToString();
+            var item = listStore.FirstOrDefault(c => c.ID == storeId);
+            if (item != null)
+                return item.NAME;
+
+            return string.Empty;
+        }
+
+        public string GetPermissionName(int permission)
+        {
+            var item = listPermission.FirstOrDefault(c => c.ID == permission);
+            if (item != null)
+                return item.NAME;
+
+            return string.Empty;
         }
 
         protected void btnNew_Click(object sender, EventArgs e)

@@ -15,6 +15,7 @@ namespace RentBike
         public bool IS_ADMIN { get; set; }
         public int STORE_ID { get; set; }
         public string STORE_NAME { get; set; }
+        public string USER_NAME { get; set; }
 
         private DropDownList drpStore;
 
@@ -36,6 +37,8 @@ namespace RentBike
 
             STORE_ID = Helper.parseInt(Session["store_id"]);
             STORE_NAME = Convert.ToString(Session["store_name"]);
+            USER_NAME = Convert.ToString(Session["username"]);
+
             if (IS_ADMIN)
             {
                 if (!string.IsNullOrEmpty(drpStore.SelectedValue))
@@ -68,7 +71,7 @@ namespace RentBike
             using (var db = new RentBikeEntities())
             {
                 var acc = (from s in db.Accounts
-                           where s.ACC == user
+                           where s.ACC == user && s.ACTIVE == true
                            select s).FirstOrDefault();
 
                 if (acc.STORE_ID != 0)

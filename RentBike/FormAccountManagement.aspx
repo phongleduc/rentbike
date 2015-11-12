@@ -21,9 +21,9 @@
                     <thead>
                         <tr class="success">
                             <th>#</th>
-                            <th>Tên tài khoản*</th>
                             <th>Tên người dùng*</th>
-                            <th>Cửa hàng</th>
+                            <th>Cửa hàng*</th>
+                            <th>Chức vụ</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,9 +31,9 @@
             <ItemTemplate>
                 <tr id='<%# Eval("ID") %>'>
                     <td><%# Container.ItemIndex + 1 %></td>
-                    <td><%# Eval("ACC") %></td>
                     <td><%# Eval("NAME") %></td>
                     <td><%# GetStoreName(Convert.ToInt32(Eval("STORE_ID"))) %></td>
+                    <td><%# GetPermissionName(Convert.ToInt32(Eval("PERMISSION_ID"))) %></td>
                 </tr>
             </ItemTemplate>
             <FooterTemplate>

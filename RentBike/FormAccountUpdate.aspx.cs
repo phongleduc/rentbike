@@ -22,7 +22,7 @@ namespace RentBike
                 ddlStore.Items.Add(new ListItem("--Tất cả cửa hàng--", "0"));
                 Common.CommonList.LoadStore(ddlStore);
 
-                if(PERMISSION != ROLE.ADMIN)
+                if (PERMISSION != ROLE.ADMIN)
                 {
                     ddlStore.SelectedValue = STORE_ID.ToString();
                     ddlStore.Enabled = false;
@@ -39,12 +39,7 @@ namespace RentBike
                                     select s).FirstOrDefault();
 
                         txtAccount.Text = item.ACC;
-                        //txtNewPassword.Text = item.PASSWORD;
-                        //item.PERMISSION_ID =
-                        //item.STORE_ID = 
                         txtName.Text = item.NAME;
-                        //item.ADDRESS = txtAddress.Text.Trim();
-                        //item.CITY_ID = Convert.ToInt32(ddlCity.SelectedValue);
                         txtPhone.Text = item.PHONE;
                         txtRegisterDate.Text = item.REGISTER_DATE.ToShortDateString();
                         rdbActive.Checked = item.ACTIVE;
@@ -53,10 +48,40 @@ namespace RentBike
                         ddlPermission.SelectedValue = item.PERMISSION_ID.ToString();
                         ddlStore.SelectedValue = item.STORE_ID.ToString();
                         ddlCity.SelectedValue = item.CITY_ID.ToString();
+
+                        switch (PERMISSION)
+                        {
+                            case ROLE.ADMIN:
+                                if (USER_NAME != item.ACC)
+                                {
+                                    if (item.PERMISSION_ID == (int)ROLE.STAFF || item.PERMISSION_ID == (int)ROLE.STORE_MANAGER)
+                                    {
+                                        trOldPassword.Visible = trNewPassword.Visible = trConfirmPassword.Visible = false;
+                                        txtName.Enabled = txtPhone.Enabled = ddlCity.Enabled = txtRegisterDate.Enabled = false;
+                                    }
+                                }
+                                break;
+                            case ROLE.STORE_MANAGER:
+                                if (USER_NAME != item.ACC)
+                                {
+                                    if (item.PERMISSION_ID == (int)ROLE.STAFF)
+                                    {
+                                        trOldPassword.Visible = txtOldPassword.Visible = false;
+                                    }
+                                }
+                                ddlPermission.Enabled = false;
+                                break;
+                            case ROLE.STAFF:
+                                ddlPermission.Enabled = false;
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
                 else // new account
                 {
+                    trOldPassword.Visible = false;
                     txtOldPassword.Enabled = false;
                 }
             }
@@ -156,8 +181,8 @@ namespace RentBike
                     int accid = Convert.ToInt32(id);
                     var acc = (from s in db.Accounts
                                where s.ACC == txtAccount.Text.Trim()
-                                select s).FirstOrDefault();
-                    if(acc != null)
+                               select s).FirstOrDefault();
+                    if (acc != null)
                     {
                         lblMessage.Text = "Tài khoản này đã tồn tại trên hệ thống.";
                         return;
@@ -199,11 +224,17 @@ namespace RentBike
                                 where s.ID == accid
                                 select s).FirstOrDefault();
 
-                    item.ACC = txtAccount.Text.Trim();
-                    if (txtOldPassword.Text.Trim().Length > 0)
+                    bool bRefresh = false;
+                    if (USER_NAME == item.ACC)
                     {
-                        item.PASSWORD = Helper.EncryptPassword(txtNewPassword.Text.Trim());
+                        if (txtOldPassword.Text.Trim().Length > 0)
+                        {
+                            item.PASSWORD = Helper.EncryptPassword(txtNewPassword.Text.Trim());
+                        }
+                        bRefresh = true;
                     }
+
+                    item.ACC = txtAccount.Text.Trim();
                     item.PERMISSION_ID = Convert.ToInt32(ddlPermission.SelectedValue);
                     item.STORE_ID = Convert.ToInt32(ddlStore.SelectedValue);
                     item.NAME = txtName.Text.Trim();
@@ -214,6 +245,16 @@ namespace RentBike
                     item.NOTE = txtNote.Text.Trim();
 
                     db.SaveChanges();
+
+                    if(bRefresh)
+                    {
+                        Session["username"] = item.ACC;
+                        Session["name"] = item.NAME;
+                        Session["permission"] = item.PERMISSION_ID;
+                        Session["city_id"] = item.CITY_ID;
+                        Session["store_id"] = item.STORE_ID;
+                    }
+
                     string message = string.Format("Tài khoản {0} cửa hàng {1} thực hiện chỉnh sửa tài khoản {2} vào lúc {3}", Convert.ToString(Session["username"]), STORE_NAME, item.ACC, DateTime.Now);
                     Helper.WriteLog(Convert.ToString(Session["username"]), STORE_NAME, Constants.ACTION_UPDATE_ACCOUNT, false);
                 }
@@ -228,29 +269,38 @@ namespace RentBike
 
         private void LoadPermission()
         {
-            int crtPermissionId = Convert.ToInt32(Session["permission"]);
-            int filterId = crtPermissionId == 1 ? 1 : crtPermissionId + 1;
-            List<AccountPermission> perList = new List<AccountPermission>();
             using (var db = new RentBikeEntities())
             {
-                var item = from itm in db.AccountPermissions
-                           where itm.ID >= filterId
-                           select itm;
+                var item = db.AccountPermissions.ToList();
+                string id = Request.QueryString["ID"];
+                if (!string.IsNullOrEmpty(id)) // Update account
+                {
+                    if (PERMISSION == ROLE.STORE_MANAGER)
+                    {
+                        int accid = Convert.ToInt32(id);
+                        var acc = (from s in db.Accounts
+                                   where s.ID == accid
+                                   select s).FirstOrDefault();
+                        if (USER_NAME == acc.ACC)
+                        {
+                            item = item.Where(c => c.ID != 1).ToList();
+                        }
+                    }
+                }
+                else
+                {
+                    item = item.Where(c => c.ID == 3).ToList();
+                }
 
-                perList = item.ToList();
-            }
+                if (item.Any())
+                {
+                    ddlPermission.DataSource = item;
+                    ddlPermission.DataTextField = "NAME";
+                    ddlPermission.DataValueField = "ID";
+                    ddlPermission.DataBind();
 
-            ddlPermission.DataSource = perList;
-            if (perList.Count > 0)
-            {
-                ddlPermission.DataTextField = "NAME";
-                ddlPermission.DataValueField = "ID";
-            }
-            ddlPermission.DataBind();
-
-            if (PERMISSION != ROLE.ADMIN)
-            {
-                ddlPermission.Enabled = false;
+                    ddlPermission.SelectedValue = PERMISSION.ToString();
+                }
             }
         }
 
