@@ -38,18 +38,10 @@
                     <td>
                         <asp:TextBox ID="txtMoreInfo" runat="server" TextMode="MultiLine" CssClass="form-control input-sm" /></td>
                 </tr>
-                <%--<tr>
-                <td>Thông tin hợp đồng</td>
-                <td>Theo hợp đồng số HDCT8552. Khách hàng: Nguyễn Quang Hùng - 1984-03/05/2014</td>
-            </tr>--%>
                 <tr>
                     <td></td>
                     <td>
-                        <%if (PERMISSION != ROLE.STAFF) { %>
-                            <asp:Button ID="btnSave" runat="server" Text="Lưu & thoát" CssClass="btn btn-primary" OnClick="btnSave_Click" />
-                        <% } else { %>
-                            <asp:Button ID="btnSave1" runat="server" Text="Lưu & thoát" CssClass="btn btn-primary btn-save" OnClientClick="return false;"/>
-                        <% } %>
+                        <asp:Button ID="btnSave" runat="server" Text="Lưu & thoát" CssClass="btn btn-primary" OnClientClick="return showModal();" OnClick="btnSave_Click" />
                         &nbsp;&nbsp;<asp:Button ID="btnCancel" runat="server" Text="Quay lại" CssClass="btn btn-primary" OnClick="btnCancel_Click" /></td>
                 </tr>
             </tbody>
@@ -94,13 +86,28 @@
         $(document).ready(function () {
             $("#txtFeeDate").datepicker();
             $('#<%=txtFeeAmount.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
-
-        <%if (PERMISSION == ROLE.STAFF)
-        { %>
-            $(".btn-save").click(function () {
-                $("#myModal").modal('show');
-            });
-            <% } %>
         });
+
+        var permission = '<%=(int)ROLE.STAFF%>';
+        function showModal() {
+
+            if (permission === '3') {
+                var inoutDate = Date.parse($('#<%=txtFeeDate.ClientID%>').val());
+
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth()+1; //January is 0!
+                var yyyy = today.getFullYear();
+
+                today = Date.parse(mm + '/' + dd + '/' + yyyy);
+                if(inoutDate < today )
+                {
+                    $("#myModal").modal('show');
+                    return false;
+                }
+            }
+
+            return true;
+        }
     </script>
 </asp:Content>
