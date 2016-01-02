@@ -42,14 +42,7 @@
                 <tr>
                     <td></td>
                     <td>
-                        <%if (PERMISSION != ROLE.STAFF)
-                            { %>
-                        <asp:Button ID="btnSave" runat="server" Text="Lưu & thoát" CssClass="btn btn-primary" OnClick="btnSave_Click" />
-                        <% }
-                        else
-                        { %>
-                        <asp:Button ID="btnSave1" runat="server" Text="Lưu & thoát" CssClass="btn btn-primary btn-save" OnClientClick="return false;" />
-                        <% } %>
+                        <asp:Button ID="btnSave" runat="server" Text="Lưu & thoát" CssClass="btn btn-primary" OnClientClick="return showModal();" OnClick="btnSave_Click" />
                         &nbsp;&nbsp;<asp:Button ID="btnCancel" runat="server" Text="Quay lại" CssClass="btn btn-primary" OnClick="btnCancel_Click" /></td>
                 </tr>
             </tbody>
@@ -102,12 +95,15 @@
                 }
             });
 
-            <%if (PERMISSION == ROLE.STAFF)
-        { %>
-            $(".btn-save").click(function () {
-                $("#myModal").modal('show');
-            });
-            <% } %>
         });
+
+        var permission = '<%=(int)PERMISSION%>';
+        function showModal() {
+            if (permission === '3') {
+                $("#myModal").modal('show');
+                return false;
+            }
+            return true;
+        }
     </script>
 </asp:Content>

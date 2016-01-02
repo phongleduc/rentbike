@@ -88,7 +88,7 @@
             $('#<%=txtFeeAmount.ClientID %>').priceFormat({ prefix: '', suffix: '', centsLimit: 0 });
         });
 
-        var permission = '<%=(int)ROLE.STAFF%>';
+        var permission = '<%=(int)PERMISSION%>';
         function showModal() {
 
             if (permission === '3') {

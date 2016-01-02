@@ -398,7 +398,7 @@
             }
         }
 
-        var permission = '<%=(int)ROLE.STAFF%>';
+        var permission = '<%=(int)PERMISSION%>';
         var isNewContract = '<%=IsNewContract%>';
         function showModal() {
             if (permission === '3') {
