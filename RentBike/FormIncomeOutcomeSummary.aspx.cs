@@ -77,7 +77,19 @@ namespace RentBike
                     IEnumerable<int> pageList = Enumerable.Range(1, count);
 
                     DateTime startDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 6);
-                    StartDate = startDate = DateTime.Today < startDate == true ? new DateTime(DateTime.Today.Year, DateTime.Today.Month - 1, 6) : startDate;
+
+                    int startMonth = DateTime.Today.Month;
+                    int startYear = DateTime.Today.Year;
+                    if (startMonth == 1)
+                    {
+                        startMonth = 12;
+                        startYear = startYear - 1;
+                    }
+                    else
+                    {
+                        startMonth = startMonth - 1;
+                    }
+                    StartDate = startDate = DateTime.Today < startDate == true ? new DateTime(startYear, startMonth, 6) : startDate;
 
                     if (page > 1)
                     {
