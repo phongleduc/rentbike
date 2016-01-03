@@ -49,7 +49,19 @@ namespace RentBike
             using (var db = new RentBikeEntities())
             {
                 DateTime startDate = new DateTime(searchDate.Year, searchDate.Month, 6);
-                StartDate = startDate = searchDate < startDate == true ? new DateTime(searchDate.Year, searchDate.Month - 1, 6) : startDate;
+
+                int startMonth = searchDate.Month;
+                int startYear = searchDate.Year;
+                if (startMonth == 1)
+                {
+                    startMonth = 12;
+                    startYear = startYear - 1;
+                }
+                else
+                {
+                    startMonth = startMonth - 1;
+                }
+                StartDate = startDate = searchDate < startDate == true ? new DateTime(startYear, startMonth, 6) : startDate;
 
                 int endYear = searchDate.Year;
                 int endMonth = searchDate.Month;
