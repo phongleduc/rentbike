@@ -104,34 +104,39 @@ namespace RentBike
             }
             if (!string.IsNullOrEmpty(id))
             {
+                if (string.IsNullOrEmpty(txtOldPassword.Text.Trim()))
+                {
+                    return "Bạn cần phải nhập mật khẩu cũ.";
+                }
+
                 int accid = Convert.ToInt32(id);
-                Account item = null;
                 using (var db = new RentBikeEntities())
                 {
                     var st = from s in db.Accounts
                              where s.ID == accid
                              select s;
 
-                    item = st.ToList<Account>()[0];
-                }
-                if (txtOldPassword.Text.Trim().Length > 0)
-                {
-                    if (Helper.EncryptPassword(txtOldPassword.Text.Trim()) != item.PASSWORD)
-                    {
-                        return "Mật khẩu cũ không đúng.";
-                    }
+                    var item = st.ToList<Account>()[0];
 
-                    if (string.IsNullOrEmpty(txtNewPassword.Text.Trim()))
+                    if (txtOldPassword.Text.Trim().Length > 0)
                     {
-                        return "Bạn cần phải nhập mật khẩu.";
-                    }
-                    if (txtNewPassword.Text.Trim().Length < 6)
-                    {
-                        return "Mật khẩu phải có ít nhất là 6 ký tự.";
-                    }
-                    if (txtConfirmPassword.Text.Trim() != txtNewPassword.Text.Trim())
-                    {
-                        return "Mật khẩu không khớp nhau.";
+                        if (Helper.EncryptPassword(txtOldPassword.Text.Trim()) != item.PASSWORD)
+                        {
+                            return "Mật khẩu cũ không đúng.";
+                        }
+
+                        if (string.IsNullOrEmpty(txtNewPassword.Text.Trim()))
+                        {
+                            return "Bạn cần phải nhập mật khẩu.";
+                        }
+                        if (txtNewPassword.Text.Trim().Length < 6)
+                        {
+                            return "Mật khẩu phải có ít nhất là 6 ký tự.";
+                        }
+                        if (txtConfirmPassword.Text.Trim() != txtNewPassword.Text.Trim())
+                        {
+                            return "Mật khẩu không khớp nhau.";
+                        }
                     }
                 }
             }
@@ -225,18 +230,8 @@ namespace RentBike
                                 select s).FirstOrDefault();
 
                     bool bRefresh = false;
-                    if (USER_NAME == item.ACC)
-                    {
-                        if (txtOldPassword.Text.Trim().Length > 0)
-                        {
-                            item.PASSWORD = Helper.EncryptPassword(txtNewPassword.Text.Trim());
-                        }
-                        bRefresh = true;
-                    }
-                    else
-                    {
-                        item.PASSWORD = Helper.EncryptPassword(txtNewPassword.Text.Trim());
-                    }
+                    item.PASSWORD = Helper.EncryptPassword(txtNewPassword.Text.Trim());
+                    if (USER_NAME == item.ACC) bRefresh = true;
 
                     item.ACC = txtAccount.Text.Trim();
                     item.PERMISSION_ID = Convert.ToInt32(ddlPermission.SelectedValue);
@@ -250,7 +245,7 @@ namespace RentBike
 
                     db.SaveChanges();
 
-                    if(bRefresh)
+                    if (bRefresh)
                     {
                         Session["username"] = item.ACC;
                         Session["name"] = item.NAME;
@@ -279,7 +274,7 @@ namespace RentBike
                 string id = Request.QueryString["ID"];
                 if (!string.IsNullOrEmpty(id)) // Update account
                 {
-                    if (PERMISSION == ROLE.STORE_MANAGER)
+                    if (PERMISSION == ROLE.STORE_MANAGER || PERMISSION == ROLE.ADMIN)
                     {
                         int accid = Convert.ToInt32(id);
                         var acc = (from s in db.Accounts
@@ -293,7 +288,10 @@ namespace RentBike
                 }
                 else
                 {
-                    item = item.Where(c => c.ID == 3).ToList();
+                    if (PERMISSION == ROLE.ADMIN)
+                        item = item.Where(c => c.ID != 1).ToList();
+                    else
+                        item = item.Where(c => c.ID == 3).ToList();
                 }
 
                 if (item.Any())
