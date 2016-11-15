@@ -102,11 +102,14 @@ namespace RentBike
                     DateTime datePager = Convert.ToDateTime(ViewState["StartDate"]);
                     List<ListItem> listItem = new List<ListItem>();
                     listItem.Add(new ListItem { Text = datePager.ToString("MM/yyyy"), Value = "1" });
-                    for (int i = 1; i < pageList.Count() - 1; i++)
+                    for (int i = 1; i < pageList.Count(); i++)
                     {
                         listItem.Add(new ListItem { Text = datePager.AddMonths(-i).ToString("MM/yyyy"), Value = (i + 1).ToString() });
                     }
-
+                    if(listSum.FirstOrDefault().InOutDate < datePager.AddMonths(pageList.Count() - 1))
+                    {
+                        listItem.Add(new ListItem { Text = datePager.AddMonths(-pageList.Count()).ToString("MM/yyyy"), Value = (pageList.Count() + 1).ToString() });
+                    }
                     ddlPager.DataSource = listItem;
                     ddlPager.DataTextField = "Text";
                     ddlPager.DataValueField = "Value";
