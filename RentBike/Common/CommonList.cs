@@ -101,7 +101,7 @@ namespace RentBike.Common
             return null;
         }
 
-        private static void CalculatePeriodFee(Contract contract, out int multipleFee, out decimal increateFeeCar, out decimal increateFeeEquip, out decimal increateFeeOther, bool bFirstCreate)
+        private static void CalculatePeriodFee(RentBikeEntities db, Contract contract, out int multipleFee, out decimal increateFeeCar, out decimal increateFeeEquip, out decimal increateFeeOther, bool bFirstCreate)
         {
             multipleFee = Convert.ToInt32(Decimal.Floor(contract.CONTRACT_AMOUNT / 100000));
             if (contract.FEE_PER_DAY == 0)
@@ -144,7 +144,7 @@ namespace RentBike.Common
                     decimal increateFeeCar;
                     decimal increateFeeEquip;
                     decimal increateFeeOther;
-                    CalculatePeriodFee(contract, out multipleFee, out increateFeeCar, out increateFeeEquip, out increateFeeOther, false);
+                    CalculatePeriodFee(db, contract, out multipleFee, out increateFeeCar, out increateFeeEquip, out increateFeeOther, false);
 
                     for (int i = 0; i <= percentDate; i++)
                     {
@@ -178,6 +178,18 @@ namespace RentBike.Common
                     switch (contract.RENT_TYPE_ID)
                     {
                         case 1:
+                            var countPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).Count();
+
+                            if (countPeriod <= 3)
+                                increateFeeCar = (contract.FEE_PER_DAY * 10) + (multipleFee * 50 * 10);
+                            else if (countPeriod > 3)
+                                increateFeeCar = (contract.FEE_PER_DAY * 10) + (multipleFee * 100 * 10);
+
+                            if (((contract.FEE_PER_DAY / multipleFee) * 10) <= 4000)
+                                pp1.AMOUNT_PER_PERIOD = increateFeeCar;
+                            else
+                                pp1.AMOUNT_PER_PERIOD = increateFeeOther;
+                            break;
                         case 2:
                             if (contract.FEE_PER_DAY < (lastPeriod.AMOUNT_PER_PERIOD / 10))
                                 pp1.AMOUNT_PER_PERIOD = lastPeriod.AMOUNT_PER_PERIOD;
@@ -241,7 +253,7 @@ namespace RentBike.Common
                 decimal increateFeeEquip;
                 decimal increateFeeOther;
 
-                CalculatePeriodFee(contract, out multipleFee, out increateFeeCar, out increateFeeEquip, out increateFeeOther, bFirstCreate);
+                CalculatePeriodFee(db, contract, out multipleFee, out increateFeeCar, out increateFeeEquip, out increateFeeOther, bFirstCreate);
                 CreateOneMorePayPeriod(db, contract, lastPeriod, multipleFee, increateFeeCar, increateFeeEquip, increateFeeOther, bFirstCreate);
             }
         }
