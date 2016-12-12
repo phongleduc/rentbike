@@ -40,7 +40,10 @@ D:\Projects\Others\rentbike\RentBike\bin\EntityFramework.xml
 D:\Projects\Others\rentbike\RentBike\bin\EntityFramework.SqlServer.xml
 D:\Projects\Others\rentbike\RentBike\bin\EPPlus.xml
 D:\Projects\Others\rentbike\RentBike\bin\RestSharp.xml
+<<<<<<< HEAD
 D:\Projects\Others\rentbike\RentBike\obj\Release\RentBike.csprojResolveAssemblyReference.cache
+=======
+>>>>>>> 7a3ab663d05cb88ec8ac812064c8da3b9dca0781
 D:\Projects\Others\rentbike\RentBike\obj\Release\Interop.NATUPNPLib.dll
 D:\Projects\Others\rentbike\RentBike\obj\Release\Interop.NETCONLib.dll
 D:\Projects\Others\rentbike\RentBike\obj\Release\Interop.NetFwTypeLib.dll

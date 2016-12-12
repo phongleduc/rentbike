@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="RentBikeModelStoreContainer" CdmEntityContainer="RentBikeEntities">
+  <EntityContainerMapping StorageEntityContainer="RentBikeStoreContainer" CdmEntityContainer="RentBikeEntities">
     <EntitySetMapping Name="Accounts">
-      <EntityTypeMapping TypeName="RentBikeModel.Account">
+      <EntityTypeMapping TypeName="RentBike.Account">
         <MappingFragment StoreEntitySet="Account">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="ACC" ColumnName="ACC" />
@@ -20,7 +20,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="AccountPermissions">
-      <EntityTypeMapping TypeName="RentBikeModel.AccountPermission">
+      <EntityTypeMapping TypeName="RentBike.AccountPermission">
         <MappingFragment StoreEntitySet="AccountPermission">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="NAME" ColumnName="NAME" />
@@ -29,7 +29,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Cities">
-      <EntityTypeMapping TypeName="RentBikeModel.City">
+      <EntityTypeMapping TypeName="RentBike.City">
         <MappingFragment StoreEntitySet="City">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="NAME" ColumnName="NAME" />
@@ -37,25 +37,15 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Contracts">
-      <EntityTypeMapping TypeName="RentBikeModel.Contract">
+      <EntityTypeMapping TypeName="RentBike.Contract">
         <MappingFragment StoreEntitySet="Contract">
-          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
-          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
-          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
-          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
-          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
-          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
-          <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
           <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
           <ScalarProperty Name="FEE_PER_DAY" ColumnName="FEE_PER_DAY" />
           <ScalarProperty Name="RENT_DATE" ColumnName="RENT_DATE" />
           <ScalarProperty Name="END_DATE" ColumnName="END_DATE" />
+          <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
           <ScalarProperty Name="CLOSE_CONTRACT_DATE" ColumnName="CLOSE_CONTRACT_DATE" />
           <ScalarProperty Name="PAY_FEE_MESSAGE" ColumnName="PAY_FEE_MESSAGE" />
           <ScalarProperty Name="NOTE" ColumnName="NOTE" />
@@ -76,6 +66,17 @@
           <ScalarProperty Name="IMPLEMENTER" ColumnName="IMPLEMENTER" />
           <ScalarProperty Name="BACK_TO_DOCUMENTS" ColumnName="BACK_TO_DOCUMENTS" />
           <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
+          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+          <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
           <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
           <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
           <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
@@ -84,19 +85,8 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="ContractHistories">
-      <EntityTypeMapping TypeName="RentBikeModel.ContractHistory">
+      <EntityTypeMapping TypeName="RentBike.ContractHistory">
         <MappingFragment StoreEntitySet="ContractHistory">
-          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
-          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
-          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
-          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
-          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
-          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
-          <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
           <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
@@ -105,6 +95,7 @@
           <ScalarProperty Name="CONTRACT_AMOUNT" ColumnName="CONTRACT_AMOUNT" />
           <ScalarProperty Name="RENT_DATE" ColumnName="RENT_DATE" />
           <ScalarProperty Name="END_DATE" ColumnName="END_DATE" />
+          <ScalarProperty Name="EXTEND_END_DATE" ColumnName="EXTEND_END_DATE" />
           <ScalarProperty Name="PAY_FEE_MESSAGE" ColumnName="PAY_FEE_MESSAGE" />
           <ScalarProperty Name="NOTE" ColumnName="NOTE" />
           <ScalarProperty Name="REFERENCE_ID" ColumnName="REFERENCE_ID" />
@@ -124,6 +115,17 @@
           <ScalarProperty Name="IMPLEMENTER" ColumnName="IMPLEMENTER" />
           <ScalarProperty Name="BACK_TO_DOCUMENTS" ColumnName="BACK_TO_DOCUMENTS" />
           <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
+          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+          <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
           <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
           <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
           <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
@@ -132,9 +134,8 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Customers">
-      <EntityTypeMapping TypeName="RentBikeModel.Customer">
+      <EntityTypeMapping TypeName="RentBike.Customer">
         <MappingFragment StoreEntitySet="Customer">
-          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="NAME" ColumnName="NAME" />
           <ScalarProperty Name="LICENSE_NO" ColumnName="LICENSE_NO" />
@@ -146,12 +147,14 @@
           <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
           <ScalarProperty Name="PHONE" ColumnName="PHONE" />
           <ScalarProperty Name="ADDRESS" ColumnName="ADDRESS" />
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
           <ScalarProperty Name="CITY_ID" ColumnName="CITY_ID" />
+          <ScalarProperty Name="IS_LOW_RECOVERABILITY" ColumnName="IS_LOW_RECOVERABILITY" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="InOuts">
-      <EntityTypeMapping TypeName="RentBikeModel.InOut">
+      <EntityTypeMapping TypeName="RentBike.InOut">
         <MappingFragment StoreEntitySet="InOut">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="IN_AMOUNT" ColumnName="IN_AMOUNT" />
@@ -165,6 +168,7 @@
           <ScalarProperty Name="SEARCH_TEXT" ColumnName="SEARCH_TEXT" />
           <ScalarProperty Name="INOUT_TYPE_ID" ColumnName="INOUT_TYPE_ID" />
           <ScalarProperty Name="INOUT_DATE" ColumnName="INOUT_DATE" />
+          <ScalarProperty Name="IS_DUMMY" ColumnName="IS_DUMMY" />
           <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
           <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
           <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
@@ -173,7 +177,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="InOutTypes">
-      <EntityTypeMapping TypeName="RentBikeModel.InOutType">
+      <EntityTypeMapping TypeName="RentBike.InOutType">
         <MappingFragment StoreEntitySet="InOutType">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="NAME" ColumnName="NAME" />
@@ -184,7 +188,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Logs">
-      <EntityTypeMapping TypeName="RentBikeModel.Log">
+      <EntityTypeMapping TypeName="RentBike.Log">
         <MappingFragment StoreEntitySet="Log">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="LOG_MSG" ColumnName="LOG_MSG" />
@@ -199,7 +203,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="PayPeriods">
-      <EntityTypeMapping TypeName="RentBikeModel.PayPeriod">
+      <EntityTypeMapping TypeName="RentBike.PayPeriod">
         <MappingFragment StoreEntitySet="PayPeriod">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
@@ -211,7 +215,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="ReferencePersons">
-      <EntityTypeMapping TypeName="RentBikeModel.ReferencePerson">
+      <EntityTypeMapping TypeName="RentBike.ReferencePerson">
         <MappingFragment StoreEntitySet="ReferencePerson">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="NAME" ColumnName="NAME" />
@@ -220,7 +224,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="RentTypes">
-      <EntityTypeMapping TypeName="RentBikeModel.RentType">
+      <EntityTypeMapping TypeName="RentBike.RentType">
         <MappingFragment StoreEntitySet="RentType">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="NAME" ColumnName="NAME" />
@@ -231,7 +235,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Stores">
-      <EntityTypeMapping TypeName="RentBikeModel.Store">
+      <EntityTypeMapping TypeName="RentBike.Store">
         <MappingFragment StoreEntitySet="Store">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="NAME" ColumnName="NAME" />
@@ -253,7 +257,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="StoreFees">
-      <EntityTypeMapping TypeName="RentBikeModel.StoreFee">
+      <EntityTypeMapping TypeName="RentBike.StoreFee">
         <MappingFragment StoreEntitySet="StoreFee">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="FEE_PERCENT" ColumnName="FEE_PERCENT" />
@@ -261,20 +265,51 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="SummaryPayFeeDailies">
+      <EntityTypeMapping TypeName="RentBike.SummaryPayFeeDaily">
+        <MappingFragment StoreEntitySet="SummaryPayFeeDaily">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
+          <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
+          <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
+          <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+          <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
+          <ScalarProperty Name="RENT_TYPE_NAME" ColumnName="RENT_TYPE_NAME" />
+          <ScalarProperty Name="PERIOD_DATE" ColumnName="PERIOD_DATE" />
+          <ScalarProperty Name="PAY_FEE" ColumnName="PAY_FEE" />
+          <ScalarProperty Name="PAY_TIME" ColumnName="PAY_TIME" />
+          <ScalarProperty Name="PAY_MESSAGE" ColumnName="PAY_MESSAGE" />
+          <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
+          <ScalarProperty Name="STORE_NAME" ColumnName="STORE_NAME" />
+          <ScalarProperty Name="NOTE" ColumnName="NOTE" />
+          <ScalarProperty Name="SEARCH_TEXT" ColumnName="SEARCH_TEXT" />
+          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
+          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
+          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
+          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SummaryPayFeeMonthlies">
+      <EntityTypeMapping TypeName="RentBike.SummaryPayFeeMonthly">
+        <MappingFragment StoreEntitySet="SummaryPayFeeMonthly">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="SUMMURY_FEE" ColumnName="SUMMURY_FEE" />
+          <ScalarProperty Name="SUMMURY_FEE_TYPE" ColumnName="SUMMURY_FEE_TYPE" />
+          <ScalarProperty Name="SUMMURY_DATE" ColumnName="SUMMURY_DATE" />
+          <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
+          <ScalarProperty Name="STORE_NAME" ColumnName="STORE_NAME" />
+          <ScalarProperty Name="NOTE" ColumnName="NOTE" />
+          <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
+          <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
+          <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
+          <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="CONTRACT_FULL_VW">
-      <EntityTypeMapping TypeName="RentBikeModel.CONTRACT_FULL_VW">
+      <EntityTypeMapping TypeName="RentBike.CONTRACT_FULL_VW">
         <MappingFragment StoreEntitySet="CONTRACT_FULL_VW">
-          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
-          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
-          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
-          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
-          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
-          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
-          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
           <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
@@ -292,6 +327,17 @@
           <ScalarProperty Name="SERIAL_1" ColumnName="SERIAL_1" />
           <ScalarProperty Name="SERIAL_2" ColumnName="SERIAL_2" />
           <ScalarProperty Name="DETAIL" ColumnName="DETAIL" />
+          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+          <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
           <ScalarProperty Name="SEARCH_TEXT" ColumnName="SEARCH_TEXT" />
           <ScalarProperty Name="CONTRACT_STATUS" ColumnName="CONTRACT_STATUS" />
           <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
@@ -303,12 +349,15 @@
           <ScalarProperty Name="CURRENT_RESIDENCE" ColumnName="CURRENT_RESIDENCE" />
           <ScalarProperty Name="BIRTH_DAY" ColumnName="BIRTH_DAY" />
           <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
+          <ScalarProperty Name="IS_LOW_RECOVERABILITY" ColumnName="IS_LOW_RECOVERABILITY" />
           <ScalarProperty Name="REFERENCE_PHONE" ColumnName="REFERENCE_PHONE" />
           <ScalarProperty Name="SCHOOL_NAME" ColumnName="SCHOOL_NAME" />
           <ScalarProperty Name="CLASS_NAME" ColumnName="CLASS_NAME" />
           <ScalarProperty Name="ADDRESS" ColumnName="ADDRESS" />
           <ScalarProperty Name="CUS_CITY_ID" ColumnName="CUS_CITY_ID" />
           <ScalarProperty Name="STORE_NAME" ColumnName="STORE_NAME" />
+          <ScalarProperty Name="ACTIVE" ColumnName="ACTIVE" />
           <ScalarProperty Name="RENT_TYPE_NAME" ColumnName="RENT_TYPE_NAME" />
           <ScalarProperty Name="CLOSE_CONTRACT_DATE" ColumnName="CLOSE_CONTRACT_DATE" />
           <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
@@ -322,19 +371,8 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="CONTRACT_HISTORY_FULL_VW">
-      <EntityTypeMapping TypeName="RentBikeModel.CONTRACT_HISTORY_FULL_VW">
+      <EntityTypeMapping TypeName="RentBike.CONTRACT_HISTORY_FULL_VW">
         <MappingFragment StoreEntitySet="CONTRACT_HISTORY_FULL_VW">
-          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
-          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
-          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
-          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
-          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
-          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
-          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
-          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="CONTRACT_ID" ColumnName="CONTRACT_ID" />
           <ScalarProperty Name="RENT_TYPE_ID" ColumnName="RENT_TYPE_ID" />
@@ -361,6 +399,17 @@
           <ScalarProperty Name="CONTRACT_NO" ColumnName="CONTRACT_NO" />
           <ScalarProperty Name="IMPLEMENTER" ColumnName="IMPLEMENTER" />
           <ScalarProperty Name="BACK_TO_DOCUMENTS" ColumnName="BACK_TO_DOCUMENTS" />
+          <ScalarProperty Name="PHOTO_1" ColumnName="PHOTO_1" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_1" ColumnName="THUMBNAIL_PHOTO_1" />
+          <ScalarProperty Name="PHOTO_2" ColumnName="PHOTO_2" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_2" ColumnName="THUMBNAIL_PHOTO_2" />
+          <ScalarProperty Name="PHOTO_3" ColumnName="PHOTO_3" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_3" ColumnName="THUMBNAIL_PHOTO_3" />
+          <ScalarProperty Name="PHOTO_4" ColumnName="PHOTO_4" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_4" ColumnName="THUMBNAIL_PHOTO_4" />
+          <ScalarProperty Name="PHOTO_5" ColumnName="PHOTO_5" />
+          <ScalarProperty Name="THUMBNAIL_PHOTO_5" ColumnName="THUMBNAIL_PHOTO_5" />
+          <ScalarProperty Name="IS_BAD_CONTRACT" ColumnName="IS_BAD_CONTRACT" />
           <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
           <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
           <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
@@ -376,16 +425,16 @@
           <ScalarProperty Name="CURRENT_RESIDENCE" ColumnName="CURRENT_RESIDENCE" />
           <ScalarProperty Name="BIRTH_DAY" ColumnName="BIRTH_DAY" />
           <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="PHOTO" ColumnName="PHOTO" />
+          <ScalarProperty Name="IS_LOW_RECOVERABILITY" ColumnName="IS_LOW_RECOVERABILITY" />
           <ScalarProperty Name="RENT_TYPE_NAME" ColumnName="RENT_TYPE_NAME" />
           <ScalarProperty Name="CLOSE_CONTRACT_DATE" ColumnName="CLOSE_CONTRACT_DATE" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="INOUT_FULL_VW">
-      <EntityTypeMapping TypeName="RentBikeModel.INOUT_FULL_VW">
+      <EntityTypeMapping TypeName="RentBike.INOUT_FULL_VW">
         <MappingFragment StoreEntitySet="INOUT_FULL_VW">
-          <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
-          <ScalarProperty Name="CUSTOMER_ID" ColumnName="CUSTOMER_ID" />
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="IN_AMOUNT" ColumnName="IN_AMOUNT" />
           <ScalarProperty Name="OUT_AMOUNT" ColumnName="OUT_AMOUNT" />
@@ -397,11 +446,15 @@
           <ScalarProperty Name="STORE_ID" ColumnName="STORE_ID" />
           <ScalarProperty Name="SEARCH_TEXT" ColumnName="SEARCH_TEXT" />
           <ScalarProperty Name="STORE_NAME" ColumnName="STORE_NAME" />
+          <ScalarProperty Name="ACTIVE" ColumnName="ACTIVE" />
           <ScalarProperty Name="RENT_TYPE_NAME" ColumnName="RENT_TYPE_NAME" />
+          <ScalarProperty Name="IS_DUMMY" ColumnName="IS_DUMMY" />
           <ScalarProperty Name="CREATED_BY" ColumnName="CREATED_BY" />
           <ScalarProperty Name="CREATED_DATE" ColumnName="CREATED_DATE" />
           <ScalarProperty Name="UPDATED_BY" ColumnName="UPDATED_BY" />
           <ScalarProperty Name="UPDATED_DATE" ColumnName="UPDATED_DATE" />
+          <ScalarProperty Name="CUSTOMER_ID" ColumnName="CUSTOMER_ID" />
+          <ScalarProperty Name="CUSTOMER_NAME" ColumnName="CUSTOMER_NAME" />
           <ScalarProperty Name="ISINCOME" ColumnName="ISINCOME" />
           <ScalarProperty Name="IS_CONTRACT" ColumnName="IS_CONTRACT" />
           <ScalarProperty Name="RENT_TYPE_ACTIVE" ColumnName="RENT_TYPE_ACTIVE" />
@@ -413,7 +466,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="STORE_FULL_VW">
-      <EntityTypeMapping TypeName="RentBikeModel.STORE_FULL_VW">
+      <EntityTypeMapping TypeName="RentBike.STORE_FULL_VW">
         <MappingFragment StoreEntitySet="STORE_FULL_VW">
           <ScalarProperty Name="ID" ColumnName="ID" />
           <ScalarProperty Name="NAME" ColumnName="NAME" />
@@ -435,5 +488,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="BackUp" FunctionName="RentBike.Store.BackUp" />
   </EntityContainerMapping>
 </Mapping>

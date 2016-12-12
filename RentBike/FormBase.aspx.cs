@@ -10,7 +10,7 @@ namespace RentBike
 {
     public partial class FormBase : System.Web.UI.Page
     {
-
+        private int IsRunAutoExtendContract = Convert.ToInt32(System.Web.Configuration.WebConfigurationManager.AppSettings["RentBike.IsRunAutoExtendContract"]);
         public ROLE PERMISSION { get; set; }
         public bool IS_ADMIN { get; set; }
         public int STORE_ID { get; set; }
@@ -21,6 +21,10 @@ namespace RentBike
 
         protected virtual void Page_Load(object sender, EventArgs e)
         {
+            //Run aunto extend contract manually.
+            if(IsRunAutoExtendContract == 1)
+                CommonList.AutoExtendContract();
+
             if (Session["store_id"] == null)
             {
                 if (Page.User.Identity.IsAuthenticated)
@@ -84,6 +88,7 @@ namespace RentBike
                     Session["store_name"] = string.Empty;
 
                 Session["username"] = acc.ACC;
+                Session["password"] = acc.PASSWORD;
                 Session["name"] = acc.NAME;
                 Session["permission"] = acc.PERMISSION_ID;
                 Session["city_id"] = acc.CITY_ID;
