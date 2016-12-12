@@ -20,6 +20,7 @@ namespace RentBike
         protected bool IsNewContract { get; set; }
 
         public int RentCarFeePerDay = Convert.ToInt32(System.Web.Configuration.WebConfigurationManager.AppSettings["RentBike.RentCarFeePerDay"]);
+        public int RentCarFeePerDayAllowed = Convert.ToInt32(System.Web.Configuration.WebConfigurationManager.AppSettings["RentBike.RentCarFeePerDayAllowed"]);
         public int RentEquipFeePerDay = Convert.ToInt32(System.Web.Configuration.WebConfigurationManager.AppSettings["RentBike.RentEquipFeePerDay"]);
         public int RentOtherFeePerDay = Convert.ToInt32(System.Web.Configuration.WebConfigurationManager.AppSettings["RentBike.RentOtherFeePerDay"]);
         protected override void Page_Load(object sender, EventArgs e)
@@ -288,11 +289,13 @@ namespace RentBike
 
             int rentTypeId = Helper.parseInt(ddlRentType.SelectedValue);
             decimal multipleFee = Decimal.Floor(Convert.ToDecimal(txtAmount.Text.Trim()) / 100000);
+            decimal feePerDayAllow = 0;
             decimal feePerDay = 0;
 
             switch (rentTypeId)
             {
                 case 1:
+                    feePerDayAllow = Decimal.Floor(multipleFee * RentCarFeePerDayAllowed);
                     feePerDay = Decimal.Floor(multipleFee * RentCarFeePerDay);
                     break;
                 case 2:
@@ -301,7 +304,15 @@ namespace RentBike
                 default:
                     break;
             }
-            if (rentTypeId == 1 || rentTypeId == 2)
+            if (rentTypeId == 1)
+            {
+                if (Convert.ToDecimal(txtFeePerDay.Text.Trim()) < feePerDayAllow)
+                {
+                    return string.Format("Không thể tạo hợp đồng với mức phí nhỏ hơn {0}", string.Format("{0:0,0}", feePerDayAllow));
+                }
+            }
+
+            if (rentTypeId == 2)
             {
                 if (Convert.ToDecimal(txtFeePerDay.Text.Trim()) < feePerDay)
                 {
