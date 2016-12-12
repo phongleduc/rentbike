@@ -12,9 +12,9 @@ namespace RentBike.Common
 {
     public class CommonList
     {
-        public int RentCarFeePerDay = Convert.ToInt32(WebConfigurationManager.AppSettings["RentBike.RentCarFeePerDay"]);
-        public int RentEquipFeePerDay = Convert.ToInt32(WebConfigurationManager.AppSettings["RentBike.RentEquipFeePerDay"]);
-        public int RentOtherFeePerDay = Convert.ToInt32(WebConfigurationManager.AppSettings["RentBike.RentOtherFeePerDay"]);
+        private static int RentCarFeePerDay = Convert.ToInt32(WebConfigurationManager.AppSettings["RentBike.RentCarFeePerDay"]);
+        private static int RentEquipFeePerDay = Convert.ToInt32(WebConfigurationManager.AppSettings["RentBike.RentEquipFeePerDay"]);
+        private static int RentOtherFeePerDay = Convert.ToInt32(WebConfigurationManager.AppSettings["RentBike.RentOtherFeePerDay"]);
         public static void LoadCity(DropDownList ddlCt)
         {
             List<City> lst;
@@ -178,17 +178,25 @@ namespace RentBike.Common
                     switch (contract.RENT_TYPE_ID)
                     {
                         case 1:
-                            var countPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).Count();
+                            if (((contract.FEE_PER_DAY / multipleFee)) < RentCarFeePerDay)
+                            {
+                                var countPeriod = db.PayPeriods.Where(c => c.CONTRACT_ID == contract.ID).Count();
 
-                            if (countPeriod <= 3)
-                                increateFeeCar = (contract.FEE_PER_DAY * 10) + (multipleFee * 50 * 10);
-                            else if (countPeriod > 3)
-                                increateFeeCar = (contract.FEE_PER_DAY * 10) + (multipleFee * 100 * 10);
+                                if (countPeriod <= 3)
+                                    increateFeeCar = (contract.FEE_PER_DAY * 10) + (multipleFee * 50 * 10);
+                                else if (countPeriod > 3)
+                                    increateFeeCar = (contract.FEE_PER_DAY * 10) + (multipleFee * 100 * 10);
+                            }
 
-                            if (((contract.FEE_PER_DAY / multipleFee) * 10) <= 4000)
-                                pp1.AMOUNT_PER_PERIOD = increateFeeCar;
+                            if (contract.FEE_PER_DAY < (lastPeriod.AMOUNT_PER_PERIOD / 10))
+                                pp1.AMOUNT_PER_PERIOD = lastPeriod.AMOUNT_PER_PERIOD;
                             else
-                                pp1.AMOUNT_PER_PERIOD = increateFeeOther;
+                            {
+                                if (((contract.FEE_PER_DAY / multipleFee) * 10) < 4000)
+                                    pp1.AMOUNT_PER_PERIOD = increateFeeCar;
+                                else
+                                    pp1.AMOUNT_PER_PERIOD = increateFeeOther;
+                            }
                             break;
                         case 2:
                             if (contract.FEE_PER_DAY < (lastPeriod.AMOUNT_PER_PERIOD / 10))
