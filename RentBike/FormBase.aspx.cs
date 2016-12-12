@@ -88,7 +88,6 @@ namespace RentBike
                     Session["store_name"] = string.Empty;
 
                 Session["username"] = acc.ACC;
-                Session["password"] = acc.PASSWORD;
                 Session["name"] = acc.NAME;
                 Session["permission"] = acc.PERMISSION_ID;
                 Session["city_id"] = acc.CITY_ID;
