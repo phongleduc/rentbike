@@ -67,7 +67,7 @@ namespace RentBike.Common
         public static string EncryptPassword(string strPassword)
         {
             string encrypted = string.Empty;
-            if (string.IsNullOrEmpty(strPassword))
+            if (!string.IsNullOrEmpty(strPassword))
             {
                 MD5 md5 = new MD5CryptoServiceProvider();
                 md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(strPassword));

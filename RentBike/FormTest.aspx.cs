@@ -11,7 +11,7 @@ namespace RentBike
     public partial class FormTest : FormBase
     {
         static readonly object _object = new object();
-        protected void Page_Load(object sender, EventArgs e)
+        protected override void Page_Load(object sender, EventArgs e)
         {
             base.Page_Load(sender, e);
             //string del = Request.QueryString["del"];

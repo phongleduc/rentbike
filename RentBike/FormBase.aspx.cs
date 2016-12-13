@@ -22,8 +22,8 @@ namespace RentBike
         protected virtual void Page_Load(object sender, EventArgs e)
         {
             //Run aunto extend contract manually.
-            if(IsRunAutoExtendContract == 1)
-                CommonList.AutoExtendContract();
+            //if(IsRunAutoExtendContract == 1)
+            //    CommonList.AutoExtendContract();
 
             if (Session["store_id"] == null)
             {

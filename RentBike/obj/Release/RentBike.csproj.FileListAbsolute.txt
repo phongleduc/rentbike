@@ -1,33 +1,3 @@
-D:\Share\TSolution\RentBike\bin\RentBike.dll.config
-D:\Share\TSolution\RentBike\bin\RentBike.dll
-D:\Share\TSolution\RentBike\bin\RentBike.pdb
-D:\Share\TSolution\RentBike\bin\EntityFramework.dll
-D:\Share\TSolution\RentBike\bin\EntityFramework.SqlServer.dll
-D:\Share\TSolution\RentBike\bin\EntityFramework.xml
-D:\Share\TSolution\RentBike\bin\EntityFramework.SqlServer.xml
-D:\Share\TSolution\RentBike\obj\Release\RentBike.dll
-D:\Share\TSolution\RentBike\obj\Release\RentBike.pdb
-D:\Projects\External\TSolution\RentBike\bin\RentBike.dll
-D:\Projects\External\TSolution\RentBike\bin\RentBike.pdb
-D:\Projects\External\TSolution\RentBike\bin\EntityFramework.dll
-D:\Projects\External\TSolution\RentBike\bin\EntityFramework.SqlServer.dll
-D:\Projects\External\TSolution\RentBike\bin\EntityFramework.xml
-D:\Projects\External\TSolution\RentBike\bin\EntityFramework.SqlServer.xml
-D:\Projects\External\TSolution\RentBike\obj\Release\RentBike.dll
-D:\Projects\External\TSolution\RentBike\obj\Release\RentBike.pdb
-D:\Projects\External\TSolution\RentBike\obj\Release\RentBike.csprojResolveAssemblyReference.cache
-D:\Projects\Others\TSolution\trunk\RentBike\bin\RentBike.dll.config
-D:\Projects\Others\TSolution\trunk\RentBike\bin\RentBike.dll
-D:\Projects\Others\TSolution\trunk\RentBike\bin\RentBike.pdb
-D:\Projects\Others\TSolution\trunk\RentBike\bin\EntityFramework.dll
-D:\Projects\Others\TSolution\trunk\RentBike\bin\EntityFramework.SqlServer.dll
-D:\Projects\Others\TSolution\trunk\RentBike\bin\EntityFramework.xml
-D:\Projects\Others\TSolution\trunk\RentBike\bin\EntityFramework.SqlServer.xml
-D:\Projects\Others\TSolution\trunk\RentBike\obj\Release\RentBike.csprojResolveAssemblyReference.cache
-D:\Projects\Others\TSolution\trunk\RentBike\obj\Release\RentBike.dll
-D:\Projects\Others\TSolution\trunk\RentBike\obj\Release\RentBike.pdb
-D:\Projects\Others\TSolution\trunk\RentBike\bin\EPPlus.dll
-D:\Projects\Others\TSolution\trunk\RentBike\bin\EPPlus.xml
 D:\Projects\Others\rentbike\RentBike\bin\RentBike.dll.config
 D:\Projects\Others\rentbike\RentBike\bin\RentBike.dll
 D:\Projects\Others\rentbike\RentBike\bin\RentBike.pdb
@@ -40,10 +10,6 @@ D:\Projects\Others\rentbike\RentBike\bin\EntityFramework.xml
 D:\Projects\Others\rentbike\RentBike\bin\EntityFramework.SqlServer.xml
 D:\Projects\Others\rentbike\RentBike\bin\EPPlus.xml
 D:\Projects\Others\rentbike\RentBike\bin\RestSharp.xml
-<<<<<<< HEAD
-D:\Projects\Others\rentbike\RentBike\obj\Release\RentBike.csprojResolveAssemblyReference.cache
-=======
->>>>>>> 7a3ab663d05cb88ec8ac812064c8da3b9dca0781
 D:\Projects\Others\rentbike\RentBike\obj\Release\Interop.NATUPNPLib.dll
 D:\Projects\Others\rentbike\RentBike\obj\Release\Interop.NETCONLib.dll
 D:\Projects\Others\rentbike\RentBike\obj\Release\Interop.NetFwTypeLib.dll
