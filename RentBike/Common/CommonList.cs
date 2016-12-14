@@ -186,8 +186,21 @@ namespace RentBike.Common
                                     increateFeeCar = (contract.FEE_PER_DAY * 10) + (multipleFee * 50 * 10);
                                 else if (countPeriod > 3)
                                     increateFeeCar = (contract.FEE_PER_DAY * 10) + (multipleFee * 100 * 10);
+
+                                pp1.AMOUNT_PER_PERIOD = increateFeeCar;
                             }
-                            pp1.AMOUNT_PER_PERIOD = increateFeeCar;
+                            else
+                            {
+                                if (contract.FEE_PER_DAY < (lastPeriod.AMOUNT_PER_PERIOD / 10))
+                                    pp1.AMOUNT_PER_PERIOD = lastPeriod.AMOUNT_PER_PERIOD;
+                                else
+                                {
+                                    if (((contract.FEE_PER_DAY / multipleFee) * 10) < 4000)
+                                        pp1.AMOUNT_PER_PERIOD = increateFeeCar;
+                                    else
+                                        pp1.AMOUNT_PER_PERIOD = increateFeeOther;
+                                }
+                            }
                             break;
                         case 2:
                             if (contract.FEE_PER_DAY < (lastPeriod.AMOUNT_PER_PERIOD / 10))

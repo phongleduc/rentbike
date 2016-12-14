@@ -16,3 +16,4 @@ D:\Projects\Others\rentbike\RentBike\obj\Release\Interop.NetFwTypeLib.dll
 D:\Projects\Others\rentbike\RentBike\obj\Release\RentBike.csproj.ResolveComReference.cache
 D:\Projects\Others\rentbike\RentBike\obj\Release\RentBike.dll
 D:\Projects\Others\rentbike\RentBike\obj\Release\RentBike.pdb
+D:\Projects\Others\rentbike\RentBike\obj\Release\RentBike.csprojResolveAssemblyReference.cache
