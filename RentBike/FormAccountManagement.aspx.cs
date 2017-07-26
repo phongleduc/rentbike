@@ -19,15 +19,19 @@ namespace RentBike
             base.Page_Load(sender, e);
             if (!IsPostBack)
             {
-                if (PERMISSION == ROLE.ADMIN)
-                {
-                    LoadData(0, string.Empty, 0);
-                }
-                else
-                {
-                    LoadData(STORE_ID, string.Empty, 0);
-                }
+                LoadData();
+            }
+        }
 
+        private void LoadData()
+        {
+            if (PERMISSION == ROLE.ADMIN)
+            {
+                LoadData(0, string.Empty, 0);
+            }
+            else
+            {
+                LoadData(STORE_ID, string.Empty, 0);
             }
         }
 
@@ -90,6 +94,12 @@ namespace RentBike
             return string.Empty;
         }
 
+        public string GetStatus(bool status)
+        {
+            return status == true 
+                ? "Hoạt động" : "Không hoạt động";
+        }
+
         protected void btnNew_Click(object sender, EventArgs e)
         {
             Response.Redirect("FormAccountUpdate.aspx");
@@ -103,6 +113,32 @@ namespace RentBike
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             LoadData(STORE_ID, txtSearch.Text.Trim(), 0);
+        }
+
+        protected void rptAccount_ItemCommand(object sender, RepeaterCommandEventArgs e)
+        {
+            try
+            {
+                if (e.CommandName == "Delete" && !string.IsNullOrEmpty(e.CommandArgument.ToString()))
+                {
+                    var id = Convert.ToInt32(e.CommandArgument.ToString());
+                    using (var db = new RentBikeEntities())
+                    {
+                        var account = db.Accounts.FirstOrDefault(c => c.ID == id);
+                        if (account != null)
+                        {
+                            db.Accounts.Remove(account);
+                            db.SaveChanges();
+                        }
+                        LoadData();
+                        ViewState["DeleteSuccess"] = "Xóa tài khoản thành công";
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                ViewState["DeleteFail"] = ex.Message;
+            }
         }
     }
 }

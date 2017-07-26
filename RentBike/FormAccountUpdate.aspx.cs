@@ -104,38 +104,41 @@ namespace RentBike
             }
             if (!string.IsNullOrEmpty(id))
             {
-                if (string.IsNullOrEmpty(txtOldPassword.Text.Trim()))
+                if (txtOldPassword.Enabled == true && txtOldPassword.Visible == true)
                 {
-                    return "Bạn cần phải nhập mật khẩu cũ.";
-                }
-
-                int accid = Convert.ToInt32(id);
-                using (var db = new RentBikeEntities())
-                {
-                    var st = from s in db.Accounts
-                             where s.ID == accid
-                             select s;
-
-                    var item = st.ToList<Account>()[0];
-
-                    if (txtOldPassword.Text.Trim().Length > 0)
+                    if (string.IsNullOrEmpty(txtOldPassword.Text.Trim()))
                     {
-                        if (Helper.EncryptPassword(txtOldPassword.Text.Trim()) != item.PASSWORD)
-                        {
-                            return "Mật khẩu cũ không đúng.";
-                        }
+                        return "Bạn cần phải nhập mật khẩu cũ.";
+                    }
 
-                        if (string.IsNullOrEmpty(txtNewPassword.Text.Trim()))
+                    int accid = Convert.ToInt32(id);
+                    using (var db = new RentBikeEntities())
+                    {
+                        var st = from s in db.Accounts
+                                 where s.ID == accid
+                                 select s;
+
+                        var item = st.ToList<Account>()[0];
+
+                        if (txtOldPassword.Text.Trim().Length > 0)
                         {
-                            return "Bạn cần phải nhập mật khẩu.";
-                        }
-                        if (txtNewPassword.Text.Trim().Length < 6)
-                        {
-                            return "Mật khẩu phải có ít nhất là 6 ký tự.";
-                        }
-                        if (txtConfirmPassword.Text.Trim() != txtNewPassword.Text.Trim())
-                        {
-                            return "Mật khẩu không khớp nhau.";
+                            if (Helper.EncryptPassword(txtOldPassword.Text.Trim()) != item.PASSWORD)
+                            {
+                                return "Mật khẩu cũ không đúng.";
+                            }
+
+                            if (string.IsNullOrEmpty(txtNewPassword.Text.Trim()))
+                            {
+                                return "Bạn cần phải nhập mật khẩu.";
+                            }
+                            if (txtNewPassword.Text.Trim().Length < 6)
+                            {
+                                return "Mật khẩu phải có ít nhất là 6 ký tự.";
+                            }
+                            if (txtConfirmPassword.Text.Trim() != txtNewPassword.Text.Trim())
+                            {
+                                return "Mật khẩu không khớp nhau.";
+                            }
                         }
                     }
                 }
