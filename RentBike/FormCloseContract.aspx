@@ -35,7 +35,7 @@
                 <tr>
                     <td class="text-right">Thực thu</td>
                     <td>
-                        <asp:TextBox ID="txtRealIncome" ClientIDMode="Static" runat="server" CssClass="form-control input-sm text-right" AutoPostBack="true"></asp:TextBox></td>
+                        <asp:TextBox ID="txtRealIncome" ClientIDMode="Static" runat="server" CssClass="form-control input-sm text-right" Enabled="false"></asp:TextBox></td>
                 </tr>
                 <tr>
                     <td class="text-right">Ghi chú</td>
